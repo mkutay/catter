@@ -18,14 +18,14 @@ export default function ThemeChanger() {
   return (
     <button
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      className="border rounded-md w-6 h-6 flex items-center justify-center">
+      className="border dark:border-[#cdd6f4] border-[#4c4f69] rounded-md w-6 h-6 flex items-center justify-center">
       <span className="sr-only">Toggle mode</span>
       {theme !== 'dark' ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          strokeWidth={1.5}
+          strokeWidth={1.8}
           stroke="currentColor"
           className="w-4 h-4">
           <path
@@ -39,7 +39,7 @@ export default function ThemeChanger() {
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          strokeWidth={1.5}
+          strokeWidth={1.8}
           stroke="currentColor"
           className="w-4 h-4">
           <path

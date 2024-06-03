@@ -10,16 +10,12 @@ const items = [
 
 export default function Footer() {
   return (
-    <footer className="h-8 place-content-center">
+    <footer className="py-8 place-content-center">
       <div className="float-left px-4 pl-8">
-        <Link href="/">
-          Made with
-          <div className="dark:text-[#f38ba8] text-[#d20f39]">
-            &lt;3
-          </div>
-        </Link>
+        Made with <b className="dark:text-[#f38ba8] text-[#d20f39]">&lt;3</b>
       </div>
-      <div className="pr-4">
+      <div className="float-right px-4 pr-8"><ThemeChanger/></div>
+      <div>
         {items.map((item) => (
           <Link
             key={item.link}
@@ -30,7 +26,6 @@ export default function Footer() {
           </Link>
         ))}
       </div>
-      <div><ThemeChanger/></div>
     </footer>
   );
 }
