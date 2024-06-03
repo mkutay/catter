@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import ThemeSwitcher from 'app/components/themeSwitcher';
+import ModeToggle from 'app/components/modeToggle';
 
 const navItems = {
   '/': {
@@ -31,7 +31,7 @@ export function Navbar() {
               )
             })}
           </div>
-          <ThemeSwitcher/>
+          <ModeToggle/>
         </nav>
       </div>
     </aside>
