@@ -1,12 +1,12 @@
 export default function NotFound() {
   return (
     <section>
-      <h1 className="font-medium text-2xl mb-8 tracking-tighter">
-        Oh no! This page doesn't exist.
+      <h1 className="mb-8 text-2xl font-semibold tracking-tighter">
+        404 - Page Not Found
       </h1>
-      <p>
-        If you expected to see something here, let me know (lee@vercel.com).
+      <p className="mb-4">
+       The page you are looking for does not exist.
       </p>
     </section>
-  );
+  )
 }

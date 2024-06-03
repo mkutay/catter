@@ -1,57 +1,42 @@
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fleerob%2Fleerob.io)
+# Portfolio Blog Starter
 
-# leerob.io
+This is a porfolio site template complete with a blog. Includes:
 
-- **Framework**: [Next.js](https://nextjs.org/)
-- **Database**: [Postgres](https://vercel.com/postgres)
-- **Authentication**: [NextAuth.js](https://next-auth.js.org)
-- **Deployment**: [Vercel](https://vercel.com)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com)
-- **Analytics**: [Vercel Analytics](https://vercel.com/analytics)
+- MDX and Markdown support
+- Optimized for SEO (sitemap, robots, JSON-LD schema)
+- RSS Feed
+- Dynamic OG images
+- Syntax highlighting
+- Tailwind v4
+- Vercel Speed Insights / Web Analytics
+- Geist font
 
-## Running Locally
+## Demo
 
-This application requires Node.js v18.17+.
+https://portfolio-blog-starter.vercel.app
+
+## How to Use
+
+You can choose from one of the following two methods to use this repository:
+
+### One-Click Deploy
+
+Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/blog&project-name=blog&repository-name=blog)
+
+### Clone and Deploy
+
+Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [pnpm](https://pnpm.io/installation) to bootstrap the example:
 
 ```bash
-git clone https://github.com/leerob/leerob.io.git
-cd leerob.io
-bun install
-bun run setup # Remove all of my personal information
-bun dev
+pnpm create next-app --example https://github.com/vercel/examples/tree/main/solutions/blog blog
 ```
 
-Create a `.env.local` file similar to [`.env.example`](https://github.com/leerob/leerob.io/blob/main/.env.example).
+Then, run Next.js in development mode:
 
-## Database Schema
-
-```sql
-CREATE TABLE redirects (
-  id SERIAL PRIMARY KEY,
-  source VARCHAR(255) NOT NULL,
-  destination VARCHAR(255) NOT NULL,
-  permanent BOOLEAN NOT NULL
-);
-
-CREATE TABLE guestbook (
-  id SERIAL PRIMARY KEY,
-  email VARCHAR(255) NOT NULL,
-  body TEXT NOT NULL,
-  created_by VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP
-);
-
-CREATE TABLE views (
-  slug VARCHAR(255) PRIMARY KEY,
-  count INT NOT NULL
-);
+```bash
+pnpm dev
 ```
 
-## License
-
-1. You are free to use this code as inspiration.
-2. Please do not copy it directly.
-3. Crediting the author is appreciated.
-
-Please remove all of my personal information (blog posts, images, etc.) by running `bun run setup`.
+Deploy it to the cloud with [Vercel](https://vercel.com/templates) ([Documentation](https://nextjs.org/docs/app/building-your-application/deploying)).

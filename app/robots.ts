@@ -1,3 +1,5 @@
+import { baseUrl } from 'app/sitemap'
+
 export default function robots() {
   return {
     rules: [
@@ -5,7 +7,6 @@ export default function robots() {
         userAgent: '*',
       },
     ],
-    sitemap: 'https://leerob.io/sitemap.xml',
-    host: 'https://leerob.io',
-  };
+    sitemap: `${baseUrl}/sitemap.xml`,
+  }
 }

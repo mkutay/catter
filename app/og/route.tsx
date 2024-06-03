@@ -1,57 +1,22 @@
-import { ImageResponse } from 'next/og';
-import { NextRequest } from 'next/server';
+import { ImageResponse } from 'next/og'
 
-export const runtime = 'edge';
-
-export async function GET(req: NextRequest) {
-  const { searchParams } = req.nextUrl;
-  const postTitle = searchParams.get('title');
-  const font = fetch(
-    new URL('../../public/fonts/kaisei-tokumin-bold.ttf', import.meta.url)
-  ).then((res) => res.arrayBuffer());
-  const fontData = await font;
+export function GET(request: Request) {
+  let url = new URL(request.url)
+  let title = url.searchParams.get('title') || 'Next.js Portfolio Starter'
 
   return new ImageResponse(
     (
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          justifyContent: 'center',
-          backgroundImage: 'url(https://leerob.io/og-bg.png)',
-        }}
-      >
-        <div
-          style={{
-            marginLeft: 190,
-            marginRight: 190,
-            display: 'flex',
-            fontSize: 130,
-            fontFamily: 'Kaisei Tokumin',
-            letterSpacing: '-0.05em',
-            fontStyle: 'normal',
-            color: 'white',
-            lineHeight: '120px',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          {postTitle}
+      <div tw="flex flex-col w-full h-full items-center justify-center bg-white">
+        <div tw="flex flex-col md:flex-row w-full py-12 px-4 md:items-center justify-between p-8">
+          <h2 tw="flex flex-col text-4xl font-bold tracking-tight text-left">
+            {title}
+          </h2>
         </div>
       </div>
     ),
     {
-      width: 1920,
-      height: 1080,
-      fonts: [
-        {
-          name: 'Kaisei Tokumin',
-          data: fontData,
-          style: 'normal',
-        },
-      ],
+      width: 1200,
+      height: 630,
     }
-  );
+  )
 }
