@@ -22,7 +22,8 @@ export default function Footer() {
       <div className="pr-4">
         {items.map((item) => (
           <Link
-            href={`${item.link}`}
+            key={item.link}
+            href={item.link}
             className="float-right inline-block text-center px-4 hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
           >
             {item.title}
