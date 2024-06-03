@@ -1,5 +1,5 @@
 export default function Home() {
   return (
-    <p>amogus</p>
+    <p>this is me</p>
   );
 }
