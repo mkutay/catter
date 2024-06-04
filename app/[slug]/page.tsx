@@ -5,7 +5,7 @@ import { getMDXComponent } from 'mdx-bundler/client';
 // export default async function Page() {
 export default async function Page({ params }: { params: { slug: string } }) {
   const slug = params.slug;
-  const { code, frontmatter } = await MdxBuild(slug, process.cwd() + `/app/[slug]/pages/`);
+  const { code, frontmatter } = await MdxBuild(slug, process.cwd() + `/content/pages/`);
 
   // const Component = React.useMemo(() => getMDXComponent(code), [code]);
   const Component = getMDXComponent(code);
