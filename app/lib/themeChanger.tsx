@@ -11,6 +11,10 @@ export default function ThemeChanger() {
     setMounted(true);
   }, []);
 
+  function getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
+  }
+
   if (!mounted) {
     return null;
   }
@@ -20,7 +24,7 @@ export default function ThemeChanger() {
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
       className="border dark:border-[#cdd6f4] border-[#4c4f69] rounded-md w-6 h-6 flex items-center justify-center">
       <span className="sr-only">Toggle mode</span>
-      {theme !== 'dark' ? (
+      {getRandomInt(2) !== 1 ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
