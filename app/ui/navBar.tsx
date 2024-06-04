@@ -3,8 +3,7 @@
 import Link from 'next/link';
 
 const items = [
-  {'title': 'Archive', 'link': 'pages/archive'},
-  {'title': 'Academia', 'link': 'pages/academia'},
+  {'title': 'Posts', 'link': 'pages/posts'},
   {'title': 'About', 'link': 'pages/about'},
 ];
 

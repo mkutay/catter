@@ -14,10 +14,14 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <div className="max-w-prose mx-auto my-0 py-8">
       <header>
-        <h1 className="font-semibold text-4xl">{frontmatter.title}</h1>
-        <p>{frontmatter.description}</p>
+        <h1 className="font-bold text-xl pb-4">
+          {frontmatter.title}
+        </h1>
+        <p className="py-1.5 text-right italic">
+          {frontmatter.description}
+        </p>
       </header>
-      <main>
+      <main className="prose">
         <Component/>
       </main>
     </div>
