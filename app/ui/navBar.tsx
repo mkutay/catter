@@ -10,7 +10,7 @@ const items = [
 
 export default function NavBar() {
   return (
-    <nav className="py-8 place-content-center">
+    <nav className="py-8 place-content-center max-w-prose mx-auto my-0">
       <div className="float-left px-4 pl-8 text-[#8839ef] dark:text-[#cba6f7] hover:underline font-bold">
         <Link href="/">Kutay</Link>
       </div>

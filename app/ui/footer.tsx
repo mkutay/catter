@@ -10,7 +10,7 @@ const items = [
 
 export default function Footer() {
   return (
-    <footer className="py-8 place-content-center">
+    <footer className="py-8 place-content-center max-w-prose mx-auto my-0">
       <div className="float-left px-4 pl-8">
         Made with <b className="dark:text-[#f38ba8] text-[#d20f39]">&lt;3</b>
       </div>
