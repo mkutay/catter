@@ -2,7 +2,10 @@ import MdxBuild from "@/app/lib/mdxBuild";
 import { getMDXComponent } from 'mdx-bundler/client';
 import path from 'path';
 import { getFormatter } from 'next-intl/server';
+import type { Metadata } from "next";
 // import * as React from 'react';
+
+let title, description;
 
 // export default async function Page() {
 export default async function Page({ params }: { params: { slug: string } }) {
@@ -18,6 +21,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
     month: 'short',
     day: 'numeric',
   });
+
+  title = frontmatter.title;
+  description = frontmatter.description;
 
   // const Component = React.useMemo(() => getMDXComponent(code), [code]);
   const Component = getMDXComponent(code);
@@ -41,3 +47,8 @@ export default async function Page({ params }: { params: { slug: string } }) {
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: title,
+  description: description,
+};
