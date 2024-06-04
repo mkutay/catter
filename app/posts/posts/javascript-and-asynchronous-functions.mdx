@@ -1,0 +1,78 @@
+---
+title: JavaScript and Asynchronous Functions
+description: Explaining an error I observer and on async functions in Javascript
+date: 2023-05-26
+---
+Hello everyone! In this second post of my blog, I am going to explain an error I stumbled upon last week, how I solved it, and asynchronous functions in Javascript.
+
+Last week, while I was improving my [website](https://www.mkutay.dev/), I just couldn’t figure something out. I mean, it wasn’t even a bug because there was nothing that the bug could be on; there was no code that was working in the slightest. I was trying to create an RSS feed extractor on my website so that anyone could look to see if there were any new posts on the Deterministic Blog (hey, we are on that right now) and on the [Cookie Blog](https://cookieblog.net/).
+
+```js
+let feedOutput = getFeed(blogInfo.feed, blogName);
+console.log(feedOutput);
+render(feedOutput);
+```
+```js
+let html = `<p><span class="purple">Latest blog posts for ${blogName}:</span><pre>\n</pre>`;
+let count = -1;
+fetch(feedUrl)
+  .then(response => response.text())
+  .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+  .then(data => {
+    const items = data.querySelectorAll("link");
+    items.forEach(el => {
+    count++;
+    if (count < 2 || count > 4) return;
+    let itemLink = el.attributes[0].textContent;
+    if (el.attributes[3]) {
+      let itemTitle = el.attributes[3].textContent;
+      html += `<p><a class="shortcut" href="${itemLink}">${itemTitle}</a></p>`;
+    }
+    });
+  })
+  .catch((e) => {
+    error("red", "Couldn't fetch data from feed.xml.");
+    html = "fetch error";
+    console.log(e);
+  });
+
+html += `</p>`;
+return html;
+```
+
+So here the first code is from the executor file, where I have all the commands for the website. And the second code is from the helpers file, which has the getFeed function that returns an HTML code to be displayed. In the getFeed function, there is much stuff that you don’t need to know about, like the entirety of the fetch function. You only need to know that it parses RSS feeds of blogs in real-time.
+
+Here started the error: when I ran the code above, there was no useful output, as if the fetch command hadn’t even parsed the feed.
+
+![No Output](/images/no-output.png)
+
+Then, after seeing this, I tried to debug it. I mean, where even was the problem? I tried to console.log the variable "html" in the helpers file and also the result of the getFeed function in the executors file. But I had no luck. If the code was executing as expected, then the error should have been the fetch function, right? So I put console.logs everywhere in the fetch function, and funny enough, it was going perfectly as expected; there weren’t any problems. Even the variable "html" was outputting correctly. I mean, the variable was "magically" resetting right before returning. So, where could the problem be?
+
+It turns out that the fetching and parsing of the RSS feed were taking so much time. It **should** actually take some time, as it is fetching all of the RSS feed from the website (which depends on the internet connection) and parsing it to get only the titles and links of the posts. So, here, right then, I was going crazy. I mean, why am I even coding in Javascript? It is such a ridiculous programming language. Why would the code not finish itself and just continue? [It's frankly ridiculous](https://www.youtube.com/watch?v=D428G28MZFY&t=27s) (actually, that whole video describes my emotions; I decided that I am actually going to listen to its one-hour version while I write this post lol). While I was in the rabbit hole of many StackOverflow posts and different articles, I found the thingamajig of _asynchronous functions_. So, let’s talk about it.
+
+Asynchronous functions are actually very useful. Asynchronous functions allow the program to start a potentially time-consuming task and still be responsive to other events while that task runs, rather than having to wait until that task has finished. Once that task has been finished, the program is presented with the result. This time-consuming task is like fetching from a website (like in our case) or accessing the user’s camera or microphone (the program needs to be asynchronous as it needs to wait for the user to answer the prompt). If it weren’t for the asynchronous functions, we would be waiting a while until the long task was finished.
+
+So, returning to our code, the fetch function is asynchronous, which means that the program on runtime doesn’t wait for the fetch to finish, so it goes on with its life and continues to run the code before the fetch function finishes and the variable "html" could be set. Now we found the main problem that was causing us to go down a StackOverflow rabbit hole. To fix it, we just cannot add a timeout right after the fetch function because the timeout function is also asynchronous. We need a better solution. Reveal the curtains, Promise, the promise you made to your friend and never kept.
+
+```js
+return new Promise((resolve, reject) => {
+  setTimeout(() => {
+    html += `</p>`;
+    resolve(html);
+  }, 1000);
+});
+```
+
+```js
+let feedOutput = getFeed(blogInfo.feed, blogName);
+feedOutput.then((html) => {
+  if (html == "fetch error</p>") return;
+  render(html);
+});
+```
+
+A Promise is a proxy for a value that is not necessarily known when the promise is created. It allows us to associate handlers with an asynchronous action's eventual success value or failure reason. Here, in the first part of the code, the Promise allows us to actually make a promise that after a second (after the fetch function is fully completed), we can resolve the "html" variable, which allows us to return the variable inside of the Promise to the executor function on the second part. The feedOutput function is a Promise, if that promise is kept, "then" we can render the "html" to the terminal.
+
+Basically, that’s how I solved this error I came across. I am highly certain that this is not the efficient or "the correct" way to solve my error, but this is the way I did it, and I solved it. As a new Javascript developer, I am learning new things, and this blog will help me share my experiences with all of you. Thank you.
+
+This has been stupid, and I’m out.

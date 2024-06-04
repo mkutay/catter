@@ -1,15 +1,18 @@
-import MdxBuild from "@/app/lib/mdxBuild";
-import { getMDXComponent } from 'mdx-bundler/client';
 import path from 'path';
 import { getFormatter } from 'next-intl/server';
 import type { Metadata } from "next";
-import { describe } from "node:test";
-// import * as React from 'react';
+import { MDXRemote, compileMDX } from 'next-mdx-remote/rsc';
+import { promises as fs } from 'fs';
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const { slug } = params;
-  const cwd = process.cwd();
-  const { frontmatter } = await MdxBuild(slug, path.join(cwd, `app/posts/posts/`));
+
+  const source = await fs.readFile(process.cwd() + `/app/posts/posts/${slug}.mdx`, 'utf-8');
+
+  const { content, frontmatter } = await compileMDX<{ title: string, description: string, date: string }>({
+    source: String(source),
+    options: { parseFrontmatter: true },
+  });
 
   return {
     title: frontmatter.title,
@@ -22,11 +25,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-// export default async function Page() {
 export default async function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
-  const cwd = process.cwd();
-  const { code, frontmatter } = await MdxBuild(slug, path.join(cwd, `app/posts/posts/`));
+
+  const source = await fs.readFile(process.cwd() + `/app/posts/posts/${slug}.mdx`, 'utf-8');
+
+  const { content, frontmatter } = await compileMDX<{ title: string, description: string, date: string }>({
+    source: String(source),
+    options: { parseFrontmatter: true },
+  });
 
   const format = await getFormatter();
   const date = new Date(frontmatter.date);
@@ -36,9 +43,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
     month: 'short',
     day: 'numeric',
   });
-
-  // const Component = React.useMemo(() => getMDXComponent(code), [code]);
-  const Component = getMDXComponent(code);
 
   return (
     <div className="max-w-prose mx-auto my-0 py-8">
@@ -54,7 +58,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </p>
       </header>
       <main className="prose">
-        <Component/>
+        {content}
       </main>
     </div>
   );
