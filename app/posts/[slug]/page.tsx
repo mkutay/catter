@@ -47,13 +47,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
   return (
     <div className="max-w-prose mx-auto my-0 py-8">
       <header>
-        <h1 className="font-bold text-xl pb-1.5">
+        <h1 className="font-bold text-3xl mb-4">
           {frontmatter.title}
         </h1>
-        <p className="py-1.5 font-medium">
+        <p className="my-4 font-semibold">
           {formattedDate}
         </p>
-        <p className="py-1.5 italic text-right">
+        <p className="my-4 italic text-right">
           {frontmatter.description}
         </p>
       </header>

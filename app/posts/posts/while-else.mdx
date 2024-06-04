@@ -1,0 +1,110 @@
+---
+title: While Else
+description: Using while/else statement in Python unironically in a code that Kutay wrote
+date: 2023-11-04
+---
+In Python, there is something that even the creator of Python despises. The *thing* that I am referring to is the "while, else" statement. Some context is that I was in a computer science course and we had to create some text-based game, and I—unironically—used the forbidden technique, the while else statement. The section of code that uses while else is given below, and for the interested, the full code is at the bottom of the page.
+
+```python
+while encounter_count < 4:
+  print("You reach a fork in the cave.")
+  path = choose_path()
+  
+  print(f"You venture {path}.")
+  
+  scenario = encounter_scenario()
+  print(scenario)
+  
+  encounter_count += 1
+  
+  if "treasure" in scenario:
+    print("Congratulations! You found the hidden treasure!")
+    break
+  
+  if "eat" in scenario:
+    print("You died. Try again!")
+    break
+  
+  print()
+else:
+  print("You couldn't find the treasure in time and starved to death.")
+```
+
+Here, the logic is that when the player cannot find the treasure in time (four encounters), they die because of starvation, and they lose the game. I implemented this using a while loop that loops the game logic while the encounter count is less than four. In the game logic, you venture into different paths in the cave, and you can stumble upon many things—such as a trap, a wolf, and the treasure. In many cases, you will survive and go to the next round, but sometimes you will get eaten by the wolves or find the treasure and escape the cave. In cases where the game finishes, the loop will be terminated by the "break" keyword. When the encounter count is greater or equal to four, instead of writing another if statement with a break inside, I decided to use the while-else statement. What it does is that when the loop condition inside the loop terminates _false_, the else statement is triggered, giving us the prompt "You couldn't find the treasure in time and starved to death." In short, that print statement will not get executed if a break of the loop is triggered, but it will be executed as long as the loop is exited normally—namely, the condition resulting in _false_.
+
+This is the basic premise of the "while else" statement. I do not think that this is unnecessary per se, but you can accomplish what this statement does by just adding an if statement. I think that this is just a cool thing that Python has that most—if not all—programming languages do not have. Also, did you know that you can do this in for loops too?
+
+---
+
+The full code for the interested:
+```python
+import time
+import random
+
+def display_intro():
+  print("You are standing at the entrance of a dark cave.")
+  print("Your objective is to explore the cave and find the hidden treasure.")
+  print()
+ 
+def choose_path():
+  path = ""
+  while path.lower() not in ["left", "right", "l", "r"]:
+    path = input("Will you go left or right? ").lower()
+
+  if path == "l":
+    path = "left"
+  if path == "r":
+    path = "right"
+
+  return path
+ 
+def encounter_scenario():
+  scenarios = [
+    "You stumbled upon a colony of bats. They startle you but eventually fly away.",
+    "You found a pile of glittering gems. You collect a few for good luck.",
+    "A sudden gust of wind blows out your torch. You're left in darkness.",
+    "You encounter a friendly troll who gives you directions to the treasure.",
+    "You slip on a wet rock and twist your ankle. You need to rest for a while.",
+    "You find a hidden passage that leads deeper into the cave.",
+    "You triggered a trap and rocks start falling. You narrowly escape.",
+    "You discover a clue that leads you closer to the hidden treasure.",
+    "You hear distant growls, and decide it's best to turn back for now.",
+    "You stumble upon a wolf, and he decides to eat you.",
+    "You found a big cave room without anything inside.",
+    "You hear a chant in the next rooms but you decide to not go there.",
+  ]
+  return random.choice(scenarios)
+ 
+def explore_cave():
+  display_intro()
+
+  encounter_count = 0
+
+  while encounter_count < 4:
+    print("You reach a fork in the cave.")
+    path = choose_path()
+
+    print(f"You venture {path}.")
+
+    scenario = encounter_scenario()
+    print(scenario)
+
+    encounter_count += 1
+
+    if "treasure" in scenario:
+      print("Congratulations! You found the hidden treasure!")
+      break
+
+    if "eat" in scenario:
+      print("You died. Try again!")
+      break
+
+    print()
+  else:
+    print("You couldn't find the treasure in time and starved to death.")
+
+if __name__ == "__main__":
+  explore_cave()
+```
+
+Also, I am now kind of a [Catppuccin](https://github.com/catppuccin/catppuccin) fan, so should I change the colour scheme of this blog to suit that, or just leave it as is? I might have to experiment with the colours from Catppuccin to have the perfect set.
