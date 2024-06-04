@@ -1,11 +1,13 @@
 import MdxBuild from "@/app/lib/mdxBuild";
 import { getMDXComponent } from 'mdx-bundler/client';
+import path from 'path';
 // import * as React from 'react';
 
 // export default async function Page() {
 export default async function Page({ params }: { params: { slug: string } }) {
-  const slug = params.slug;
-  const { code, frontmatter } = await MdxBuild(slug, process.cwd() + `/content/posts/`);
+  const { slug } = params;
+  const cwd = process.cwd();
+  const { code, frontmatter } = await MdxBuild(slug, path.join(cwd, `app/posts/posts/`));
 
   // const Component = React.useMemo(() => getMDXComponent(code), [code]);
   const Component = getMDXComponent(code);

@@ -3,9 +3,9 @@
 import Link from 'next/link';
 
 const items = [
-  {'title': 'Archive', 'link': 'archive'},
-  {'title': 'Academia', 'link': 'academia'},
-  {'title': 'About', 'link': 'about'},
+  {'title': 'Archive', 'link': 'pages/archive'},
+  {'title': 'Academia', 'link': 'pages/academia'},
+  {'title': 'About', 'link': 'pages/about'},
 ];
 
 export default function NavBar() {
