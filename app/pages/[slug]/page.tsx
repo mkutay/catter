@@ -6,7 +6,7 @@ import { promises as fs } from 'fs';
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const { slug } = params;
 
-  const source = await fs.readFile(process.cwd() + `/content/pages/${slug}.mdx`, 'utf-8');
+  const source = await fs.readFile(path.join(process.cwd(), `app/pages/pages/${slug}.mdx`), 'utf-8');
 
   const { content, frontmatter } = await compileMDX<{ title: string, description: string, date: string }>({
     source: String(source),
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function Page({ params }: { params: { slug: string } }) {
   const { slug } = params;
 
-  const source = await fs.readFile(process.cwd() + `/content/pages/${slug}.mdx`, 'utf-8');
+  const source = await fs.readFile(path.join(process.cwd(), `app/pages/pages/${slug}.mdx`), 'utf-8');
 
   const { content, frontmatter } = await compileMDX<{ title: string, description: string, date: string }>({
     source: String(source),
