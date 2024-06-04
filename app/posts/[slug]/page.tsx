@@ -14,6 +14,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: frontmatter.title,
     description: frontmatter.description,
+    openGraph: {
+      title: frontmatter.title,
+      description: frontmatter.description,
+      url: 'https://mkutay.dev/posts/' + slug,
+    },
   }
 }
 

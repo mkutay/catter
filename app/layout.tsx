@@ -8,8 +8,20 @@ import Footer from "@/app/ui/footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Kutay's Blog",
-  description: "A blog where uni student Kutay posts about things he likes, from maths to computer science",
+  title: 'Kutay\'s Blog',
+  description: 'A blog where uni student Kutay posts about things he likes, from maths to computer science',
+  generator: 'Next.js',
+  applicationName: 'Next.js',
+  authors: [{ name: 'Mehmet Kutay Bozkurt', url: 'https://mkutay.dev' }],
+  creator: 'Mehmet Kutay Bozkurt',
+  openGraph: {
+    title: 'Kutay\'s Blog',
+    description: 'A blog where uni student Kutay posts about things he likes, from maths to computer science',
+    url: 'https://mkutay.dev',
+    siteName: 'Kutay\'s Blog',
+    locale: 'en_UK',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
