@@ -1,65 +1,65 @@
 import path from 'path';
-import { getFormatter } from 'next-intl/server';
-import type { Metadata } from "next";
-import { MDXRemote, compileMDX } from 'next-mdx-remote/rsc';
-import { promises as fs } from 'fs';
+import type { Metadata } from 'next';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import fs from 'fs';
+import matter from 'gray-matter';
+import { parseISO, format } from 'date-fns';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export function generateMetadata({ params }: { params: { slug: string } }) {
   const { slug } = params;
-
-  const source = await fs.readFile(path.join(process.cwd(), `app/posts/posts/${slug}.mdx`), 'utf-8');
-
-  const { content, frontmatter } = await compileMDX<{ title: string, description: string, date: string }>({
-    source: String(source),
-    options: { parseFrontmatter: true },
-  });
+  const blog = getPost(params);
 
   return {
-    title: frontmatter.title,
-    description: frontmatter.description,
+    title: blog.meta.title,
+    description: blog.meta.description,
     openGraph: {
-      title: frontmatter.title,
-      description: frontmatter.description,
+      title: blog.meta.title,
+      description: blog.meta.description,
       url: 'https://mkutay.dev/posts/' + slug,
     },
-  }
+  };
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default function Page({ params }: { params: { slug: string } } ) {
+  const props = getPost(params);
 
-  const source = await fs.readFile(path.join(process.cwd(), `app/posts/posts/${slug}.mdx`), 'utf-8');
-
-  const { content, frontmatter } = await compileMDX<{ title: string, description: string, date: string }>({
-    source: String(source),
-    options: { parseFrontmatter: true },
-  });
-
-  const format = await getFormatter();
-  const date = new Date(frontmatter.date);
-
-  const formattedDate = format.dateTime(date, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
+  const formattedDate = format(props.meta.date, 'PP')
 
   return (
     <div className="max-w-prose mx-auto my-0 py-8">
       <header>
         <h1 className="font-bold text-3xl mb-4">
-          {frontmatter.title}
+          {props.meta.title}
         </h1>
         <p className="my-4 font-semibold">
           {formattedDate}
         </p>
         <p className="my-4 italic text-right">
-          {frontmatter.description}
+          {props.meta.description}
         </p>
       </header>
       <main className="prose">
-        {content}
+        <MDXRemote source={props.content}/>
       </main>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const files = fs.readdirSync(path.join(process.cwd(), 'app/posts/posts'));
+
+  return files.map(filename => ({
+    slug: filename.replace('.mdx', ''),
+  }));
+}
+
+function getPost({ slug }: { slug : string }) {
+  const markdownFile = fs.readFileSync(path.join(process.cwd(), `app/posts/posts/${slug}.mdx`), 'utf-8');
+  const { data: frontMatter, content } = matter(markdownFile);
+
+  return {
+    meta: frontMatter,
+    slug: slug,
+    content: content,
+  };
 }

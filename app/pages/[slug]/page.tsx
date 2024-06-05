@@ -1,52 +1,59 @@
 import path from 'path';
-import type { Metadata } from "next";
-import { MDXRemote, compileMDX } from 'next-mdx-remote/rsc';
-import { promises as fs } from 'fs';
+import type { Metadata } from 'next';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import fs from 'fs';
+import matter from 'gray-matter';
+import { parseISO, format } from 'date-fns';
+import ListOfPosts from '@/app/ui/listOfPosts';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export function generateMetadata({ params }: { params: { slug: string } }) {
   const { slug } = params;
-
-  const source = await fs.readFile(path.join(process.cwd(), `app/pages/pages/${slug}.mdx`), 'utf-8');
-
-  const { content, frontmatter } = await compileMDX<{ title: string, description: string, date: string }>({
-    source: String(source),
-    options: { parseFrontmatter: true },
-  });
+  const blog = getPage(params);
 
   return {
-    title: frontmatter.title,
-    description: frontmatter.description,
+    title: blog.meta.title,
+    description: blog.meta.description,
     openGraph: {
-      title: frontmatter.title,
-      description: frontmatter.description,
+      title: blog.meta.title,
+      description: blog.meta.description,
       url: 'https://mkutay.dev/posts/' + slug,
     },
-  }
+  };
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  const { slug } = params;
-
-  const source = await fs.readFile(path.join(process.cwd(), `app/pages/pages/${slug}.mdx`), 'utf-8');
-
-  const { content, frontmatter } = await compileMDX<{ title: string, description: string, date: string }>({
-    source: String(source),
-    options: { parseFrontmatter: true },
-  });
+  const props = getPage(params);
 
   return (
-    <div className="max-w-prose mx-auto my-0 py-8">
-      <header>
-        <h1 className="font-bold text-3xl mb-4">
-          {frontmatter.title}
-        </h1>
-        <p className="my-4 text-right italic">
-          {frontmatter.description}
-        </p>
-      </header>
-      <main className="prose">
-        {content}
+    <div className="max-w-prose mx-auto my-0 py-8 prose">
+      <h1 className="">
+        {props.meta.title}
+      </h1>
+      <p className="my-4 text-right italic">
+        {props.meta.description}
+      </p>
+      <main>
+        <MDXRemote source={props.content} components={{ListOfPosts}}/>
       </main>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const files = fs.readdirSync(path.join(process.cwd(), 'app/pages/pages'));
+
+  return files.map(filename => ({
+    slug: filename.replace('.mdx', ''),
+  }));
+}
+
+function getPage({ slug }: { slug : string }) {
+  const markdownFile = fs.readFileSync(path.join(process.cwd(), `app/pages/pages/${slug}.mdx`), 'utf-8');
+  const { data: frontMatter, content } = matter(markdownFile);
+
+  return {
+    meta: frontMatter,
+    slug: slug,
+    content: content,
+  };
 }

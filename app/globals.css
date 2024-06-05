@@ -2,38 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-.prose p {
-  @apply my-4 leading-relaxed;
-}
-
-.prose a {
-  @apply dark:text-[#89b4fa] text-[#1e66f5] hover:underline;
-}
-
-.prose hr {
-  @apply dark:border-[#313244] border-[#ccd0da] my-4;
-}
-
-.prose h1 {
- @apply text-2xl font-bold my-4;
-}
-
-.prose h2 {
-  @apply text-2xl font-medium my-4;
-}
-
-.prose h3 {
-  @apply text-xl font-bold my-4;
-}
-
-.prose h4 {
-  @apply text-xl font-medium my-4;
-}
-
-.prose h5 {
-  @apply text-lg font-bold my-4;
-}
-
-.prose h6 {
-  @apply text-lg font-medium my-4;
+.prose {
+  @apply prose-headings:text-[#4c4f69] dark:prose-headings:text-[#cdd6f4];
+  @apply prose-p:text-[#4c4f69] dark:prose-p:text-[#cdd6f4];
+  @apply dark:prose-hr:border-[#313244] prose-hr:border-[#ccd0da];
+  @apply dark:prose-a:text-[#89b4fa] prose-a:text-[#1e66f5];
 }

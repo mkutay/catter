@@ -10,7 +10,9 @@ const config: Config = {
     extend: {
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
   darkMode: "class",
 };
 export default config;
