@@ -5,7 +5,7 @@ import ThemeChanger from '@/app/lib/themeChanger';
 
 const items = [
   {'title': 'Sponsor Me', 'link': 'https://github.com/sponsors/mkutay?o=esb'},
-  {'title': 'Résumé', 'link': 'https://mkutay.dev/assets/pdfs/mehmet-kutay-bozkurt.pdf'},
+  {'title': 'Résumé', 'link': 'https://www.mkutay.dev/pdfs/mehmet-kutay-bozkurt.pdf'},
 ];
 
 export default function Footer() {

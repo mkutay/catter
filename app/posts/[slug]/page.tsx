@@ -15,7 +15,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
     openGraph: {
       title: blog.meta.title,
       description: blog.meta.description,
-      url: 'https://mkutay.dev/posts/' + slug,
+      url: 'https://www.mkutay.dev/posts/' + slug,
     },
   };
 }

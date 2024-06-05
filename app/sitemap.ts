@@ -1,4 +1,4 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
@@ -49,7 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified = new Date(String(page.meta.date));
     }
     siteMap.push({
-      url: `https://mkutay.dev/pages/${page.slug}`,
+      url: `https://www.mkutay.dev/pages/${page.slug}`,
       lastModified: lastModified,
       changeFrequency: page.meta.changeFrequency,
       priority: page.meta.priority,
@@ -58,7 +58,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   posts.forEach((post) => {
     siteMap.push({
-      url: `https://mkutay.dev/posts/${post.slug}`,
+      url: `https://www.mkutay.dev/posts/${post.slug}`,
       lastModified: new Date(String(post.meta.date)),
       changeFrequency: 'monthly',
       priority: 0.75,
@@ -66,7 +66,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
 
   siteMap.push({
-    url: 'https://mkutay.dev',
+    url: 'https://www.mkutay.dev',
     lastModified: new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
