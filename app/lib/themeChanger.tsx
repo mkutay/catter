@@ -60,7 +60,7 @@ export default function ThemeChanger() {
         )}
       </button>
       {
-        (numOfChanges > 20) && <p>stawwwp itt</p>
+        (numOfChanges % 20 == 0) && <p>stawwwp itt</p>
       }
     </div>
   );

@@ -4,6 +4,14 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import fs from 'fs';
 import matter from 'gray-matter';
 import { parseISO, format } from 'date-fns';
+import remarkGfm from 'remark-gfm';
+
+const options = {
+  mdxOptions: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [],
+  }
+};
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -26,7 +34,7 @@ export default function Page({ params }: { params: { slug: string } } ) {
   const formattedDate = format(props.meta.date, 'PP')
 
   return (
-    <div className="max-w-prose mx-auto my-0 py-8">
+    <div className="max-w-prose mx-auto my-0 py-8 sm:px-8 px-4">
       <header>
         <h1 className="font-bold text-3xl mb-4">
           {props.meta.title}
@@ -39,7 +47,7 @@ export default function Page({ params }: { params: { slug: string } } ) {
         </p>
       </header>
       <main className="prose">
-        <MDXRemote source={props.content}/>
+        <MDXRemote source={props.content} options={options}/>
       </main>
     </div>
   );

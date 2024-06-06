@@ -25,7 +25,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const props = getPage(params);
 
   return (
-    <div className="max-w-prose mx-auto my-0 py-8 prose">
+    <div className="max-w-prose mx-auto my-0 py-8 prose px-4 sm:px-8">
       <h1 className="">
         {props.meta.title}
       </h1>
