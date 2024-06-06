@@ -36,9 +36,11 @@ export async function saveGuestbookEntry(formData: FormData) {
   let entry = formData.get('entry')?.toString() || '';
   let body = entry.slice(0, 500);
 
+  let random = Math.floor(Math.random() * 100000);
+
   await sql`
     INSERT INTO guestbook (id, email, body, created_by, created_at)
-    VALUES (RANDOM()+5000, ${email}, ${body}, ${created_by}, NOW())
+    VALUES (${random}, ${email}, ${body}, ${created_by}, NOW())
   `;
 
   revalidatePath('/guestbook');
