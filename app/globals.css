@@ -5,7 +5,7 @@
 .prose {
   @apply prose-headings:text-[#4c4f69] dark:prose-headings:text-[#cdd6f4];
   @apply prose-p:text-[#4c4f69] dark:prose-p:text-[#cdd6f4];
-  @apply dark:prose-hr:border-[#313244] prose-hr:border-[#ccd0da];
+  @apply dark:prose-hr:border-[#313244] prose-hr:border-[#ccd0da] prose-hr:my-8;
   @apply dark:prose-a:text-[#89b4fa] prose-a:text-[#1e66f5];
   @apply prose-strong:text-[#4c4f69] dark:prose-strong:text-[#cdd6f4];
   @apply prose-em:text-[#4c4f69] dark:prose-em:text-[#cdd6f4];
