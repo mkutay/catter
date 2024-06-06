@@ -6,7 +6,7 @@ export default function Home() {
       <h1>
         Latest Posts
       </h1>
-      <ListOfPosts/>
+      <ListOfPosts lastNumOfPosts={5}/>
     </section>
   )
 }

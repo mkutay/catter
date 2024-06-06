@@ -5,6 +5,14 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { parseISO, format } from 'date-fns';
 import ListOfPosts from '@/app/ui/listOfPosts';
+import remarkGfm from 'remark-gfm';
+
+const options = {
+  mdxOptions: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [],
+  }
+};
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const { slug } = params;
@@ -33,7 +41,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         {props.meta.description}
       </p>
       <main>
-        <MDXRemote source={props.content} components={{ListOfPosts}}/>
+        <MDXRemote source={props.content} components={{ListOfPosts}} options={options}/>
       </main>
     </div>
   );

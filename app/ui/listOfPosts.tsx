@@ -3,8 +3,19 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
 import Link from 'next/link';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
 
-export default function ListOfPosts() {
+const options = {
+  mdxOptions: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [],
+  }
+};
+
+export default function ListOfPosts(params: { lastNumOfPosts: number }) {
+  const { lastNumOfPosts } = params;
+
   const postFiles = fs.readdirSync(path.join(process.cwd(), 'app/posts/posts/'), 'utf-8');
 
   const posts = postFiles.map(filename => {
@@ -26,25 +37,29 @@ export default function ListOfPosts() {
     new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime()
   ));
 
+  const postsLength = posts.length;
+
+  for (let i = 0; i < postsLength - lastNumOfPosts; i++) {
+    posts.pop();
+  }
+
   return (
     <div>
       {posts.map((post) => (
-        <div className="flex justify-between align-middle" key={post.slug}>
-          <div>
-            <h3 className="prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4]">
-              <Link
-                href={'/posts/' + post.slug}
-                passHref
-                key={post.slug}
-              >
-                {post.meta.title}
-              </Link>
-            </h3>
-            <p>{post.meta.description}</p>
-          </div>
-          <div className="flex">
-            <p>{post.meta.date}</p>
-          </div>
+        <div className="justify-between align-middle" key={post.slug}>
+          <h2 className="prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4]">
+            <Link
+              href={'/posts/' + post.slug}
+              passHref
+              key={post.slug}
+            >
+              {post.meta.title}
+            </Link>
+          </h2>
+          <p className="text-[#6c6f85] dark:text-[#a6adc8] -mt-4 not-prose">
+            {post.meta.description}
+          </p>
+          <MDXRemote source={post.meta.excerpt} options={options}/>
         </div>
       ))}
     </div>
