@@ -9,15 +9,15 @@ export const metadata = {
   description: 'Sign my guestbook and leave your mark.',
 };
 
-export default function GuestbookPage() {
+export default function Page() {
   return (
-    <section>
-      <h1 className="font-medium text-2xl mb-8 tracking-tighter">
-        sign my guestbook
+    <section className="prose max-w-prose mx-auto my-0 py-8 px-4 sm:px-8">
+      <h1 className="tracking-tighter">
+        Sign my guestbook!
       </h1>
       <Suspense>
-        <GuestbookForm />
-        <GuestbookEntries />
+        <GuestbookForm/>
+        <GuestbookEntries/>
       </Suspense>
     </section>
   );

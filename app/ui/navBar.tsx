@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 const items = [
+  {'title': 'Guest Book', 'link': 'guestbook'},
   {'title': 'Posts', 'link': 'pages/posts'},
   {'title': 'About', 'link': 'pages/about'},
 ];

@@ -18,24 +18,14 @@
     "contentlayer": "^0.3.4",
     "date-fns": "^3.6.0",
     "esbuild": "^0.21.4",
-    "googleapis": "^139.0.0",
     "gray-matter": "^4.0.3",
-    "mdx-bundler": "^10.0.2",
-    "micromark": "^4.0.0",
-    "micromark-extension-frontmatter": "^2.0.0",
-    "micromark-extension-gfm": "^3.0.0",
-    "micromark-extension-math": "^3.0.0",
-    "micromark-extension-mdx": "^2.1.0",
     "next": "14.2.3",
-    "next-auth": "^4.24.7",
-    "next-intl": "^3.14.1",
+    "next-auth": "5.0.0-beta.19",
     "next-mdx-remote": "^5.0.0",
     "next-themes": "^0.3.0",
     "postgres": "^3.4.4",
     "react": "^18",
     "react-dom": "^18",
-    "rehype": "^13.0.1",
-    "rehype-sanitize": "^6.0.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
     "remark-mdx": "^3.0.1",
@@ -51,5 +41,8 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "browser": {
+    "crypto": false
   }
 }

@@ -1,7 +1,3 @@
-import createNextIntlPlugin from 'next-intl/plugin';
- 
-const withNextIntl = createNextIntlPlugin('./app/lib/i18n.ts');
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Configure `pageExtensions`` to include MDX files
@@ -14,4 +10,4 @@ const nextConfig = {
   // }
 };
 
-export default withNextIntl(nextConfig);
+export default nextConfig;
