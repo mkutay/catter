@@ -44,12 +44,14 @@ async function GuestbookEntries() {
   }
 
   return entries.map((entry: any) => (
-    <div key={entry.id} className="flex flex-col space-y-1 mb-4">
-      <div className="w-full text-sm break-words">
-        <span className="text-neutral-600 dark:text-neutral-400 mr-1">
+    <div key={entry.id} className="flex flex-col my-2">
+      <div className="w-full break-words">
+        <span className="text-[#d20f39] dark:text-[#f38ba8] mr-1">
           {entry.created_by}:
         </span>
-        {entry.body}
+        <span className="text-[#4c4f69] dark:text-[#cdd6f4]">
+          {entry.body}
+        </span>
       </div>
     </div>
   ));
