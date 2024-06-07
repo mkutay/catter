@@ -12,7 +12,7 @@ export const metadata = {
 export default function Page() {
   return (
     <section className="prose max-w-prose mx-auto my-0 py-8 px-4 sm:px-8">
-      <h1 className="tracking-tighter">
+      <h1>
         Sign my guestbook!
       </h1>
       <Suspense>
