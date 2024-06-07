@@ -24,6 +24,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
       title: blog.meta.title,
       description: blog.meta.description,
       url: 'https://www.mkutay.dev/posts/' + slug,
+      locale: blog.meta.locale,
     },
   };
 }
@@ -34,12 +35,12 @@ export default function Page({ params }: { params: { slug: string } } ) {
   const formattedDate = format(props.meta.date, 'PP')
 
   return (
-    <div className="max-w-prose mx-auto my-0 py-8 sm:px-8 px-4">
+    <div className="max-w-prose mx-auto my-0 py-8 sm:px-8 px-4 prose">
       <header>
-        <h1 className="font-bold text-3xl mb-4">
+        <h1 className="mb-4">
           {props.meta.title}
         </h1>
-        <p className="my-4 font-semibold">
+        <p className="my-4 text-lg font-semibold">
           {formattedDate}
         </p>
         <p className="my-4 italic text-right">
