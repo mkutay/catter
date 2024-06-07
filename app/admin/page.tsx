@@ -16,8 +16,8 @@ export default async function Page() {
   let entries = await getGuestbookEntries();
 
   return (
-    <section>
-      <h1 className="font-medium text-2xl mb-8 tracking-tighter">admin</h1>
+    <section className="prose max-w-prose mx-auto px-8 py-8">
+      <h1>Admin</h1>
       <Form entries={entries} />
     </section>
   );

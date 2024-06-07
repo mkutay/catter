@@ -36,7 +36,7 @@ export async function saveGuestbookEntry(formData: FormData) {
   let entry = formData.get('entry')?.toString() || '';
   let body = entry.slice(0, 500);
 
-  let random = Math.floor(Math.random() * 100000);
+  let random = Math.floor(Math.random() * 1000000);
 
   await sql`
     INSERT INTO guestbook (id, email, body, created_by, created_at)
