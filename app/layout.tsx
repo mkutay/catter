@@ -36,7 +36,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class">
           <main className="flex flex-col min-h-screen divide-y divide-[#ccd0da] dark:divide-[#313244]">
             <div><NavBar/></div>
-            <div>{children}</div>
+            <div className="flex-1">{children}</div>
             <div><Footer/></div>
           </main>
         </ThemeProvider>
