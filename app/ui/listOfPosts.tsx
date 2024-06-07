@@ -59,7 +59,7 @@ export default function ListOfPosts(params: { lastNumOfPosts: number }) {
           <em className="text-[#6c6f85] dark:text-[#a6adc8] not-prose">
             {post.meta.description}
           </em>
-          <div className="">
+          <div>
             <MDXRemote source={post.meta.excerpt} options={options}/>
           </div>
         </div>
