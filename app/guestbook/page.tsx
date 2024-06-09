@@ -28,11 +28,11 @@ async function GuestbookForm() {
 
   return session?.user ? (
     <>
-      <Form />
-      <SignOut />
+      <Form/>
+      <SignOut/>
     </>
   ) : (
-    <SignIn />
+    <SignIn/>
   );
 }
 
