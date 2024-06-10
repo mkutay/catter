@@ -47,7 +47,7 @@ export default function Page({ params }: { params: { slug: string } } ) {
         <h1 className="mb-4">
           {props.meta.title}
         </h1>
-        <div className="text-lg font-semibold flex items-center">
+        <div className="text-lg font-semibold flex items-center text-[#4c4f69] dark:text-[#cdd6f4]">
           <div>
             {formattedDate}
           </div>
