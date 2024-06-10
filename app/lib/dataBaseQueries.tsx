@@ -35,6 +35,20 @@ export async function getViewsCount(): Promise<
   `;
 }
 
+export async function getLikesCount(): Promise<
+  { slug: string; count: number }[]
+> {
+  if (!process.env.POSTGRES_URL) {
+    return [];
+  }
+
+  noStore();
+  return sql`
+    SELECT slug, count
+    FROM likes
+  `;
+}
+
 export async function getGuestbookEntries() {
   if (!process.env.POSTGRES_URL) {
     return [];

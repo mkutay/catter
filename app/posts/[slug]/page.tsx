@@ -5,6 +5,11 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { parseISO, format } from 'date-fns';
 import remarkGfm from 'remark-gfm';
+import { getViewsCount, getLikesCount } from '@/app/lib/dataBaseQueries';
+import { incrementViews, incrementLikes } from '@/app/lib/dataBaseActions';
+import { Suspense } from 'react';
+import ViewCounter from '@/app/ui/viewCounter';
+import LikeButton from '@/app/ui/likeButton';
 
 const options = {
   mdxOptions: {
@@ -32,17 +37,29 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
 export default function Page({ params }: { params: { slug: string } } ) {
   const props = getPost(params);
 
-  const formattedDate = format(props.meta.date, 'PP')
+  const formattedDate = format(props.meta.date, 'PP');
+
+  incrementViews(props.slug);
 
   return (
-    <div className="max-w-prose mx-auto my-0 py-8 sm:px-8 px-4 prose">
+    <section className="max-w-prose mx-auto my-0 py-8 sm:px-8 px-4 prose">
       <header>
         <h1 className="mb-4">
           {props.meta.title}
         </h1>
-        <p className="my-4 text-lg font-semibold">
-          {formattedDate}
-        </p>
+        <div className="text-lg font-semibold flex items-center">
+          <div>
+            {formattedDate}
+          </div>
+          <div className="px-2">
+            ·
+          </div>
+          <div>
+            <Suspense>
+              <Views slug={props.slug}/>
+            </Suspense>
+          </div>
+        </div>
         <p className="my-4 italic text-right">
           {props.meta.description}
         </p>
@@ -50,8 +67,23 @@ export default function Page({ params }: { params: { slug: string } } ) {
       <main className="prose">
         <MDXRemote source={props.content} options={options}/>
       </main>
-    </div>
+      {/* <Suspense>
+        <Likes slug={props.slug}/>
+      </Suspense> */}
+    </section>
   );
+}
+
+async function Views({ slug }: { slug: string }) {
+  let views = await getViewsCount();
+
+  return <ViewCounter allViews={views} slug={slug}/>;
+}
+
+async function Likes({ slug }: { slug: string }) {
+  let likes = await getLikesCount();
+
+  return <LikeButton allLikes={likes} slug={slug}/>;
 }
 
 export async function generateStaticParams() {

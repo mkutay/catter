@@ -5,13 +5,23 @@ import { type Session } from 'next-auth';
 import { sql } from '@/app/lib/postgres';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
-export async function increment(slug: string) {
+export async function incrementViews(slug: string) {
   noStore();
   await sql`
     INSERT INTO views (slug, count)
     VALUES (${slug}, 1)
     ON CONFLICT (slug)
     DO UPDATE SET count = views.count + 1
+  `;
+}
+
+export async function incrementLikes(slug: string) {
+  noStore();
+  await sql`
+    INSERT INTO likes (slug, count)
+    VALUES (${slug}, 1)
+    ON CONFLICT (slug)
+    DO UPDATE SET count = likes.count + 1
   `;
 }
 
