@@ -41,7 +41,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
       {props.meta.addDescription && (<p className="mb-4 text-right italic">
         {props.meta.description}
       </p>)}
-      <main>
+      <main className="prose-p:mb-0">
         <MDXRemote source={props.content} components={{ListOfPosts}} options={options}/>
       </main>
     </div>
