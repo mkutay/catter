@@ -49,7 +49,7 @@ export default function ListOfPosts(params: { lastNumOfPosts: number }) {
     <div>
       {posts.map((post, index) => (
         <div key={post.slug}>
-          <h2 className="prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] mt-8 mb-4">
+          <h2 className="prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] mt-0 mb-4">
             <Link
               href={'/posts/' + post.slug}
               passHref

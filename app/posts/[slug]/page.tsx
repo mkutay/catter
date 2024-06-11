@@ -44,9 +44,10 @@ export default function Page({ params }: { params: { slug: string } } ) {
   return (
     <section className="max-w-prose mx-auto my-0 py-8 sm:px-8 px-4 prose">
       <header>
-        <h1 className="mb-4">
+        <h1>
           {props.meta.title}
         </h1>
+        <hr/>
         <div className="text-lg font-semibold flex items-center text-[#4c4f69] dark:text-[#cdd6f4]">
           <div>
             {formattedDate}

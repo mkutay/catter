@@ -34,12 +34,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div className="max-w-prose mx-auto my-0 py-8 prose px-4 sm:px-8">
-      <h1 className="">
+      <h1 className="my-0">
         {props.meta.title}
       </h1>
-      <p className="my-4 text-right italic">
+      <hr/>
+      {props.meta.addDescription && (<p className="mb-4 text-right italic">
         {props.meta.description}
-      </p>
+      </p>)}
       <main>
         <MDXRemote source={props.content} components={{ListOfPosts}} options={options}/>
       </main>
