@@ -43,11 +43,13 @@ export default function ListOfPosts(params: { lastNumOfPosts: number }) {
     posts.pop();
   }
 
+  const lastPost = posts[posts.length - 1];
+
   return (
     <div>
-      {posts.map((post) => (
-        <div className="justify-between align-middle" key={post.slug}>
-          <h2 className="prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4]">
+      {posts.map((post, index) => (
+        <div key={post.slug}>
+          <h2 className="prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] mt-8 mb-4">
             <Link
               href={'/posts/' + post.slug}
               passHref
@@ -56,12 +58,13 @@ export default function ListOfPosts(params: { lastNumOfPosts: number }) {
               {post.meta.title}
             </Link>
           </h2>
-          <em className="text-[#6c6f85] dark:text-[#a6adc8] not-prose">
+          <em className="text-[#6c6f85] dark:text-[#a6adc8] not-prose my-4">
             {post.meta.description}
           </em>
-          <div>
+          <div className="prose-p:my-4">
             <MDXRemote source={post.meta.excerpt} options={options}/>
           </div>
+          {index !== posts.length - 1 && <hr/>}
         </div>
       ))}
     </div>
