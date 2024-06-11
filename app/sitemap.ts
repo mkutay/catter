@@ -72,5 +72,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   });
 
+  siteMap.push({
+    url: 'https://www.mkutay.dev/guestbook',
+    lastModified: new Date(),
+    changeFrequency: "daily" as const,
+    priority: 0.75,
+  });
+
   return siteMap;
 }
