@@ -51,7 +51,7 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
   return (
     <div>
       {posts.map((post) => (
-        <div key={post.slug} className="prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] flex items-center text-[#4c4f69] dark:text-[#cdd6f4]">
+        <div key={post.slug} className="text-xl prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] flex items-center text-[#4c4f69] dark:text-[#cdd6f4]">
           <div className="pr-2 text-2xl">
             ›
           </div>

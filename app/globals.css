@@ -12,4 +12,5 @@
   @apply prose-code:text-[#c6d0f5] dark:prose-code:text-[#c6d0f5] prose-code:bg-[#303446] dark:prose-code:bg-[#303446];
   @apply prose-blockquote:text-[#c6d0f5] dark:prose-blockquote:text-[#c6d0f5] prose-blockquote:bg-[#303446] dark:prose-blockquote:bg-[#303446];
   @apply prose-pre:text-[#c6d0f5] dark:prose-pre:text-[#c6d0f5] prose-pre:bg-[#303446] dark:prose-pre:bg-[#303446];
+  @apply prose-headings:tracking-tighter
 }
