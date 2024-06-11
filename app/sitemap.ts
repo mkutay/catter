@@ -44,7 +44,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   let siteMap = [];
   pages.forEach((page) => {
     let lastModified = new Date();
-    console.log(lastModified);
     if (typeof page.meta.date != "undefined") {
       lastModified = new Date(String(page.meta.date));
     }
