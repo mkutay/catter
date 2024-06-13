@@ -9,7 +9,9 @@ export default function Home() {
         Latest Posts
       </h1>
       <hr/>
-      <ListOfPosts lastNumOfPosts={5}/>
+      <Suspense>
+        <ListOfPosts lastNumOfPosts={5}/>
+      </Suspense>
       <hr/>
       <h1 className="mb-6">
         Top Posts
