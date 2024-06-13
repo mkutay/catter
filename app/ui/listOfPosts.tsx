@@ -43,8 +43,6 @@ export default function ListOfPosts(params: { lastNumOfPosts: number }) {
     posts.pop();
   }
 
-  const lastPost = posts[posts.length - 1];
-
   return (
     <div>
       {posts.map((post, index) => (
