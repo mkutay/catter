@@ -6,6 +6,7 @@ import matter from 'gray-matter';
 import { parseISO, format } from 'date-fns';
 import ListOfPosts from '@/app/ui/listOfPosts';
 import remarkGfm from 'remark-gfm';
+import { Suspense } from "react";
 
 const options = {
   mdxOptions: {
@@ -42,7 +43,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         {props.meta.description}
       </p>)}
       <main className="prose-p:mb-0">
-        <MDXRemote source={props.content} components={{ListOfPosts}} options={options}/>
+        <MDXRemote source={props.content} components={{ListOfPosts, Suspense}} options={options}/>
       </main>
     </div>
   );

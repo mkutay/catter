@@ -6,5 +6,8 @@ priority: 0.5
 addDescription: false
 ---
 import { ListOfPosts } from '@/app/ui/listOfPosts';
+import { Suspense } from "react";
 
-<ListOfPosts lastNumOfPosts={10000}/>
+<Suspense>
+  <ListOfPosts lastNumOfPosts={10000}/>
+</Suspense>
