@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import ThemeChanger from '@/app/lib/themeChanger';
+import GithubSvg from '@/app/ui/githubSvg';
 
 const items = [
   {'title': 'Sponsor Me', 'link': 'https://github.com/sponsors/mkutay?o=esb'},
@@ -16,6 +17,13 @@ export default function Footer() {
       </div>
       <div className="float-right sm:px-4 sm:pr-8 px-2 pr-4"><ThemeChanger/></div>
       <div>
+        <Link
+          key="github-svg"
+          href="https://github.com/mkutay"
+          className="float-right inline-block text-center sm:px-4 px-2 hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
+        >
+          <GithubSvg/>
+        </Link>
         {items.map((item) => (
           <Link
             key={item.link}
