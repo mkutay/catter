@@ -10,6 +10,7 @@ import { incrementViews, incrementLikes } from '@/app/lib/dataBaseActions';
 import { Suspense } from 'react';
 import ViewCounter from '@/app/ui/viewCounter';
 import LikeButton from '@/app/ui/likeButton';
+import Comment from '@/app/ui/giscusComments';
 
 const options = {
   mdxOptions: {
@@ -68,9 +69,7 @@ export default function Page({ params }: { params: { slug: string } } ) {
       <main className="prose">
         <MDXRemote source={props.content} options={options}/>
       </main>
-      {/* <Suspense>
-        <Likes slug={props.slug}/>
-      </Suspense> */}
+      <Comment/>
     </section>
   );
 }
