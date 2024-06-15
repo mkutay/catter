@@ -67,8 +67,8 @@ main {
   --color-neutral-muted: #ccd0da;
   --color-accent-fg: #8839ef;
   --color-accent-emphasis: #8839ef;
-  --color-accent-muted: #8839ef;
-  --color-accent-subtle: #8839ef;
+  --color-accent-muted: rgb(136, 57, 239, 40%);
+  --color-accent-subtle: rgb(136, 57, 239, 15%);
   --color-success-fg: #40a02b;
   --color-attention-fg: #fe640b;
   --color-attention-muted: #fe640b;
