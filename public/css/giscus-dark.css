@@ -38,7 +38,7 @@ main {
   --color-btn-hover-border: #313244;
   --color-btn-active-bg: #11111b;
   --color-btn-active-border: #313244;
-  --color-btn-selected-bg: #cba6f7;
+  --color-btn-selected-bg: #181825;
   --color-btn-primary-text: #1e1e2e;
   --color-btn-primary-bg: #a6e3a1;
   --color-btn-primary-border: #313244;
@@ -46,7 +46,7 @@ main {
   --color-btn-primary-inset-shadow: 0 0 transparent;
   --color-btn-primary-hover-bg: #a6e3a1;
   --color-btn-primary-hover-border: #313244;
-  --color-btn-primary-selected-bg: #cba6f7;
+  --color-btn-primary-selected-bg: #181825;
   --color-btn-primary-selected-shadow: 0 0 transparent;
   --color-btn-primary-disabled-text: #1e1e2e;
   --color-btn-primary-disabled-bg: #a6e3a1;

@@ -38,7 +38,7 @@ main {
   --color-btn-hover-border: #ccd0da;
   --color-btn-active-bg: #dce0e8;
   --color-btn-active-border: #ccd0da;
-  --color-btn-selected-bg: #8839ef;
+  --color-btn-selected-bg: #e6e9ef;
   --color-btn-primary-text: #eff1f5;
   --color-btn-primary-bg: #40a02b;
   --color-btn-primary-border: #ccd0da;
@@ -46,7 +46,7 @@ main {
   --color-btn-primary-inset-shadow: 0 0 transparent;
   --color-btn-primary-hover-bg: #40a02b;
   --color-btn-primary-hover-border: #ccd0da;
-  --color-btn-primary-selected-bg: #8839ef;
+  --color-btn-primary-selected-bg: #e6e9ef;
   --color-btn-primary-selected-shadow: 0 0 transparent;
   --color-btn-primary-disabled-text: #eff1f5;
   --color-btn-primary-disabled-bg: #40a02b;
