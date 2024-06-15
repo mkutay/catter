@@ -18,8 +18,8 @@ export default function Comment() {
         reactionsEnabled="1"
         emitMetadata="0"
         inputPosition="top"
-        // data-theme={theme === "dark" ? "http://localhost:3000/css/giscus-dark.css" : "http://localhost:3000/css/giscus-light.css"}
-        theme={theme === "dark" ? "transparent_dark" : "light"}
+        theme={theme === "dark" ? "https://www.mkutay.dev/css/giscus-dark.css" : "https://www.mkutay.dev/css/giscus-light.css"}
+        // theme={theme === "dark" ? "transparent_dark" : "light"}
         loading="lazy"
         lang="en"
       />
