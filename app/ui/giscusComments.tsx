@@ -8,7 +8,7 @@ export default function Comment() {
   const { theme } = useTheme();
 
   return (
-    <div id="comment" className="mx-auto max-w-prose pt-8 not-prose">
+    <div id="comment" className="mx-auto max-w-prose not-prose">
       <Giscus
         repo={giscusConfigs.repo}
         repoId={giscusConfigs.repoId}
