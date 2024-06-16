@@ -54,12 +54,12 @@ export default function Page({ params }: { params: { id: string } }) {
         ))}
       </div>
       <hr/>
-      <Pagination totalPages={Math.ceil(postsLength / 5)} currentId={id}/>
+      <PaginationArrows totalPages={Math.ceil(postsLength / 5)} currentId={id}/>
     </section>
   )
 }
 
-export function Pagination({ totalPages, currentId }: { totalPages: number, currentId: number }) {
+function PaginationArrows({ totalPages, currentId }: { totalPages: number, currentId: number }) {
   const prevPage = currentId - 1 > 0;
   const nextPage = currentId + 1 <= totalPages;
 

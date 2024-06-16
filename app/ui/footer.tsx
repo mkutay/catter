@@ -22,7 +22,7 @@ export default function Footer() {
           href="https://github.com/mkutay"
           className="float-right inline-block text-center sm:px-4 px-2 hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
         >
-          <GithubSvg/>
+          <GithubSvg width={24} height={24}/>
         </Link>
         {items.map((item) => (
           <Link
