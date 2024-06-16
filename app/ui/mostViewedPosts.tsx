@@ -4,8 +4,10 @@ import fs from "fs";
 import matter from 'gray-matter';
 import { parseISO, format } from 'date-fns';
 import Link from "next/link";
-import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 const options = {
   mdxOptions: {
@@ -52,7 +54,7 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
     <ul className="px-0">
       {posts.map((post) => (
         <li key={post.slug} className="px-0 my-0 flex place-items-baseline text-lg prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] text-[#4c4f69] dark:text-[#cdd6f4]">
-          <div className="pr-2 text-2xl">
+          <div className={`pr-2 text-2xl font-bold ${inter.className}`}>
             ⇒
           </div>
           <div>
