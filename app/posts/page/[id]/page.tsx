@@ -82,7 +82,7 @@ function PaginationArrows({ totalPages, currentId }: { totalPages: number, curre
     <div className="flex text-lg justify-between not-prose">
       {!prevPage ? (
         <div className="cursor-auto text-[#6c6f85] dark:text-[#a6adc8]">
-          Previous
+          Prev
         </div>
       ) : (
         <Link
@@ -90,7 +90,7 @@ function PaginationArrows({ totalPages, currentId }: { totalPages: number, curre
           rel="prev"
           className="dark:text-[#cdd6f4] text-[#4c4f69] underline"
         >
-          Previous
+          Prev
         </Link>
       )}
       <em className="dark:text-[#cdd6f4] text-[#4c4f69] place-self-center">
