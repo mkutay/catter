@@ -69,6 +69,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       <main className="prose">
         <MDXRemote source={props.content} options={options}/>
       </main>
+      <hr/>
       <Comment/>
     </section>
   );
