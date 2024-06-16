@@ -22,38 +22,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 
-  const pageFiles = fs.readdirSync(path.join(process.cwd(), 'app/pages/pages/'), 'utf-8');
-
-  const pages = pageFiles.map(filename => {
-    const slug = filename.replace('.mdx', '');
-    const source = fs.readFileSync(path.join(process.cwd(), `app/pages/pages/${slug}.mdx`), 'utf-8');
-    let { data: frontMatter } = matter(source);
-
-    if (typeof frontMatter.date != "undefined") {
-      const formattedDate = format(frontMatter.date, 'PP');
-      frontMatter.date = formattedDate;
-    }
-
-    return {
-      meta: frontMatter,
-      slug: slug,
-    };
-  });
-
+  const postsLength = posts.length;
 
   let siteMap = [];
-  pages.forEach((page) => {
-    let lastModified = new Date();
-    if (typeof page.meta.date != "undefined") {
-      lastModified = new Date(String(page.meta.date));
-    }
-    siteMap.push({
-      url: `https://www.mkutay.dev/pages/${page.slug}`,
-      lastModified: lastModified,
-      changeFrequency: page.meta.changeFrequency,
-      priority: page.meta.priority,
-    });
-  });
 
   posts.forEach((post) => {
     siteMap.push({
@@ -77,6 +48,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "daily" as const,
     priority: 0.75,
   });
+
+  siteMap.push({
+    url: 'https://www.mkutay.dev/about',
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.78,
+  });
+
+  for (let i = 1; i <= Math.ceil(postsLength / 5); i++) {
+    siteMap.push({
+      url: `https://www.mkutay.dev/posts/page/${i}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    })
+  }
 
   return siteMap;
 }

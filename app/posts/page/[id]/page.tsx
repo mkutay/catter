@@ -11,6 +11,21 @@ const options = {
   }
 };
 
+export function generateMetadata({ params }: { params: { id: string } }) {
+  const id = Number(params.id);
+  const postsLength = getPostsLength();
+
+  return {
+    title: `Posts | Page ${id}`,
+    description: `List of all posts for page ${id} out of ${Math.ceil(postsLength / 5)}`,
+    openGraph: {
+      title: `Posts | Page ${id}`,
+      description: `List of all posts for page ${id} out of ${Math.ceil(postsLength / 5)}`,
+      url: `https://www.mkutay.dev/posts/page/${id}`,
+    },
+  };
+}
+
 export default function Page({ params }: { params: { id: string } }) {
   const id = Number(params.id);
 
