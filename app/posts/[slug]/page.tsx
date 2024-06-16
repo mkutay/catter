@@ -1,5 +1,4 @@
 import path from 'path';
-import type { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import fs from 'fs';
 import matter from 'gray-matter';
@@ -11,6 +10,7 @@ import { Suspense } from 'react';
 import ViewCounter from '@/app/ui/viewCounter';
 import LikeButton from '@/app/ui/likeButton';
 import Comment from '@/app/ui/giscusComments';
+import { notFound } from 'next/navigation';
 
 const options = {
   mdxOptions: {
@@ -35,7 +35,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   };
 }
 
-export default function Page({ params }: { params: { slug: string } } ) {
+export default function Page({ params }: { params: { slug: string } }) {
   const props = getPost(params);
 
   const formattedDate = format(props.meta.date, 'PP');
@@ -95,7 +95,12 @@ export async function generateStaticParams() {
 }
 
 function getPost({ slug }: { slug : string }) {
-  const markdownFile = fs.readFileSync(path.join(process.cwd(), `app/posts/posts/${slug}.mdx`), 'utf-8');
+  let markdownFile;
+  try {
+    markdownFile = fs.readFileSync(path.join(process.cwd(), `app/posts/posts/${slug}.mdx`), 'utf-8');
+  } catch(error) {
+    notFound();
+  }
   const { data: frontMatter, content } = matter(markdownFile);
 
   return {

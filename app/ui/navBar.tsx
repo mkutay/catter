@@ -4,8 +4,8 @@ import Link from 'next/link';
 
 const items = [
   {'title': 'Guest Book', 'link': 'guestbook'},
-  {'title': 'Posts', 'link': 'pages/posts'},
-  {'title': 'About', 'link': 'pages/about'},
+  {'title': 'Posts', 'link': 'posts/page/1'},
+  {'title': 'About', 'link': 'about'},
 ];
 
 export default function NavBar() {

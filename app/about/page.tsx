@@ -1,12 +1,8 @@
 import path from 'path';
-import type { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import fs from 'fs';
 import matter from 'gray-matter';
-import { parseISO, format } from 'date-fns';
-import ListOfPosts from '@/app/ui/listOfPosts';
 import remarkGfm from 'remark-gfm';
-import { Suspense } from "react";
 
 const options = {
   mdxOptions: {
@@ -15,9 +11,9 @@ const options = {
   }
 };
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const { slug } = params;
-  const blog = getPage(params);
+export function generateMetadata() {
+  const slug = "about";
+  const blog = getPage();
 
   return {
     title: blog.meta.title,
@@ -30,8 +26,8 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   };
 }
 
-export default async function Page({ params }: { params: { slug: string } }) {
-  const props = getPage(params);
+export default async function Page() {
+  const props = getPage();
 
   return (
     <div className="max-w-prose mx-auto my-0 py-8 prose px-4 sm:px-8">
@@ -43,27 +39,19 @@ export default async function Page({ params }: { params: { slug: string } }) {
         {props.meta.description}
       </p>)}
       <main className="prose-p:mb-0">
-        <MDXRemote source={props.content} components={{ListOfPosts, Suspense}} options={options}/>
+        <MDXRemote source={props.content} options={options}/>
       </main>
     </div>
   );
 }
 
-export async function generateStaticParams() {
-  const files = fs.readdirSync(path.join(process.cwd(), 'app/pages/pages'));
-
-  return files.map(filename => ({
-    slug: filename.replace('.mdx', ''),
-  }));
-}
-
-function getPage({ slug }: { slug : string }) {
-  const markdownFile = fs.readFileSync(path.join(process.cwd(), `app/pages/pages/${slug}.mdx`), 'utf-8');
+function getPage() {
+  const markdownFile = fs.readFileSync(path.join(process.cwd(), `app/about/about.mdx`), 'utf-8');
   const { data: frontMatter, content } = matter(markdownFile);
 
   return {
     meta: frontMatter,
-    slug: slug,
+    slug: "about",
     content: content,
   };
 }
