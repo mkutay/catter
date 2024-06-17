@@ -20,6 +20,7 @@ export default function Footer() {
           key="rss-svg"
           href={{pathname: '/feed.xml'}}
           className="float-right inline-block text-center sm:px-4 px-2 hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
+          prefetch={false}
         >
           <RssSvg width={30} height={30}/>
         </Link>
