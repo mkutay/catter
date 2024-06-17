@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import GithubSvg from '@/app/ui/githubSvg';
-import RssSvg from './rssSvg';
+import RssSvg from '@/app/ui/rssSvg';
 
 const items = [
   {'title': 'Sponsor Me', 'link': 'https://github.com/sponsors/mkutay?o=esb'},
@@ -18,7 +18,7 @@ export default function Footer() {
       <div>
         <Link
           key="rss-svg"
-          href="https://mkutay.dev/feed.xml"
+          href="/feed.xml"
           className="float-right inline-block text-center sm:px-4 px-2 hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
         >
           <RssSvg width={30} height={30}/>

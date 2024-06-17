@@ -1,8 +1,7 @@
 import Rss from 'rss';
 import getPosts from '@/app/lib/getPosts';
-import { metadata } from '@/app/layout';
 
-export function GET() {
+export async function GET() {
   const feed = new Rss({
     title: 'Kutay\'s Blog',
     description: 'A blog where uni student Kutay posts about things he likes, from maths to computer science',
@@ -32,7 +31,7 @@ export function GET() {
 
   return new Response(feed.xml(), {
     headers: {
-      'Content-Type': 'application/xml; charset=utf-8',
+      'Content-Type': 'application/xml',
     },
   });
 }
