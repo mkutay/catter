@@ -28,9 +28,9 @@ export function GET() {
     });
   });
 
-  return new Response(feed.xml(), {
+  return new Response(feed.xml({ indent: true }), {
     headers: {
-      'Content-Type': 'application/xml',
+      'Content-Type': 'application/atom+xml; charset=utf-8',
     },
   });
 }

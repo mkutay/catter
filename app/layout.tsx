@@ -24,6 +24,11 @@ export const metadata: Metadata = {
     locale: 'en_UK',
     type: 'website',
   },
+  alternates: {
+    types: {
+      'application/rss+xml': 'https://mkutay.dev/feed.xml',
+    },
+  },
 };
 
 export default function RootLayout({
