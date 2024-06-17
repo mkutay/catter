@@ -50,17 +50,25 @@ export default function Page({ params }: { params: { slug: string } }) {
         </h1>
         <hr/>
         <div className="text-lg font-semibold flex items-center text-[#4c4f69] dark:text-[#cdd6f4]">
-          <div>
+          <span>
             {formattedDate}
-          </div>
-          <div className="px-2">
+          </span>
+          <span className="px-2">
             ·
-          </div>
-          <div>
+          </span>
+          <span>
             <Suspense>
               <Views slug={props.slug}/>
             </Suspense>
-          </div>
+          </span>
+          <span className="px-2">
+            ·
+          </span>
+          {props.meta.tags.map((tag: string) => (
+            <span className="text-[#5c5f77] dark:text-[#bac2de]" key={tag}>
+              [{tag}]
+            </span>
+          ))}
         </div>
         <p className="my-4 italic text-right">
           {props.meta.description}

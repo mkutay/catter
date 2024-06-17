@@ -25,6 +25,7 @@ export async function GET() {
       url: `https://mkutay.dev/posts/${post.slug}`,
       date: post.meta.date,
       author: 'Mehmet Kutay Bozkurt <hello@mkutay.dev>',
+      categories: post.meta.tags || [],
     });
   });
 
