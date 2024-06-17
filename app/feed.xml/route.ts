@@ -1,15 +1,15 @@
 import Rss from 'rss';
 import getPosts from '@/app/lib/getPosts';
 
-export function GET() {
+export async function GET() {
   const feed = new Rss({
     title: 'Kutay\'s Blog',
     description: 'A blog where uni student Kutay posts about things he likes, from maths to computer science',
     generator: 'RSS for Node and Next.js',
     feed_url: 'https://www.mkutay.dev/feed.xml',
     site_url: 'https://www.mkutay.dev/',
-    managingEditor: 'hello@mkutay.dev (Mehmet Kutay Bozkurt)',
-    webMaster: 'hello@mkutay.dev (Mehmet Kutay Bozkurt)',
+    managingEditor: 'Mehmet Kutay Bozkurt <hello@mkutay.dev>',
+    webMaster: 'Mehmet Kutay Bozkurt <hello@mkutay.dev>',
     copyright: `Copyright ${new Date().getFullYear().toString()}, Mehmet Kutay Bozkurt`,
     language: 'en-UK',
     pubDate: new Date().toUTCString(),
@@ -24,7 +24,7 @@ export function GET() {
       description: post.meta.description,
       url: `https://mkutay.dev/posts/${post.slug}`,
       date: post.meta.date,
-      author: `Mehmet Kutay Bozkurt <hello@mkutay.dev>`,
+      author: 'Mehmet Kutay Bozkurt <hello@mkutay.dev>',
     });
   });
 
