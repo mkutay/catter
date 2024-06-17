@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import ThemeChanger from '@/app/lib/themeChanger';
 
 const items = [
   {'title': 'Guest Book', 'link': 'guestbook'},
@@ -14,6 +15,7 @@ export default function NavBar() {
       <div className="float-left sm:px-4 sm:pl-8 px-2 pl-4 text-[#8839ef] dark:text-[#cba6f7] hover:underline font-extrabold text-xl">
         <Link href="/">Kutay</Link>
       </div>
+      <div className="float-right sm:px-4 sm:pr-8 px-2 pr-4"><ThemeChanger/></div>
       <div className="sm:pr-4 pr-2">
         {items.map((item) => (
           <Link
