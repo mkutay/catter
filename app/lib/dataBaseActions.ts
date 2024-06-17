@@ -12,7 +12,7 @@ export async function incrementViews(slug: string) {
     INSERT INTO views (slug, count)
     VALUES (${slug}, 1)
     ON CONFLICT (slug)
-    DO UPDATE SET count = views.count + 0
+    DO UPDATE SET count = views.count + 1
   `;
 }
 
