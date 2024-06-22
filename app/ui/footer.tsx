@@ -19,10 +19,10 @@ export default function Footer() {
         <Link
           key="rss-svg"
           href="/feed.xml"
-          className="float-right inline-block text-center sm:px-4 px-2 hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
+          className="float-right inline-block text-center sm:pl-4 pl-2  sm:pr-8 pr-4 hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
           prefetch={false}
         >
-          <RssSvg width={30} height={30}/>
+          <RssSvg width={24} height={24}/>
         </Link>
         <Link
           key="github-svg"

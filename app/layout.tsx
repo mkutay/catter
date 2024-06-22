@@ -6,6 +6,7 @@ import NavBar from '@/app/ui/navBar';
 import Footer from "@/app/ui/footer";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import '@/app/katex.min.css';
 
 const inter = Inter({ subsets: ["latin"] });
 

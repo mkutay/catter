@@ -30,7 +30,7 @@ export default async function Page() {
   const props = getPage();
 
   return (
-    <div className="max-w-prose mx-auto my-0 py-8 prose px-4 sm:px-8">
+    <div className="max-w-prose mx-auto my-0 py-8 prose px-4 sm:px-8 prose-h1:my-0">
       <h1 className="my-0">
         {props.meta.title}
       </h1>

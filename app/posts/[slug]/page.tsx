@@ -4,6 +4,9 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { parseISO, format } from 'date-fns';
 import remarkGfm from 'remark-gfm';
+import remarkLint from 'remark-lint';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import { getViewsCount, getLikesCount } from '@/app/lib/dataBaseQueries';
 import { incrementViews, incrementLikes } from '@/app/lib/dataBaseActions';
 import { Suspense } from 'react';
@@ -14,8 +17,8 @@ import { notFound } from 'next/navigation';
 
 const options = {
   mdxOptions: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [],
+    remarkPlugins: [remarkGfm, remarkLint, remarkMath],
+    rehypePlugins: [rehypeKatex],
   }
 };
 
@@ -43,7 +46,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   incrementViews(props.slug);
 
   return (
-    <section className="max-w-prose mx-auto my-0 py-8 sm:px-8 px-4 prose">
+    <section className="max-w-prose mx-auto my-0 py-8 sm:px-8 px-4 prose prose-h1:my-0">
       <header>
         <h1>
           {props.meta.title}

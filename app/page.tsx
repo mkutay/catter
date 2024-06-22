@@ -19,15 +19,15 @@ export default function Home() {
   }[] = getPosts(0, 5);
 
   return (
-    <section className="max-w-prose mx-auto my-0 py-8 prose px-4 sm:px-8">
+    <section className="max-w-prose mx-auto my-0 py-8 prose px-4 sm:px-8 prose-h1:my-0">
       <h1>
         Latest Posts
       </h1>
       <hr/>
       <div>
         {posts.map((post, index) => (
-          <div key={post.slug}>
-            <h2 className="prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] mt-0 mb-4">
+          <div key={post.slug} className="prose-h2:mt-0 prose-h2:mb-4">
+            <h2 className="prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4]">
               <Link
                 href={'/posts/' + post.slug}
                 passHref
@@ -39,7 +39,7 @@ export default function Home() {
             <em className="text-[#6c6f85] dark:text-[#a6adc8] not-prose my-4">
               {post.meta.description}
             </em>
-            <div className="prose-p:my-4">
+            <div className="prose-p:my-4 prose-p:py-0">
               <MDXRemote source={post.meta.excerpt} options={options}/>
             </div>
             {index !== posts.length - 1 && <hr/>}

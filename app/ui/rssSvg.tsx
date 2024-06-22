@@ -3,7 +3,7 @@ export default function RssSvg({ width, height}: { width: number, height: number
     <svg
       width={`${width}`}
       height={`${height}`}
-      viewBox={`-5 -5 ${width} ${height}`}
+      viewBox={`-4 -4 ${width} ${height}`}
       xmlns="http://www.w3.org/2000/svg"
       className="dark:fill-[#cdd6f4] fill-[#4c4f69] hover:fill-[#1e66f5] hover:dark:fill-[#89b4fa]"
     >
