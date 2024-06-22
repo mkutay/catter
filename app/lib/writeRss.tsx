@@ -1,8 +1,9 @@
 import Rss from 'rss';
 import getPosts from '@/app/lib/getPosts';
-import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 
-export async function GET() {
+export default function writeRss() {
   const feed = new Rss({
     title: 'Kutay\'s Blog',
     description: 'A blog where uni student Kutay posts about things he likes, from maths to computer science',
@@ -30,9 +31,5 @@ export async function GET() {
     });
   });
 
-  return new NextResponse(feed.xml({ indent: true }), {
-    headers: {
-      'Content-Type': 'application/xml; charset=utf-8',
-    },
-  });
+  fs.writeFileSync(path.join(process.cwd(), 'public/feed.xml'), feed.xml({ indent: true }));
 }

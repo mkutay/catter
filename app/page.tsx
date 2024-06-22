@@ -4,6 +4,7 @@ import getPosts from "@/app/lib/getPosts";
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
+import writeRss from "./lib/writeRss";
 
 const options = {
   mdxOptions: {
@@ -13,6 +14,8 @@ const options = {
 };
 
 export default function Home() {
+  writeRss();
+
   const posts: {
     slug: string,
     meta: { [key: string]: any }
