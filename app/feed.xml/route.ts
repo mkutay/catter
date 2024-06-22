@@ -1,5 +1,6 @@
 import Rss from 'rss';
 import getPosts from '@/app/lib/getPosts';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   const feed = new Rss({
@@ -29,7 +30,7 @@ export async function GET() {
     });
   });
 
-  return new Response(feed.xml({ indent: true }), {
+  return new NextResponse(feed.xml({ indent: true }), {
     headers: {
       'Content-Type': 'application/xml; charset=utf-8',
     },
