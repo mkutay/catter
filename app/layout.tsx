@@ -10,7 +10,7 @@ import '@/app/katex.min.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const revalidate = 60;
+export const revalidate = 1;
 
 export const metadata: Metadata = {
   title: 'Kutay\'s Blog',
