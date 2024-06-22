@@ -20,7 +20,7 @@ export default function Footer() {
           key="rss-svg"
           href="/feed.xml"
           className="float-right inline-block text-center sm:pl-4 pl-2  sm:pr-8 pr-4 hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
-          prefetch={false}
+          prefetch={true}
         >
           <RssSvg width={24} height={24}/>
         </Link>
