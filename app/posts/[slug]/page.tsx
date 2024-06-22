@@ -52,19 +52,17 @@ export default function Page({ params }: { params: { slug: string } }) {
           {props.meta.title}
         </h1>
         <hr/>
-        <div className="text-lg font-semibold flex items-center text-[#4c4f69] dark:text-[#cdd6f4]">
+        <div className="text-lg font-semibold text-[#4c4f69] dark:text-[#cdd6f4]">
           <span>
             {formattedDate}
           </span>
-          <span className="px-2">
+          <span className="px-2 text-xl">
             ·
           </span>
-          <span>
-            <Suspense>
-              <Views slug={props.slug}/>
-            </Suspense>
-          </span>
-          <span className="px-2">
+          <Suspense>
+            <Views slug={props.slug}/>
+          </Suspense>
+          <span className="px-2 text-xl">
             ·
           </span>
           {props.meta.tags.map((tag: string) => (

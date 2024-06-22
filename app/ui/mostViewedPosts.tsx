@@ -58,21 +58,21 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
             ⇒
           </div>
           <div>
-          <span className="pr-1">
-            <Link
-              href={'/posts/' + post.slug}
-              passHref
-              key={post.slug}
-            >
-              {post.meta.title}
-            </Link>
-          </span>
-          <span className="px-2 text-xl">
-            ·
-          </span>
-          <span className="italic">
-            {`${post.count} views`}
-          </span>
+            <span className="pr-1">
+              <Link
+                href={'/posts/' + post.slug}
+                passHref
+                key={post.slug}
+              >
+                {post.meta.title}
+              </Link>
+            </span>
+            <span className="px-2 text-xl">
+              ·
+            </span>
+            <span className="italic">
+              {`${post.count} views`}
+            </span>
           </div>
         </li>
       ))}
