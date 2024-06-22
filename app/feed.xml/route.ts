@@ -8,8 +8,8 @@ export async function GET() {
     generator: 'RSS for Node and Next.js',
     feed_url: 'https://www.mkutay.dev/feed.xml',
     site_url: 'https://www.mkutay.dev/',
-    managingEditor: 'Mehmet Kutay Bozkurt <hello@mkutay.dev>',
-    webMaster: 'Mehmet Kutay Bozkurt <hello@mkutay.dev>',
+    managingEditor: 'hello@mkutay.dev (Mehmet Kutay Bozkurt)',
+    webMaster: 'hello@mkutay.dev (Mehmet Kutay Bozkurt)',
     copyright: `Copyright ${new Date().getFullYear().toString()}, Mehmet Kutay Bozkurt`,
     language: 'en-UK',
     pubDate: new Date().toUTCString(),
@@ -24,7 +24,7 @@ export async function GET() {
       description: post.meta.description,
       url: `https://mkutay.dev/posts/${post.slug}`,
       date: post.meta.date,
-      author: 'Mehmet Kutay Bozkurt <hello@mkutay.dev>',
+      author: 'hello@mkutay.dev (Mehmet Kutay Bozkurt)',
       categories: post.meta.tags || [],
     });
   });
