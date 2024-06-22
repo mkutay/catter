@@ -7,6 +7,13 @@ import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 export async function incrementViews(slug: string) {
   noStore();
+
+  let session = await getSession();
+  let email = session.user?.email as string;
+
+  if (email === 'hello@mkutay.dev') {
+    return;
+  }
   
   await sql`
     INSERT INTO views (slug, count)
