@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: 'Kutay\'s Blog',
   description: 'A blog where uni student Kutay posts about things he likes, from maths to computer science',
   generator: 'Next.js',
-  applicationName: 'Next.js',
+  applicationName: 'Kutay\'s Blog',
   authors: [{ name: 'Mehmet Kutay Bozkurt', url: 'https://www.mkutay.dev' }],
   creator: 'Mehmet Kutay Bozkurt',
   openGraph: {

@@ -29,6 +29,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   return {
     title: blog.meta.title,
     description: blog.meta.description,
+    keywords: blog.meta.tags,
     openGraph: {
       title: blog.meta.title,
       description: blog.meta.description,
