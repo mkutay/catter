@@ -10,6 +10,8 @@ import '@/app/katex.min.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: 'Kutay\'s Blog',
   description: 'A blog where uni student Kutay posts about things he likes, from maths to computer science',
