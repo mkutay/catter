@@ -22,6 +22,7 @@ export async function incrementViews(slug: string) {
   `;
 }
 
+// dormant
 export async function incrementLikes(slug: string) {
   noStore();
   await sql`
