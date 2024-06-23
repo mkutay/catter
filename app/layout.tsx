@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: '%s | Kutay\'s Blog',
     default: 'Kutay\'s Blog',
   },
-  description: 'A blog where uni student Kutay posts about things he likes, from mathematics to computer science',
+  description: 'A blog where university student Kutay posts about things he likes, from mathematics to computer science.',
   generator: 'Next.js',
   applicationName: 'Kutay\'s Blog',
   referrer: 'origin-when-cross-origin',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   keywords: ['computer science', 'mathematics', 'personal blog'],
   openGraph: {
     title: 'Kutay\'s Blog',
-    description: 'A blog where uni student Kutay posts about things he likes, from mathematics to computer science',
+    description: 'A blog where university student Kutay posts about things he likes, from mathematics to computer science.',
     url: 'https://www.mkutay.dev',
     siteName: 'Kutay\'s Blog',
     locale: 'en_UK',

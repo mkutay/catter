@@ -6,7 +6,7 @@ import RssSvg from '@/app/ui/rssSvg';
 
 const items = [
   {'title': 'Sponsor Me', 'link': 'https://github.com/sponsors/mkutay?o=esb'},
-  {'title': 'Résumé', 'link': 'https://www.mkutay.dev/pdfs/mehmet-kutay-bozkurt.pdf'},
+  {'title': 'CV', 'link': '/pdfs/mehmet-kutay-bozkurt.pdf'},
 ];
 
 export default function Footer() {
