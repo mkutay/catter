@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     types: {
-      'text/rss+xml': 'https://mkutay.dev/feed.xml',
+      'application/rss+xml': 'https://mkutay.dev/feed.xml',
     },
   },
 };
