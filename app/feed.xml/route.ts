@@ -32,7 +32,7 @@ export function GET() {
 
   return new NextResponse(feed.xml({ indent: true }), {
     headers: {
-      'Content-Type': 'text/xml; charset=utf-8',
+      'Content-Type': 'text/rss+xml; charset=utf-8',
     },
   });
 }
