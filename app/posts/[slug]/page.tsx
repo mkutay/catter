@@ -25,6 +25,7 @@ const options = {
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const blog = getPost(params);
+  const formattedDate = format(blog.meta.date, 'PP');
 
   return {
     title: blog.meta.title,
@@ -35,6 +36,8 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
       description: blog.meta.description,
       url: 'https://www.mkutay.dev/posts/' + slug,
       locale: blog.meta.locale,
+      type: 'article',
+      publishedTime: formattedDate,
     },
   };
 }

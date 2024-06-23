@@ -5,6 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
+      crawlDelay: 86400,
     },
     sitemap: 'https://www.mkutay.dev/sitemap.xml',
   }

@@ -13,15 +13,22 @@ const inter = Inter({ subsets: ["latin"] });
 export const revalidate = 1;
 
 export const metadata: Metadata = {
-  title: 'Kutay\'s Blog',
-  description: 'A blog where uni student Kutay posts about things he likes, from maths to computer science',
+  metadataBase: new URL(`https://www.mkutay.dev`),
+  title: {
+    template: '%s | Kutay\'s Blog',
+    default: 'Kutay\'s Blog',
+  },
+  description: 'A blog where uni student Kutay posts about things he likes, from mathematics to computer science',
   generator: 'Next.js',
   applicationName: 'Kutay\'s Blog',
+  referrer: 'origin-when-cross-origin',
   authors: [{ name: 'Mehmet Kutay Bozkurt', url: 'https://www.mkutay.dev' }],
   creator: 'Mehmet Kutay Bozkurt',
+  publisher: 'Mehmet Kutay Bozkurt',
+  keywords: ['computer science', 'mathematics', 'personal blog'],
   openGraph: {
     title: 'Kutay\'s Blog',
-    description: 'A blog where uni student Kutay posts about things he likes, from maths to computer science',
+    description: 'A blog where uni student Kutay posts about things he likes, from mathematics to computer science',
     url: 'https://www.mkutay.dev',
     siteName: 'Kutay\'s Blog',
     locale: 'en_UK',
@@ -31,6 +38,12 @@ export const metadata: Metadata = {
     types: {
       'application/rss+xml': 'https://mkutay.dev/feed.xml',
     },
+    canonical: './',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: true,
   },
 };
 
