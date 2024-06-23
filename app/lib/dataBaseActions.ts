@@ -8,10 +8,9 @@ import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 export async function incrementViews(slug: string) {
   noStore();
 
-  let session = await getSession();
-  let email = session.user?.email as string;
+  let session = await auth();
 
-  if (email === 'hello@mkutay.dev') {
+  if (session && session.user && session.user?.email as string === 'hello@mkutay.dev') {
     return;
   }
   
