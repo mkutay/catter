@@ -3,24 +3,10 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
 import { parseISO, format } from 'date-fns';
+import getPosts from './lib/getPosts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const postFiles = fs.readdirSync(path.join(process.cwd(), 'app/posts/posts/'), 'utf-8');
-
-  const posts = postFiles.map(filename => {
-    const slug = filename.replace('.mdx', '');
-    const source = fs.readFileSync(path.join(process.cwd(), `app/posts/posts/${slug}.mdx`), 'utf-8');
-    let { data: frontMatter } = matter(source);
-
-    const formattedDate = format(frontMatter.date, 'PP');
-
-    frontMatter.date = formattedDate;
-
-    return {
-      meta: frontMatter,
-      slug: slug,
-    };
-  });
+  const posts = getPosts(0, 100000);
 
   const postsLength = posts.length;
 

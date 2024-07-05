@@ -14,7 +14,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <section className="prose mx-auto max-w-prose sm:px-8 px-4 py-8 prose-h1:my-0">
+    <section className="prose mx-auto max-w-prose px-4 py-8 prose-h1:my-0">
       <h1>
         ERROR
       </h1>

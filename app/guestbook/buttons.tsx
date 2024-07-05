@@ -1,7 +1,7 @@
 'use client';
 
 import { signIn, signOut } from 'next-auth/react';
-import GithubSvg from '@/app/ui/githubSvg';
+import { GithubSvg } from '@/app/ui/icons';
 
 export function SignOut() {
   return (

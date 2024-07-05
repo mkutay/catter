@@ -2,7 +2,7 @@ import path from 'path';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import fs from 'fs';
 import matter from 'gray-matter';
-import { parseISO, format } from 'date-fns';
+import { format } from 'date-fns';
 import remarkGfm from 'remark-gfm';
 import remarkLint from 'remark-lint';
 import remarkMath from 'remark-math';
@@ -14,12 +14,21 @@ import ViewCounter from '@/app/ui/viewCounter';
 import LikeButton from '@/app/ui/likeButton';
 import Comment from '@/app/ui/giscusComments';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 
 const options = {
   mdxOptions: {
     remarkPlugins: [remarkGfm, remarkLint, remarkMath],
     rehypePlugins: [rehypeKatex],
   }
+};
+
+const components = {
+  Image: (props: any) => (
+    <div className="my-8 flex place-content-center">
+      <Image {...props} className="my-0"/>
+    </div>
+  ),
 };
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
@@ -50,7 +59,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   incrementViews(props.slug);
 
   return (
-    <section className="max-w-prose mx-auto my-0 py-8 sm:px-8 px-4 prose prose-h1:my-0">
+    <section className="max-w-prose mx-auto my-0 py-8 px-4 prose prose-h1:my-0">
       <header>
         <h1>
           {props.meta.title}
@@ -80,7 +89,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         </p>
       </header>
       <main className="prose">
-        <MDXRemote source={props.content} options={options}/>
+        <MDXRemote source={props.content} options={options} components={components}/>
       </main>
       <hr/>
       <Comment/>
