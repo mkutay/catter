@@ -16,11 +16,11 @@ export function generateMetadata({ params }: { params: { id: string } }) {
   const postsLength = getPostsLength();
 
   return {
-    title: `Posts | Page ${id}`,
-    description: `List of all posts for page ${id} out of ${Math.ceil(postsLength / 5)}`,
+    title: `Posts On the Blog | Page ${id}`,
+    description: `List of all the latest posts on Kutay's Blog, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
     openGraph: {
       title: `Posts | Page ${id}`,
-      description: `List of all posts for page ${id} out of ${Math.ceil(postsLength / 5)}`,
+      description: `List of all the latest posts on Kutay's Blog, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
       url: `https://www.mkutay.dev/posts/page/${id}`,
     },
   };

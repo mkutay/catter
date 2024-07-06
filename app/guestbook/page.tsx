@@ -5,15 +5,15 @@ import { Suspense } from 'react';
 import Form from '@/app/guestbook/form';
 
 export const metadata = {
-  title: 'Guestbook',
-  description: 'Sign my guestbook and leave your mark.',
+  title: 'Sign and Mark My Guestbook',
+  description: 'Sign my guestbook and leave your mark on this infinite internet, here.',
 };
 
 export default function Page() {
   return (
     <section className="prose max-w-prose mx-auto my-0 py-8 px-4 prose-h1:my-0">
       <h1 className="mb-0">
-        Sign my guestbook!
+        Sign My Guestbook!
       </h1>
       <hr/>
       <Suspense>

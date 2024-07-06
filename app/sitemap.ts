@@ -16,7 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     siteMap.push({
       url: `https://www.mkutay.dev/posts/${post.slug}`,
       lastModified: new Date(String(post.meta.date)),
-      changeFrequency: 'monthly',
+      changeFrequency: 'yearly',
       priority: 0.75,
     });
   });
@@ -31,14 +31,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   siteMap.push({
     url: 'https://www.mkutay.dev/guestbook',
     lastModified: new Date(),
-    changeFrequency: "daily" as const,
+    changeFrequency: "monthly" as const,
     priority: 0.75,
   });
 
   siteMap.push({
     url: 'https://www.mkutay.dev/about',
     lastModified: new Date(),
-    changeFrequency: "monthly" as const,
+    changeFrequency: "yearly" as const,
     priority: 0.78,
   });
 

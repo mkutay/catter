@@ -59,9 +59,6 @@ export default function ThemeChanger() {
           </svg>
         )}
       </button>
-      {
-        (numOfChanges % 20 == 0) && <p>stawwwp itt</p>
-      }
     </div>
   );
 }

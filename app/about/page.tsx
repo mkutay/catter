@@ -13,7 +13,7 @@ const options = {
 
 export function generateMetadata() {
   const slug = "about";
-  const blog = getPage();
+  const blog = getPage(slug);
 
   return {
     title: blog.meta.title,
@@ -27,7 +27,8 @@ export function generateMetadata() {
 }
 
 export default async function Page() {
-  const props = getPage();
+  const slug = "about";
+  const props = getPage(slug);
 
   return (
     <div className="max-w-prose mx-auto my-0 py-8 prose px-4 prose-h1:my-0">
@@ -35,9 +36,9 @@ export default async function Page() {
         {props.meta.title}
       </h1>
       <hr/>
-      {props.meta.addDescription && (<p className="mb-4 text-right italic">
+      <p className="mb-4 text-right italic">
         {props.meta.description}
-      </p>)}
+      </p>
       <main className="prose-p:mb-0">
         <MDXRemote source={props.content} options={options}/>
       </main>
@@ -45,13 +46,13 @@ export default async function Page() {
   );
 }
 
-function getPage() {
+function getPage(slug: string) {
   const markdownFile = fs.readFileSync(path.join(process.cwd(), `app/about/about.mdx`), 'utf-8');
   const { data: frontMatter, content } = matter(markdownFile);
 
   return {
     meta: frontMatter,
-    slug: "about",
+    slug: slug,
     content: content,
   };
 }

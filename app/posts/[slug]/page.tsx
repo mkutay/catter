@@ -7,11 +7,10 @@ import remarkGfm from 'remark-gfm';
 import remarkLint from 'remark-lint';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import { getViewsCount, getLikesCount } from '@/app/lib/dataBaseQueries';
-import { incrementViews, incrementLikes } from '@/app/lib/dataBaseActions';
+import { getViewsCount } from '@/app/lib/dataBaseQueries';
+import { incrementViews } from '@/app/lib/dataBaseActions';
 import { Suspense } from 'react';
 import ViewCounter from '@/app/ui/viewCounter';
-import LikeButton from '@/app/ui/likeButton';
 import Comment from '@/app/ui/giscusComments';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -101,12 +100,6 @@ async function Views({ slug }: { slug: string }) {
   let views = await getViewsCount();
 
   return <ViewCounter allViews={views} slug={slug}/>;
-}
-
-async function Likes({ slug }: { slug: string }) {
-  let likes = await getLikesCount();
-
-  return <LikeButton allLikes={likes} slug={slug}/>;
 }
 
 export async function generateStaticParams() {
