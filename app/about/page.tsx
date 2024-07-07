@@ -47,7 +47,7 @@ export default async function Page() {
 }
 
 function getPage(slug: string) {
-  const markdownFile = fs.readFileSync(path.join(process.cwd(), `pages/about.mdx`), 'utf-8');
+  const markdownFile = fs.readFileSync(path.join(process.cwd(), `content/pages/about.mdx`), 'utf-8');
   const { data: frontMatter, content } = matter(markdownFile);
 
   return {

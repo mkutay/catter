@@ -15,6 +15,7 @@ import Comment from '@/app/ui/giscusComments';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import EmailSubButton from '@/app/ui/emailSubButton';
 
 const options = {
   mdxOptions: {
@@ -97,6 +98,8 @@ export default function Page({ params }: { params: { slug: string } }) {
         <MDXRemote source={props.content} options={options} components={components}/>
       </main>
       <hr/>
+      <EmailSubButton/>
+      <hr/>
       <Comment/>
     </section>
   );
@@ -109,7 +112,7 @@ async function Views({ slug }: { slug: string }) {
 }
 
 export async function generateStaticParams() {
-  const files = fs.readdirSync(path.join(process.cwd(), 'posts'));
+  const files = fs.readdirSync(path.join(process.cwd(), 'content/posts'));
 
   return files.map(filename => ({
     slug: filename.replace('.mdx', ''),
@@ -119,7 +122,7 @@ export async function generateStaticParams() {
 function getPost({ slug }: { slug : string }) {
   let markdownFile;
   try {
-    markdownFile = fs.readFileSync(path.join(process.cwd(), `posts/${slug}.mdx`), 'utf-8');
+    markdownFile = fs.readFileSync(path.join(process.cwd(), `content/posts/${slug}.mdx`), 'utf-8');
   } catch(error) {
     notFound();
   }

@@ -19,11 +19,11 @@ const options = {
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
   let views = await getViewsCount();
 
-  const postFiles = fs.readdirSync(path.join(process.cwd(), 'posts/'), 'utf-8');
+  const postFiles = fs.readdirSync(path.join(process.cwd(), 'content/posts/'), 'utf-8');
 
   const posts = postFiles.map(filename => {
     const slug = filename.replace('.mdx', '');
-    const source = fs.readFileSync(path.join(process.cwd(), `posts/${slug}.mdx`), 'utf-8');
+    const source = fs.readFileSync(path.join(process.cwd(), `content/posts/${slug}.mdx`), 'utf-8');
     let { data: frontMatter } = matter(source);
 
     const formattedDate = format(frontMatter.date, 'PP');
