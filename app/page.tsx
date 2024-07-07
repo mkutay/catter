@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import writeRss from "./lib/writeRss";
+import EmailSubButton from "./ui/emailSubButton";
 
 const options = {
   mdxOptions: {
@@ -49,6 +50,8 @@ export default function Home() {
           </div>
         ))}
       </div>
+      <hr/>
+      <EmailSubButton/>
       <hr/>
       <h1 className="mb-6">
         Top Posts
