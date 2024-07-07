@@ -4,11 +4,11 @@ import matter from 'gray-matter';
 import path from 'path';
 
 export default function getPosts(startInd: number, endInd: number) { // half-open interval, ie. [startInd, endInd)
-  const postFiles = fs.readdirSync(path.join(process.cwd(), 'app/posts/posts/'), 'utf-8');
+  const postFiles = fs.readdirSync(path.join(process.cwd(), 'posts/'), 'utf-8');
 
   const posts = postFiles.map(filename => {
     const slug = filename.replace('.mdx', '');
-    const source = fs.readFileSync(path.join(process.cwd(), `app/posts/posts/${slug}.mdx`), 'utf-8');
+    const source = fs.readFileSync(path.join(process.cwd(), `posts/${slug}.mdx`), 'utf-8');
     let { data: frontMatter } = matter(source);
 
     const formattedDate = format(frontMatter.date, 'PP');

@@ -14,6 +14,7 @@ import ViewCounter from '@/app/ui/viewCounter';
 import Comment from '@/app/ui/giscusComments';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const options = {
   mdxOptions: {
@@ -25,8 +26,13 @@ const options = {
 const components = {
   Image: (props: any) => (
     <div className="my-8 flex place-content-center">
-      <Image {...props} className="my-0"/>
+      <Image {...props} alt={props.alt} className="my-0"/>
     </div>
+  ),
+  Link: (props: any) => (
+    <Link {...props}>
+      {props.children}
+    </Link>
   ),
 };
 
@@ -103,7 +109,7 @@ async function Views({ slug }: { slug: string }) {
 }
 
 export async function generateStaticParams() {
-  const files = fs.readdirSync(path.join(process.cwd(), 'app/posts/posts'));
+  const files = fs.readdirSync(path.join(process.cwd(), 'posts'));
 
   return files.map(filename => ({
     slug: filename.replace('.mdx', ''),
@@ -113,7 +119,7 @@ export async function generateStaticParams() {
 function getPost({ slug }: { slug : string }) {
   let markdownFile;
   try {
-    markdownFile = fs.readFileSync(path.join(process.cwd(), `app/posts/posts/${slug}.mdx`), 'utf-8');
+    markdownFile = fs.readFileSync(path.join(process.cwd(), `posts/${slug}.mdx`), 'utf-8');
   } catch(error) {
     notFound();
   }
