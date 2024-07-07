@@ -4,6 +4,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
+import TagsButtonGrid from "@/components/tagsButtonGrid";
 
 const options = {
   mdxOptions: {
@@ -17,8 +18,8 @@ export function generateMetadata({ params }: { params: { id: string } }) {
   const postsLength = getPostsLength();
 
   return {
-    title: `Posts On the Blog | Page ${id}`,
-    description: `List of all the latest posts on ${siteConfig.name}, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
+    title: `Posts and Tags On the Blog | Page ${id}`,
+    description: `List of all the latest posts and tags on ${siteConfig.name}, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
     openGraph: {
       title: `Posts | Page ${id}`,
       description: `List of all the latest posts on ${siteConfig.name}, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
@@ -48,7 +49,7 @@ export default function Page({ params }: { params: { id: string } }) {
   return (
     <section className="max-w-prose mx-auto my-0 py-8 prose px-4 prose-h1:my-0">
       <h1>
-        Posts
+        List of All Posts and Tags
       </h1>
       <hr/>
       <div>
@@ -75,6 +76,8 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
       <hr/>
       <PaginationArrows totalPages={Math.ceil(postsLength / 5)} currentId={id}/>
+      <hr/>
+      <TagsButtonGrid/>
     </section>
   )
 }

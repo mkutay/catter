@@ -99,8 +99,8 @@ export default function Page({ params }: { params: { slug: string } }) {
               ·
             </span>
             {props.meta.tags.map((tag: string) => (
-              <span key={tag} className="text-[#5c5f77] dark:text-[#bac2de]">
-                [ <Link className="text-[#5c5f77] dark:text-[#bac2de]" href={`/tags/${tag}`}>{tag}</Link> ]
+              <span key={tag} className="text-[#5c5f77] dark:text-[#bac2de] prose-a:text-[#5c5f77] prose-a:dark:text-[#bac2de]">
+                [ <Link href={`/tags/${tag}`}>{tag}</Link> ]
               </span>
             ))}
           </div>

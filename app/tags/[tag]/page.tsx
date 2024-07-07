@@ -15,7 +15,7 @@ export function generateMetadata({ params }: { params: { tag: string } }) {
   const tag = params.tag;
 
   return {
-    title: `Tags On the Blog | Tag ${tag}`,
+    title: `Tags On the Blog | Tag: ${tag}`,
     description: `List of all the tags that posts have on Kutay's Blog, currently on displaying tag ${tag}.`,
     openGraph: {
       title: `Tags On the Blog | Tag ${tag}`,
@@ -42,7 +42,7 @@ export default function Page({ params }: { params: { tag: string } }) {
   return (
     <section className="max-w-prose mx-auto my-8 prose px-4 prose-h1:my-0">
       <h1>
-        Tag: <span className="text-[#1e66f5] dark:text-[#89b4fa]">{tag}</span>
+        Posts With Tag: <span className="text-[#1e66f5] dark:text-[#89b4fa]">{tag.charAt(0).toUpperCase() + tag.slice(1)}</span>
       </h1>
       <hr/>
       <div>
