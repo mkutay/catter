@@ -10,12 +10,12 @@ export const siteConfig = {
       href: "/about",
     },
     {
-      label: "Posts",
-      href: "/posts/page/1",
-    },
-    {
       label: "Guest Book",
       href: "/guestbook",
+    },
+    {
+      label: "Posts",
+      href: "/posts/page/1",
     },
   ],
   navMenuItems: [
