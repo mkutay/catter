@@ -26,7 +26,7 @@ export default function ThemeChanger() {
     <div>
       <button
         onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-        className="border dark:border-[#cdd6f4] border-[#4c4f69] rounded-md w-6 h-6 flex items-center justify-center"
+        className="border dark:border-[#cdd6f4] border-[#4c4f69] rounded-md w-7 h-7 flex items-center justify-center"
       >
         <span className="sr-only">Toggle mode</span>
         {getRandomInt(2) !== 1 ? (

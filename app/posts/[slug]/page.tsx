@@ -65,45 +65,56 @@ export default function Page({ params }: { params: { slug: string } }) {
   incrementViews(props.slug);
 
   return (
-    <section className="max-w-prose mx-auto my-0 py-8 px-4 prose prose-h1:my-0">
-      <header>
-        <h1>
-          {props.meta.title}
-        </h1>
-        <hr/>
-        <div className="text-lg font-semibold text-[#4c4f69] dark:text-[#cdd6f4]">
-          <span>
-            {formattedDate}
-          </span>
-          <span className="px-2 text-xl">
-            ·
-          </span>
-          <Suspense>
-            <Views slug={props.slug}/>
-          </Suspense>
-          <span className="px-2 text-xl">
-            ·
-          </span>
-          {props.meta.tags.map((tag: string) => (
-            <span className="text-[#5c5f77] dark:text-[#bac2de]" key={tag}>
-              [{tag}]
+    <div className="my-8">
+      {props.meta.coverImageSrc && (<Image
+        alt={`${props.meta.title} post cover image`}
+        src={props.meta.coverImageSrc}
+        width={0}
+        height={0}
+        sizes="100vw"
+        style={{ width: "100%", height: "auto" }}
+        className="max-w-4xl mx-auto mb-8 pt-2"
+      />)}
+      <section className="max-w-prose mx-auto px-4 prose prose-h1:my-0">
+        <header>
+          <h1>
+            {props.meta.title}
+          </h1>
+          <hr/>
+          <div className="text-lg font-semibold text-[#4c4f69] dark:text-[#cdd6f4]">
+            <span>
+              {formattedDate}
             </span>
-          ))}
-        </div>
-        <p className="my-4 italic text-right">
-          {props.meta.description}
-        </p>
-      </header>
-      <main className="prose">
-        <MDXRemote source={props.content} options={options} components={components}/>
-      </main>
-      <hr/>
-      <EmailSubButton/>
-      <hr/>
-      <Suspense>
-        <Comment/>
-      </Suspense>
-    </section>
+            <span className="px-2 text-xl">
+              ·
+            </span>
+            <Suspense>
+              <Views slug={props.slug}/>
+            </Suspense>
+            <span className="px-2 text-xl">
+              ·
+            </span>
+            {props.meta.tags.map((tag: string) => (
+              <span className="text-[#5c5f77] dark:text-[#bac2de]" key={tag}>
+                [{tag}]
+              </span>
+            ))}
+          </div>
+          <p className="my-4 italic text-right">
+            {props.meta.description}
+          </p>
+        </header>
+        <main className="prose">
+          <MDXRemote source={props.content} options={options} components={components}/>
+        </main>
+        <hr/>
+        <EmailSubButton/>
+        <hr/>
+        <Suspense>
+          <Comment/>
+        </Suspense>
+      </section>
+    </div>
   );
 }
 
