@@ -7,14 +7,14 @@ import { siteConfig } from '@/config/site';
 
 export default function NavBar() {
   return (
-    <nav className="my-8 max-w-prose mx-auto flex flex-row items-center">
-      <div className="mr-auto px-4 text-[#8839ef] dark:text-[#cba6f7] hover:underline font-extrabold text-lg gap-2 flex flex-row items-center">
+    <nav className="my-8 max-w-prose mx-auto flex flex-row items-center place-items-center">
+      <div className="mr-auto place-items-center px-4 text-[#8839ef] dark:text-[#cba6f7] hover:underline font-extrabold text-lg gap-2 flex flex-row items-center">
         <Link href="/" className="flex flex-row items-center gap-2">
           <Logo className="flex-none"/>
           Kutay&#39;s Blog
         </Link>
       </div>
-      <div className="ml-auto flex flex-row">
+      <div className="ml-auto flex flex-row place-items-center">
         {siteConfig.navItems.map((item) => (
           <Link
             key={item.href}
