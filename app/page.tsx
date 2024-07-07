@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import { MostViewedPosts } from "@/app/ui/mostViewedPosts";
+import { MostViewedPosts } from "@/components/mostViewedPosts";
 import getPosts from "@/app/lib/getPosts";
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import writeRss from "./lib/writeRss";
-import EmailSubButton from "./ui/emailSubButton";
+import EmailSubButton from "../components/emailSubButton";
 
 const options = {
   mdxOptions: {
@@ -15,8 +15,6 @@ const options = {
 };
 
 export default function Home() {
-  // writeRss();
-
   const posts: {
     slug: string,
     meta: { [key: string]: any }

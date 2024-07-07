@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { GithubSvg } from '@/app/ui/icons';
-import { RssSvg } from '@/app/ui/icons';
+import { GithubSvg } from '@/components/icons';
+import { RssSvg } from '@/components/icons';
 
 const items = [
   {'title': 'Sponsor Me', 'link': 'https://github.com/sponsors/mkutay?o=esb'},

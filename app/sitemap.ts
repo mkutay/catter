@@ -1,9 +1,5 @@
 import { MetadataRoute } from 'next';
-import fs from 'fs';
-import matter from 'gray-matter';
-import path from 'path';
-import { parseISO, format } from 'date-fns';
-import getPosts from './lib/getPosts';
+import getPosts from '@/app/lib/getPosts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getPosts(0, 100000);

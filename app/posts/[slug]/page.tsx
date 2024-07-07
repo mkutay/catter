@@ -10,13 +10,13 @@ import rehypeKatex from 'rehype-katex';
 import { getViewsCount } from '@/app/lib/dataBaseQueries';
 import { incrementViews } from '@/app/lib/dataBaseActions';
 import { Suspense } from 'react';
-import ViewCounter from '@/app/ui/viewCounter';
-import Comment from '@/app/ui/giscusComments';
+import ViewCounter from '@/components/viewCounter';
+import Comment from '@/components/giscusComments';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import EmailSubButton from '@/app/ui/emailSubButton';
-import metadata from '@/app/layout';
+import EmailSubButton from '@/components/emailSubButton';
+import { siteConfig } from '@/config/site';
 
 const options = {
   mdxOptions: {
@@ -52,7 +52,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
     openGraph: {
       title: blog.meta.title,
       description: blog.meta.description,
-      url: 'https://www.mkutay.dev/posts/' + slug,
+      url: siteConfig.url + '/posts/' + slug,
       locale: blog.meta.locale,
       type: 'article',
       publishedTime: formattedDate,
