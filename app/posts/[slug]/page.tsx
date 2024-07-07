@@ -100,7 +100,9 @@ export default function Page({ params }: { params: { slug: string } }) {
       <hr/>
       <EmailSubButton/>
       <hr/>
-      <Comment/>
+      <Suspense>
+        <Comment/>
+      </Suspense>
     </section>
   );
 }
