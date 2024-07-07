@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import { notFound } from "next/navigation";
+import { siteConfig } from "@/config/site";
 
 const options = {
   mdxOptions: {
@@ -17,16 +18,20 @@ export function generateMetadata({ params }: { params: { id: string } }) {
 
   return {
     title: `Posts On the Blog | Page ${id}`,
-    description: `List of all the latest posts on Kutay's Blog, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
+    description: `List of all the latest posts on ${siteConfig.name}, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
     openGraph: {
       title: `Posts | Page ${id}`,
-      description: `List of all the latest posts on Kutay's Blog, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
-      url: `https://www.mkutay.dev/posts/page/${id}`,
+      description: `List of all the latest posts on ${siteConfig.name}, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
+      url: `${siteConfig.url}/posts/page/${id}`,
     },
   };
 }
 
 export default function Page({ params }: { params: { id: string } }) {
+  if (/^-?\d+$/.test(params.id) == false) {
+    notFound();
+  }
+  
   const id = Number(params.id);
 
   const postsLength = getPostsLength();
