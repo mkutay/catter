@@ -33,6 +33,7 @@ export const metadata: Metadata = {
     siteName: 'Kutay\'s Blog',
     locale: 'en_UK',
     type: 'website',
+    images: ['images/favicon.png'],
   },
   alternates: {
     types: {
@@ -56,7 +57,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} text-[#4c4f69] bg-[#eff1f5] dark:text-[#cdd6f4] dark:bg-[#1e1e2e]`}>
         <ThemeProvider attribute="class">
-          <main className="grid grid-cols-1 min-h-screen divide-y divide-[#ccd0da] dark:divide-[#313244]">
+          <main className="flex flex-col min-h-screen divide-y divide-[#ccd0da] dark:divide-[#313244]">
             <div><NavBar/></div>
             <div className="flex-1">{children}</div>
             <div><Footer/></div>

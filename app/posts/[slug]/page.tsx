@@ -16,6 +16,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import EmailSubButton from '@/app/ui/emailSubButton';
+import metadata from '@/app/layout';
 
 const options = {
   mdxOptions: {
@@ -42,6 +43,8 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   const blog = getPost(params);
   const formattedDate = format(blog.meta.date, 'PP');
 
+  const coverSquare = blog.meta.coverSquare || 'images/favicon.png';
+
   return {
     title: blog.meta.title,
     description: blog.meta.description,
@@ -53,6 +56,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
       locale: blog.meta.locale,
       type: 'article',
       publishedTime: formattedDate,
+      images: [coverSquare],
     },
   };
 }
@@ -66,9 +70,9 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div className="my-8">
-      {props.meta.coverImageSrc && (<Image
+      {props.meta.cover && (<Image
         alt={`${props.meta.title} post cover image`}
-        src={props.meta.coverImageSrc}
+        src={props.meta.cover}
         width={0}
         height={0}
         sizes="100vw"
