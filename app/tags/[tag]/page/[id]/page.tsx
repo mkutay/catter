@@ -5,6 +5,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from 'remark-gfm';
 import PaginationArrows from "@/components/paginationArrows";
 import { notFound } from "next/navigation";
+import TagsButtonGrid from "@/components/tagsButtonGrid";
 
 const options = {
   mdxOptions: {
@@ -13,16 +14,27 @@ const options = {
   }
 };
 
-export function generateMetadata({ params }: { params: { tag: string } }) {
-  const tag = params.tag;
+export function generateMetadata({ params }: { params: { tag: string, id: string } }) {
+  const { id, tag } = params;
+  const posts = getPosts(0, 100000);
+  let postsThatHaveTag: {
+    slug: string,
+    meta: { [key: string]: any }
+  }[] = [];
+
+  posts.forEach((post) => {
+    if (post.meta.tags.includes(tag)) {
+      postsThatHaveTag.push(post);
+    }
+  });
 
   return {
-    title: `Tags On the Blog | Tag: ${tag}`,
-    description: `List of all the tags that posts have on Kutay's Blog, currently on displaying tag ${tag}.`,
+    title: `Posts With Tag: ${tag} | Page ${id}`,
+    description: `List of all the tags that posts have on Kutay's Blog, currently displaying tag ${tag} on page ${id} out of ${Math.ceil(postsThatHaveTag.length / siteConfig.postNumPerPage)}.`,
     openGraph: {
-      title: `Tags On the Blog | Tag ${tag}`,
-      description: `List of all the tags that posts have on Kutay's Blog, currently on displaying tag ${tag}.`,
-      url: `${siteConfig.url}/tags/${tag}`,
+      title: `Posts With Tag: ${tag} | Page ${id}`,
+      description: `List of all the tags that posts have on Kutay's Blog, currently displaying tag ${tag} on page ${id} out of ${Math.ceil(postsThatHaveTag.length / siteConfig.postNumPerPage)}.`,
+      url: `${siteConfig.url}/tags/${tag}/page/${id}`,
     },
   };
 }
@@ -83,6 +95,8 @@ export default function Page({ params }: { params: { tag: string, id: string } }
       </div>
       <hr/>
       <PaginationArrows totalPages={Math.ceil(postsThatHaveTag.length / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
+      <hr/>
+      <TagsButtonGrid/>
     </section>
   )
 }
