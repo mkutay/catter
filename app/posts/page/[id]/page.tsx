@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import TagsButtonGrid from "@/components/tagsButtonGrid";
+import PaginationArrows from "@/components/paginationArrows";
 
 const options = {
   mdxOptions: {
@@ -19,10 +20,10 @@ export function generateMetadata({ params }: { params: { id: string } }) {
 
   return {
     title: `Posts and Tags On the Blog | Page ${id}`,
-    description: `List of all the latest posts and tags on ${siteConfig.name}, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
+    description: `List of all the latest posts and tags on ${siteConfig.name}, currently on page ${id} out of ${Math.ceil(postsLength / siteConfig.postNumPerPage)}.`,
     openGraph: {
       title: `Posts | Page ${id}`,
-      description: `List of all the latest posts on ${siteConfig.name}, currently on page ${id} out of ${Math.ceil(postsLength / 5)}.`,
+      description: `List of all the latest posts on ${siteConfig.name}, currently on page ${id} out of ${Math.ceil(postsLength / siteConfig.postNumPerPage)}.`,
       url: `${siteConfig.url}/posts/page/${id}`,
     },
   };
@@ -37,14 +38,14 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const postsLength = getPostsLength();
 
-  if (5 * (id - 1) >= postsLength || id <= 0) {
+  if (siteConfig.postNumPerPage * (id - 1) >= postsLength || id <= 0) {
     notFound();
   }
 
   const posts: {
     slug: string,
     meta: { [key: string]: any }
-  }[] = getPosts(5 * (id - 1), 5 * id);
+  }[] = getPosts(siteConfig.postNumPerPage * (id - 1), siteConfig.postNumPerPage * id);
 
   return (
     <section className="max-w-prose mx-auto my-0 py-8 prose px-4 prose-h1:my-0">
@@ -75,57 +76,18 @@ export default function Page({ params }: { params: { id: string } }) {
         ))}
       </div>
       <hr/>
-      <PaginationArrows totalPages={Math.ceil(postsLength / 5)} currentId={id}/>
+      <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
       <hr/>
       <TagsButtonGrid/>
     </section>
   )
 }
 
-function PaginationArrows({ totalPages, currentId }: { totalPages: number, currentId: number }) {
-  const prevPage = currentId - 1 > 0;
-  const nextPage = currentId + 1 <= totalPages;
-
-  return (
-    <div className="flex text-lg justify-between not-prose">
-      {!prevPage ? (
-        <div className="cursor-auto text-[#6c6f85] dark:text-[#a6adc8]">
-          Prev
-        </div>
-      ) : (
-        <Link
-          href={`/posts/page/${currentId - 1}`}
-          rel="prev"
-          className="dark:text-[#cdd6f4] text-[#4c4f69] underline"
-        >
-          Prev
-        </Link>
-      )}
-      <em className="dark:text-[#cdd6f4] text-[#4c4f69] place-self-center">
-        {currentId} of {totalPages}
-      </em>
-      {!nextPage ? (
-        <div className="cursor-auto text-[#6c6f85] dark:text-[#a6adc8]">
-          Next
-        </div>
-      ) : (
-        <Link
-          href={`/posts/page/${currentId + 1}`}
-          rel="next"
-          className="dark:text-[#cdd6f4] text-[#4c4f69] underline"
-        >
-          Next
-        </Link>
-      )}
-    </div>
-  );
-}
-
 export async function generateStaticParams() {
   const posts = getPosts(0, 100000);
 
   let ret: {id: string}[] = [];
-  for (let i = 1; i <= Math.ceil(posts.length / 5); i++) {
+  for (let i = 1; i <= Math.ceil(posts.length / siteConfig.postNumPerPage); i++) {
     ret.push({ id: i.toString() });
   }
 
