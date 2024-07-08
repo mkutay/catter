@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import TagsButtonGrid from "@/components/tagsButtonGrid";
 import PaginationArrows from "@/components/paginationArrows";
+import EmailSubButton from "@/components/emailSubButton";
 
 const options = {
   mdxOptions: {
@@ -77,6 +78,8 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
       <hr/>
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
+      <hr/>
+      <EmailSubButton/>
       <hr/>
       <TagsButtonGrid/>
     </section>

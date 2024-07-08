@@ -6,6 +6,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import writeRss from "./lib/writeRss";
 import EmailSubButton from "../components/emailSubButton";
+import { siteConfig } from "@/config/site";
 
 const options = {
   mdxOptions: {
@@ -18,7 +19,7 @@ export default function Home() {
   const posts: {
     slug: string,
     meta: { [key: string]: any }
-  }[] = getPosts(0, 5);
+  }[] = getPosts(0, siteConfig.postNumPerPage);
 
   return (
     <section className="max-w-prose mx-auto my-0 py-8 prose px-4 prose-h1:my-0">
@@ -55,7 +56,7 @@ export default function Home() {
         Top Posts
       </h1>
       <Suspense>
-        <MostViewedPosts postNum={5}/>
+        <MostViewedPosts postNum={Math.floor(siteConfig.postNumPerPage * 1.5)}/>
       </Suspense>
     </section>
   )

@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import PaginationArrows from "@/components/paginationArrows";
 import { notFound } from "next/navigation";
 import TagsButtonGrid from "@/components/tagsButtonGrid";
+import EmailSubButton from "@/components/emailSubButton";
 
 const options = {
   mdxOptions: {
@@ -95,6 +96,8 @@ export default function Page({ params }: { params: { tag: string, id: string } }
       </div>
       <hr/>
       <PaginationArrows totalPages={Math.ceil(postsThatHaveTag.length / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
+      <hr/>
+      <EmailSubButton/>
       <hr/>
       <TagsButtonGrid/>
     </section>

@@ -1,5 +1,6 @@
 import { siteConfig } from "@/config/site";
 import TagsButtonGrid from "@/components/tagsButtonGrid";
+import EmailSubButton from "@/components/emailSubButton";
 
 export function generateMetadata({ params }: { params: { tag: string } }) {
   const tag = params.tag;
@@ -23,6 +24,8 @@ export default function Page() {
       </h1>
       <hr/>
       <TagsButtonGrid/>
+      <hr/>
+      <EmailSubButton/>
     </section>
   )
 }
