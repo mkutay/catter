@@ -1,8 +1,10 @@
 import { MetadataRoute } from 'next';
-import getPosts from '@/app/lib/getPosts';
+import getPosts, { getPostsLength } from '@/app/lib/getPosts';
+import { getListOfAllTags } from './lib/getListOfAllTags';
+import { siteConfig } from '@/config/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getPosts(0, 100000);
+  const posts = getPosts({ });
 
   const postsLength = posts.length;
 
@@ -38,14 +40,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.78,
   });
 
-  for (let i = 1; i <= Math.ceil(postsLength / 5); i++) {
+  for (let i = 1; i <= Math.ceil(postsLength / siteConfig.postNumPerPage); i++) {
     siteMap.push({
       url: `https://www.mkutay.dev/posts/page/${i}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.6,
-    })
+    });
   }
+
+  const tags = getListOfAllTags();
+  tags.forEach((tag) => {
+    const postsWithTagLength = getPostsLength(tag);
+    for (let i = 1; i <= Math.ceil(postsWithTagLength / siteConfig.postNumPerPage); i++) {
+      siteMap.push({
+        url: `https://www.mkutay.dev/tags/${tag}/page/${i}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.62,
+      });
+    }
+  });
 
   return siteMap;
 }

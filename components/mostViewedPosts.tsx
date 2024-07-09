@@ -1,60 +1,29 @@
-import { getViewsCount } from "@/app/lib/dataBaseQueries";
-import path from "path";
-import fs from "fs";
-import matter from 'gray-matter';
-import { parseISO, format } from 'date-fns';
 import Link from "next/link";
-import remarkGfm from 'remark-gfm';
-import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
-
-const options = {
-  mdxOptions: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [],
-  }
-};
+import { getViewsCount } from "@/app/lib/dataBaseQueries";
+import getPosts from "@/app/lib/getPosts";
 
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
-  let views = await getViewsCount();
+  const views = await getViewsCount();
+  const posts = getPosts({ startInd: 0, endInd: postNum });
 
-  const postFiles = fs.readdirSync(path.join(process.cwd(), 'content/posts/'), 'utf-8');
-
-  const posts = postFiles.map(filename => {
-    const slug = filename.replace('.mdx', '');
-    const source = fs.readFileSync(path.join(process.cwd(), `content/posts/${slug}.mdx`), 'utf-8');
-    let { data: frontMatter } = matter(source);
-
-    const formattedDate = format(frontMatter.date, 'PP');
-
-    frontMatter.date = formattedDate;
-
-    const viewsForSlug = views && views.find((view) => view.slug === slug);
-    const number = viewsForSlug?.count || 0
+  const postsWithViews = posts.map(post => {
+    const viewsForSlug = views && views.find((view) => view.slug === post.slug);
+    const number = viewsForSlug?.count || -1;
 
     return {
-      meta: frontMatter,
-      slug: slug,
-      count: number,
-    };
-  });
-
-  posts.sort((a, b) => (
-    b.count - a.count
-  ));
-
-  const postsLength = posts.length;
-
-  for (let i = 0; i < postsLength - postNum; i++) {
-    posts.pop();
-  }
+      slug: post.slug,
+      meta: post.meta,
+      content: post.content,
+      views: number,
+    }
+  })
 
   return (
     <ul className="px-0">
-      {posts.map((post) => (
+      {postsWithViews.map((post) => (
         <li key={post.slug} className="px-0 my-0 flex place-items-baseline text-lg prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] text-[#4c4f69] dark:text-[#cdd6f4]">
-          <div className={`pr-2 text-2xl font-bold ${inter.className}`}>
+          <div className={`pr-2 text-2xl font-bold`}>
             ⇒
           </div>
           <div>
@@ -71,7 +40,7 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
               ·
             </span>
             <span className="italic">
-              {`${post.count} views`}
+              {`${post.views} views`}
             </span>
           </div>
         </li>

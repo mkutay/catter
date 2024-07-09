@@ -1,69 +1,40 @@
-import path from 'path';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import fs from 'fs';
-import matter from 'gray-matter';
-import { format } from 'date-fns';
-import remarkGfm from 'remark-gfm';
-import remarkLint from 'remark-lint';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import { getViewsCount } from '@/app/lib/dataBaseQueries';
-import { incrementViews } from '@/app/lib/dataBaseActions';
-import { Suspense } from 'react';
-import ViewCounter from '@/components/viewCounter';
-import Comment from '@/components/giscusComments';
-import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { format } from 'date-fns';
+import { Suspense } from 'react';
+
+import { incrementViews } from '@/app/lib/dataBaseActions';
+import ViewCounter from '@/components/viewCounter';
+import Comment from '@/components/giscusComments';
 import EmailSubButton from '@/components/emailSubButton';
 import { siteConfig } from '@/config/site';
-
-const options = {
-  mdxOptions: {
-    remarkPlugins: [remarkGfm, remarkLint, remarkMath],
-    rehypePlugins: [rehypeKatex],
-  }
-};
-
-const components = {
-  Image: (props: any) => (
-    <div className="my-8 flex place-content-center">
-      <Image {...props} alt={props.alt} className="my-0"/>
-    </div>
-  ),
-  Link: (props: any) => (
-    <Link {...props}>
-      {props.children}
-    </Link>
-  ),
-};
+import getProps from '@/app/lib/getProps';
+import { getPostFiles } from '@/app/lib/getPostFiles';
+import { components, options } from '@/app/lib/mdxRemoteSettings';
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
-  const { slug } = params;
-  const blog = getPost(params);
-  const formattedDate = format(blog.meta.date, 'PP');
-
-  const coverSquare = blog.meta.coverSquare || 'images/favicon.png';
+  const props = getProps('content/posts', params.slug);
+  const formattedDate = format(props.meta.date, 'PP');
 
   return {
-    title: blog.meta.title,
-    description: blog.meta.description,
-    keywords: blog.meta.tags,
+    title: props.meta.title,
+    description: props.meta.description,
+    keywords: props.meta.tags,
     openGraph: {
-      title: blog.meta.title,
-      description: blog.meta.description,
-      url: siteConfig.url + '/posts/' + slug,
-      locale: blog.meta.locale,
+      title: props.meta.title,
+      description: props.meta.description,
+      url: siteConfig.url + '/posts/' + props.slug,
+      locale: props.meta.locale,
       type: 'article',
       publishedTime: formattedDate,
-      images: [coverSquare],
+      images: [props.meta.coverSquare || 'images/favicon.png'],
     },
   };
 }
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const props = getPost(params);
-
+  const props = getProps('content/posts', params.slug);
   const formattedDate = format(props.meta.date, 'PP');
 
   incrementViews(props.slug);
@@ -93,13 +64,13 @@ export default function Page({ params }: { params: { slug: string } }) {
               ·
             </span>
             <Suspense>
-              <Views slug={props.slug}/>
+              <ViewCounter slug={props.slug}/>
             </Suspense>
             <span className="px-2 text-xl">
               ·
             </span>
             {props.meta.tags.map((tag: string) => (
-              <span key={tag} className="text-[#5c5f77] dark:text-[#bac2de] prose-a:text-[#5c5f77] prose-a:dark:text-[#bac2de]">
+              <span key={tag} className="text-[#5c5f77] dark:text-[#bac2de] prose-a:text-[#5c5f77] prose-a:dark:text-[#bac2de] whitespace-nowrap">
                 [ <Link href={`/tags/${tag}`}>{tag}</Link> ]
               </span>
             ))}
@@ -108,7 +79,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             {props.meta.description}
           </p>
         </header>
-        <main className="prose">
+        <main>
           <MDXRemote source={props.content} options={options} components={components}/>
         </main>
         <hr/>
@@ -122,32 +93,10 @@ export default function Page({ params }: { params: { slug: string } }) {
   );
 }
 
-async function Views({ slug }: { slug: string }) {
-  let views = await getViewsCount();
-
-  return <ViewCounter allViews={views} slug={slug}/>;
-}
-
 export async function generateStaticParams() {
-  const files = fs.readdirSync(path.join(process.cwd(), 'content/posts'));
+  const postFiles = getPostFiles();
 
-  return files.map(filename => ({
+  return postFiles.map(filename => ({
     slug: filename.replace('.mdx', ''),
   }));
-}
-
-function getPost({ slug }: { slug : string }) {
-  let markdownFile;
-  try {
-    markdownFile = fs.readFileSync(path.join(process.cwd(), `content/posts/${slug}.mdx`), 'utf-8');
-  } catch(error) {
-    notFound();
-  }
-  const { data: frontMatter, content } = matter(markdownFile);
-
-  return {
-    meta: frontMatter,
-    slug: slug,
-    content: content,
-  };
 }

@@ -1,4 +1,4 @@
-import type { Viewport, Metadata } from "next";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { ThemeProvider } from "next-themes";
@@ -6,7 +6,7 @@ import NavBar from '@/components/navBar';
 import Footer from "@/components/footer";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import '@/app/katex.min.css';
+import '@/public/css/katex.min.css';
 import { siteConfig } from "@/config/site";
 
 const inter = Inter({ subsets: ["latin"] });

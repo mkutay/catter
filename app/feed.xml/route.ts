@@ -16,7 +16,7 @@ export async function GET() {
     ttl: 60,
   });
 
-  const posts = getPosts(0, 100000);
+  const posts = getPosts({ });
 
   posts.forEach((post) => {
     feed.item({

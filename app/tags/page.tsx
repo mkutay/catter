@@ -2,16 +2,14 @@ import { siteConfig } from "@/config/site";
 import TagsButtonGrid from "@/components/tagsButtonGrid";
 import EmailSubButton from "@/components/emailSubButton";
 
-export function generateMetadata({ params }: { params: { tag: string } }) {
-  const tag = params.tag;
-
+export function generateMetadata() {
   return {
-    title: `Tags On the Blog | Tag ${tag}`,
-    description: `List of all the tags that posts have on Kutay's Blog, currently on displaying tag ${tag}.`,
+    title: `List Of Tags On the Blog`,
+    description: `List of all the tags that posts have on Kutay's Blog`,
     openGraph: {
-      title: `Tags On the Blog | Tag ${tag}`,
-      description: `List of all the tags that posts have on Kutay's Blog, currently on displaying tag ${tag}.`,
-      url: `${siteConfig.url}/tags/${tag}`,
+      title: `List Of Tags On the Blog`,
+      description: `List of all the tags that posts have on Kutay's Blog`,
+      url: `${siteConfig.url}/tags`,
     },
   };
 }

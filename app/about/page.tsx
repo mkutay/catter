@@ -1,58 +1,36 @@
-import path from 'path';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import fs from 'fs';
-import matter from 'gray-matter';
-import remarkGfm from 'remark-gfm';
-
-const options = {
-  mdxOptions: {
-    remarkPlugins: [remarkGfm],
-    rehypePlugins: [],
-  }
-};
+import { siteConfig } from '@/config/site';
+import getProps from '@/app/lib/getProps';
 
 export function generateMetadata() {
-  const slug = "about";
-  const blog = getPage(slug);
+  const props = getProps('content/pages', 'about');
 
   return {
-    title: blog.meta.title,
-    description: blog.meta.description,
+    title: props.meta.title,
+    description: props.meta.description,
     openGraph: {
-      title: blog.meta.title,
-      description: blog.meta.description,
-      url: 'https://www.mkutay.dev/posts/' + slug,
+      title: props.meta.title,
+      description: props.meta.description,
+      url: siteConfig.url + '/' + props.slug,
     },
   };
 }
 
 export default async function Page() {
-  const slug = "about";
-  const props = getPage(slug);
+  const props = getProps('content/pages', 'about');
 
   return (
-    <div className="max-w-prose mx-auto my-0 py-8 prose px-4 prose-h1:my-0">
-      <h1 className="my-0">
+    <div className="max-w-prose mx-auto my-8 prose px-4 prose-h1:my-0">
+      <h1>
         {props.meta.title}
       </h1>
       <hr/>
       <p className="mb-4 text-right italic">
         {props.meta.description}
       </p>
-      <main className="prose-p:mb-0">
-        <MDXRemote source={props.content} options={options}/>
+      <main>
+        <MDXRemote source={props.content}/>
       </main>
     </div>
   );
-}
-
-function getPage(slug: string) {
-  const markdownFile = fs.readFileSync(path.join(process.cwd(), `content/pages/about.mdx`), 'utf-8');
-  const { data: frontMatter, content } = matter(markdownFile);
-
-  return {
-    meta: frontMatter,
-    slug: slug,
-    content: content,
-  };
 }
