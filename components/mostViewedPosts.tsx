@@ -5,11 +5,11 @@ import getPosts from "@/app/lib/getPosts";
 
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
   const views = await getViewsCount();
-  const posts = getPosts({ startInd: 0, endInd: postNum });
+  const posts = getPosts({  });
 
-  const postsWithViews = posts.map(post => {
+  let postsWithViews = posts.map(post => {
     const viewsForSlug = views && views.find((view) => view.slug === post.slug);
-    const number = viewsForSlug?.count || -1;
+    const number = viewsForSlug?.count || 0;
 
     return {
       slug: post.slug,
@@ -17,7 +17,13 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
       content: post.content,
       views: number,
     }
-  })
+  });
+
+  postsWithViews.sort((a, b) => (
+    b.views - a.views
+  ));
+
+  postsWithViews = postsWithViews.slice(0, postNum);
 
   return (
     <ul className="px-0">
