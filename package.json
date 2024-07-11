@@ -21,6 +21,7 @@
     "date-fns": "^3.6.0",
     "esbuild": "^0.21.4",
     "framer-motion": "^11.2.13",
+    "fs": "^0.0.1-security",
     "gray-matter": "^4.0.3",
     "katex": "^0.16.10",
     "next": "14.2.3",

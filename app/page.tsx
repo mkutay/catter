@@ -7,7 +7,7 @@ import ListPosts from "@/components/listPosts";
 
 export default function Home() {
   return (
-    <section className="max-w-prose mx-auto my-0 py-8 prose px-4 prose-h1:my-0">
+    <section className="max-w-prose mx-auto my-8 prose px-4 prose-h1:my-0">
       <h1>
         Latest Posts
       </h1>
