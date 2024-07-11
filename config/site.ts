@@ -33,5 +33,5 @@ export const siteConfig = {
       href: "/posts/page/1",
     },
   ],
-  date: new Date(),
+  date: new Date().toISOString().split('T')[0],
 };

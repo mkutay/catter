@@ -1,14 +1,9 @@
 import getPosts, { getPostsLength } from '@/app/lib/getPosts';
 import { getListOfAllTags } from '@/app/lib/getListOfAllTags';
 import { siteConfig } from '@/config/site';
-import { getGuestbookEntries } from '@/app/lib/dataBaseQueries';
 import getProps from '@/app/lib/getProps';
 
 export default async function sitemap() {
-  const guestbookEntries = (await getGuestbookEntries()).sort((a, b) => 
-    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
-
   let siteMap = [];
 
   siteMap.push({
@@ -18,12 +13,12 @@ export default async function sitemap() {
 
   siteMap.push({
     url: `${siteConfig.url}/guestbook`,
-    lastModified: new Date(guestbookEntries[0].created_at),
+    lastModified: siteConfig.date,
   });
 
   siteMap.push({
     url: `${siteConfig.url}/about`,
-    lastModified: new Date(getProps('content/pages', 'about').meta.date),
+    lastModified: new Date(getProps('content/pages', 'about').meta.date).toISOString().split('T')[0],
   });
 
   const tags = getListOfAllTags();
@@ -42,7 +37,7 @@ export default async function sitemap() {
   posts.forEach((post) => {
     siteMap.push({
       url: `${siteConfig.url}/posts/${post.slug}`,
-      lastModified: new Date(String(post.meta.lastModified ?? post.meta.date)),
+      lastModified: new Date(String(post.meta.lastModified ?? post.meta.date)).toISOString().split('T')[0],
     });
   });
 
