@@ -1,11 +1,11 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import { getPostsLength } from "@/app/lib/getPosts";
-import { siteConfig } from "@/config/site";
-import TagsButtonGrid from "@/components/tagsButtonGrid";
-import PaginationArrows from "@/components/paginationArrows";
-import EmailSubButton from "@/components/emailSubButton";
-import ListPosts from "@/components/listPosts";
+import { getPostsLength } from '@/app/lib/getPosts';
+import { siteConfig } from '@/config/site';
+import TagsButtonGrid from '@/components/tagsButtonGrid';
+import PaginationArrows from '@/components/paginationArrows';
+import EmailSubButton from '@/components/emailSubButton';
+import ListPosts from '@/components/listPosts';
 
 export function generateMetadata({ params }: { params: { id: string } }) {
   const id = Number(params.id);

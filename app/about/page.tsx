@@ -1,4 +1,5 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
+
 import { siteConfig } from '@/config/site';
 import getProps from '@/app/lib/getProps';
 

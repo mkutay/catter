@@ -1,7 +1,8 @@
+import { Suspense } from 'react';
+
 import { auth } from '@/app/lib/auth';
 import { getGuestbookEntries } from '@/app/lib/dataBaseQueries';
 import { SignIn, SignOut } from '@/app/guestbook/buttons';
-import { Suspense } from 'react';
 import Form from '@/app/guestbook/form';
 
 export const metadata = {

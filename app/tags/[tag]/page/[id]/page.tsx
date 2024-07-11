@@ -1,11 +1,12 @@
-import getPosts, { getPostsLength } from "@/app/lib/getPosts";
-import { siteConfig } from "@/config/site";
-import PaginationArrows from "@/components/paginationArrows";
-import { notFound } from "next/navigation";
-import TagsButtonGrid from "@/components/tagsButtonGrid";
-import EmailSubButton from "@/components/emailSubButton";
-import { getListOfAllTags } from "@/app/lib/getListOfAllTags";
-import ListPosts from "@/components/listPosts";
+import { notFound } from 'next/navigation';
+
+import getPosts, { getPostsLength } from '@/app/lib/getPosts';
+import { siteConfig } from '@/config/site';
+import PaginationArrows from '@/components/paginationArrows';
+import TagsButtonGrid from '@/components/tagsButtonGrid';
+import EmailSubButton from '@/components/emailSubButton';
+import { getListOfAllTags } from '@/app/lib/getListOfAllTags';
+import ListPosts from '@/components/listPosts';
 
 export function generateMetadata({ params }: { params: { tag: string, id: string } }) {
   const { id, tag } = params;

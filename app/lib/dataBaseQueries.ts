@@ -1,10 +1,11 @@
 'use server';
 
-import { sql } from '@/app/lib/postgres';
 import {
   unstable_cache as cache,
   unstable_noStore as noStore,
 } from 'next/cache';
+
+import { sql } from '@/app/lib/postgres';
 
 
 export async function getBlogViews() {

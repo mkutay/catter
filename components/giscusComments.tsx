@@ -2,7 +2,7 @@
 
 import Giscus from '@giscus/react';
 import { useTheme } from 'next-themes';
-import { giscusConfigs } from '@/app/lib/giscusConfigs';
+import { giscusConfigs } from '@/config/giscus';
 
 export default function Comment() {
   const { theme } = useTheme();

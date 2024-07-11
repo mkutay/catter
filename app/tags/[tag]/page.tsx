@@ -1,5 +1,6 @@
-import { getListOfAllTags } from "@/app/lib/getListOfAllTags";
-import { notFound, redirect } from "next/navigation";
+import { notFound, redirect } from 'next/navigation';
+
+import { getListOfAllTags } from '@/app/lib/getListOfAllTags';
 
 export default function Page({ params }: { params: { tag: string } }) {
   const { tag } = params;

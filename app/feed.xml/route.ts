@@ -1,4 +1,5 @@
 import Rss from 'rss';
+
 import getPosts from '@/app/lib/getPosts';
 import { siteConfig } from '@/config/site';
 
@@ -13,7 +14,7 @@ export async function GET() {
     webMaster: 'hello@mkutay.dev (Mehmet Kutay Bozkurt)',
     copyright: `Copyright ${new Date().getFullYear().toString()}, Mehmet Kutay Bozkurt`,
     language: 'en-UK',
-    pubDate: new Date().toUTCString(),
+    pubDate: new Date().toISOString().split('T')[0],
     ttl: 60,
   });
 
@@ -24,7 +25,7 @@ export async function GET() {
       title: post.meta.title,
       description: post.meta.description,
       url: `${siteConfig.url}/posts/${post.slug}`,
-      date: post.meta.date,
+      date: new Date(post.meta.date).toISOString().split('T')[0],
       author: 'hello@mkutay.dev (Mehmet Kutay Bozkurt)',
       categories: post.meta.tags || [],
     });
