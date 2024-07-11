@@ -1,10 +1,9 @@
-import { MetadataRoute } from 'next';
 import getPosts, { getPostsLength } from '@/app/lib/getPosts';
 import { getListOfAllTags } from './lib/getListOfAllTags';
 import { siteConfig } from '@/config/site';
 import { getGuestbookEntries } from '@/app/lib/dataBaseQueries';
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default async function sitemap() {
   const posts = getPosts({ });
 
   const guestbookEntries = await getGuestbookEntries();
