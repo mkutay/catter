@@ -2,9 +2,15 @@ import { MetadataRoute } from 'next';
 import getPosts, { getPostsLength } from '@/app/lib/getPosts';
 import { getListOfAllTags } from './lib/getListOfAllTags';
 import { siteConfig } from '@/config/site';
+import { getGuestbookEntries } from '@/app/lib/dataBaseQueries';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = getPosts({ });
+
+  const guestbookEntries = await getGuestbookEntries();
+  guestbookEntries.sort((a, b) => 
+    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
 
   const postsLength = posts.length;
 
