@@ -33,4 +33,5 @@ export const siteConfig = {
       href: "/posts/page/1",
     },
   ],
+  date: new Date(),
 };
