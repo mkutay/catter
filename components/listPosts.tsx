@@ -1,8 +1,8 @@
-import Link from "next/link";
-import { MDXRemote } from "next-mdx-remote/rsc";
+import Link from 'next/link';
+import { MDXRemote } from 'next-mdx-remote/rsc';
 
-import getPosts from "@/app/lib/getPosts";
-import { options } from "@/app/lib/mdxRemoteSettings";
+import { getPosts } from '@/lib/postQueries';
+import { options } from '@/lib/mdxRemoteSettings';
 
 export default function ListPosts({ startInd, endInd, tag }: { startInd: number, endInd: number, tag?: string }) { // half-open interval
   const posts: {

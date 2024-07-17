@@ -1,7 +1,7 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import { getViewsCount } from "@/app/lib/dataBaseQueries";
-import getPosts from "@/app/lib/getPosts";
+import { getViewsCount } from '@/lib/dataBaseQueries';
+import { getPosts } from '@/lib/postQueries';
 
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
   const views = await getViewsCount();

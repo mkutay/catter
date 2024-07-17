@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { saveGuestbookEntry } from '@/app/lib/dataBaseActions';
+import { saveGuestbookEntry } from '@/lib/dataBaseActions';
 
 export default function Form() {
   const formRef = useRef<HTMLFormElement>(null);

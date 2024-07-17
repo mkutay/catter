@@ -1,4 +1,4 @@
-import { getViewsCount } from "@/app/lib/dataBaseQueries";
+import { getViewsCount } from "@/lib/dataBaseQueries";
 
 export default async function ViewCounter({ slug }: { slug: string }) {
   let allViews = await getViewsCount();

@@ -2,6 +2,7 @@
 
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
+
 import { MoonFilledIcon, SunFilledIcon } from '@/components/icons';
 
 let numOfChanges = 0;

@@ -3,8 +3,8 @@
 import { type Session } from 'next-auth';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
-import { auth } from '@/app/lib/auth';
-import { sql } from '@/app/lib/postgres';
+import { auth } from '@/lib/auth';
+import { sql } from '@/lib/postgres';
 
 export async function incrementViews(slug: string) {
   noStore();

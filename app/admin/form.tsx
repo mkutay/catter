@@ -3,7 +3,7 @@
 import { useFormStatus } from 'react-dom';
 import { useState } from 'react';
 
-import { deleteGuestbookEntries } from '@/app/lib/dataBaseActions';
+import { deleteGuestbookEntries } from '@/lib/dataBaseActions';
 
 export default function Form({ entries }: any) {
   const [selectedInputs, setSelectedInputs] = useState<string[]>([]);

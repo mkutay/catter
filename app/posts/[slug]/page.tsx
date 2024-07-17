@@ -4,14 +4,13 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { format } from 'date-fns';
 import { Suspense } from 'react';
 
-import { incrementViews } from '@/app/lib/dataBaseActions';
+import { incrementViews } from '@/lib/dataBaseActions';
 import ViewCounter from '@/components/viewCounter';
 import Comment from '@/components/giscusComments';
 import EmailSubButton from '@/components/emailSubButton';
 import { siteConfig } from '@/config/site';
-import getProps from '@/app/lib/getProps';
-import { getPostFiles } from '@/app/lib/getPostFiles';
-import { components, options } from '@/app/lib/mdxRemoteSettings';
+import { getPostFiles, getProps } from '@/lib/postQueries';
+import { components, options } from '@/lib/mdxRemoteSettings';
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const props = getProps('content/posts', params.slug);

@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "@/app/globals.css";
-import { ThemeProvider } from "next-themes";
-import NavBar from '@/components/navBar';
-import Footer from "@/components/footer";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import '@/public/css/katex.min.css';
-import { siteConfig } from "@/config/site";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { ThemeProvider } from 'next-themes';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
-const inter = Inter({ subsets: ["latin"] });
+import '@/styles/globals.css';
+import '@/styles/katex.min.css';
+import NavBar from '@/components/navBar';
+import Footer from '@/components/footer';
+import { siteConfig } from '@/config/site';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const revalidate = 1;
 
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'Mehmet Kutay Bozkurt', url: 'https://www.mkutay.dev' }],
   creator: 'Mehmet Kutay Bozkurt',
   publisher: 'Mehmet Kutay Bozkurt',
-  keywords: ['computer science', 'mathematics', 'personal blog'],
+  keywords: ['computer science', 'mathematics', 'personal blog', 'blog', 'school', 'university'],
   openGraph: {
     title: {
       template: `%s | ${siteConfig.name}`,
@@ -60,7 +61,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} text-[#4c4f69] bg-[#eff1f5] dark:text-[#cdd6f4] dark:bg-[#1e1e2e]`}>
-          <ThemeProvider attribute="class">
+        <ThemeProvider attribute="class">
           <main className="flex flex-col min-h-screen divide-y divide-[#ccd0da] dark:divide-[#313244]">
             <div><NavBar/></div>
             <div className="flex-1">{children}</div>

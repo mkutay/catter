@@ -1,9 +1,9 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
-import { MostViewedPosts } from "@/components/mostViewedPosts";
-import EmailSubButton from "@/components/emailSubButton";
-import { siteConfig } from "@/config/site";
-import ListPosts from "@/components/listPosts";
+import { MostViewedPosts } from '@/components/mostViewedPosts';
+import EmailSubButton from '@/components/emailSubButton';
+import { siteConfig } from '@/config/site';
+import ListPosts from '@/components/listPosts';
 
 export default function Home() {
   return (

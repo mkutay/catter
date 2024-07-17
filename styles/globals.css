@@ -15,6 +15,7 @@
   @apply prose-headings:tracking-tighter;
   @apply prose-blockquote:bg-[#e6e9ef] prose-blockquote:dark:bg-[#181825] prose-blockquote:text-[#4c4f69] prose-blockquote:dark:text-[#cdd6f4] prose-blockquote:border-[#7c7f93] prose-blockquote:dark:border-[#9399b2];
   @apply prose-li:my-0 prose-li:py-0;
+  @apply dark:prose-li:text-[#cdd6f4] prose-li:text-[#4c4f69] dark:prose-ul:text-[#cdd6f4] prose-ul:text-[#4c4f69] dark:prose-ol:text-[#cdd6f4] prose-ol:text-[#4c4f69] dark:prose-li:marker:text-[#a6adc8] prose-li:marker:text-[#6c6f85];
 }
 
 .data-footnote-backref {

@@ -1,11 +1,10 @@
 import { notFound } from 'next/navigation';
 
-import getPosts, { getPostsLength } from '@/app/lib/getPosts';
+import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/postQueries';
 import { siteConfig } from '@/config/site';
 import PaginationArrows from '@/components/paginationArrows';
-import TagsButtonGrid from '@/components/tagsButtonGrid';
+import TagsButtonGrid, { turnTagString } from '@/components/tagsButtonGrid';
 import EmailSubButton from '@/components/emailSubButton';
-import { getListOfAllTags } from '@/app/lib/getListOfAllTags';
 import ListPosts from '@/components/listPosts';
 
 export function generateMetadata({ params }: { params: { tag: string, id: string } }) {
@@ -43,7 +42,7 @@ export default function Page({ params }: { params: { tag: string, id: string } }
   return (
     <section className="max-w-prose mx-auto my-8 prose px-4 prose-h1:my-0">
       <h1>
-        Posts With Tag: <span className="text-[#1e66f5] dark:text-[#89b4fa]">{tag.charAt(0).toUpperCase() + tag.slice(1)}</span>
+        Posts With Tag: <span className="text-[#1e66f5] dark:text-[#89b4fa]">{turnTagString(tag)}</span>
       </h1>
       <hr/>
       <ListPosts startInd={startInd} endInd={endInd} tag={tag}/>

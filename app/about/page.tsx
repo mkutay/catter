@@ -1,7 +1,7 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
 import { siteConfig } from '@/config/site';
-import getProps from '@/app/lib/getProps';
+import { getProps } from '@/lib/postQueries';
 
 export function generateMetadata() {
   const props = getProps('content/pages', 'about');

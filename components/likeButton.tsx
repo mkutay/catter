@@ -1,8 +1,8 @@
 'use client';
 
-import { incrementLikes } from '@/app/lib/dataBaseActions';
 import { useState } from 'react';
-import Image from 'next/image';
+
+import { incrementLikes } from '@/lib/dataBaseActions';
 
 export default function LikeButton({
   slug,

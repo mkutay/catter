@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+
 import ThemeChanger from '@/components/themeChanger';
 import { Logo } from '@/components/icons';
 import { siteConfig } from '@/config/site';

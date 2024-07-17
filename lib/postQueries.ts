@@ -1,7 +1,31 @@
-import { getPostFiles } from '@/app/lib/getPostFiles';
-import getProps from '@/app/lib/getProps';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import { notFound } from 'next/navigation';
 
-export default function getPosts({
+export function getPostFiles() {
+  const postFiles = fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
+  return postFiles;
+}
+
+export function getProps(pathTo: string, slug: string) {
+  let markdownFile;
+  try {
+    markdownFile = fs.readFileSync(path.join(process.cwd(), path.join(pathTo, slug + '.mdx')), 'utf-8');
+  } catch(error) {
+    notFound();
+  }
+
+  const { data: frontMatter, content } = matter(markdownFile);
+
+  return {
+    meta: frontMatter,
+    slug: slug,
+    content: content,
+  };
+}
+
+export function getPosts({
   startInd,
   endInd,
   tag,
@@ -44,4 +68,17 @@ export function getPostsLength(tag?: string) {
     return getPostFiles().length;
   }
   return getPosts({ tag }).length;
+}
+
+export function getListOfAllTags() {
+  const posts = getPosts({  });
+  const tags = new Set<string>();
+
+  posts.forEach((post) => {
+    post.meta.tags.forEach((tag: string) => {
+      tags.add(tag);
+    });
+  });
+
+  return Array.from(tags);
 }

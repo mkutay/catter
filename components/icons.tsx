@@ -1,6 +1,6 @@
-import * as React from "react";
-import { Icons } from "next/dist/lib/metadata/types/metadata-types";
-import { SVGProps } from "react";
+import * as React from 'react';
+import { Icons } from 'next/dist/lib/metadata/types/metadata-types';
+import { SVGProps } from 'react';
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;

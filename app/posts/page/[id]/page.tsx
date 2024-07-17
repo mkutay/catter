@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { getPostsLength } from '@/app/lib/getPosts';
+import { getPostsLength } from '@/lib/postQueries';
 import { siteConfig } from '@/config/site';
 import TagsButtonGrid from '@/components/tagsButtonGrid';
 import PaginationArrows from '@/components/paginationArrows';

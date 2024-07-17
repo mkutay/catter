@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+
 import { GithubSvg } from '@/components/icons';
 import { RssSvg } from '@/components/icons';
 

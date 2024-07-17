@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 
-import { auth } from '@/app/lib/auth';
-import { getGuestbookEntries } from '@/app/lib/dataBaseQueries';
+import { auth } from '@/lib/auth';
+import { getGuestbookEntries } from '@/lib/dataBaseQueries';
 import Form from '@/app/admin/form';
 
 export const metadata = {

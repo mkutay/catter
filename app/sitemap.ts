@@ -1,7 +1,5 @@
-import getPosts, { getPostsLength } from '@/app/lib/getPosts';
-import { getListOfAllTags } from '@/app/lib/getListOfAllTags';
 import { siteConfig } from '@/config/site';
-import getProps from '@/app/lib/getProps';
+import { getPosts, getPostsLength, getListOfAllTags, getProps } from '@/lib/postQueries';
 
 export default async function sitemap() {
   let siteMap = [];

@@ -1,6 +1,6 @@
 import Rss from 'rss';
 
-import getPosts from '@/app/lib/getPosts';
+import { getPosts } from '@/lib/postQueries';
 import { siteConfig } from '@/config/site';
 
 export async function GET() {
