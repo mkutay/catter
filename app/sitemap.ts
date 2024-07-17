@@ -1,5 +1,5 @@
 import { siteConfig } from '@/config/site';
-import { getPosts, getPostsLength, getListOfAllTags, getProps } from '@/lib/postQueries';
+import { getPosts, getProps } from '@/lib/postQueries';
 
 export default async function sitemap() {
   let siteMap = [];
@@ -19,17 +19,6 @@ export default async function sitemap() {
     lastModified: new Date(getProps('content/pages', 'about').meta.date).toISOString().split('T')[0],
   });
 
-  const tags = getListOfAllTags();
-  tags.forEach((tag) => {
-    const postsWithTagLength = getPostsLength(tag);
-    for (let i = 1; i <= Math.ceil(postsWithTagLength / siteConfig.postNumPerPage); i++) {
-      siteMap.push({
-        url: `${siteConfig.url}/tags/${tag}/page/${i}`,
-        lastModified: siteConfig.date,
-      });
-    }
-  });
-
   const posts = getPosts({ });
 
   posts.forEach((post) => {
@@ -39,12 +28,10 @@ export default async function sitemap() {
     });
   });
 
-  for (let i = 1; i <= Math.ceil(posts.length / siteConfig.postNumPerPage); i++) {
-    siteMap.push({
-      url: `${siteConfig.url}/posts/page/${i}`,
-      lastModified: siteConfig.date,
-    });
-  }
+  siteMap.push({
+    url: `${siteConfig.url}/posts/page/1`,
+    lastModified: siteConfig.date,
+  });
 
   return siteMap;
 }
