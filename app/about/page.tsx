@@ -2,6 +2,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 
 import { siteConfig } from '@/config/site';
 import { getProps } from '@/lib/postQueries';
+import { components, options } from '@/lib/mdxRemoteSettings';
 
 export function generateMetadata() {
   const props = getProps('content/pages', 'about');
@@ -26,11 +27,11 @@ export default async function Page() {
         {props.meta.title}
       </h1>
       <hr/>
-      <p className="mb-4 text-right italic">
-        {props.meta.description}
-      </p>
+      <div className="mb-4 text-right italic">
+        <MDXRemote source={props.meta.description} options={options} components={components}/>
+      </div>
       <main>
-        <MDXRemote source={props.content}/>
+        <MDXRemote source={props.content} options={options} components={components}/>
       </main>
     </div>
   );

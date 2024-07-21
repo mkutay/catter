@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
-import Form from '@/app/admin/form';
+import Form from '@/app/guestbook/admin/form';
 
 export const metadata = {
   title: 'Admin',

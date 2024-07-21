@@ -19,7 +19,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   return {
     title: props.meta.title,
     description: props.meta.description,
-    keywords: props.meta.tags,
+    keywords: props.meta.keywords ?? props.meta.tags,
     openGraph: {
       title: props.meta.title,
       description: props.meta.description,

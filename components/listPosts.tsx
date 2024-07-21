@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
 import { getPosts } from '@/lib/postQueries';
-import { options } from '@/lib/mdxRemoteSettings';
+import { components, options } from '@/lib/mdxRemoteSettings';
 
 export default function ListPosts({ startInd, endInd, tag }: { startInd: number, endInd: number, tag?: string }) { // half-open interval
   const posts: {
@@ -28,7 +28,7 @@ export default function ListPosts({ startInd, endInd, tag }: { startInd: number,
             {post.meta.description}
           </em>
           <div className="prose-p:my-4 prose-p:py-0">
-            <MDXRemote source={post.meta.excerpt} options={options}/>
+            <MDXRemote source={post.meta.excerpt} options={options} components={components}/>
           </div>
           {index !== posts.length - 1 && <hr/>}
         </div>
