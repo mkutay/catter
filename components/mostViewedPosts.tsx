@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { getViewsCount } from '@/lib/dataBaseQueries';
 import { getPosts } from '@/lib/postQueries';
+import { ArrowRightIcon } from '@radix-ui/react-icons';
 
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
   const views = await getViewsCount();
@@ -28,9 +29,9 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
   return (
     <ul className="px-0">
       {postsWithViews.map((post) => (
-        <li key={post.slug} className="px-0 my-0 flex place-items-baseline text-lg prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] text-[#4c4f69] dark:text-[#cdd6f4]">
-          <div className={`pr-2 text-2xl font-bold`}>
-            ⇒
+        <li key={post.slug} className="px-0 my-0 flex items-baseline text-lg prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] text-[#4c4f69] dark:text-[#cdd6f4]">
+          <div className="pr-2 text-2xl font-bold">
+            <ArrowRightIcon stroke="currentColor" strokeWidth="1.75px"/>
           </div>
           <div>
             <span className="pr-1">
