@@ -7,8 +7,8 @@ import ListPosts from '@/components/listPosts';
 
 export default function Home() {
   return (
-    <section className="justify-center my-8 px-4 prose-h1:my-0 flex lg:flex-row flex-col lg:gap-24 gap-0 lg:max-w-6xl max-w-prose mx-auto">
-      <div className="lg:w-2/3 prose w-full lg:mx-0 mx-auto">
+    <section className="justify-center px-4 prose-h1:my-0 flex lg:flex-row flex-col lg:gap-24 gap-0 lg:max-w-6xl max-w-prose mx-auto">
+      <div className="lg:w-2/3 prose w-full lg:mx-0 mx-auto py-8">
         <h1>
           Recently Published
         </h1>

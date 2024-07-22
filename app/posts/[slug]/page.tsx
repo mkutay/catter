@@ -50,8 +50,8 @@ export default function Page({ params }: { params: { slug: string } }) {
         style={{ width: "100%", height: "auto" }}
         className="max-w-4xl mx-auto mb-8 pt-2"
       />)}
-      <section className="justify-center my-8 px-4 prose-h1:my-0 flex lg:flex-row flex-col lg:gap-24 gap-0 lg:max-w-6xl max-w-prose mx-auto">
-        <div className="lg:w-2/3 prose w-full lg:mx-0 mx-auto">
+      <section className="justify-center px-4 prose-h1:my-0 flex lg:flex-row flex-col lg:gap-24 gap-0 lg:max-w-6xl max-w-prose mx-auto">
+        <div className="lg:w-2/3 prose w-full lg:mx-0 mx-auto py-8">
           <header>
             <h1>
               {props.meta.title}
