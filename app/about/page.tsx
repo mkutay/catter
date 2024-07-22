@@ -3,6 +3,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { siteConfig } from '@/config/site';
 import { getProps } from '@/lib/postQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
+import DoublePane from '@/components/doublePane';
 
 export function generateMetadata() {
   const props = getProps('content/pages', 'about');
@@ -22,7 +23,7 @@ export default async function Page() {
   const props = getProps('content/pages', 'about');
 
   return (
-    <div className="max-w-prose mx-auto my-8 prose px-4 prose-h1:my-0">
+    <DoublePane>
       <h1>
         {props.meta.title}
       </h1>
@@ -33,6 +34,6 @@ export default async function Page() {
       <main>
         <MDXRemote source={props.content} options={options} components={components}/>
       </main>
-    </div>
+    </DoublePane>
   );
 }
