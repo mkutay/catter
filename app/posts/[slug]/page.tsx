@@ -86,7 +86,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           <hr/>
           <Comment/>
         </div>
-        <div className="lg:w-1/3 prose w-full lg:mx-0 mx-auto prose-h1:mb-6 lg:prose-h1:my-0">
+        <div className="lg:w-1/3 prose w-full lg:mx-0 mx-auto prose-h1:mb-6 lg:prose-h1:my-0 sticky top-0 h-screen py-8">
           <hr className="lg:hidden flex"/>
           <h1>
             Popular Content
