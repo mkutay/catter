@@ -30,8 +30,8 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
     <ul className="px-0">
       {postsWithViews.map((post) => (
         <li key={post.slug} className="px-0 my-0 flex items-baseline text-lg prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] text-[#4c4f69] dark:text-[#cdd6f4]">
-          <div className="pr-2 text-2xl font-bold">
-            <ArrowRightIcon stroke="currentColor" strokeWidth="1.75px"/>
+          <div className="pr-2">
+            <ArrowRightIcon stroke="currentColor" strokeWidth="1.7px"/>
           </div>
           <div>
             <span className="pr-1">
@@ -43,7 +43,7 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
                 {post.meta.title}
               </Link>
             </span>
-            <span className="px-2 text-xl">
+            <span className="px-2 text-2xl">
               ·
             </span>
             <span className="italic">
