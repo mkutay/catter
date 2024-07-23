@@ -29,8 +29,8 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
   return (
     <ul className="px-0">
       {postsWithViews.map((post) => (
-        <li key={post.slug} className="px-0 my-0 flex items-baseline text-lg prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] text-[#4c4f69] dark:text-[#cdd6f4]">
-          <div className="pr-2">
+        <li key={post.slug} className="group pl-0 hover:pl-2 transition-all px-0 my-0 flex flex-row items-baseline text-lg prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] text-[#4c4f69] dark:text-[#cdd6f4]">
+          <div className="pr-4 group-hover:pr-2 transition-all">
             <ArrowRightIcon stroke="currentColor" strokeWidth="1.7px"/>
           </div>
           <div>

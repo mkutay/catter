@@ -37,4 +37,6 @@ export const siteConfig = {
   tagsThatShouldBeCapital: [
     'ib',
   ],
+  lastModifiedIsTrue: true,
+  lastModifiedDate: new Date().toISOString().split('T')[0],
 };
