@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
 import { SignIn, SignOut } from '@/app/guestbook/buttons';
 import Form from '@/app/guestbook/form';
+import DoublePane from '@/components/doublePane';
 
 export const metadata = {
   title: 'Sign and Mark My Guestbook',
@@ -12,7 +13,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <section className="prose max-w-prose mx-auto my-0 py-8 px-4 lg:px-8 prose-h1:my-0">
+    <DoublePane>
       <h1 className="mb-0">
         Sign My Guestbook!
       </h1>
@@ -21,7 +22,7 @@ export default function Page() {
         <GuestbookForm/>
         <GuestbookEntries/>
       </Suspense>
-    </section>
+    </DoublePane>
   );
 }
 

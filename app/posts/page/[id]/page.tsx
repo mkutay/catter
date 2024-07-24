@@ -6,6 +6,7 @@ import TagsButtonGrid from '@/components/tagsButtonGrid';
 import PaginationArrows from '@/components/paginationArrows';
 import EmailSubButton from '@/components/emailSubButton';
 import ListPosts from '@/components/listPosts';
+import DoublePane from '@/components/doublePane';
 
 export function generateMetadata({ params }: { params: { id: string } }) {
   const id = Number(params.id);
@@ -37,7 +38,7 @@ export default function Page({ params }: { params: { id: string } }) {
   }
 
   return (
-    <section className="max-w-prose mx-auto my-0 py-8 prose px-4 lg:px-8 prose-h1:my-0">
+    <DoublePane>
       <h1>
         List of All Posts and Tags
       </h1>
@@ -46,10 +47,8 @@ export default function Page({ params }: { params: { id: string } }) {
       <hr/>
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
       <hr/>
-      <EmailSubButton/>
-      <hr/>
       <TagsButtonGrid/>
-    </section>
+    </DoublePane>
   )
 }
 

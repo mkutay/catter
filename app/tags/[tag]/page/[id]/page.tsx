@@ -6,6 +6,7 @@ import PaginationArrows from '@/components/paginationArrows';
 import TagsButtonGrid, { turnTagString } from '@/components/tagsButtonGrid';
 import EmailSubButton from '@/components/emailSubButton';
 import ListPosts from '@/components/listPosts';
+import DoublePane from '@/components/doublePane';
 
 export function generateMetadata({ params }: { params: { tag: string, id: string } }) {
   const { id, tag } = params;
@@ -40,7 +41,7 @@ export default function Page({ params }: { params: { tag: string, id: string } }
   }
 
   return (
-    <section className="max-w-prose mx-auto my-8 prose px-4 lg:px-8 prose-h1:my-0">
+    <DoublePane>
       <h1>
         Posts With Tag: <span className="text-[#1e66f5] dark:text-[#89b4fa]">{turnTagString(tag)}</span>
       </h1>
@@ -52,7 +53,7 @@ export default function Page({ params }: { params: { tag: string, id: string } }
       <EmailSubButton/>
       <hr/>
       <TagsButtonGrid/>
-    </section>
+    </DoublePane>
   )
 }
 
