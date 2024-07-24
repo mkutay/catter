@@ -54,7 +54,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <p className="text-sm text-[#6c6f85] dark:text-[#a6adc8] lg:hidden flex">
+      <p className="text-sm text-[#6c6f85] dark:text-[#a6adc8] lg:hidden flex text-center justify-center">
         © 2023-present Mehmet Kutay Bozkurt. All Rights Reserved.
       </p>
     </footer>

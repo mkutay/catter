@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'Mehmet Kutay Bozkurt', url: 'https://www.mkutay.dev' }],
   creator: 'Mehmet Kutay Bozkurt',
   publisher: 'Mehmet Kutay Bozkurt',
-  keywords: ['computer science', 'mathematics', 'personal blog', 'blog', 'school', 'university'],
+  keywords: ['computer science', 'mathematics', 'blog', 'school'],
   openGraph: {
     title: {
       template: `%s | ${siteConfig.name}`,
