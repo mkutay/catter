@@ -38,7 +38,7 @@ export const siteConfig = {
     'ib',
   ],
   lastModifiedIsTrue: true,
-  lastModifiedDate: new Date().toISOString().split('T')[0],
+  lastModifiedDate: new Date('2024-07-24'),
   footerItems: {
     'connections': [
       {'title': 'GitHub', 'link': 'https://github.com/mkutay'},

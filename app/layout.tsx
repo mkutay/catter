@@ -60,9 +60,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} text-[#4c4f69] bg-[#eff1f5] dark:text-[#cdd6f4] dark:bg-[#1e1e2e]`}>
+      <body className={`${inter.className} text-text bg-base`}>
         <ThemeProvider attribute="class">
-          <main className="flex flex-col min-h-screen divide-y divide-[#ccd0da] dark:divide-[#313244]">
+          <main className="flex flex-col min-h-screen divide-y divide-surface-0">
             <div><NavBar/></div>
             <div className="flex-1">{children}</div>
             <div><Footer/></div>

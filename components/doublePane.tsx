@@ -21,7 +21,7 @@ export default function DoublePane({
         </h1>
         <hr className="hidden lg:flex"/>
         <Suspense>
-          <MostViewedPosts postNum={Math.floor(siteConfig.postNumPerPage * 1.5)}/>
+          <MostViewedPosts postNum={Math.floor(siteConfig.postNumPerPage * 1.25)}/>
         </Suspense>
         <hr/>
         <EmailSubButton/>
