@@ -24,7 +24,7 @@ export default async function sitemap() {
   posts.forEach((post) => {
     siteMap.push({
       url: `${siteConfig.url}/posts/${post.slug}`,
-      lastModified: siteConfig.lastModifiedIsTrue ? siteConfig.lastModifiedDate : new Date(String(post.meta.lastModified ?? post.meta.date)).toISOString().split('T')[0],
+      lastModified: siteConfig.lastModifiedIsTrue && new Date(siteConfig.lastModifiedDate) > new Date(new Date(String(post.meta.lastModified ?? post.meta.date)).toISOString().split('T')[0]) ? siteConfig.lastModifiedDate : new Date(String(post.meta.lastModified ?? post.meta.date)).toISOString().split('T')[0],
     });
   });
 

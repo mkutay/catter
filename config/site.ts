@@ -41,8 +41,9 @@ export const siteConfig = {
   lastModifiedDate: new Date('2024-07-24'),
   footerItems: {
     'connections': [
+      {'title': 'Twitter/X', 'link': 'https://x.com/mkutaybozkurt'},
+      {'title': 'Instagram', 'link': 'https://www.instagram.com/mkutaybozkurt'},
       {'title': 'GitHub', 'link': 'https://github.com/mkutay'},
-      {'title': 'Instagram', 'link': 'https://www.instagram.com/mkutayboz'},
       {'title': 'Resume', 'link': '/pdfs/mehmet-kutay-bozkurt.pdf'},
     ],
     'blog': [

@@ -7,12 +7,11 @@ import { Suspense } from 'react';
 import { incrementViews } from '@/lib/dataBaseActions';
 import ViewCounter from '@/components/viewCounter';
 import Comment from '@/components/giscusComments';
-import EmailSubButton from '@/components/emailSubButton';
 import { siteConfig } from '@/config/site';
 import { getPostFiles, getProps } from '@/lib/postQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { MostViewedPosts } from '@/components/mostViewedPosts';
 import DoublePane from '@/components/doublePane';
+import CopyToClipboard from '@/components/copyToClipboard';
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const props = getProps('content/posts', params.slug);
@@ -75,6 +74,15 @@ export default function Page({ params }: { params: { slug: string } }) {
                 [<Link href={`/tags/${tag}/page/1`}>{tag}</Link>]
               </span>
             ))}
+            {/* <span className="px-2 text-xl">
+              ·
+            </span>
+            <span>
+              <CopyToClipboard text={props.meta.shortened}/>
+            </span> */}
+          </div>
+          <div className="my-4 text-right">
+            <CopyToClipboard text={props.meta.shortened}/>
           </div>
           <p className="my-4 italic text-right">
             {props.meta.description}
