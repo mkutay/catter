@@ -16,7 +16,7 @@ export function generateMetadata() {
 
 export default function Page() {
   return (
-    <section className="max-w-prose mx-auto my-0 py-8 prose px-4 prose-h1:my-0">
+    <section className="max-w-prose mx-auto my-0 py-8 prose px-4 lg:px-8 prose-h1:my-0">
       <h1>
         Tags
       </h1>

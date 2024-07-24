@@ -39,4 +39,17 @@ export const siteConfig = {
   ],
   lastModifiedIsTrue: true,
   lastModifiedDate: new Date().toISOString().split('T')[0],
+  footerItems: {
+    'connections': [
+      {'title': 'GitHub', 'link': 'https://github.com/mkutay'},
+      {'title': 'Instagram', 'link': 'https://www.instagram.com/mkutayboz'},
+      {'title': 'Resume', 'link': '/pdfs/mehmet-kutay-bozkurt.pdf'},
+    ],
+    'blog': [
+      {'title': 'Sponsor Me', 'link': 'https://github.com/sponsors/mkutay?o=esb'},
+      {'title': 'About Me', 'link': '/about'},
+      {'title': 'Substack', 'link': 'https://mkutay.substack.com'},
+      {'title': 'RSS Feed', 'link': '/feed.xml'},
+    ],
+  },
 };

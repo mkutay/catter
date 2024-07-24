@@ -25,7 +25,7 @@ import {
 export default function NavBar() {
   return (
     <nav className="my-8 max-w-prose lg:max-w-6xl mx-auto flex flex-row items-center place-items-center justify-center">
-      <div className="mr-auto place-items-center px-4 text-[#8839ef] dark:text-[#cba6f7] hover:underline font-extrabold text-lg gap-2 flex flex-row items-center">
+      <div className="mr-auto place-items-center px-4 lg:px-8 text-[#8839ef] dark:text-[#cba6f7] hover:underline font-extrabold text-lg gap-2 flex flex-row items-center">
         <Link href="/" className="flex flex-row items-center gap-2">
           <Logo className="flex-none"/>
           Kutay&#39;s Blog
@@ -43,8 +43,8 @@ export default function NavBar() {
             </Link>
           ))}
         </div>
-        <div className="px-2 lg:px-4 lg:pl-2"><ThemeChanger/></div>
-        <div className="flex lg:hidden px-4 pl-2 lg:px-0">
+        <div className="px-2 lg:px-8 lg:pl-2"><ThemeChanger/></div>
+        <div className="flex lg:hidden px-8 pl-2 lg:px-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
