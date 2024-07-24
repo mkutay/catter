@@ -50,8 +50,6 @@ export default function Page({ params }: { params: { tag: string, id: string } }
       <hr/>
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
       <hr/>
-      <EmailSubButton/>
-      <hr/>
       <TagsButtonGrid/>
     </DoublePane>
   )
