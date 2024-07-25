@@ -5,7 +5,7 @@ export default function EmailSubButton() {
     <div className="grid grid-rows-1 gap-2 prose-p:my-0">
       <p className="text-lg col-auto">
         <span className="text-[#8839ef] dark:text-[#cba6f7] underline">Subscribe</span>
-        <span> to my newsletter to get updates on new posts and email only posts.</span>
+        <span> to my newsletter to get updates on new posts and email only specials.</span>
       </p>
       <div className="flex justify-center items-center">
         <button
