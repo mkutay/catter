@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
 import { MostViewedPosts } from '@/components/mostViewedPosts';
-import EmailSubButton from '@/components/emailSubButton';
+import EmailSubButton from '@/components/post/emailSubButton';
 import { siteConfig } from '@/config/site';
 
 export default function DoublePane({

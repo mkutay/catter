@@ -1,6 +1,6 @@
 import { siteConfig } from '@/config/site';
 import TagsButtonGrid from '@/components/tagsButtonGrid';
-import EmailSubButton from '@/components/emailSubButton';
+import EmailSubButton from '@/components/post/emailSubButton';
 
 export function generateMetadata() {
   return {

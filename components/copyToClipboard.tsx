@@ -3,7 +3,7 @@
 import copy from 'copy-to-clipboard';
 
 import { siteConfig } from '@/config/site';
-import { Button } from '@/components/button';
+import { Button } from '@/components/ui/button';
 import { useToast } from './ui/use-toast';
 import { ClipboardCopyIcon, ClipboardIcon } from '@radix-ui/react-icons';
 

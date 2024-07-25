@@ -5,8 +5,8 @@ import { format } from 'date-fns';
 import { Suspense } from 'react';
 
 import { incrementViews } from '@/lib/dataBaseActions';
-import ViewCounter from '@/components/viewCounter';
-import Comment from '@/components/giscusComments';
+import ViewCounter from '@/components/post/viewCounter';
+import Comment from '@/components/post/giscusComments';
 import { siteConfig } from '@/config/site';
 import { getPostFiles, getProps } from '@/lib/postQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';

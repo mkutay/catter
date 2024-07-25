@@ -4,7 +4,7 @@ import { getPostsLength } from '@/lib/postQueries';
 import { siteConfig } from '@/config/site';
 import TagsButtonGrid from '@/components/tagsButtonGrid';
 import PaginationArrows from '@/components/paginationArrows';
-import EmailSubButton from '@/components/emailSubButton';
+import EmailSubButton from '@/components/post/emailSubButton';
 import ListPosts from '@/components/listPosts';
 import DoublePane from '@/components/doublePane';
 
