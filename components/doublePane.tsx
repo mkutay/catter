@@ -11,7 +11,7 @@ export default function DoublePane({
   children: React.ReactNode;
 }>) {
   return (
-    <section className="my-8 lg:my-0 justify-center px-4 lg:px-8 prose-h1:my-0 flex lg:flex-row flex-col lg:gap-24 gap-0 lg:max-w-6xl max-w-prose mx-auto">
+    <section className="my-8 mb-10 lg:my-0 lg:mb-2 justify-center px-4 lg:px-8 prose-h1:my-0 flex lg:flex-row flex-col lg:gap-24 gap-0 lg:max-w-6xl max-w-prose mx-auto">
       <div className="lg:w-2/3 prose w-full lg:mx-0 mx-auto lg:my-8">
         {children}
       </div>
