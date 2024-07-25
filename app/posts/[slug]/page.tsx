@@ -12,6 +12,7 @@ import { getPostFiles, getProps } from '@/lib/postQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import DoublePane from '@/components/doublePane';
 import CopyToClipboard from '@/components/copyToClipboard';
+import ViewCounterFallback from '@/components/post/viewCounterFallback';
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const props = getProps('content/posts', params.slug);
@@ -63,12 +64,6 @@ export default function Page({ params }: { params: { slug: string } }) {
             <span className="px-2 text-xl">
               ·
             </span>
-            <Suspense>
-              <ViewCounter slug={props.slug}/>
-            </Suspense>
-            <span className="px-2 text-xl">
-              ·
-            </span>
             {props.meta.tags.map((tag: string) => (
               <span key={tag} className="text-[#5c5f77] dark:text-[#bac2de] prose-a:text-[#5c5f77] prose-a:dark:text-[#bac2de]">
                 [<Link href={`/tags/${tag}/page/1`}>{tag}</Link>]
@@ -81,7 +76,11 @@ export default function Page({ params }: { params: { slug: string } }) {
               <CopyToClipboard text={props.meta.shortened}/>
             </span> */}
           </div>
-          <div className="my-4 text-right">
+          <div className="my-4 flex flex-row items-center gap-4 justify-end text-text text-lg">
+            <Suspense fallback={<ViewCounterFallback/>}>
+              <ViewCounter slug={props.slug}/>
+            </Suspense>
+            {/* <ViewCounterFallback/> */}
             <CopyToClipboard text={props.meta.shortened}/>
           </div>
           <p className="my-4 italic text-right">
