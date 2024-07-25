@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { Button } from '../ui/button';
+import { Mailbox } from 'lucide-react';
 
 export default function EmailSubButton() {
   return (
@@ -7,14 +9,13 @@ export default function EmailSubButton() {
         <span className="text-[#8839ef] dark:text-[#cba6f7] underline">Subscribe</span>
         <span> to my newsletter to get updates on new posts and email only specials.</span>
       </p>
-      <div className="flex justify-center items-center">
-        <button
-          className="text-lg font-bold tracking-tight rounded-xl p-3 not-prose border border-[#bcc0cc] dark:border-[#45475a] bg-[#e6e9ef] dark:bg-[#181825] text-[#8839ef] dark:text-[#cba6f7]"
-        >
-          <Link href="https://mkutay.substack.com/subscribe">
-            Subscribe!
+      <div className="flex justify-center items-center not-prose">
+        <Button variant="default" size="lg" asChild className="text-lg text-mauve">
+          <Link href="https://mkutay.substack.com/subscribe" className="flex flex-row gap-3">
+            <Mailbox stroke="currentColor" strokeWidth="1.8px"/>
+            <div>Subscribe!</div>
           </Link>
-        </button>
+        </Button>
       </div>
     </div>
   );
