@@ -66,7 +66,7 @@ export default function RootLayout({
           <main className="flex flex-col min-h-screen divide-y divide-surface-0">
             <div><NavBar/></div>
             <div className="flex-1">{children}</div>
-            <div><Footer/></div>
+            <div className="bg-surface-0"><Footer/></div>
           </main>
           <Toaster/>
         </ThemeProvider>
