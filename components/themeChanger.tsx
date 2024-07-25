@@ -28,10 +28,10 @@ export default function ThemeChanger() {
     <div>
       <button
         onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-        className="rounded-md w-7 h-7 flex items-center justify-center"
+        className="rounded-md w-7 h-7 flex items-center justify-center transition-all"
       >
         <span className="sr-only">Toggle mode</span>
-        {getRandomInt(2) !== 1 ? (
+        {theme === 'dark' ? (
           <SunFilledIcon/>
         ) : (
           <MoonFilledIcon/>

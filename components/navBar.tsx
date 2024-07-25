@@ -44,7 +44,7 @@ export default function NavBar() {
           ))}
         </div>
         <div className="px-2 lg:px-8 lg:pl-2"><ThemeChanger/></div>
-        <div className="flex lg:hidden px-8 pl-2 lg:px-0">
+        <div className="flex lg:hidden px-4 pl-2 lg:px-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
