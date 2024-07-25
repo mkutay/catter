@@ -14,6 +14,10 @@ export const siteConfig = {
       label: "Guest Book",
       href: "/guestbook",
     },
+    // {
+    //   label: "Projects",
+    //   href: "/projects",
+    // },
     {
       label: "Posts",
       href: "/posts/page/1",
