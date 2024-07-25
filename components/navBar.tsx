@@ -50,11 +50,11 @@ export default function NavBar() {
         <div className="flex lg:hidden px-4 pl-2 lg:px-0">
           <DropdownMenu onOpenChange={() => setTriggered(triggered ? false : true)}>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="transition-all duration-1000">
+              <Button variant="ghost" size="icon">
                 {triggered === true ? (
-                  <Cross1Icon stroke="currentColor" strokeWidth="1px" className="transition-all duration-1000"/>
+                  <Cross1Icon stroke="currentColor" strokeWidth="1px"/>
                 ) : (
-                  <HamburgerMenuIcon stroke="currentColor" strokeWidth="1px" className="transition-all duration-1000"/>
+                  <HamburgerMenuIcon stroke="currentColor" strokeWidth="1px"/>
                 )}
               </Button>
             </DropdownMenuTrigger>

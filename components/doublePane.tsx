@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { MostViewedPosts } from '@/components/mostViewedPosts';
 import EmailSubButton from '@/components/post/emailSubButton';
 import { siteConfig } from '@/config/site';
+import { MostViewedPostsFallback } from './mostViewedPostsFallback';
 
 export default function DoublePane({
   children,
@@ -20,7 +21,7 @@ export default function DoublePane({
           Popular Content
         </h1>
         <hr className="hidden lg:flex"/>
-        <Suspense>
+        <Suspense fallback={<MostViewedPostsFallback postNum={Math.floor(siteConfig.postNumPerPage * 1.25)}/>}>
           <MostViewedPosts postNum={Math.floor(siteConfig.postNumPerPage * 1.25)}/>
         </Suspense>
         <hr/>
