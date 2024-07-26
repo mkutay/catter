@@ -5,6 +5,7 @@ import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
+import { redirect } from 'next/navigation';
 
 export async function incrementViews(slug: string) {
   noStore();
@@ -44,23 +45,35 @@ async function getSession(): Promise<Session> {
 }
 
 export async function saveGuestbookEntry(formData: FormData) {
-  let session = await getSession();
-  let email = formData.get('code')?.toString() || session.user?.email as string;
-  let created_by = formData.get('name')?.toString() || session.user?.name as string;
-
-  if (!session.user || email !== 'abracadabra') {
-    throw new Error('Unauthorized');
-  }
-
   let entry = formData.get('entry')?.toString() || '';
   let body = entry.slice(0, 1000);
 
   let random = Math.floor(Math.random() * 1000000);
 
-  await sql`
-    INSERT INTO guestbook (id, email, body, created_by, created_at)
-    VALUES (${random}, ${email}, ${body}, ${created_by}, NOW())
-  `;
+  let session = await getSession();
+
+  if (!session.user) {
+    const email = formData.get('code')?.toString || String('');
+    
+    if (email !== 'abracadabra') {
+      throw new Error('Unauthorized');
+    }
+
+    const created_by = formData.get('name')?.toString() || String('');
+
+    await sql`
+      INSERT INTO guestbook (id, email, body, created_by, created_at)
+      VALUES (${random}, ${email}, ${body}, ${created_by}, NOW())
+    `;
+  } else {
+    let email = session.user?.email as string;
+    let created_by = session.user?.name as string;
+
+    await sql`
+      INSERT INTO guestbook (id, email, body, created_by, created_at)
+      VALUES (${random}, ${email}, ${body}, ${created_by}, NOW())
+    `;
+  }
 
   revalidatePath('/guestbook');
 }
