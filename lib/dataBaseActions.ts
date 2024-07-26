@@ -44,9 +44,7 @@ async function getSession(): Promise<Session> {
   return session;
 }
 
-export async function saveGuestbookEntry(formData: FormData) {
-  console.log(formData, formData.get('entry')?.toString, formData.get('code')?.toString, formData.get('name')?.toString);
-  
+export async function saveGuestbookEntry(formData: FormData) {  
   let entry = formData.get('entry')?.toString() || '';
   let body = entry.slice(0, 1000);
 
@@ -55,15 +53,13 @@ export async function saveGuestbookEntry(formData: FormData) {
   let session = await getSession();
 
   if (!session.user) {
-    let email = formData.get('code')?.toString || String('');
-    console.log(email);
+    let email = formData.get('code')?.toString() || String('');
     
     if (email != String('abracadabra')) {
       throw new Error('Unauthorized');
     }
 
     const created_by = formData.get('name')?.toString() || String('');
-    email = `${email}@a.com`;
 
     await sql`
       INSERT INTO guestbook (id, email, body, created_by, created_at)
