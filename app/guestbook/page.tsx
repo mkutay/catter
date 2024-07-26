@@ -1,11 +1,13 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
-import { SignIn, SignInFallback, SignOut } from '@/app/guestbook/buttons';
 import Form from '@/app/guestbook/form';
 import DoublePane from '@/components/doublePane';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { GuestBookSignIn, GuestBookSignOut } from '@/components/guestBookButtons';
 
 export const metadata = {
   title: 'Sign and Mark My Guestbook',
@@ -19,12 +21,21 @@ export default function Page() {
         Sign My Guestbook!
       </h1>
       <hr/>
-      <Suspense fallback={<SignInFallback/>}>
-        <GuestbookForm/>
-      </Suspense>
-      <Suspense fallback={<GuestbookEntriesFallback/>}>
-        <GuestbookEntries/>
-      </Suspense>
+      <main className="flex flex-col gap-4">
+        <Suspense fallback={<Skeleton className="h-12 md:w-2/5 w-full"/>}>
+          <GuestbookForm/>
+        </Suspense>
+        <Suspense fallback={<GuestbookEntriesFallback/>}>
+          <GuestbookEntries/>
+        </Suspense>
+        <div className="flex justify-end">
+          <Button variant="ghost" size="sm" className="w-fit not-prose" asChild>
+            <Link href="/guestbook/admin" className="text-text">
+              Admin
+            </Link>
+          </Button>
+        </div>
+      </main>
     </DoublePane>
   );
 }
@@ -35,11 +46,11 @@ async function GuestbookForm() {
   return session?.user ? (
     <div className="flex flex-col gap-2">
       <Form/>
-      <SignOut/>
+      <GuestBookSignOut/>
     </div>
   ) : (
     <div className="items-center justify-center flex">
-      <SignIn/>
+      <GuestBookSignIn/>
     </div>
   );
 }
@@ -51,18 +62,20 @@ async function GuestbookEntries() {
     return null;
   }
 
-  return entries.map((entry: any) => (
-    <div key={entry.id} className="flex flex-col my-1">
-      <div className="w-full break-words">
-        <span className="text-sapphire mr-1">
-          {entry.created_by}:
-        </span>
-        <span className="text-text">
-          {entry.body}
-        </span>
-      </div>
+  return (
+    <div className="flex flex-col gap-2">
+      {entries.map((entry: any) => (
+        <div key={entry.id} className="w-full break-words">
+          <span className="text-sapphire mr-1">
+            {entry.created_by}:
+          </span>
+          <span className="text-text">
+            {entry.body}
+          </span>
+        </div>
+      ))}
     </div>
-  ));
+  );
 }
 
 function GuestbookEntriesFallback() {
@@ -70,10 +83,14 @@ function GuestbookEntriesFallback() {
   for (let i = 0; i < 8; i++) {
     entries.push(i);
   }
-  return entries.map((entry: number) => (
-    <div key={entry} className="my-3">
-      <Skeleton className="text-text h-6"/>
+  return (
+    <div>
+      {entries.map((entry: number) => (
+        <div key={entry} className="my-3">
+          <Skeleton className="text-text h-6"/>
+        </div>
+      ))}
     </div>
-  ));
+  );
 }
 

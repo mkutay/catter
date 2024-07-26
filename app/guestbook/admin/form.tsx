@@ -43,10 +43,10 @@ function GuestbookEntry({ entry, children }: any) {
   return (
     <div className="w-full break-words items-center my-2">
       {children}
-      <span className="text-[#d20f39] dark:text-[#f38ba8] mr-1">
+      <span className="text-sapphire mr-1">
         {entry.created_by}:
       </span>
-      <span className="text-[#4c4f69] dark:text-[#cdd6f4]">
+      <span className="text-text">
         {entry.body}
       </span>
     </div>
