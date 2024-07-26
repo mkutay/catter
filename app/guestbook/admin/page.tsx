@@ -11,7 +11,7 @@ export const metadata = {
 export default async function Page() {
   let session = await auth();
   if (session?.user?.email !== 'hello@mkutay.dev') {
-    redirect('/');
+    redirect('/guestbook');
   }
 
   let entries = await getGuestbookEntries();
