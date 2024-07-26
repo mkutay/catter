@@ -3,10 +3,17 @@ import Link from 'next/link';
 
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
-import Form from '@/app/guestbook/form';
+import Form, { GuestBookPopOverForm } from '@/app/guestbook/form';
 import DoublePane from '@/components/doublePane';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { GuestBookSignIn, GuestBookSignOut } from '@/components/guestBookButtons';
 
 export const metadata = {
@@ -21,14 +28,29 @@ export default function Page() {
         Sign My Guestbook!
       </h1>
       <hr/>
-      <main className="flex flex-col gap-4">
+      <main className="flex flex-col gap-4 not-prose">
         <Suspense fallback={<Skeleton className="h-12 md:w-2/5 w-full"/>}>
           <GuestbookForm/>
         </Suspense>
         <Suspense fallback={<GuestbookEntriesFallback/>}>
           <GuestbookEntries/>
         </Suspense>
-        <div className="flex justify-end">
+        <div className="flex flex-row justify-end gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="w-fit">
+                Use a Code
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="max-w-3xl">
+              <div className="grid gap-4">
+                <p className="text-md text-text space-y-2">
+                  Enter a code and a name to sign my guest book.
+                </p>
+                <GuestBookPopOverForm/>
+              </div>
+            </PopoverContent>
+          </Popover>
           <Button variant="ghost" size="sm" className="w-fit not-prose" asChild>
             <Link href="/guestbook/admin" className="text-text">
               Admin

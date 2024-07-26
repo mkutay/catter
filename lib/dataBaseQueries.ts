@@ -60,6 +60,6 @@ export async function getGuestbookEntries() {
     SELECT id, body, created_by, created_at, updated_at
     FROM guestbook
     ORDER BY created_at DESC
-    LIMIT 100
+    LIMIT 300
   `;
 }

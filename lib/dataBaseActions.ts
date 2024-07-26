@@ -43,17 +43,17 @@ async function getSession(): Promise<Session> {
   return session;
 }
 
-export async function saveGuestbookEntry(formData: FormData) {
+export async function saveGuestbookEntry(formData: FormData, refEmail?: string, refName?: string) {
   let session = await getSession();
-  let email = session.user?.email as string;
-  let created_by = session.user?.name as string;
+  let email = refEmail ?? session.user?.email as string;
+  let created_by = refName ?? session.user?.name as string;
 
   if (!session.user) {
     throw new Error('Unauthorized');
   }
 
   let entry = formData.get('entry')?.toString() || '';
-  let body = entry.slice(0, 500);
+  let body = entry.slice(0, 1000);
 
   let random = Math.floor(Math.random() * 1000000);
 
@@ -81,6 +81,6 @@ export async function deleteGuestbookEntries(selectedEntries: string[]) {
     WHERE id = ANY(${arrayLiteral}::int[])
   `;
 
-  revalidatePath('/admin');
+  revalidatePath('/guestbook/admin');
   revalidatePath('/guestbook');
 }
