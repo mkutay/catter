@@ -13,7 +13,7 @@ export function SignOut() {
       variant="ghost"
       size="sm"
       onClick={() => signOut()}
-      className="mb-4 w-20"
+      className="mb-4 w-18"
     >
       Sign out
     </Button>
