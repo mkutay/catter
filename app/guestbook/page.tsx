@@ -15,6 +15,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { GuestBookSignIn, GuestBookSignOut } from '@/components/guestBookButtons';
+import { cn } from '@/lib/utils';
+import { siteConfig } from '@/config/site';
 
 export const metadata = {
   title: 'Sign and Mark My Guestbook',
@@ -88,7 +90,7 @@ async function GuestbookEntries() {
     <div className="flex flex-col gap-2">
       {entries.map((entry: any) => (
         <div key={entry.id} className="w-full break-words">
-          <span className="text-text mr-1 font-bold tracking-tight">
+          <span className={cn("mr-1 font-bold tracking-tight", entry.email.includes('@') ? "text-text" : siteConfig.codesStyles[entry.email as keyof typeof siteConfig.codesStyles])}>
             {entry.created_by}:
           </span>
           <span className="text-text">

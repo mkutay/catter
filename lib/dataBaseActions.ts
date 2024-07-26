@@ -6,6 +6,7 @@ import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
 import { redirect } from 'next/navigation';
+import { siteConfig } from '@/config/site';
 
 export async function incrementViews(slug: string) {
   noStore();
@@ -57,7 +58,7 @@ export async function saveGuestbookEntry(formData: FormData) {
   if (!session || !session.user) {
     let email = formData.get('code')?.toString() || String('');
     
-    if (email !== 'abracadabra') {
+    if (!siteConfig.codes.includes(email)) {
       throw new Error('Unauthorized');
     }
 

@@ -57,4 +57,8 @@ export const siteConfig = {
       {'title': 'RSS Feed', 'link': '/feed.xml'},
     ],
   },
+  codes: ['abracadabra'],
+  codesStyles: {
+    'abracadabra': 'text-maroon',
+  }
 };
