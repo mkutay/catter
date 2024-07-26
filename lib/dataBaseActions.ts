@@ -47,7 +47,6 @@ async function getSession(): Promise<Session> {
 }
 
 export async function saveGuestbookEntry(formData: FormData) {  
-  console.log(formData, formData.get('entry')?.toString(), formData.get('code')?.toString(), formData.get('name')?.toString());
   let entry = formData.get('entry')?.toString() || String('');
   let body = entry.slice(0, 1000);
 
