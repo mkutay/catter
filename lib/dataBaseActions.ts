@@ -37,7 +37,8 @@ export async function incrementLikes(slug: string) {
 
 async function getSession(): Promise<Session> {
   let session = await auth();
-  if (!session || !session.user) {
+
+  if (!session) {
     throw new Error('Unauthorized');
   }
 
@@ -45,7 +46,8 @@ async function getSession(): Promise<Session> {
 }
 
 export async function saveGuestbookEntry(formData: FormData) {  
-  let entry = formData.get('entry')?.toString() || '';
+  console.log(formData, formData.get('entry')?.toString(), formData.get('code')?.toString(), formData.get('name')?.toString());
+  let entry = formData.get('entry')?.toString() || String('');
   let body = entry.slice(0, 1000);
 
   let random = Math.floor(Math.random() * 1000000);
@@ -55,7 +57,7 @@ export async function saveGuestbookEntry(formData: FormData) {
   if (!session.user) {
     let email = formData.get('code')?.toString() || String('');
     
-    if (email != String('abracadabra')) {
+    if (email !== 'abracadabra') {
       throw new Error('Unauthorized');
     }
 
