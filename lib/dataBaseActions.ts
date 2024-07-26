@@ -57,7 +57,7 @@ export async function saveGuestbookEntry(formData: FormData) {
     const email = formData.get('code')?.toString || String('');
     console.log(email);
     
-    if (email !== 'abracadabra') {
+    if (email != String('abracadabra')) {
       throw new Error('Unauthorized');
     }
 
