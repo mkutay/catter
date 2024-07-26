@@ -37,8 +37,8 @@ export async function incrementLikes(slug: string) {
 
 async function getSession(): Promise<Session> {
   let session = await auth();
-
-  if (!session) {
+  
+  if (!session || !session.user) {
     throw new Error('Unauthorized');
   }
 
@@ -52,9 +52,9 @@ export async function saveGuestbookEntry(formData: FormData) {
 
   let random = Math.floor(Math.random() * 1000000);
 
-  let session = await getSession();
+  let session = await auth();
 
-  if (!session.user) {
+  if (!session || !session.user) {
     let email = formData.get('code')?.toString() || String('');
     
     if (email !== 'abracadabra') {
