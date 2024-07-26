@@ -5,6 +5,7 @@ import { signIn, signOut } from 'next-auth/react';
 import { GithubSvg } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function SignOut() {
   return (
@@ -30,5 +31,11 @@ export function SignIn() {
       <GitHubLogoIcon width={24} height={24}/>
       <div className="ml-4">Sign in with GitHub</div>
     </Button>
+  );
+}
+
+export function SignInFallback() {
+  return (
+    <Skeleton className="h-12 md:w-2/5 w-full mb-4"/>
   );
 }

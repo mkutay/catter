@@ -2,9 +2,10 @@ import { Suspense } from 'react';
 
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
-import { SignIn, SignOut } from '@/app/guestbook/buttons';
+import { SignIn, SignInFallback, SignOut } from '@/app/guestbook/buttons';
 import Form from '@/app/guestbook/form';
 import DoublePane from '@/components/doublePane';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const metadata = {
   title: 'Sign and Mark My Guestbook',
@@ -18,10 +19,10 @@ export default function Page() {
         Sign My Guestbook!
       </h1>
       <hr/>
-      <Suspense>
+      <Suspense fallback={<SignInFallback/>}>
         <GuestbookForm/>
       </Suspense>
-      <Suspense>
+      <Suspense fallback={<GuestbookEntriesFallback/>}>
         <GuestbookEntries/>
       </Suspense>
     </DoublePane>
@@ -51,7 +52,7 @@ async function GuestbookEntries() {
   }
 
   return entries.map((entry: any) => (
-    <div key={entry.id} className="flex flex-col my-2">
+    <div key={entry.id} className="flex flex-col my-1">
       <div className="w-full break-words">
         <span className="text-sapphire mr-1">
           {entry.created_by}:
@@ -63,3 +64,16 @@ async function GuestbookEntries() {
     </div>
   ));
 }
+
+function GuestbookEntriesFallback() {
+  const entries: number[] = [];
+  for (let i = 0; i < 8; i++) {
+    entries.push(i);
+  }
+  return entries.map((entry: number) => (
+    <div key={entry} className="my-3">
+      <Skeleton className="text-text h-6"/>
+    </div>
+  ));
+}
+
