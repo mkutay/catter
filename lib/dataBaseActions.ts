@@ -45,6 +45,7 @@ async function getSession(): Promise<Session> {
 }
 
 export async function saveGuestbookEntry(formData: FormData) {
+  console.log(formData);
   let entry = formData.get('entry')?.toString() || '';
   let body = entry.slice(0, 1000);
 
@@ -54,6 +55,7 @@ export async function saveGuestbookEntry(formData: FormData) {
 
   if (!session.user) {
     const email = formData.get('code')?.toString || String('');
+    console.log(email);
     
     if (email !== 'abracadabra') {
       throw new Error('Unauthorized');
