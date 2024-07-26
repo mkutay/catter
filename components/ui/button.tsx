@@ -17,7 +17,7 @@ const buttonVariants = cva(
           "border border-overlay-0 bg-base text-text shadow-sm hover:bg-surface-0 hover:text-text",
         secondary:
           "bg-mauve text-base shadow-sm hover:bg-mauve/80",
-        ghost: "dark:hover:bg-[#313244] hover:bg-[#ccd0da]",
+        ghost: "hover:bg-surface-0 text-text",
         link: "text-text underline-offset-4 hover:underline",
       },
       size: {
@@ -25,6 +25,7 @@ const buttonVariants = cva(
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-12 rounded-lg px-6",
         icon: "h-9 w-9",
+        md: "h-10 rounded-md px-3 text-md",
       },
     },
     defaultVariants: {

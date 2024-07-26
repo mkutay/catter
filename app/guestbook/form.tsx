@@ -4,27 +4,27 @@ import { useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { saveGuestbookEntry } from '@/lib/dataBaseActions';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function Form() {
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
     <form
-      className="relative"
       ref={formRef}
       action={async (formData) => {
         await saveGuestbookEntry(formData);
         formRef.current?.reset();
       }}
     >
-      <div className="flex">
-        <input
+      <div className="flex flex-row gap-2">
+        <Input
           aria-label="Your message"
           placeholder="Your message..."
           name="entry"
           type="text"
           required
-          className="px-4 lg:px-8 py-2 flex w-full border mr-1 border-[#bcc0cc] dark:border-[#45475a] bg-[#e6e9ef] dark:bg-[#181825] rounded-md text-[#4c4f69] dark:text-[#cdd6f4]"
         />
         <SubmitButton/>
       </div>
@@ -36,12 +36,13 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
-      className="flex items-center justify-center lg:px-8 px-4 py-2 ml-1 border border-[#bcc0cc] dark:border-[#45475a] bg-[#e6e9ef] dark:bg-[#181825] text-[#4c4f69] dark:text-[#cdd6f4] rounded-md"
+    <Button
+      variant="secondary"
+      size="md"
       disabled={pending}
       type="submit"
     >
-      Sign
-    </button>
+      Sign!
+    </Button>
   );
 }

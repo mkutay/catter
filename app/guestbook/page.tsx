@@ -20,6 +20,8 @@ export default function Page() {
       <hr/>
       <Suspense>
         <GuestbookForm/>
+      </Suspense>
+      <Suspense>
         <GuestbookEntries/>
       </Suspense>
     </DoublePane>
@@ -30,12 +32,14 @@ async function GuestbookForm() {
   let session = await auth();
 
   return session?.user ? (
-    <>
+    <div className="flex flex-col gap-2">
       <Form/>
       <SignOut/>
-    </>
+    </div>
   ) : (
-    <SignIn/>
+    <div className="items-center justify-center flex">
+      <SignIn/>
+    </div>
   );
 }
 
@@ -49,10 +53,10 @@ async function GuestbookEntries() {
   return entries.map((entry: any) => (
     <div key={entry.id} className="flex flex-col my-2">
       <div className="w-full break-words">
-        <span className="text-[#d20f39] dark:text-[#f38ba8] mr-1">
+        <span className="text-sapphire mr-1">
           {entry.created_by}:
         </span>
-        <span className="text-[#4c4f69] dark:text-[#cdd6f4]">
+        <span className="text-text">
           {entry.body}
         </span>
       </div>
