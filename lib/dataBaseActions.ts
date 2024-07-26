@@ -43,12 +43,12 @@ async function getSession(): Promise<Session> {
   return session;
 }
 
-export async function saveGuestbookEntry(formData: FormData, refEmail?: string, refName?: string) {
+export async function saveGuestbookEntry(formData: FormData) {
   let session = await getSession();
-  let email = refEmail ?? session.user?.email as string;
-  let created_by = refName ?? session.user?.name as string;
+  let email = formData.get('code')?.toString() || session.user?.email as string;
+  let created_by = formData.get('name')?.toString() || session.user?.name as string;
 
-  if (!session.user) {
+  if (!session.user || email !== 'abracadabra') {
     throw new Error('Unauthorized');
   }
 
