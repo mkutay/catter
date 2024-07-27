@@ -4,11 +4,17 @@ import { useFormStatus } from 'react-dom';
 import { useState } from 'react';
 
 import { deleteGuestbookEntries } from '@/lib/dataBaseActions';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { siteConfig } from '@/config/site';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DropdownMenuLabel } from '@/components/ui/dropdown';
 
 export default function Form({ entries }: any) {
   const [selectedInputs, setSelectedInputs] = useState<string[]>([]);
 
-  const handleNormalClick = (checked: boolean, id: string, index: number) => {
+  const handleNormalClick = (checked: any, id: string, index: number) => {
     setSelectedInputs((prevInputs) =>
       checked
         ? [...prevInputs, id]
@@ -22,54 +28,47 @@ export default function Form({ entries }: any) {
         e.preventDefault();
         await deleteGuestbookEntries(selectedInputs);
       }}
+      className="flex flex-col gap-4"
     >
-      <DeleteButton isActive={selectedInputs.length !== 0} />
-      {entries.map((entry: any, index: any) => (
-        <GuestbookEntry key={entry.id} entry={entry}>
-          <input
-            name={entry.id}
-            type="checkbox"
-            className="mr-2 w-4 h-4 border-[#bcc0cc] dark:border-[#45475a] bg-[#e6e9ef] dark:bg-[#181825] border"
-            onChange={(e) => handleNormalClick(e.target.checked, entry.id, index)}
-            checked={selectedInputs.includes(entry.id)}
-          />
-        </GuestbookEntry>
-      ))}
+      <div className="flex justify-center items-center">
+        <DeleteButton isActive={selectedInputs.length !== 0} />
+      </div>
+      <div>
+        {entries.map((entry: any, index: any) => (
+          <div className="flex flex-row gap-2 w-full break-words" key={entry.id}>
+            <Checkbox
+              id={entry.id}
+              checked={selectedInputs.includes(entry.id)}
+              onCheckedChange={(e) => handleNormalClick(e.valueOf(), entry.id, index)}
+              className="mt-1"
+            />
+            <div className="break-words">
+              <span className={cn("mr-1 font-bold tracking-tight", entry.email.includes('@') ? "text-text" : siteConfig.codesStyles[entry.email as keyof typeof siteConfig.codesStyles])}>
+                {entry.created_by}:
+              </span>
+              <span className="text-text">
+                {entry.body}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
     </form>
   );
 }
 
-function GuestbookEntry({ entry, children }: any) {
-  return (
-    <div className="w-full break-words items-center my-2">
-      {children}
-      <span className="text-text mr-1 font-bold tracking-tight">
-        {entry.created_by}:
-      </span>
-      <span className="text-text">
-        {entry.body}
-      </span>
-    </div>
-  );
-}
-
-const cx = (...classes: any) => classes.filter(Boolean).join(' ');
-
-function DeleteButton({ isActive }: any) {
+function DeleteButton({ isActive }: { isActive: boolean }) {
   const { pending } = useFormStatus();
 
   return (
-    <button
-      className={cx(
-        'w-full items-center justify-center border border-[#bcc0cc] dark:border-[#45475a] bg-[#e6e9ef] dark:bg-[#181825] rounded-md p-4 not-prose inline-flex text-[#4c4f69] dark:text-[#cdd6f4] mb-8 transition-all',
-        {
-          'bg-[#d20f39] dark:bg-[#f38ba8]': isActive,
-        }
-      )}
+    <Button
       disabled={pending}
       type="submit"
+      className="w-fit"
+      variant={isActive ? "destructive" : "default"}
+      size="lg"
     >
       Delete Entries
-    </button>
+    </Button>
   );
 }
