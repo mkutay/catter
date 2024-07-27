@@ -60,7 +60,7 @@ export default function NavBar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {siteConfig.navItems.map((item) => (
-                <DropdownMenuItem key={item.href}>
+                <DropdownMenuItem key={item.href} asChild>
                   <Link
                     href={`${item.href}`}
                     className="text-center text-lg px-1"
