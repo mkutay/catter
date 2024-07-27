@@ -33,7 +33,7 @@ export default function Form({ entries }: any) {
       <div className="flex justify-center items-center">
         <DeleteButton isActive={selectedInputs.length !== 0} />
       </div>
-      <div>
+      <div className="flex flex-col gap-2">
         {entries.map((entry: any, index: any) => (
           <div className="flex flex-row gap-2 w-full break-words" key={entry.id}>
             <Checkbox
