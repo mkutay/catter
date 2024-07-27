@@ -7,13 +7,11 @@ import Form, { GuestBookPopOverForm } from '@/app/guestbook/form';
 import DoublePane from '@/components/doublePane';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from '@/components/ui/popover';
 import { GuestBookSignIn, GuestBookSignOut } from '@/components/guestBookButtons';
 import { cn } from '@/lib/utils';
 import { siteConfig } from '@/config/site';
@@ -38,6 +36,11 @@ export default function Page() {
           <GuestbookEntries/>
         </Suspense>
         <div className="flex flex-row justify-end gap-2">
+          <Button variant="ghost" size="sm" className="w-fit not-prose" asChild>
+            <Link href="/guestbook/admin" className="text-text">
+              Admin
+            </Link>
+          </Button>
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" size="sm" className="w-fit">
@@ -53,11 +56,6 @@ export default function Page() {
               </div>
             </PopoverContent>
           </Popover>
-          <Button variant="ghost" size="sm" className="w-fit not-prose" asChild>
-            <Link href="/guestbook/admin" className="text-text">
-              Admin
-            </Link>
-          </Button>
         </div>
       </main>
     </DoublePane>
