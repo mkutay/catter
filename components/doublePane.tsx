@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { MostViewedPosts } from '@/components/mostViewedPosts';
 import EmailSubButton from '@/components/post/emailSubButton';
 import { siteConfig } from '@/config/site';
-import { MostViewedPostsFallback } from './mostViewedPostsFallback';
+import { MostViewedPostsFallback } from '@/components/mostViewedPosts';
 
 export default function DoublePane({
   children,
@@ -15,7 +15,7 @@ export default function DoublePane({
       <div className="lg:w-2/3 prose w-full lg:mx-0 mx-auto lg:my-8">
         {children}
       </div>
-      <div className="lg:w-1/3 prose w-full lg:mx-0 mx-auto prose-h1:mb-6 lg:prose-h1:my-0 sticky top-0 h-full lg:py-8">
+      <div className="lg:w-1/3 prose w-full lg:mx-0 mx-auto prose-h1:mb-6 lg:prose-h1:my-0 sticky top-0 h-fit lg:py-8">
         <hr className="lg:hidden flex"/>
         <h1>
           Popular Content

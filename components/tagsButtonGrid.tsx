@@ -2,18 +2,19 @@ import Link from 'next/link';
 
 import { getListOfAllTags } from '@/lib/postQueries';
 import { siteConfig } from '@/config/site';
+import { Button } from './ui/button';
 
 export default function TagsButtonGrid() {
   const tags = getListOfAllTags();
 
   return (
-    <div className="gap-4 grid grid-flow-row sm:grid-cols-3 grid-cols-2 items-center">
+    <div className="gap-4 grid grid-flow-row sm:grid-cols-3 grid-cols-2 items-center not-prose">
       {tags.map((tag) => (
-        <Link key={tag} href={`/tags/${tag}/page/1`} className="text-center border rounded-2xl py-2 px-4 placeholder:text-center border-[#bcc0cc] dark:border-[#45475a] bg-[#e6e9ef] dark:bg-[#181825]">
-          <div className="tracking-tight text-lg font-bold">
+        <Button key={tag} variant="default" size="lg" asChild className="text-lg font-bold tracking-tight">
+          <Link href={`/tags/${tag}/page/1`} className="text-text">
             {turnTagString(tag)}
-          </div>
-        </Link>
+          </Link>
+        </Button>
       ))}
     </div>
   );

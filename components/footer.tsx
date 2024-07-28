@@ -1,26 +1,24 @@
-'use client';
-
 import Link from 'next/link';
 
 import { siteConfig } from '@/config/site';
 
 export default function Footer() {
   return (
-    <footer className="items-center lg:items-start lg:px-8 px-4 my-12 flex lg:flex-row flex-col max-w-prose lg:max-w-6xl mx-auto gap-8 lg:gap-0">
-      <div className="lg:mr-auto flex flex-col h-full grow place-content-between">
-        <div className="flex flex-col gap-4">
-          <div className="text-lg">
+    <footer className="items-center lg:items-center lg:px-8 px-4 my-12 flex lg:flex-row flex-col max-w-prose lg:max-w-6xl mx-auto gap-8">
+      <div className="grow flex flex-col justify-between lg:h-44">
+        <div className="flex flex-col items-center lg:items-start gap-4">
+          <p className="text-lg">
             Made with <b className="text-red">&lt;3</b>
-          </div>
-          <p className="lg:flex hidden">
+          </p>
+          <p>
             Thanks for reading.
           </p>
         </div>
-        <p className="text-sm text-subtext-0 lg:flex hidden mt-6">
+        <p className="text-sm text-subtext-0 lg:flex hidden">
           © 2023-present Mehmet Kutay Bozkurt. All Rights Reserved.
         </p>
       </div>
-      <div className="lg:ml-auto flex flex-row gap-16">
+      <div className="flex flex-row gap-16 h-fit">
         <div className="flex flex-col gap-6">
           <p className="text-subtext-0 text-sm">
             Connections
