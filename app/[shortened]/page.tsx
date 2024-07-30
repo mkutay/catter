@@ -1,24 +1,21 @@
 import { notFound, redirect } from 'next/navigation';
 
-import { getPostFiles, getProps } from '@/lib/postQueries';
-import { getProjectFiles } from '@/lib/projectQueries';
+import { getPostFiles, getProps, getPosts } from '@/lib/contentQueries';
 
 export default function Page({ params }: { params: { shortened: string } }) {
   const { shortened } = params;
-  const postFiles = getPostFiles();
-  const projectFiles = getProjectFiles();
+  const posts = getPosts({ });
+  const projects = getPosts({ tags: ['project'] });
   
-  postFiles.forEach((postFile) => {
-    const props = getProps('content/posts', postFile.replace('.mdx', ''));
-    if (props.meta.shortened === shortened) {
-      redirect(`/posts/${postFile.replace('.mdx', '')}`);
+  posts.forEach((post) => {
+    if (post.meta.shortened === shortened) {
+      redirect(`/posts/${post.slug}`);
     }
   });
 
-  projectFiles.forEach((postFile) => {
-    const props = getProps('content/projects', postFile.replace('.mdx', ''));
-    if (props.meta.shortened === shortened) {
-      redirect(`/projects/${postFile.replace('.mdx', '')}`);
+  projects.forEach((post) => {
+    if (post.meta.shortened === shortened) {
+      redirect(`/posts/${post.slug}`);
     }
   });
 
@@ -26,16 +23,16 @@ export default function Page({ params }: { params: { shortened: string } }) {
 }
 
 export function generateStaticParams() {
-  const postFiles = getPostFiles();
   const ret: { shortened: string }[] = [];
-  const projectFiles = getProjectFiles();
+  const posts = getPosts({ });
+  const projects = getPosts({ tags: ['project'] });
 
-  postFiles.forEach((filename) => {
-    ret.push({ shortened: getProps('content/posts', filename.replace('.mdx', '')).meta.shortened ?? '/' });
+  posts.forEach((post) => {
+    ret.push({ shortened: post.meta.shortened });
   });
 
-  projectFiles.forEach((filename) => {
-    ret.push({ shortened: getProps('content/projects', filename.replace('.mdx', '')).meta.shortened ?? '/' });
+  projects.forEach((post) => {
+    ret.push({ shortened: post.meta.shortened });
   });
 
   return ret;

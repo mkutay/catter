@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { getPostsLength } from '@/lib/postQueries';
+import { getPostsLength } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 import TagsButtonGrid from '@/components/tagsButtonGrid';
 import PaginationArrows from '@/components/paginationArrows';
@@ -9,7 +9,7 @@ import DoublePane from '@/components/doublePane';
 
 export function generateMetadata({ params }: { params: { id: string } }) {
   const id = Number(params.id);
-  const postsLength = getPostsLength();
+  const postsLength = getPostsLength({ });
 
   return {
     title: `Posts and Tags On the Blog | Page ${id}`,
@@ -26,7 +26,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const id = Number(params.id);
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;
-  const postsLength = getPostsLength();
+  const postsLength = getPostsLength({ disallowTags: ['project'] });
 
   if (
     /^-?\d+$/.test(params.id) == false || 
@@ -42,7 +42,7 @@ export default function Page({ params }: { params: { id: string } }) {
         List of All Posts and Tags
       </h1>
       <hr/>
-      <ListPosts startInd={startInd} endInd={endInd}/>
+      <ListPosts startInd={startInd} endInd={endInd} disallowTags={['project']}/>
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
       <hr/>
       <TagsButtonGrid/>
@@ -51,7 +51,7 @@ export default function Page({ params }: { params: { id: string } }) {
 }
 
 export async function generateStaticParams() {
-  const postsLength = getPostsLength();
+  const postsLength = getPostsLength({ disallowTags: ['project'] });
   let ret: {id: string}[] = [];
 
   for (let i = 1; i <= Math.ceil(postsLength / siteConfig.postNumPerPage); i++) {

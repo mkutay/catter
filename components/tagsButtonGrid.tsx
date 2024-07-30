@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { getListOfAllTags } from '@/lib/postQueries';
+import { getListOfAllTags } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
 export default function TagsButtonGrid() {
@@ -21,9 +21,17 @@ export default function TagsButtonGrid() {
 }
 
 export function turnTagString(tag: string) {
+  tag = tag.replace('-', ' ');
+
   if (siteConfig.tagsThatShouldBeCapital.includes(tag)) {
     return tag.toUpperCase();
   }
 
-  return tag.charAt(0).toUpperCase() + tag.slice(1);
+  return tag
+    .toLowerCase()
+    .split(' ')
+    .map(function(word) {
+      return word[0].toUpperCase() + word.slice(1);
+    })
+    .join(' ');
 }

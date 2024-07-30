@@ -1,4 +1,7 @@
-import { getProps } from '@/lib/projectQueries';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import Link from 'next/link';
+import Image from 'next/image';
+
 import {
   Card,
   CardHeader,
@@ -7,26 +10,40 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { components, options } from '@/lib/mdxRemoteSettings';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { components, options } from '@/lib/mdxRemoteSettings';
+import { postMeta } from '@/config/site';
 
-export default function ProjectCard({ slug }: { slug: string }) {
-  const props = getProps('content/projects', slug);
-
+export default function ProjectCard({
+  props
+}: {
+  props: {
+    slug: string,
+    meta: postMeta,
+    content: string,
+  }
+}) {
   return (
     <Card className="not-prose">
+      <Image
+        alt={`Project ${props.meta.title}'s cover square image`}
+        src={props.meta.coverSquare}
+        width={0}
+        height={0}
+        sizes="100vw"
+        style={{ width: "100%", height: "auto" }}
+        className="rounded-xl p-2"
+      />
       <CardHeader>
         <CardTitle>{props.meta.title}</CardTitle>
         <CardDescription>{props.meta.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p><MDXRemote source={props.meta.excerpt} options={options} components={components}/></p>
+        <MDXRemote source={props.meta.excerpt} options={options} components={components}/>
       </CardContent>
       <CardFooter>
         <Button asChild>
-          <Link href={`/projects/${props.slug}`} className="text-foreground">
+          <Link href={`/posts/${props.slug}`} className="text-foreground">
             Find Out More!
           </Link>
         </Button>

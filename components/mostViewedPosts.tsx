@@ -3,11 +3,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
 
 import { getViewsCount } from '@/lib/dataBaseQueries';
-import { getPosts } from '@/lib/postQueries';
+import { getPosts } from '@/lib/contentQueries';
 
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
   const views = await getViewsCount();
-  const posts = getPosts({  });
+  const posts = getPosts({ });
 
   const postsWithViews = posts.map(post => {
     const viewsForSlug = views && views.find((view) => view.slug === post.slug);

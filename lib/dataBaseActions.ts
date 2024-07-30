@@ -12,7 +12,7 @@ export async function incrementViews(slug: string) {
 
   let session = await auth();
 
-  if (session && session.user && siteConfig.siteAdmins.includes(session.user?.email as string)) {
+  if (session && session.user && siteConfig.guestbook.siteAdmins.includes(session.user?.email as string)) {
     return;
   }
   
@@ -37,44 +37,27 @@ async function getSession(): Promise<Session> {
 export async function saveGuestbookEntry(formData: FormData) {  
   const entry = formData.get('entry')?.toString() || String('');
   const body = entry.slice(0, 1000);
-
   const random = Math.floor(Math.random() * 1000000);
-
   const session = await auth();
 
-  if (!session || !session.user) {
-    const email = formData.get('code')?.toString() || String('');
-    
-    if (!siteConfig.codes.includes(email)) {
+  let email = formData.get('code')?.toString() || String('');
+  let created_by = '';
+
+  if (!siteConfig.guestbook.codes.includes(email)) {
+    if (!session || !session.user) {
       throw new Error('Unauthorized');
-    }
-
-    const created_by = formData.get('name')?.toString() || String('');
-
-    await sql`
-      INSERT INTO guestbook (id, email, body, created_by, created_at)
-      VALUES (${random}, ${email}, ${body}, ${created_by}, NOW())
-    `;
-  } else {
-    let email = formData.get('code')?.toString() || String('');
-    
-    if (siteConfig.codes.includes(email)) {
-      const created_by = formData.get('name')?.toString() || String('');
-      
-      await sql`
-        INSERT INTO guestbook (id, email, body, created_by, created_at)
-        VALUES (${random}, ${email}, ${body}, ${created_by}, NOW())
-      `;
     } else {
       email = session.user?.email as string;
-      const created_by = session.user?.name as string;
-      
-      await sql`
-        INSERT INTO guestbook (id, email, body, created_by, created_at)
-        VALUES (${random}, ${email}, ${body}, ${created_by}, NOW())
-      `;
+      created_by = session.user?.name as string;
     }
+  } else {
+    created_by = formData.get('name')?.toString() || String('');
   }
+
+  await sql`
+    INSERT INTO guestbook (id, email, body, created_by, created_at)
+    VALUES (${random}, ${email}, ${body}, ${created_by}, NOW())
+  `;
 
   revalidatePath('/guestbook');
 }
@@ -83,7 +66,7 @@ export async function deleteGuestbookEntries(selectedEntries: string[]) {
   let session = await getSession();
   let email = session.user?.email as string;
 
-  if (!siteConfig.siteAdmins.includes(email)) {
+  if (!siteConfig.guestbook.siteAdmins.includes(email)) {
     throw new Error('Unauthorized');
   }
 

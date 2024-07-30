@@ -4,13 +4,13 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { format } from 'date-fns';
 import { Suspense } from 'react';
 
-import ViewCounter from '@/components/post/viewCounter';
-import Comment from '@/components/post/giscusComments';
-import { ViewCounterFallback } from '@/components/post/viewCounter';
+import ViewCounter from '@/components/viewCounter';
+import Comment from '@/components/giscusComments';
+import { ViewCounterFallback } from '@/components/viewCounter';
 import DoublePane from '@/components/doublePane';
 import CopyToClipboard from '@/components/copyToClipboard';
 import { incrementViews } from '@/lib/dataBaseActions';
-import { getPostFiles, getProps } from '@/lib/postQueries';
+import { getPostFiles, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';

@@ -13,9 +13,9 @@ export default function Home() {
           Recently Published
         </h1>
         <hr/>
-        <ListPosts startInd={0} endInd={siteConfig.postNumPerPage}/>
+        <ListPosts startInd={0} endInd={siteConfig.postNumPerPage} disallowTags={['project']}/>
         <Button asChild variant="secondary" className="not-prose mx-auto mt-4 mb-2" size="lg">
-          <Link href="/posts/page/2" className="flex flex-row gap-3">
+          <Link href="/posts/page/1" className="flex flex-row gap-3">
             <Telescope stroke="currentColor" strokeWidth="1.8px"/>
             <div>Look At My Other Posts!</div>
           </Link>

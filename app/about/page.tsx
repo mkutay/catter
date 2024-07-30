@@ -1,7 +1,7 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
 
 import { siteConfig } from '@/config/site';
-import { getProps } from '@/lib/postQueries';
+import { getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import DoublePane from '@/components/doublePane';
 

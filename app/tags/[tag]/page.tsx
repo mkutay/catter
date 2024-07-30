@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 
-import { getListOfAllTags } from '@/lib/postQueries';
+import { getListOfAllTags } from '@/lib/contentQueries';
 
 export default function Page({ params }: { params: { tag: string } }) {
   const { tag } = params;

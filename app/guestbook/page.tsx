@@ -88,7 +88,7 @@ async function GuestbookEntries() {
     <div className="flex flex-col gap-2">
       {entries.map((entry: entryMeta) => (
         <div key={entry.id} className="w-full break-words">
-          <span className={cn("mr-1 font-bold tracking-tight", entry.email.includes('@') ? "text-foreground" : siteConfig.codesStyles[entry.email as keyof typeof siteConfig.codesStyles])}>
+          <span className={cn("mr-1 font-bold tracking-tight", entry.email.includes('@') ? "text-foreground" : siteConfig.guestbook.codesStyles[entry.email as keyof typeof siteConfig.guestbook.codesStyles])}>
             {entry.created_by}:
           </span>
           <span className="text-foreground">

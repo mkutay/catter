@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/postQueries';
+import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 import PaginationArrows from '@/components/paginationArrows';
 import TagsButtonGrid, { turnTagString } from '@/components/tagsButtonGrid';
@@ -9,7 +9,7 @@ import DoublePane from '@/components/doublePane';
 
 export function generateMetadata({ params }: { params: { tag: string, id: string } }) {
   const { id, tag } = params;
-  const posts = getPosts({ tag });
+  const posts = getPosts({ tags: [tag] });
 
   return {
     title: `Posts With Tag: ${tag} | Page ${id}`,
@@ -28,7 +28,7 @@ export default function Page({ params }: { params: { tag: string, id: string } }
 
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;
-  const postsLength = getPostsLength(tag);
+  const postsLength = getPostsLength({ tags: [tag] });
   
   if (
     /^-?\d+$/.test(params.id) == false || 
@@ -45,7 +45,7 @@ export default function Page({ params }: { params: { tag: string, id: string } }
         Posts With Tag: <span className="text-secondary">{turnTagString(tag)}</span>
       </h1>
       <hr/>
-      <ListPosts startInd={startInd} endInd={endInd} tag={tag}/>
+      <ListPosts startInd={startInd} endInd={endInd} tags={[tag]}/>
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
       <hr/>
       <TagsButtonGrid/>
@@ -58,7 +58,7 @@ export async function generateStaticParams() {
   const ret: { tag: string, id: string }[] = [];
 
   tags.forEach((tag) => {
-    const tagsMapLength = getPostsLength(tag);
+    const tagsMapLength = getPostsLength({ tags: [tag] });
     for (let i = 1; i <= Math.ceil(tagsMapLength / siteConfig.postNumPerPage); i++) {
       ret.push({ tag: tag, id: i.toString() });
     }
