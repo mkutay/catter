@@ -24,14 +24,13 @@ export default async function Page() {
 
   return (
     <DoublePane>
-      <h1>
+      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-foreground">
         {props.meta.title}
       </h1>
-      <hr/>
-      <div className="mb-4 text-right italic">
+      <div id="mdxremote" className="text-right italic leading-7 [&:not(:first-child)]:mt-6 text-description">
         <MDXRemote source={props.meta.description} options={options} components={components}/>
       </div>
-      <main>
+      <main id="mdxremote">
         <MDXRemote source={props.content} options={options} components={components}/>
       </main>
     </DoublePane>

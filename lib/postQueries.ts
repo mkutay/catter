@@ -3,6 +3,8 @@ import path from 'path';
 import matter from 'gray-matter';
 import { notFound } from 'next/navigation';
 
+import { postMeta } from '@/config/site';
+
 export function getPostFiles() {
   const postFiles = fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
   return postFiles;
@@ -19,8 +21,8 @@ export function getProps(pathTo: string, slug: string) {
   const { data: frontMatter, content } = matter(markdownFile);
 
   return {
-    meta: frontMatter,
     slug: slug,
+    meta: frontMatter as postMeta,
     content: content,
   };
 }
@@ -42,7 +44,7 @@ export function getPosts({
   let posts: {
     slug: string,
     content: string,
-    meta: { [key: string]: any },
+    meta: postMeta,
   }[] = [];
   
   postFiles.forEach((filename) => {

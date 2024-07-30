@@ -1,11 +1,11 @@
 'use server';
 
 import {
-  unstable_cache as cache,
   unstable_noStore as noStore,
 } from 'next/cache';
 
 import { sql } from '@/lib/postgres';
+import { entryMeta } from '@/config/site';
 
 
 export async function getBlogViews() {
@@ -36,21 +36,9 @@ export async function getViewsCount(): Promise<
   `;
 }
 
-export async function getLikesCount(): Promise<
-  { slug: string; count: number }[]
+export async function getGuestbookEntries(): Promise<
+  entryMeta[]
 > {
-  if (!process.env.POSTGRES_URL) {
-    return [];
-  }
-
-  noStore();
-  return sql`
-    SELECT slug, count
-    FROM likes
-  `;
-}
-
-export async function getGuestbookEntries() {
   if (!process.env.POSTGRES_URL) {
     return [];
   }

@@ -9,7 +9,7 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
   const views = await getViewsCount();
   const posts = getPosts({  });
 
-  let postsWithViews = posts.map(post => {
+  const postsWithViews = posts.map(post => {
     const viewsForSlug = views && views.find((view) => view.slug === post.slug);
     const number = viewsForSlug?.count || 0;
 
@@ -25,12 +25,10 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
     b.views - a.views
   ));
 
-  postsWithViews = postsWithViews.slice(0, postNum);
-
   return (
     <ul className="px-0">
-      {postsWithViews.map((post) => (
-        <li key={post.slug} className="group pl-0 hover:pl-2 transition-all px-0 my-0 flex flex-row items-baseline text-lg prose-a:text-[#4c4f69] dark:prose-a:text-[#cdd6f4] text-[#4c4f69] dark:text-[#cdd6f4]">
+      {postsWithViews.slice(0, postNum).map((post) => (
+        <li key={post.slug} className="group pl-0 hover:pl-2 transition-all px-0 my-0 flex flex-row items-baseline text-lg prose-a:text-foreground text-foreground">
           <div className="pr-4 group-hover:pr-2 transition-all">
             <ArrowRightIcon stroke="currentColor" strokeWidth="1.7px"/>
           </div>
@@ -58,21 +56,22 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
 }
 
 export async function MostViewedPostsFallback({ postNum }: { postNum: number }) {
-  const posts = [];
+  const posts: React.ReactNode[] = [];
+  
   for (let i = 0; i < postNum; i++) {
-    posts.push(i);
+    posts.push(
+      <div key={i} className="flex flex-row items-center group pl-0 hover:pl-2 transition-all px-0">
+        <div className="pr-4 group-hover:pr-2 transition-all">
+          <ArrowRightIcon stroke="currentColor" strokeWidth="1.7px"/>
+        </div>
+        <Skeleton className="h-6 w-full my-2"/>
+      </div>
+    );
   }
 
   return (
     <ul className="px-0">
-      {posts.map((ind) => (
-        <div key={ind} className="flex flex-row items-center group pl-0 hover:pl-2 transition-all px-0">
-          <div className="pr-4 group-hover:pr-2 transition-all">
-            <ArrowRightIcon stroke="currentColor" strokeWidth="1.7px"/>
-          </div>
-          <Skeleton className="h-6 w-full my-2"/>
-        </div>
-      ))}
+      {posts}
     </ul>
   );
 }

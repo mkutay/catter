@@ -1,29 +1,28 @@
-import { siteConfig } from '@/config/site';
 import TagsButtonGrid from '@/components/tagsButtonGrid';
-import EmailSubButton from '@/components/post/emailSubButton';
+import DoublePane from '@/components/doublePane';
+import { siteConfig } from '@/config/site';
 
 export function generateMetadata() {
   return {
-    title: `List Of Tags On the Blog`,
-    description: `List of all the tags that posts have on Kutay's Blog`,
+    title: `List of Tags on the Posts`,
+    description: `List and buttons of all the tags that posts have on Kutay's Blog.`,
     openGraph: {
-      title: `List Of Tags On the Blog`,
-      description: `List of all the tags that posts have on Kutay's Blog`,
+      title: `List of Tags on the Posts`,
+      description: `List and buttons of all the tags that posts have on Kutay's Blog.`,
       url: `${siteConfig.url}/tags`,
+      images: ['images/favicon.png'],
     },
   };
 }
 
 export default function Page() {
   return (
-    <section className="max-w-prose mx-auto my-0 py-8 prose px-4 lg:px-8 prose-h1:my-0">
+    <DoublePane>
       <h1>
-        Tags
+      List of Tags on the Posts
       </h1>
       <hr/>
       <TagsButtonGrid/>
-      <hr/>
-      <EmailSubButton/>
-    </section>
+    </DoublePane>
   )
 }

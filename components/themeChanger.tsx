@@ -2,15 +2,7 @@
 
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
-
-import { MoonFilledIcon, SunFilledIcon } from '@/components/icons';
-
-let numOfChanges = 0;
-
-function getRandomInt(max: number) {
-  numOfChanges += 1;
-  return Math.floor(Math.random() * max);
-}
+import { MoonIcon, SunIcon } from 'lucide-react';
 
 export default function ThemeChanger() {
   const [mounted, setMounted] = useState(false);
@@ -32,9 +24,9 @@ export default function ThemeChanger() {
       >
         <span className="sr-only">Toggle mode</span>
         {theme === 'dark' ? (
-          <SunFilledIcon/>
+          <SunIcon/>
         ) : (
-          <MoonFilledIcon/>
+          <MoonIcon/>
         )}
       </button>
     </div>

@@ -3,9 +3,10 @@
 import { useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { saveGuestbookEntry } from '@/lib/dataBaseActions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from "@/components/ui/textarea"
+import { saveGuestbookEntry } from '@/lib/dataBaseActions';
 
 export default function Form() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -76,12 +77,12 @@ export function GuestBookPopOverForm() {
           name="name"
           required
         />
-        <Input
+        <Textarea
           aria-label="Your message"
-          placeholder="Your message..."
+          placeholder="Type your message here..."
           name="entry"
-          type="text"
           required
+          className="h-24"
         />
         <SubmitButton/>
       </div>

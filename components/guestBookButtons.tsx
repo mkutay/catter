@@ -22,9 +22,9 @@ export function GuestBookSignIn() {
   return (
     <Button
       onClick={() => signIn('github')}
-      variant="outline"
+      variant="secondary"
       size="lg"
-      className="w-fit text-mauve"
+      className="w-fit"
     >
       <GitHubLogoIcon width={28} height={28}/>
       <div className="ml-4">Sign in with GitHub</div>

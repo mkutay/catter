@@ -8,19 +8,19 @@ export default function Footer() {
       <div className="grow flex flex-col justify-between lg:h-44">
         <div className="flex flex-col items-center lg:items-start gap-4">
           <p className="text-lg">
-            Made with <b className="text-red">&lt;3</b>
+            Made with <b className="text-secondary">&lt;3</b>
           </p>
           <p>
             Thanks for reading.
           </p>
         </div>
-        <p className="text-sm text-subtext-0 lg:flex hidden">
+        <p className="text-sm text-description lg:flex hidden">
           © 2023-present Mehmet Kutay Bozkurt. All Rights Reserved.
         </p>
       </div>
       <div className="flex flex-row gap-16 h-fit">
         <div className="flex flex-col gap-6">
-          <p className="text-subtext-0 text-sm">
+          <p className="text-description text-sm">
             Connections
           </p>
           <div className="flex flex-col gap-3">
@@ -28,7 +28,7 @@ export default function Footer() {
               <Link
                 key={item.link}
                 href={item.link}
-                className="hover:text-blue hover:underline"
+                className="hover:text-link hover:underline"
               >
                 {item.title}
               </Link>
@@ -36,7 +36,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-col gap-6">
-          <p className="text-subtext-0 text-sm">
+          <p className="text-description text-sm">
             Blog
           </p>
           <div className="flex flex-col gap-3">
@@ -44,7 +44,7 @@ export default function Footer() {
               <Link
                 key={item.link}
                 href={item.link}
-                className="hover:text-blue hover:underline"
+                className="hover:text-link hover:underline"
               >
                 {item.title}
               </Link>
@@ -52,7 +52,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <p className="text-sm text-subtext-0 lg:hidden flex text-center justify-center">
+      <p className="text-sm text-description lg:hidden flex text-center justify-center">
         © 2023-present Mehmet Kutay Bozkurt. All Rights Reserved.
       </p>
     </footer>

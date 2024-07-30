@@ -3,15 +3,13 @@
 import { useFormStatus } from 'react-dom';
 import { useState } from 'react';
 
-import { deleteGuestbookEntries } from '@/lib/dataBaseActions';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { siteConfig } from '@/config/site';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DropdownMenuLabel } from '@/components/ui/dropdown';
+import { deleteGuestbookEntries } from '@/lib/dataBaseActions';
+import { cn } from '@/lib/utils';
+import { entryMeta, siteConfig } from '@/config/site';
 
-export default function Form({ entries }: any) {
+export default function Form({ entries }: { entries: entryMeta[] }) {
   const [selectedInputs, setSelectedInputs] = useState<string[]>([]);
 
   const handleNormalClick = (checked: any, id: string, index: number) => {
@@ -35,18 +33,18 @@ export default function Form({ entries }: any) {
       </div>
       <div className="flex flex-col gap-2">
         {entries.map((entry: any, index: any) => (
-          <div className="flex flex-row gap-2 w-full break-words" key={entry.id}>
+          <div className="flex flex-row gap-2 w-full break-words items-start" key={entry.id}>
             <Checkbox
               id={entry.id}
               checked={selectedInputs.includes(entry.id)}
               onCheckedChange={(e) => handleNormalClick(e.valueOf(), entry.id, index)}
-              className="mt-1"
+              className="mt-1.5"
             />
             <div className="break-words">
-              <span className={cn("mr-1 font-bold tracking-tight", entry.email.includes('@') ? "text-text" : siteConfig.codesStyles[entry.email as keyof typeof siteConfig.codesStyles])}>
+              <span className={cn("mr-1 font-bold tracking-tight", entry.email.includes('@') ? "text-foreground" : siteConfig.codesStyles[entry.email as keyof typeof siteConfig.codesStyles])}>
                 {entry.created_by}:
               </span>
-              <span className="text-text">
+              <span className="text-foreground">
                 {entry.body}
               </span>
             </div>

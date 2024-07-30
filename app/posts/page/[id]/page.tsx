@@ -4,7 +4,6 @@ import { getPostsLength } from '@/lib/postQueries';
 import { siteConfig } from '@/config/site';
 import TagsButtonGrid from '@/components/tagsButtonGrid';
 import PaginationArrows from '@/components/paginationArrows';
-import EmailSubButton from '@/components/post/emailSubButton';
 import ListPosts from '@/components/listPosts';
 import DoublePane from '@/components/doublePane';
 
@@ -44,7 +43,6 @@ export default function Page({ params }: { params: { id: string } }) {
       </h1>
       <hr/>
       <ListPosts startInd={startInd} endInd={endInd}/>
-      <hr/>
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
       <hr/>
       <TagsButtonGrid/>
@@ -54,8 +52,8 @@ export default function Page({ params }: { params: { id: string } }) {
 
 export async function generateStaticParams() {
   const postsLength = getPostsLength();
-
   let ret: {id: string}[] = [];
+
   for (let i = 1; i <= Math.ceil(postsLength / siteConfig.postNumPerPage); i++) {
     ret.push({ id: i.toString() });
   }

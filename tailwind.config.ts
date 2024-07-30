@@ -38,6 +38,43 @@ const config: Config = {
         base: "hsl(var(--base))",
         mantle: "hsl(var(--mantle))",
         crust: "hsl(var(--crust))",
+
+        border: "hsl(var(--overlay-0))",
+        input: "hsl(var(--overlay-0))",
+        ring: "hsl(var(--mauve))",
+        background: "hsl(var(--base))",
+        "background-dark": "hsl(var(--crust))",
+        foreground: "hsl(var(--text))",
+        description: "hsl(var(--subtext-0))",
+        link: "hsl(var(--blue))",
+        primary: {
+          DEFAULT: "hsl(var(--text))",
+          foreground: "hsl(var(--base))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--mauve))",
+          foreground: "hsl(var(--base))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--red))",
+          foreground: "hsl(var(--base))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--surface-0))",
+          foreground: "hsl(var(--text))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--mauve))",
+          foreground: "hsl(var(--base))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--mantle))",
+          foreground: "hsl(var(--text))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--mantle))",
+          foreground: "hsl(var(--text))",
+        },
       },
       typography: {
         DEFAULT: {

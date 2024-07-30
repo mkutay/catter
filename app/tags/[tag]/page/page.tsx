@@ -5,7 +5,7 @@ import { getListOfAllTags } from '@/lib/postQueries';
 export default function Page({ params }: { params: { tag: string } }) {
   const { tag } = params;
   
-  if (getListOfAllTags().includes(tag) == false) {
+  if (!getListOfAllTags().includes(tag)) {
     notFound();
   }
 
@@ -13,12 +13,9 @@ export default function Page({ params }: { params: { tag: string } }) {
 }
 
 export async function generateStaticParams() {
-  let ret: { tag: string }[] = [];
   const tags = getListOfAllTags();
 
-  tags.forEach((tag) => {
-    ret.push({ tag: tag });
-  })
-
-  return ret;
+  return tags.map((tag) => (
+    { tag: tag }
+  ));
 }

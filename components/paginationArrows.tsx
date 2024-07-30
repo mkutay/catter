@@ -1,7 +1,6 @@
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -23,37 +22,6 @@ export default function PaginationArrows({ totalPages, currentId, href }: { tota
   }
 
   return (
-    // <div className="flex text-lg justify-between not-prose">
-    //   {!prevPage ? (
-    //     <div className="cursor-auto text-[#6c6f85] dark:text-[#a6adc8]">
-    //       Prev
-    //     </div>
-    //   ) : (
-    //     <Link
-    //       href={`${href}/${currentId - 1}`}
-    //       rel="prev"
-    //       className="dark:text-[#cdd6f4] text-[#4c4f69] underline"
-    //     >
-    //       Prev
-    //     </Link>
-    //   )}
-    //   <em className="dark:text-[#cdd6f4] text-[#4c4f69] place-self-center">
-    //     {currentId} of {totalPages}
-    //   </em>
-    //   {!nextPage ? (
-    //     <div className="cursor-auto text-[#6c6f85] dark:text-[#a6adc8]">
-    //       Next
-    //     </div>
-    //   ) : (
-    //     <Link
-    //       href={`${href}/${currentId + 1}`}
-    //       rel="next"
-    //       className="dark:text-[#cdd6f4] text-[#4c4f69] underline"
-    //     >
-    //       Next
-    //     </Link>
-    //   )}
-    // </div>
     <Pagination className="not-prose">
       <PaginationContent>
         <PaginationItem>

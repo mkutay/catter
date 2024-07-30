@@ -1,27 +1,19 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { Cross1Icon, HamburgerMenuIcon } from '@radix-ui/react-icons';
 
-import ThemeChanger from '@/components/themeChanger';
 import { Logo } from '@/components/icons';
-import { siteConfig } from '@/config/site';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown';
-import { useState } from 'react';
+import ThemeChanger from '@/components/themeChanger';
+import { siteConfig } from '@/config/site';
 
 export default function NavBar() {
   const [triggered, setTriggered] = useState(false);
@@ -50,7 +42,7 @@ export default function NavBar() {
         <div className="flex lg:hidden px-4 pl-2 lg:px-0">
           <DropdownMenu onOpenChange={() => setTriggered(triggered ? false : true)}>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" aria-label="dropdown menu for linking the website">
                 {triggered === true ? (
                   <Cross1Icon stroke="currentColor" strokeWidth="1px"/>
                 ) : (

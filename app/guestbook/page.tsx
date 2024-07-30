@@ -1,9 +1,6 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 
-import { auth } from '@/lib/auth';
-import { getGuestbookEntries } from '@/lib/dataBaseQueries';
-import Form, { GuestBookPopOverForm } from '@/app/guestbook/form';
 import DoublePane from '@/components/doublePane';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
@@ -13,8 +10,11 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { GuestBookSignIn, GuestBookSignOut } from '@/components/guestBookButtons';
+import { auth } from '@/lib/auth';
+import { getGuestbookEntries } from '@/lib/dataBaseQueries';
+import Form, { GuestBookPopOverForm } from '@/app/guestbook/form';
 import { cn } from '@/lib/utils';
-import { siteConfig } from '@/config/site';
+import { entryMeta, siteConfig } from '@/config/site';
 
 export const metadata = {
   title: 'Sign and Mark My Guestbook',
@@ -24,20 +24,20 @@ export const metadata = {
 export default function Page() {
   return (
     <DoublePane>
-      <h1 className="mb-0">
+      <h1>
         Sign My Guestbook!
       </h1>
       <hr/>
-      <main className="flex flex-col gap-4 not-prose">
+      <main className="flex flex-col gap-4">
         <Suspense fallback={<Skeleton className="h-12 md:w-2/5 w-full"/>}>
           <GuestbookForm/>
         </Suspense>
         <Suspense fallback={<GuestbookEntriesFallback/>}>
           <GuestbookEntries/>
         </Suspense>
-        <div className="flex flex-row justify-end gap-2">
-          <Button variant="ghost" size="sm" className="w-fit not-prose" asChild>
-            <Link href="/guestbook/admin" className="text-text">
+        <div className="flex flex-row justify-end gap-2 not-prose">
+          <Button variant="ghost" size="sm" className="w-fit" asChild>
+            <Link href="/guestbook/admin" className="text-foreground">
               Admin
             </Link>
           </Button>
@@ -49,7 +49,7 @@ export default function Page() {
             </PopoverTrigger>
             <PopoverContent className="max-w-3xl">
               <div className="grid gap-4">
-                <p className="text-md text-text space-y-2">
+                <p className="text-md text-foreground space-y-2">
                   Enter a code and a name to sign my guest book.
                 </p>
                 <GuestBookPopOverForm/>
@@ -63,7 +63,7 @@ export default function Page() {
 }
 
 async function GuestbookForm() {
-  let session = await auth();
+  const session = await auth();
 
   return session?.user ? (
     <div className="flex flex-col gap-2">
@@ -78,7 +78,7 @@ async function GuestbookForm() {
 }
 
 async function GuestbookEntries() {
-  let entries = await getGuestbookEntries();
+  const entries = await getGuestbookEntries();
 
   if (entries.length === 0) {
     return null;
@@ -86,12 +86,12 @@ async function GuestbookEntries() {
 
   return (
     <div className="flex flex-col gap-2">
-      {entries.map((entry: any) => (
+      {entries.map((entry: entryMeta) => (
         <div key={entry.id} className="w-full break-words">
-          <span className={cn("mr-1 font-bold tracking-tight", entry.email.includes('@') ? "text-text" : siteConfig.codesStyles[entry.email as keyof typeof siteConfig.codesStyles])}>
+          <span className={cn("mr-1 font-bold tracking-tight", entry.email.includes('@') ? "text-foreground" : siteConfig.codesStyles[entry.email as keyof typeof siteConfig.codesStyles])}>
             {entry.created_by}:
           </span>
-          <span className="text-text">
+          <span className="text-foreground">
             {entry.body}
           </span>
         </div>
@@ -101,17 +101,17 @@ async function GuestbookEntries() {
 }
 
 function GuestbookEntriesFallback() {
-  const entries: number[] = [];
+  const entries: React.ReactNode[] = [];
+
   for (let i = 0; i < 8; i++) {
-    entries.push(i);
+    entries.push(
+      <Skeleton className="h-6" key={i}/>
+    );
   }
+
   return (
-    <div>
-      {entries.map((entry: number) => (
-        <div key={entry} className="my-3">
-          <Skeleton className="text-text h-6"/>
-        </div>
-      ))}
+    <div className="flex flex-col gap-4">
+      {entries}
     </div>
   );
 }

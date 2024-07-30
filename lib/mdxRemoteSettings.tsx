@@ -19,7 +19,7 @@ export const components = {
     </div>
   ),
   Link: (props: any) => (
-    <Link {...props}>
+    <Link {...props} className="text-link underline hover:underline-offset-4">
       {props.children}
     </Link>
   ),

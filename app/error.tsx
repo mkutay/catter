@@ -14,12 +14,12 @@ export default function Error({
   }, [error]);
 
   return (
-    <section className="prose mx-auto max-w-prose px-4 lg:px-8 py-8 prose-h1:my-0">
+    <section className="prose mx-auto max-w-prose lg:max-w-6xl px-4 lg:px-8 py-8 prose-h1:my-0">
       <h1>
-        ERROR
+        Error
       </h1>
       <hr/>
-      <p className="text-xl">
+      <p className="text-2xl">
         Oh no, something went wrong... maybe refresh?
       </p>
     </section>

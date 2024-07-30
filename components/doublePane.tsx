@@ -2,8 +2,8 @@ import { Suspense } from 'react';
 
 import { MostViewedPosts } from '@/components/mostViewedPosts';
 import EmailSubButton from '@/components/post/emailSubButton';
-import { siteConfig } from '@/config/site';
 import { MostViewedPostsFallback } from '@/components/mostViewedPosts';
+import { siteConfig } from '@/config/site';
 
 export default function DoublePane({
   children,

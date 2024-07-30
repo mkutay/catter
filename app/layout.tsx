@@ -4,8 +4,8 @@ import { ThemeProvider } from 'next-themes';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-import '@/styles/globals.css';
-import '@/styles/katex.min.css';
+import '@/app/globals.css';
+import '@/public/styles/katex.min.css';
 import NavBar from '@/components/navBar';
 import Footer from '@/components/footer';
 import { siteConfig } from '@/config/site';
@@ -61,12 +61,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} text-text bg-base`}>
+      <body className={`${inter.className} text-foreground bg-background`}>
         <ThemeProvider attribute="class">
-          <main className="flex flex-col min-h-screen divide-y divide-surface-0">
+          <main className="flex flex-col min-h-screen divide-y divide-muted">
             <div><NavBar/></div>
             <div className="flex-1">{children}</div>
-            <div className="bg-gradient-to-b from-base to-mantle"><Footer/></div>
+            <div className="bg-gradient-to-b from-background to-background-dark"><Footer/></div>
           </main>
           <Toaster/>
         </ThemeProvider>

@@ -10,7 +10,7 @@ export default function Comment() {
   const { theme } = useTheme();
 
   return (
-    <div id="comment" className="mx-auto max-w-prose not-prose">
+    <div id="comment">
       <Giscus
         repo={giscusConfigs.repo}
         repoId={giscusConfigs.repoId}

@@ -4,7 +4,6 @@ import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/postQueries';
 import { siteConfig } from '@/config/site';
 import PaginationArrows from '@/components/paginationArrows';
 import TagsButtonGrid, { turnTagString } from '@/components/tagsButtonGrid';
-import EmailSubButton from '@/components/post/emailSubButton';
 import ListPosts from '@/components/listPosts';
 import DoublePane from '@/components/doublePane';
 
@@ -43,11 +42,10 @@ export default function Page({ params }: { params: { tag: string, id: string } }
   return (
     <DoublePane>
       <h1>
-        Posts With Tag: <span className="text-[#1e66f5] dark:text-[#89b4fa]">{turnTagString(tag)}</span>
+        Posts With Tag: <span className="text-secondary">{turnTagString(tag)}</span>
       </h1>
       <hr/>
       <ListPosts startInd={startInd} endInd={endInd} tag={tag}/>
-      <hr/>
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
       <hr/>
       <TagsButtonGrid/>
@@ -56,8 +54,8 @@ export default function Page({ params }: { params: { tag: string, id: string } }
 }
 
 export async function generateStaticParams() {
-  let ret: { tag: string, id: string }[] = [];
   const tags = getListOfAllTags();
+  const ret: { tag: string, id: string }[] = [];
 
   tags.forEach((tag) => {
     const tagsMapLength = getPostsLength(tag);

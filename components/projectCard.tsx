@@ -1,4 +1,4 @@
-import { getProps } from "@/lib/projectQueries";
+import { getProps } from '@/lib/projectQueries';
 import {
   Card,
   CardHeader,
@@ -6,11 +6,11 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import { components, options } from "@/lib/mdxRemoteSettings";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+} from '@/components/ui/card';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import { components, options } from '@/lib/mdxRemoteSettings';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function ProjectCard({ slug }: { slug: string }) {
   const props = getProps('content/projects', slug);
@@ -26,7 +26,7 @@ export default function ProjectCard({ slug }: { slug: string }) {
       </CardContent>
       <CardFooter>
         <Button asChild>
-          <Link href={`/projects/${props.slug}`} className="text-text">
+          <Link href={`/projects/${props.slug}`} className="text-foreground">
             Find Out More!
           </Link>
         </Button>

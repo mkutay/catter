@@ -5,7 +5,6 @@ import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
-import { redirect } from 'next/navigation';
 import { siteConfig } from '@/config/site';
 
 export async function incrementViews(slug: string) {
@@ -13,7 +12,7 @@ export async function incrementViews(slug: string) {
 
   let session = await auth();
 
-  if (session && session.user && session.user?.email as string === 'hello@mkutay.dev') {
+  if (session && session.user && siteConfig.siteAdmins.includes(session.user?.email as string)) {
     return;
   }
   
@@ -22,17 +21,6 @@ export async function incrementViews(slug: string) {
     VALUES (${slug}, 1)
     ON CONFLICT (slug)
     DO UPDATE SET count = views.count + 1
-  `;
-}
-
-// dormant
-export async function incrementLikes(slug: string) {
-  noStore();
-  await sql`
-    INSERT INTO likes (slug, count)
-    VALUES (${slug}, 1)
-    ON CONFLICT (slug)
-    DO UPDATE SET count = likes.count + 1
   `;
 }
 
@@ -95,7 +83,7 @@ export async function deleteGuestbookEntries(selectedEntries: string[]) {
   let session = await getSession();
   let email = session.user?.email as string;
 
-  if (email !== 'hello@mkutay.dev') {
+  if (!siteConfig.siteAdmins.includes(email)) {
     throw new Error('Unauthorized');
   }
 

@@ -60,5 +60,29 @@ export const siteConfig = {
   codes: ['abracadabra'],
   codesStyles: {
     'abracadabra': 'text-maroon',
-  }
+  },
+  siteAdmins: ['hello@mkutay.dev'],
+};
+
+export type postMeta = {
+  title: string,
+  description: string,
+  date: string,
+  excerpt: string,
+  locale: string,
+  tags: string[],
+  cover: string,
+  coverSquare: string,
+  lastModified: string,
+  keywords: string[],
+  shortened: string,
+};
+
+export type entryMeta = {
+  id: string,
+  body: string,
+  created_by: string,
+  created_at: string,
+  updated_at: string,
+  email: string,
 };

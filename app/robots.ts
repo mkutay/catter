@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/*.json$', '/*.js$', '/vercel/', '/pages/', 'https://shareme.mkutay.dev/', 'https://port.mkutay.dev/', 'https://cdn.mkutay.dev/', 'https://blog.mkutay.dev/', 'https://academia.mkutay.dev'],
+      disallow: ['/*.json$', '/*.js$', '/vercel/', '/pages/'],
     },
     sitemap: `${siteConfig.url}/sitemap.xml`,
   }
