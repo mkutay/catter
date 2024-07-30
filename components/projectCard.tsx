@@ -25,15 +25,17 @@ export default function ProjectCard({
 }) {
   return (
     <Card className="not-prose">
-      <Image
-        alt={`Project ${props.meta.title}'s cover square image`}
-        src={props.meta.coverSquare}
-        width={0}
-        height={0}
-        sizes="100vw"
-        style={{ width: "100%", height: "auto" }}
-        className="rounded-xl p-2"
-      />
+      <div className="m-2">
+        <Image
+          alt={`Project ${props.meta.title}'s cover square image`}
+          src={props.meta.coverSquare}
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "100%", height: "auto" }}
+          className="rounded-xl shadow-md"
+        />
+      </div>
       <CardHeader>
         <CardTitle>{props.meta.title}</CardTitle>
         <CardDescription>{props.meta.description}</CardDescription>

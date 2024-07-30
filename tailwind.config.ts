@@ -68,11 +68,11 @@ const config: Config = {
           foreground: "hsl(var(--base))",
         },
         popover: {
-          DEFAULT: "hsl(var(--mantle))",
+          DEFAULT: "hsl(var(--base))",
           foreground: "hsl(var(--text))",
         },
         card: {
-          DEFAULT: "hsl(var(--mantle))",
+          DEFAULT: "hsl(var(--base))",
           foreground: "hsl(var(--text))",
         },
       },
