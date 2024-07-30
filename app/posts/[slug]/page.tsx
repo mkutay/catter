@@ -49,7 +49,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         src={images[props.slug]}
         sizes="100vw"
         style={{ width: "100%", height: "auto" }}
-        className="max-w-4xl mx-auto"
+        className="max-w-4xl mx-auto lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
         placeholder="blur"
       /></div>)}
       <DoublePane>
