@@ -11,7 +11,7 @@ export default function EmailSubButton() {
         Subscribe to my newsletter to get updates on new posts and email only specials.
       </p>
       <div className="flex justify-center items-center not-prose">
-        <Button variant="default" size="lg" asChild>
+        <Button variant="secondary" size="lg" asChild>
           <Link href={siteConfig.newsletterSubscribe} className="flex flex-row gap-3">
             <Mailbox stroke="currentColor" strokeWidth="1.8px"/>
             <div>Subscribe!</div>
