@@ -33,11 +33,12 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
             <ArrowRightIcon stroke="currentColor" strokeWidth="1.7px"/>
           </div>
           <div>
-            <span className="pr-1">
+            <span className="pr-1 not-prose">
               <Link
                 href={'/posts/' + post.slug}
                 passHref
                 key={post.slug}
+                className="text-foreground underline font-semibold"
               >
                 {post.meta.title}
               </Link>
