@@ -19,6 +19,16 @@ import { entryMeta, siteConfig } from '@/config/site';
 export const metadata = {
   title: 'Sign and Mark My Guestbook',
   description: 'Sign my guestbook and leave your mark on this infinite internet, here.',
+  keywords: ['guestbook', 'mark'],
+  openGraph: {
+    title: 'Sign and Mark My Guestbook',
+    description: 'Sign my guestbook and leave your mark on this infinite internet, here.',
+    url: siteConfig.url + '/guestbook',
+    locale: 'en_UK',
+    type: 'website',
+    images: ['images/favicon.png'],
+    siteName: siteConfig.name,
+  },
 };
 
 export default function Page() {

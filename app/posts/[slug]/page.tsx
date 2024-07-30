@@ -31,6 +31,7 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
       type: 'article',
       publishedTime: formattedDate,
       images: [props.meta.coverSquare || 'images/favicon.png'],
+      siteName: siteConfig.name,
     },
   };
 }
