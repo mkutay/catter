@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { getPosts } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { postMeta } from '@/config/site';
+import { turnTagString } from './tagsButtonGrid';
 
 export default function ListPosts({
   startInd,
@@ -39,7 +40,7 @@ export default function ListPosts({
           <div className="not-prose flex flex-row justify-end">
             <Button asChild variant="default" size="md" className="w-fit">
               <Link href={`/posts/${post.slug}`}>
-                Read More
+                {`Read More: ${post.meta.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
               </Link>
             </Button>
           </div>
