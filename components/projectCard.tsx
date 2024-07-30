@@ -44,7 +44,7 @@ export default function ProjectCard({
       <CardFooter>
         <Button asChild>
           <Link href={`/posts/${props.slug}`} className="text-foreground">
-            Find Out More!
+            {`Read More: ${props.meta.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
           </Link>
         </Button>
       </CardFooter>
