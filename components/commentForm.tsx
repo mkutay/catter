@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { TbReload } from 'react-icons/tb';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,7 +15,7 @@ import {
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { SignOut } from '@/components/commentsButtons';
-import { saveComment } from '@/lib/dataBaseActions';
+import { revalidatePost, saveComment } from '@/lib/dataBaseActions';
 
 const formSchema = z.object({
   message: z.string().min(1).max(1000),
@@ -47,9 +48,14 @@ export function CommentForm({ slug }: { slug: string }) {
             </FormItem>
           )}
         />
-        <div className="flex flex-row gap-2 justify-end">
-          <SignOut/>
-          <Button variant="default" size="default" type="submit">Submit</Button>
+        <div className="flex flex-row gap-2 justify-between items-center">
+          <Button variant="ghost" size="icon" onClick={() => revalidatePost({ slug })}>
+            <TbReload size="24px" strokeWidth="2.5px"/>
+          </Button>
+          <div className="flex flex-row gap-2 items-center">
+            <SignOut/>
+            <Button variant="default" size="default" type="submit">Post</Button>
+          </div>
         </div>
       </form>
     </Form>

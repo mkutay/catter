@@ -55,10 +55,10 @@ export async function Comment({ comment }: { comment: commentMeta }) {
   return (
     <div id={comment.id} className="flex flex-col gap-2 w-full">
       <Label htmlFor="user">{`${comment.created_by} on ${format(comment.created_at, 'PP')}`}</Label>
-      <div className="border border-border shadow-sm rounded-md px-3 py-2">
+      <div className="border border-border shadow-sm rounded-md px-3 py-2 prose-p:my-2">
         <MDXRemote source={comment.body}/>
       </div>
-      {admin || isUsers && (
+      {(admin || isUsers) && (
         <div className="flex flex-row justify-end">
           <DeleteComment comment={comment}/>
         </div>

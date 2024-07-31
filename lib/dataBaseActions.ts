@@ -116,3 +116,7 @@ export async function deleteComment({ comment }: { comment: commentMeta }) {
 
   revalidatePath(`/posts/${comment.slug}`);
 }
+
+export async function revalidatePost({ slug }: { slug: string }) {
+  revalidatePath(`/posts/${slug}`)
+}
