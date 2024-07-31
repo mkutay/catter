@@ -29,7 +29,9 @@ export default function ListPosts({
       {posts.map((post, index) => (
         <div key={post.slug} className="prose-h2:my-0 flex flex-col gap-4 py-8 first:pt-0">
           <h2 className="font-normal tracking-tight">
-            {post.meta.title}
+            <Link href={`/posts/${post.slug}`} className="not-prose underline">
+              {post.meta.title}
+            </Link>
           </h2>
           <em className="text-description not-prose">
             {post.meta.description}
