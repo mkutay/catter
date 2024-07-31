@@ -52,6 +52,7 @@ export const siteConfig = {
     siteAdmins: ['hello@mkutay.dev', 'me@mkutay.dev'],
   },
   newsletterSubscribe: 'https://mkutay.substack.com/subscribe',
+  adSenseClient: 'ca-pub-9198023121523009',
 };
 
 export type postMeta = {
