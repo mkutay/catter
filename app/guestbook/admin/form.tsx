@@ -25,6 +25,7 @@ export default function Form({ entries }: { entries: entryMeta[] }) {
       onSubmit={async (e) => {
         e.preventDefault();
         await deleteGuestbookEntries(selectedInputs);
+        setSelectedInputs([]);
       }}
       className="flex flex-col gap-4"
     >

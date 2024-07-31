@@ -5,7 +5,7 @@ import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
-import { siteConfig } from '@/config/site';
+import { commentMeta, siteConfig } from '@/config/site';
 
 export async function incrementViews(slug: string) {
   noStore();
@@ -80,4 +80,39 @@ export async function deleteGuestbookEntries(selectedEntries: string[]) {
 
   revalidatePath('/guestbook/admin');
   revalidatePath('/guestbook');
+}
+
+export async function saveComment({ slug, message }: { slug: string, message: string }) {
+  const random = Math.floor(Math.random() * 10000000);
+  const session = await auth();
+
+  if (!session || !session.user) {
+    throw new Error('Unauthorized');
+  }
+
+  const email = session.user?.email as string;
+  const created_by = session.user?.name as string;
+
+  await sql`
+    INSERT INTO comments (id, slug, email, body, created_by, created_at)
+    VALUES (${random}, ${slug}, ${email}, ${message}, ${created_by}, NOW())
+  `;
+
+  revalidatePath(`/posts/${slug}`);
+}
+
+export async function deleteComment({ comment }: { comment: commentMeta }) {
+  let session = await getSession();
+  let email = session.user?.email as string;
+
+  if (!siteConfig.comments.siteAdmins.includes(email)) {
+    throw new Error('Unauthorized');
+  }
+
+  await sql`
+    DELETE FROM comments
+    WHERE id = (${comment.id})
+  `;
+
+  revalidatePath(`/posts/${comment.slug}`);
 }

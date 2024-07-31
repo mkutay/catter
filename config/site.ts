@@ -46,7 +46,10 @@ export const siteConfig = {
     codesStyles: {
       'abracadabra': 'text-maroon',
     },
-    siteAdmins: ['hello@mkutay.dev'],
+    siteAdmins: ['hello@mkutay.dev', 'me@mkutay.dev'],
+  },
+  comments: {
+    siteAdmins: ['hello@mkutay.dev', 'me@mkutay.dev'],
   },
   newsletterSubscribe: 'https://mkutay.substack.com/subscribe',
 };
@@ -67,6 +70,16 @@ export type postMeta = {
 
 export type entryMeta = {
   id: string,
+  body: string,
+  created_by: string,
+  created_at: string,
+  updated_at: string,
+  email: string,
+};
+
+export type commentMeta = {
+  id: string,
+  slug: string,
   body: string,
   created_by: string,
   created_at: string,

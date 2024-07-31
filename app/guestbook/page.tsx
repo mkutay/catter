@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
+import { unstable_cache } from 'next/cache';
 
 import DoublePane from '@/components/doublePane';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -87,8 +88,16 @@ async function GuestbookForm() {
   );
 }
 
+const getCachedGuestbookEntries = unstable_cache(
+  async () => getGuestbookEntries(),
+  ['nextjs-blog-guestbook-entries'],
+  {
+    revalidate: 900, // 15 minutes
+  }
+);
+
 async function GuestbookEntries() {
-  const entries = await getGuestbookEntries();
+  const entries = await getCachedGuestbookEntries();
 
   if (entries.length === 0) {
     return null;

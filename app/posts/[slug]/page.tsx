@@ -14,6 +14,7 @@ import { getPostFiles, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
+import Comments from '@/components/comments';
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const props = getProps('content/posts', params.slug);
@@ -84,8 +85,8 @@ export default function Page({ params }: { params: { slug: string } }) {
         <main>
           <MDXRemote source={props.content} options={options} components={components}/>
         </main>
-        <hr/>
-        <Comment/>
+        {/* <Comment/> */}
+        <Comments slug={props.slug}/>
       </DoublePane>
     </div>
   );

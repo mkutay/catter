@@ -24,6 +24,7 @@ export default function DoublePane({
         <Suspense fallback={<MostViewedPostsFallback postNum={Math.floor(siteConfig.postNumPerPage * 1.25)}/>}>
           <MostViewedPosts postNum={Math.floor(siteConfig.postNumPerPage * 1.25)}/>
         </Suspense>
+        {/* <MostViewedPostsFallback postNum={Math.floor(siteConfig.postNumPerPage * 1.25)}/> */}
         <hr/>
         <EmailSubButton/>
       </div>

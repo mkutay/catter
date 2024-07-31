@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@giscus/react": "^3.0.0",
+    "@hookform/resolvers": "^3.9.0",
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
     "@next/mdx": "^14.2.3",
@@ -43,6 +44,8 @@
     "postgres": "^3.4.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.52.1",
+    "react-icons": "^5.2.1",
     "rehype-katex": "^7.0.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
@@ -52,7 +55,8 @@
     "remark-toc": "^9.0.0",
     "rss": "^1.2.2",
     "sharp": "^0.33.4",
-    "tailwind-merge": "^2.4.0"
+    "tailwind-merge": "^2.4.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20",

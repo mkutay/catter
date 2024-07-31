@@ -1,7 +1,7 @@
 'use client';
 
 import { signIn, signOut } from 'next-auth/react';
-import { GitHubLogoIcon } from '@radix-ui/react-icons';
+import { FaDiscord, FaGithub, FaSpotify } from 'react-icons/fa';
 
 import { Button } from '@/components/ui/button';
 
@@ -20,14 +20,25 @@ export function GuestBookSignOut() {
 
 export function GuestBookSignIn() {
   return (
-    <Button
-      onClick={() => signIn('github')}
-      variant="secondary"
-      size="lg"
-      className="w-fit"
-    >
-      <GitHubLogoIcon width={28} height={28}/>
-      <div className="ml-4">Sign in with GitHub</div>
-    </Button>
+    <div className="flex md:flex-row flex-col gap-4 items-center mx-auto w-fit">
+      <Button variant="secondary" size="default" className="flex flex-row gap-3 items-center" onClick={() => signIn('github')}>
+        <FaGithub/>
+        <span>
+          Sign in with GitHub
+        </span>
+      </Button>
+      <Button variant="secondary" size="default" className="flex flex-row gap-3 items-center" onClick={() => signIn('discord')}>
+        <FaDiscord/>
+        <span>
+          Sign in with Discord
+        </span>
+      </Button>
+      <Button variant="secondary" size="default" className="flex flex-row gap-3 items-center" onClick={() => signIn('spotify')}>
+        <FaSpotify/>
+        <span>
+          Sign in with Spotify
+        </span>
+      </Button>
+    </div>
   );
 }

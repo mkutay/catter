@@ -1,24 +1,34 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { unstable_cache } from 'next/cache';
 
 import Form from '@/app/guestbook/admin/form';
 import DoublePane from '@/components/doublePane';
 import { Button } from '@/components/ui/button';
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
+import { siteConfig } from '@/config/site';
 
 export const metadata = {
   title: 'Admin',
 };
 
+const getCachedGuestbookEntries = unstable_cache(
+  async () => getGuestbookEntries(),
+  ['nextjs-blog-guestbook-entries'],
+  {
+    revalidate: 900, // 15 minutes
+  }
+);
+
 export default async function Page() {
   const session = await auth();
 
-  if (session?.user?.email !== 'hello@mkutay.dev') {
+  if (!siteConfig.guestbook.siteAdmins.includes(session?.user?.email || '')) {
     redirect('/guestbook');
   }
 
-  const entries = await getGuestbookEntries();
+  const entries = await getCachedGuestbookEntries();
 
   return (
     <DoublePane>
