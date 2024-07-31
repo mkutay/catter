@@ -50,6 +50,7 @@ export async function Comment({ comment }: { comment: commentMeta }) {
   const session = await auth();
   
   const admin = session && session.user && siteConfig.comments.siteAdmins.includes(session.user?.email as string);
+  const isUsers = session && session.user && session.user.email == comment.email;
 
   return (
     <div id={comment.id} className="flex flex-col gap-2 w-full">
@@ -57,7 +58,7 @@ export async function Comment({ comment }: { comment: commentMeta }) {
       <div className="border border-border shadow-sm rounded-md px-3 py-2">
         <MDXRemote source={comment.body}/>
       </div>
-      {admin && (
+      {admin || isUsers && (
         <div className="flex flex-row justify-end">
           <DeleteComment comment={comment}/>
         </div>
