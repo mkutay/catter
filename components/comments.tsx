@@ -13,7 +13,7 @@ const getCachedComments = unstable_cache(
   async ({ slug }: { slug: string }) => getComments({ slug }),
   [`nextjs-blog-comments`],
   {
-    revalidate: 1800, // 30 minutes
+    revalidate: 300, // 5 minutes
   }
 );
 
