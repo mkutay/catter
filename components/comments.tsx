@@ -1,19 +1,25 @@
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import { micromark } from 'micromark';
 import { format } from 'date-fns';
 import { unstable_cache } from 'next/cache';
+import { gfm, gfmHtml } from 'micromark-extension-gfm';
+import { math, mathHtml } from 'micromark-extension-math';
+import parse from 'html-react-parser';
 
 import { Label } from '@/components/ui/label';
 import { DeleteComment, SignIn } from '@/components/commentsButtons';
-import { CommentForm } from '@/components/commentForm';
+import { CommentForm } from '@/components/commentsForm';
 import { auth } from '@/lib/auth';
 import { getComments } from '@/lib/dataBaseQueries';
 import { commentMeta, siteConfig } from '@/config/site';
+import { Skeleton } from './ui/skeleton';
+import React from 'react';
 
 const getCachedComments = unstable_cache(
   async ({ slug }: { slug: string }) => getComments({ slug }),
   [`nextjs-blog-comments`],
   {
-    revalidate: 300, // 5 minutes
+    tags: [`nextjs-blog-comments`],
+    revalidate: 180, // 3 minutes
   }
 );
 
@@ -56,13 +62,35 @@ export async function Comment({ comment }: { comment: commentMeta }) {
     <div id={comment.id} className="flex flex-col gap-2 w-full">
       <Label htmlFor="user">{`${comment.created_by} on ${format(comment.created_at, 'PP')}`}</Label>
       <div className="border border-border shadow-sm rounded-md px-3 py-2 prose-p:my-2">
-        <MDXRemote source={comment.body}/>
+        {parse(micromark(comment.body, {
+          extensions: [gfm(), math()],
+          htmlExtensions: [gfmHtml(), mathHtml()],
+        }))}
       </div>
       {(admin || isUsers) && (
         <div className="flex flex-row justify-end">
           <DeleteComment comment={comment}/>
         </div>
       )}
+    </div>
+  );
+}
+
+export function CommentsFallback() {
+  const comments: React.ReactNode[] = [];
+
+  for (let i = 0; i < 3; i++) {
+    comments.push(
+      <div key={i} className="flex flex-col gap-2">
+        <Skeleton className="h-8 w-2/5"/>
+        <Skeleton className="h-20 w-full"/>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      {comments}
     </div>
   );
 }

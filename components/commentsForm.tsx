@@ -12,13 +12,18 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { SignOut } from '@/components/commentsButtons';
 import { revalidatePost, saveComment } from '@/lib/dataBaseActions';
 
 const formSchema = z.object({
-  message: z.string().min(1).max(1000),
+  message: z.string().min(2, {
+    message: 'Comment must be at least 2 characters.'
+  }).max(1000, {
+    message: 'Comment must be at most 1000 characters.'
+  }),
 });
 
 export function CommentForm({ slug }: { slug: string }) {
@@ -31,11 +36,12 @@ export function CommentForm({ slug }: { slug: string }) {
  
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     saveComment({ slug, message: values.message });
+    form.reset();
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
         <FormField
           control={form.control}
           name="message"
@@ -45,12 +51,13 @@ export function CommentForm({ slug }: { slug: string }) {
               <FormControl>
                 <Textarea className="h-32"  placeholder="Your comment..." {...field} />
               </FormControl>
+              <FormMessage/>
             </FormItem>
           )}
         />
         <div className="flex flex-row gap-2 justify-between items-center">
-          <Button variant="ghost" size="icon" onClick={() => revalidatePost({ slug })}>
-            <TbReload size="24px" strokeWidth="2.5px"/>
+          <Button type="button"  aria-label="Revalidate Comments" variant="ghost" size="icon" onClick={() => revalidatePost({ slug })}>
+            <TbReload size="20px" strokeWidth="2.5px"/>
           </Button>
           <div className="flex flex-row gap-2 items-center">
             <SignOut/>

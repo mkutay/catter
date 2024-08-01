@@ -1,9 +1,10 @@
+import { Telescope } from 'lucide-react';
+import Link from 'next/link';
+
 import DoublePane from '@/components/doublePane';
 import ListPosts from '@/components/listPosts';
 import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
-import { Telescope } from 'lucide-react';
-import Link from 'next/link';
 
 export default function Home() {
   return (

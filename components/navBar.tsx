@@ -19,27 +19,27 @@ export default function NavBar() {
   const [triggered, setTriggered] = useState(false);
 
   return (
-    <nav className="my-8 max-w-prose lg:max-w-6xl mx-auto flex flex-row items-center place-items-center justify-center">
-      <div className="mr-auto place-items-center px-4 lg:px-8 text-[#8839ef] dark:text-[#cba6f7] hover:underline font-extrabold text-lg gap-2 flex flex-row items-center">
+    <nav className="my-4 max-w-prose lg:max-w-6xl mx-auto flex flex-row items-center justify-between px-4">
+      <div className="place-items-center text-[#8839ef] dark:text-[#cba6f7] hover:underline font-extrabold text-lg gap-2 flex flex-row items-center">
         <Link href="/" className="flex flex-row items-center gap-2">
           <Logo className="flex-none"/>
           Kutay&#39;s Blog
         </Link>
       </div>
-      <div className="ml-auto flex flex-row place-items-center">
-        <div className="hidden lg:flex">
+      <div className="flex flex-row place-items-center gap-4">
+        <div className="hidden lg:flex flex-row gap-4">
           {siteConfig.navItems.map((item) => (
             <Link
               key={item.href}
               href={`${item.href}`}
-              className="text-center px-2 hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
+              className="text-center hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
             >
               {item.label}
             </Link>
           ))}
         </div>
-        <div className="px-2 lg:px-8 lg:pl-2"><ThemeChanger/></div>
-        <div className="flex lg:hidden px-4 pl-2 lg:px-0">
+        <div><ThemeChanger/></div>
+        <div className="flex lg:hidden">
           <DropdownMenu onOpenChange={() => setTriggered(triggered ? false : true)}>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="dropdown menu for linking the website">
@@ -52,10 +52,9 @@ export default function NavBar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {siteConfig.navItems.map((item) => (
-                <DropdownMenuItem key={item.href} asChild>
+                <DropdownMenuItem key={item.href} asChild className="text-md font-medium">
                   <Link
                     href={`${item.href}`}
-                    className="text-center text-lg px-1"
                   >
                     {item.label}
                   </Link>

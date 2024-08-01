@@ -5,11 +5,11 @@ import { signIn, signOut } from 'next-auth/react';
 
 import { Button } from '@/components/ui/button';
 import { deleteComment } from '@/lib/dataBaseActions';
-import { commentMeta, siteConfig } from '@/config/site';
+import { commentMeta } from '@/config/site';
 
 export function SignOut() {
   return (
-    <Button type="reset" variant="ghost" size="default" onClick={() => signOut()}>
+    <Button type="button" variant="ghost" size="default" onClick={() => signOut()}>
       Sign Out
     </Button>
   );

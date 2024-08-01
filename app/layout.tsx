@@ -72,8 +72,8 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} text-foreground bg-background`}>
         <ThemeProvider attribute="class">
-          <main className="flex flex-col min-h-screen divide-y divide-muted">
-            <div><NavBar/></div>
+          <main className="flex flex-col min-h-screen">
+            <div className="bg-background lg:sticky top-0 h-fit z-50"><NavBar/></div>
             <div className="flex-1">{children}</div>
             <div className="bg-gradient-to-b from-background to-background-dark"><Footer/></div>
           </main>

@@ -1,7 +1,7 @@
 'use server';
 
 import { type Session } from 'next-auth';
-import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
+import { revalidatePath, unstable_noStore as noStore, revalidateTag } from 'next/cache';
 
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
@@ -105,7 +105,7 @@ export async function deleteComment({ comment }: { comment: commentMeta }) {
   let session = await getSession();
   let email = session.user?.email as string;
 
-  if (!siteConfig.comments.siteAdmins.includes(email)) {
+  if (!siteConfig.comments.siteAdmins.includes(email) && comment.email !== email) {
     throw new Error('Unauthorized');
   }
 
@@ -114,9 +114,10 @@ export async function deleteComment({ comment }: { comment: commentMeta }) {
     WHERE id = (${comment.id})
   `;
 
-  revalidatePath(`/posts/${comment.slug}`);
+  // revalidatePath(`/posts/${comment.slug}`);
+  revalidateTag('nextjs-blog-comments');
 }
 
 export async function revalidatePost({ slug }: { slug: string }) {
-  revalidatePath(`/posts/${slug}`)
+  revalidatePath(`/posts/${slug}`);
 }

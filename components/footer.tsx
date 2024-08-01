@@ -4,7 +4,7 @@ import { siteConfig } from '@/config/site';
 
 export default function Footer() {
   return (
-    <footer className="items-center lg:items-center lg:px-8 px-4 my-12 flex lg:flex-row flex-col max-w-prose lg:max-w-6xl mx-auto gap-8">
+    <footer className="items-center lg:items-center px-4 my-12 flex lg:flex-row flex-col max-w-prose lg:max-w-6xl mx-auto gap-8">
       <div className="grow flex flex-col justify-between lg:h-44">
         <div className="flex flex-col items-center lg:items-start gap-4">
           <p className="text-lg">

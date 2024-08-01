@@ -5,7 +5,6 @@ import { format } from 'date-fns';
 import { Suspense } from 'react';
 
 import ViewCounter from '@/components/viewCounter';
-import Comment from '@/components/giscusComments';
 import { ViewCounterFallback } from '@/components/viewCounter';
 import DoublePane from '@/components/doublePane';
 import CopyToClipboard from '@/components/copyToClipboard';
@@ -14,7 +13,7 @@ import { getPostFiles, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
-import Comments from '@/components/comments';
+import Comments, { CommentsFallback } from '@/components/comments';
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const props = getProps('content/posts', params.slug);
@@ -85,8 +84,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         <main>
           <MDXRemote source={props.content} options={options} components={components}/>
         </main>
-        {/* <Comment/> */}
-        <Comments slug={props.slug}/>
+        <Suspense fallback={<CommentsFallback/>}><Comments slug={props.slug}/></Suspense>
       </DoublePane>
     </div>
   );
