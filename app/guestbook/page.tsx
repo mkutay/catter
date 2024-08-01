@@ -106,7 +106,7 @@ function GuestbookEntriesFallback() {
 
   for (let i = 0; i < 8; i++) {
     entries.push(
-      <Skeleton className="h-6 w-[65ch]" key={i}/>
+      <Skeleton className="h-6 lg:w-[65ch] w-full" key={i}/>
     );
   }
 

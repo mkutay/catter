@@ -81,7 +81,7 @@ export default function AddEmailForm() {
         />
         <Button
           variant="secondary"
-          size="default"
+          size="sm"
           type="submit"
           className="w-fit"
         >

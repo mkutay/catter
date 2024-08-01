@@ -12,7 +12,7 @@ export default function DoublePane({
 }>) {
   return (
     <section className="justify-center px-4 flex lg:flex-row flex-col lg:gap-16 gap-0 lg:max-w-6xl max-w-prose mx-auto">
-      <div className="prose lg:mx-0 mx-auto w-max">
+      <div className="prose lg:mx-0 mx-auto max-w-prose">
         {children}
       </div>
       <div className="prose lg:mx-0 mx-auto sticky top-16 h-fit">

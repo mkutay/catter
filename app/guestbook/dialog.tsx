@@ -108,7 +108,7 @@ export function GuestbookDialog() {
                           placeholder="Search colour..."
                           className="h-9"
                         />
-                        <CommandList>
+                        <CommandList className="max-h-48 lg:max-h-72">
                           <CommandEmpty>No colour found.</CommandEmpty>
                           <CommandGroup className="py-1">
                             {guestbookColors.map((color) => (

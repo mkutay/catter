@@ -97,8 +97,8 @@ export default function GuestbookAdminForm({ entries }: { entries: entryMeta[] }
           )}
         />
         <div className="flex flex-row items-center not-prose gap-2">
-          <Button type="submit" size="default" variant="destructive">Delete Entries</Button>
-          <Button asChild variant="ghost" size="default">
+          <Button type="submit" size="sm" variant="destructive">Delete Entries</Button>
+          <Button asChild variant="ghost" size="sm">
             <Link href="/guestbook">
               Return to Guest Book
             </Link>

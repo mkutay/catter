@@ -86,7 +86,7 @@ export default function DeleteAdminForm({ admins }: { admins: { id: number, emai
             </FormItem>
           )}
         />
-        <Button type="submit" size="default" variant="destructive">Delete Admins</Button>
+        <Button type="submit" size="sm" variant="destructive">Delete Admins</Button>
       </form>
     </Form>
   );

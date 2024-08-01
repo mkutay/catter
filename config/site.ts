@@ -38,7 +38,6 @@ export const siteConfig = {
     ],
     blog: [
       {title: 'Sponsor Me', link: 'https://github.com/sponsors/mkutay?o=esb'},
-      {title: 'About Me', link: '/about'},
       {title: 'Substack', link: 'https://mkutay.substack.com'},
       {title: 'RSS Feed', link: '/feed.xml'},
       {title: 'Admin', link: '/admin'},
