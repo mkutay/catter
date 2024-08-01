@@ -6,7 +6,7 @@ import { revalidatePath, unstable_noStore as noStore, revalidateTag } from 'next
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
 import { commentMeta, siteConfig } from '@/config/site';
-import { guestbookColors } from '@/app/guestbook/dialog';
+import { guestbookColors } from '@/config/site';
 
 export async function incrementViews(slug: string) {
   noStore();

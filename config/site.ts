@@ -90,3 +90,21 @@ export type commentMeta = {
   updated_at: string,
   email: string,
 };
+
+export const guestbookColors = [
+  { label: 'Rosewater', value: 'rosewater'},
+  { label: 'Flamingo', value: 'flamingo'},
+  { label: 'Pink', value: 'pink'},
+  { label: 'Mauve', value: 'mauve'},
+  { label: 'Red', value: 'red'},
+  { label: 'Maroon', value: 'maroon'},
+  { label: 'Peach', value: 'peach'},
+  { label: 'Yellow', value: 'yellow'},
+  { label: 'Green', value: 'green'},
+  { label: 'Teal', value: 'teal'},
+  { label: 'Sky', value: 'sky'},
+  { label: 'Sapphire', value: 'sapphire'},
+  { label: 'Blue', value: 'blue'},
+  { label: 'Lavender', value: 'lavender'},
+  { label: 'Text', value: 'text'},
+];
