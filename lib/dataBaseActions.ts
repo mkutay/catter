@@ -6,6 +6,7 @@ import { revalidatePath, unstable_noStore as noStore, revalidateTag } from 'next
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
 import { commentMeta, siteConfig } from '@/config/site';
+import { guestbookColors } from '@/app/guestbook/dialog';
 
 export async function incrementViews(slug: string) {
   noStore();
@@ -42,7 +43,8 @@ export async function saveGuestbookEntry({
   color?: string,
   username?: string,
   message: string
-}) {  
+}) {
+  const body = message.slice(0, 500) as string;
   const random = Math.floor(Math.random() * 1000000);
   const session = await auth();
 
@@ -50,14 +52,18 @@ export async function saveGuestbookEntry({
     throw new Error('Unauthorized');
   }
 
-  const created_by = username || session.user.name as string;
+  const created_by = username?.slice(0, 30) as string || session.user.name as string;
   const email = session.user.email as string;
 
-  color = color || '';
+  color = color || 'INVALID';
+
+  if (!guestbookColors.includes({ label: color.charAt(0).toUpperCase() + color.slice(1), value: color })) {
+    color = 'text';
+  }
 
   await sql`
     INSERT INTO guestbook (id, email, body, created_by, created_at, color)
-    VALUES (${random}, ${email}, ${message}, ${created_by}, NOW(), ${color})
+    VALUES (${random}, ${email}, ${body}, ${created_by}, NOW(), ${color})
   `;
 
   revalidatePath('/guestbook');

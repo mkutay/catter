@@ -41,9 +41,8 @@ import {
 } from '@/components/ui/popover';
 import { saveGuestbookEntry } from '@/lib/dataBaseActions';
 import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
-const colors = [
+export const guestbookColors = [
   { label: 'Rosewater', value: 'rosewater'},
   { label: 'Flamingo', value: 'flamingo'},
   { label: 'Pink', value: 'pink'},
@@ -70,8 +69,8 @@ const PopOverFormSchema = z.object({
   }).max(30, {
     message: 'Username must be at most 30 characters.',
   }),
-  message: z.string().min(2, {
-    message: 'Message must be at least 2 characters.'
+  message: z.string().min(1, {
+    message: 'Message must be at least 1 characters.'
   }).max(500, {
     message: 'Message must be at most 500 characters.'
   }),
@@ -135,7 +134,7 @@ export function GuestBookDialogForm() {
                       )}
                     >
                       {field.value
-                        ? colors.find(
+                        ? guestbookColors.find(
                             (color) => color.value === field.value
                           )?.label
                         : "Select colour"}
@@ -153,7 +152,7 @@ export function GuestBookDialogForm() {
                     <CommandList>
                       <CommandEmpty>No colour found.</CommandEmpty>
                       <CommandGroup className="py-1">
-                        {colors.map((color) => (
+                        {guestbookColors.map((color) => (
                           <CommandItem
                             value={color.label}
                             key={color.value}
