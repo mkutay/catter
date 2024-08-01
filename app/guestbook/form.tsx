@@ -14,15 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { saveGuestbookEntry } from '@/lib/dataBaseActions';
-
-
-const GuestbookFormSchema = z.object({
-  message: z.string().min(1, {
-    message: 'Message must be at least 1 characters.'
-  }).max(500, {
-    message: 'Message must be at most 500 characters.'
-  }),
-});
+import { GuestbookFormSchema } from '@/config/schema';
 
 export default function GuestbookZodForm() {
   const form = useForm<z.infer<typeof GuestbookFormSchema>>({

@@ -108,3 +108,21 @@ export const guestbookColors = [
   { label: 'Lavender', value: 'lavender'},
   { label: 'Text', value: 'text'},
 ];
+
+export const guestbookColorsValue = [
+  'rosewater',
+  'flamingo',
+  'pink',
+  'mauve',
+  'red',
+  'maroon',
+  'peach',
+  'yellow',
+  'green',
+  'teal',
+  'sky',
+  'sapphire',
+  'blue',
+  'lavender',
+  'text',
+] as const;

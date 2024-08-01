@@ -17,24 +17,17 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { SignOut } from '@/components/commentsButtons';
 import { revalidatePost, saveComment } from '@/lib/dataBaseActions';
-
-const formSchema = z.object({
-  message: z.string().min(2, {
-    message: 'Comment must be at least 2 characters.'
-  }).max(1000, {
-    message: 'Comment must be at most 1000 characters.'
-  }),
-});
+import { CommentsFormSchema } from '@/config/schema';
 
 export function CommentForm({ slug }: { slug: string }) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof CommentsFormSchema>>({
+    resolver: zodResolver(CommentsFormSchema),
     defaultValues: {
       message: "",
     },
   });
  
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof CommentsFormSchema>) => {
     await saveComment({ slug, message: values.message });
     form.reset();
   };

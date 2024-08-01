@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
 import { commentMeta, siteConfig } from '@/config/site';
 import { guestbookColors } from '@/config/site';
+import { CommentsFormSchema, GuestbookFormSchema, PopOverFormSchema } from '@/config/schema';
 
 export async function incrementViews(slug: string) {
   noStore();
@@ -44,26 +45,39 @@ export async function saveGuestbookEntry({
   username?: string,
   message: string
 }) {
-  const body = message.slice(0, 500) as string;
-  const random = Math.floor(Math.random() * 1000000);
   const session = await auth();
 
   if (!session || !session.user) {
     throw new Error('Unauthorized');
   }
 
-  const created_by = username?.slice(0, 30) as string || session.user.name as string;
-  const email = session.user.email as string;
+  username = username || '';
+  color = color || 'text';
 
-  color = color || 'INVALID';
+  const random = Math.floor(Math.random() * 1000000);
 
-  if (!guestbookColors.includes({ label: color.charAt(0).toUpperCase() + color.slice(1), value: color })) {
-    color = 'text';
+  const validationPopOver = PopOverFormSchema.safeParse({
+    color,
+    message,
+    username
+  });
+
+  const validationGuestbook = GuestbookFormSchema.safeParse({
+    message
+  });
+
+  if (!validationPopOver.success && !validationGuestbook.success) {
+    return {
+      errors: validationGuestbook.error.issues,
+    };
   }
+
+  const email = session.user.email as string;
+  const created_by = validationPopOver.success ? username : session.user.name as string;
 
   await sql`
     INSERT INTO guestbook (id, email, body, created_by, created_at, color)
-    VALUES (${random}, ${email}, ${body}, ${created_by}, NOW(), ${color})
+    VALUES (${random}, ${email}, ${message}, ${created_by}, NOW(), ${color})
   `;
 
   revalidatePath('/guestbook');
@@ -95,11 +109,22 @@ export async function revalidateGuestbook() {
 }
 
 export async function saveComment({ slug, message }: { slug: string, message: string }) {
-  const random = Math.floor(Math.random() * 10000000);
   const session = await auth();
-
+  
   if (!session || !session.user) {
     throw new Error('Unauthorized');
+  }
+
+  const random = Math.floor(Math.random() * 10000000);
+
+  const validation = CommentsFormSchema.safeParse({
+    message,
+  });
+
+  if (!validation.success) {
+    return {
+      errors: validation.error.issues,
+    };
   }
 
   const email = session.user?.email as string;

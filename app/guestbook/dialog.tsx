@@ -42,22 +42,7 @@ import {
 import { saveGuestbookEntry } from '@/lib/dataBaseActions';
 import { cn } from '@/lib/utils';
 import { guestbookColors } from '@/config/site';
-
-const PopOverFormSchema = z.object({
-  color: z.string({
-    required_error: 'Please select a colour.',
-  }),
-  username: z.string().min(1, {
-    message: 'Username must be at least 1 character.',
-  }).max(30, {
-    message: 'Username must be at most 30 characters.',
-  }),
-  message: z.string().min(1, {
-    message: 'Message must be at least 1 characters.'
-  }).max(500, {
-    message: 'Message must be at most 500 characters.'
-  }),
-});
+import { PopOverFormSchema } from '@/config/schema';
 
 export function GuestbookDialog() {
   return (
@@ -81,7 +66,7 @@ export function GuestBookDialogForm() {
   const form = useForm<z.infer<typeof PopOverFormSchema>>({
     resolver: zodResolver(PopOverFormSchema),
     defaultValues: {
-      color: "",
+      color: "text",
       username: "",
       message: "",
     },
@@ -131,7 +116,6 @@ export function GuestBookDialogForm() {
                       placeholder="Search colour..."
                       className="h-9"
                     />
-                    {/* <ScrollArea className="max-h-[300px]"> */}
                     <CommandList>
                       <CommandEmpty>No colour found.</CommandEmpty>
                       <CommandGroup className="py-1">
@@ -140,7 +124,7 @@ export function GuestBookDialogForm() {
                             value={color.label}
                             key={color.value}
                             onSelect={() => {
-                              form.setValue("color", color.value);
+                              form.setValue("color", color.value as "rosewater" | "flamingo" | "pink" | "mauve" | "red" | "maroon" | "peach" | "yellow" | "green" | "teal" | "sky" | "sapphire" | "blue" | "lavender" | "text");
                             }}
                             className={`text-${color.value}`}
                           >
@@ -157,12 +141,11 @@ export function GuestBookDialogForm() {
                         ))}
                       </CommandGroup>
                     </CommandList>
-                    {/* </ScrollArea> */}
                   </Command>
                 </PopoverContent>
               </Popover>
               <FormDescription>
-                This is the <span className={`text-${field.value}`}>colour</span> that your name will be rendered as.
+                This is the <span className={`text-${field.value} font-bold`}>colour</span> that your name will be rendered as.
               </FormDescription>
               <FormMessage />
             </FormItem>
