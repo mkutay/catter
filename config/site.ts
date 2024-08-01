@@ -41,17 +41,8 @@ export const siteConfig = {
       {title: 'About Me', link: '/about'},
       {title: 'Substack', link: 'https://mkutay.substack.com'},
       {title: 'RSS Feed', link: '/feed.xml'},
+      {title: 'Admin', link: '/admin'},
     ],
-  },
-  guestbook: {
-    codes: ['abracadabra'],
-    codesStyles: {
-      'abracadabra': 'text-maroon',
-    },
-    siteAdmins: ['hello@mkutay.dev', 'me@mkutay.dev'],
-  },
-  comments: {
-    siteAdmins: ['hello@mkutay.dev', 'me@mkutay.dev'],
   },
   newsletterSubscribe: 'https://mkutay.substack.com/subscribe',
   adSenseClient: 'ca-pub-9198023121523009',
@@ -92,24 +83,6 @@ export type commentMeta = {
 };
 
 export const guestbookColors = [
-  { label: 'Rosewater', value: 'rosewater'},
-  { label: 'Flamingo', value: 'flamingo'},
-  { label: 'Pink', value: 'pink'},
-  { label: 'Mauve', value: 'mauve'},
-  { label: 'Red', value: 'red'},
-  { label: 'Maroon', value: 'maroon'},
-  { label: 'Peach', value: 'peach'},
-  { label: 'Yellow', value: 'yellow'},
-  { label: 'Green', value: 'green'},
-  { label: 'Teal', value: 'teal'},
-  { label: 'Sky', value: 'sky'},
-  { label: 'Sapphire', value: 'sapphire'},
-  { label: 'Blue', value: 'blue'},
-  { label: 'Lavender', value: 'lavender'},
-  { label: 'Text', value: 'text'},
-];
-
-export const guestbookColorsValue = [
   'rosewater',
   'flamingo',
   'pink',

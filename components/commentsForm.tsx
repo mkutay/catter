@@ -17,17 +17,17 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { SignOut } from '@/components/commentsButtons';
 import { revalidatePost, saveComment } from '@/lib/dataBaseActions';
-import { CommentsFormSchema } from '@/config/schema';
+import { commentsFormSchema } from '@/config/schema';
 
 export function CommentForm({ slug }: { slug: string }) {
-  const form = useForm<z.infer<typeof CommentsFormSchema>>({
-    resolver: zodResolver(CommentsFormSchema),
+  const form = useForm<z.infer<typeof commentsFormSchema>>({
+    resolver: zodResolver(commentsFormSchema),
     defaultValues: {
       message: "",
     },
   });
  
-  const onSubmit = async (values: z.infer<typeof CommentsFormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof commentsFormSchema>) => {
     await saveComment({ slug, message: values.message });
     form.reset();
   };

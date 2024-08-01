@@ -1,19 +1,16 @@
 'use server';
 
-import {
-  unstable_noStore as noStore,
-} from 'next/cache';
-
 import { sql } from '@/lib/postgres';
 import { commentMeta, entryMeta } from '@/config/site';
 
 
-export async function getBlogViews() {
+export async function getBlogViews(): Promise<
+  number
+> {
   if (!process.env.POSTGRES_URL) {
-    return [];
+    return 0;
   }
 
-  noStore();
   let views = await sql`
     SELECT count
     FROM views
@@ -64,4 +61,35 @@ export async function getComments({ slug }: { slug: string }): Promise<
     ORDER BY created_at DESC
     LIMIT 15
   `;
+}
+
+export async function getAdmins(): Promise<
+  { id: number, email: string, name: string}[]
+> {
+  if (!process.env.POSTGRES_URL) {
+    return [];
+  }
+  
+  return await sql`
+    SELECT id, email, name
+    FROM admins
+  `;
+}
+
+export async function isAdmin(email: string): Promise<
+  boolean
+> {
+  let adminFlag: boolean = false;
+  const admins = await getAdmins();
+
+  if (admins.length == 0) return true;
+
+  admins.forEach((admin) => {
+    if (admin.email == email) {
+      adminFlag = true;
+      return;
+    }
+  });
+
+  return adminFlag;
 }

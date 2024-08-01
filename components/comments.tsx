@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { DeleteComment, SignIn } from '@/components/commentsButtons';
 import { CommentForm } from '@/components/commentsForm';
 import { auth } from '@/lib/auth';
-import { getComments } from '@/lib/dataBaseQueries';
+import { getComments, isAdmin } from '@/lib/dataBaseQueries';
 import { commentMeta, siteConfig } from '@/config/site';
 import { Skeleton } from './ui/skeleton';
 import React from 'react';
@@ -55,7 +55,7 @@ export function CommentAuth({ slug }: { slug: string }) {
 export async function Comment({ comment }: { comment: commentMeta }) {
   const session = await auth();
   
-  const admin = session && session.user && siteConfig.comments.siteAdmins.includes(session.user?.email as string);
+  const admin = session && session.user && (await isAdmin(session.user?.email as string));
   const isUsers = session && session.user && session.user.email == comment.email;
 
   return (

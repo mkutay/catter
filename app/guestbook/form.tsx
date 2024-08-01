@@ -9,22 +9,24 @@ import { Input } from '@/components/ui/input';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { saveGuestbookEntry } from '@/lib/dataBaseActions';
-import { GuestbookFormSchema } from '@/config/schema';
+import { guestbookFormSchema } from '@/config/schema';
 
 export default function GuestbookZodForm() {
-  const form = useForm<z.infer<typeof GuestbookFormSchema>>({
-    resolver: zodResolver(GuestbookFormSchema),
+  const form = useForm<z.infer<typeof guestbookFormSchema>>({
+    resolver: zodResolver(guestbookFormSchema),
     defaultValues: {
       message: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof GuestbookFormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof guestbookFormSchema>) => {
     await saveGuestbookEntry({
       message: values.message,
     });

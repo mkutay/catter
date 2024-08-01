@@ -9,7 +9,7 @@ import { ViewCounterFallback } from '@/components/viewCounter';
 import DoublePane from '@/components/doublePane';
 import CopyToClipboard from '@/components/copyToClipboard';
 import { incrementViews } from '@/lib/dataBaseActions';
-import { getPostFiles, getProps } from '@/lib/contentQueries';
+import { getPostSlugs, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
@@ -91,9 +91,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 }
 
 export async function generateStaticParams() {
-  const postFiles = getPostFiles();
+  const postSlugs = getPostSlugs();
 
-  return postFiles.map(filename => ({
-    slug: filename.replace('.mdx', ''),
-  }));
+  return postSlugs;
 }

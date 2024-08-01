@@ -42,16 +42,9 @@ export default function Page() {
           <GuestbookEntries/>
         </Suspense>
         {/* <GuestbookEntriesFallback/> */}
-        <div className="flex flex-row justify-between items-center not-prose">
+        <div className="flex flex-row justify-end gap-2 items-center not-prose">
           <RevalidateGuestbook/>
-          <div className="flex flex-row gap-2 items-center">
-            <Button variant="ghost" size="sm" className="w-fit" asChild>
-              <Link href="/guestbook/admin" className="text-foreground">
-                Admin
-              </Link>
-            </Button>
-            <GuestbookDialog/>
-          </div>
+          <GuestbookDialog/>
         </div>
       </main>
     </DoublePane>
