@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 
-import { getPostFiles, getProps, getPosts } from '@/lib/contentQueries';
+import { getPosts } from '@/lib/contentQueries';
 
 export default function Page({ params }: { params: { shortened: string } }) {
   const { shortened } = params;
@@ -24,6 +24,7 @@ export default function Page({ params }: { params: { shortened: string } }) {
 
 export function generateStaticParams() {
   const ret: { shortened: string }[] = [];
+  
   const posts = getPosts({ });
   const projects = getPosts({ tags: ['project'] });
 

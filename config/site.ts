@@ -1,6 +1,8 @@
 export const siteConfig = {
   url: 'https://www.mkutay.dev',
   name: 'Kutay\'s Blog',
+  author: 'Mehmet Kutay Bozkurt',
+  authorEmail: 'hello@mkutay.dev',
   description: 'A blog where university student Kutay posts about things he likes, from mathematics to computer science.',
   postNumPerPage: 5,
   navItems: [
@@ -76,6 +78,7 @@ export type entryMeta = {
   created_at: string,
   updated_at: string,
   email: string,
+  color: string,
 };
 
 export type commentMeta = {

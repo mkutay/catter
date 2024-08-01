@@ -42,7 +42,7 @@ export default function Form({ entries }: { entries: entryMeta[] }) {
               className="mt-1.5"
             />
             <div className="break-words">
-              <span className={cn("mr-1 font-bold tracking-tight", entry.email.includes('@') ? "text-foreground" : siteConfig.guestbook.codesStyles[entry.email as keyof typeof siteConfig.guestbook.codesStyles])}>
+              <span className={cn("mr-1 font-bold tracking-tight", (entry.color === '' || entry.color === null) ? 'text-foreground' : `text-${entry.color}`)}>
                 {entry.created_by}:
               </span>
               <span className="text-foreground">

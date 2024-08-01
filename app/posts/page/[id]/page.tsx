@@ -44,7 +44,6 @@ export default function Page({ params }: { params: { id: string } }) {
       <h1>
         List of All Posts and Tags
       </h1>
-      <hr/>
       <ListPosts startInd={startInd} endInd={endInd} disallowTags={['project']}/>
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
       <hr/>

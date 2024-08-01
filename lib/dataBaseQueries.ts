@@ -43,7 +43,7 @@ export async function getGuestbookEntries(): Promise<
   }
 
   return sql`
-    SELECT id, body, created_by, created_at, updated_at, email
+    SELECT id, body, created_by, created_at, updated_at, email, color
     FROM guestbook
     ORDER BY created_at DESC
     LIMIT 300

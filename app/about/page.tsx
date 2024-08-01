@@ -1,9 +1,11 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import Image from 'next/image';
 
-import { siteConfig } from '@/config/site';
+import DoublePane from '@/components/doublePane';
 import { getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
-import DoublePane from '@/components/doublePane';
+import { siteConfig } from '@/config/site';
+import me from '@/public/images/me.jpg';
 
 export function generateMetadata() {
   const props = getProps('content/pages', 'about');
@@ -24,15 +26,33 @@ export default async function Page() {
 
   return (
     <DoublePane>
-      <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-foreground">
+      <h1>
         {props.meta.title}
       </h1>
-      <div id="mdxremote" className="text-right italic leading-7 [&:not(:first-child)]:mt-6 text-description">
-        <MDXRemote source={props.meta.description} options={options} components={components}/>
-      </div>
-      <main id="mdxremote">
+      <p className="text-right italic not-prose text-description">
+        {props.meta.description}
+      </p>
+      <Image
+        alt={`${siteConfig.author} portrait image`}
+        src={me}
+        sizes="100vw"
+        style={{ width: "100%", height: "auto" }}
+        priority
+        placeholder="blur"
+        className="rounded-full shadow-md max-w-64 float-right lg:flex hidden"
+      />
+      <main>
         <MDXRemote source={props.content} options={options} components={components}/>
       </main>
+      <Image
+        alt={`${siteConfig.author} portrait image`}
+        src={me}
+        sizes="100vw"
+        style={{ width: "100%", height: "auto" }}
+        priority
+        placeholder="blur"
+        className="rounded-full shadow-md max-w-64 lg:hidden flex mx-auto"
+      />
     </DoublePane>
   );
 }

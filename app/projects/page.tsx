@@ -26,7 +26,6 @@ export default function Page() {
       <h1>
         Different Coding Projects I Did
       </h1>
-      <hr/>
       <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
         {projects.map((project) => (
           <ProjectCard props={project} key={project.slug}/>

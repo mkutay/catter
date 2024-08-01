@@ -13,8 +13,8 @@ export async function TotalBlogViews() {
   const views = await getCachedBlogViews();
 
   return (
-    <div className="flex justify-center items-center">
-      {`${views} views`}
+    <div className="flex justify-center items-center text-secondary font-bold tracking-tight text-lg">
+      {`${views} total views`}
     </div>
   );
 }

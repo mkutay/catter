@@ -34,29 +34,30 @@ async function getSession(): Promise<Session> {
   return session;
 }
 
-export async function saveGuestbookEntry(formData: FormData) {  
-  const entry = formData.get('entry')?.toString() || String('');
-  const body = entry.slice(0, 1000);
+export async function saveGuestbookEntry({
+  color,
+  username,
+  message
+}: {
+  color?: string,
+  username?: string,
+  message: string
+}) {  
   const random = Math.floor(Math.random() * 1000000);
   const session = await auth();
 
-  let email = formData.get('code')?.toString() || String('');
-  let created_by = '';
-
-  if (!siteConfig.guestbook.codes.includes(email)) {
-    if (!session || !session.user) {
-      throw new Error('Unauthorized');
-    } else {
-      email = session.user?.email as string;
-      created_by = session.user?.name as string;
-    }
-  } else {
-    created_by = formData.get('name')?.toString() || String('');
+  if (!session || !session.user) {
+    throw new Error('Unauthorized');
   }
 
+  const created_by = username || session.user.name as string;
+  const email = session.user.email as string;
+
+  color = color || '';
+
   await sql`
-    INSERT INTO guestbook (id, email, body, created_by, created_at)
-    VALUES (${random}, ${email}, ${body}, ${created_by}, NOW())
+    INSERT INTO guestbook (id, email, body, created_by, created_at, color)
+    VALUES (${random}, ${email}, ${message}, ${created_by}, NOW(), ${color})
   `;
 
   revalidatePath('/guestbook');
@@ -78,6 +79,11 @@ export async function deleteGuestbookEntries(selectedEntries: string[]) {
     WHERE id = ANY(${arrayLiteral}::int[])
   `;
 
+  revalidatePath('/guestbook/admin');
+  revalidatePath('/guestbook');
+}
+
+export async function revalidateGuestbook() {
   revalidatePath('/guestbook/admin');
   revalidatePath('/guestbook');
 }

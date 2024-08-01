@@ -47,7 +47,6 @@ export default function Page({ params }: { params: { tag: string, id: string } }
       <h1>
         Posts With Tag: <span className="text-secondary">{turnTagString(tag)}</span>
       </h1>
-      <hr/>
       <ListPosts startInd={startInd} endInd={endInd} tags={[tag]}/>
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
       <hr/>

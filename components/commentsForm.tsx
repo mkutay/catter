@@ -34,8 +34,8 @@ export function CommentForm({ slug }: { slug: string }) {
     },
   });
  
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    saveComment({ slug, message: values.message });
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await saveComment({ slug, message: values.message });
     form.reset();
   };
 
@@ -49,7 +49,7 @@ export function CommentForm({ slug }: { slug: string }) {
             <FormItem>
               <FormLabel>Write a Comment to this Post!</FormLabel>
               <FormControl>
-                <Textarea className="h-32"  placeholder="Your comment..." {...field} />
+                <Textarea className="h-32" placeholder="Your comment..." {...field}/>
               </FormControl>
               <FormMessage/>
             </FormItem>

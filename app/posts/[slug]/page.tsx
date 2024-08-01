@@ -43,7 +43,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   incrementViews(props.slug);
 
   return (
-    <div className="my-8">
+    <div>
       {props.meta.cover && (<div className="pt-2"><Image
         alt={`${props.meta.title} post cover image`}
         src={images[props.slug]}
@@ -57,7 +57,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           <h1>
             {props.meta.title}
           </h1>
-          <hr/>
+          {/* <hr/> */}
           <div className="text-lg font-semibold text-text">
             <span>
               {formattedDate}

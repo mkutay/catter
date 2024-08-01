@@ -13,7 +13,7 @@ export default function Home() {
         <h1>
           Recently Published
         </h1>
-        <hr/>
+        {/* <hr/> */}
         <ListPosts startInd={0} endInd={siteConfig.postNumPerPage} disallowTags={['project']}/>
         <Button asChild variant="secondary" className="not-prose mx-auto mt-4 mb-2" size="lg">
           <Link href="/posts/page/1" className="flex flex-row gap-3">

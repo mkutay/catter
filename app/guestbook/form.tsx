@@ -1,91 +1,71 @@
 'use client';
 
-import { useRef } from 'react';
-import { useFormStatus } from 'react-dom';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from "@/components/ui/textarea"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
 import { saveGuestbookEntry } from '@/lib/dataBaseActions';
 
-export default function Form() {
-  const formRef = useRef<HTMLFormElement>(null);
+
+const GuestbookFormSchema = z.object({
+  message: z.string().min(2, {
+    message: 'Message must be at least 2 characters.'
+  }).max(500, {
+    message: 'Message must be at most 500 characters.'
+  }),
+});
+
+export default function GuestbookZodForm() {
+  const form = useForm<z.infer<typeof GuestbookFormSchema>>({
+    resolver: zodResolver(GuestbookFormSchema),
+    defaultValues: {
+      message: "",
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof GuestbookFormSchema>) => {
+    await saveGuestbookEntry({
+      message: values.message,
+    });
+    form.reset();
+  };
 
   return (
-    <form
-      ref={formRef}
-      action={async (formData) => {
-        await saveGuestbookEntry(formData);
-        formRef.current?.reset();
-      }}
-    >
-      <div className="flex flex-row gap-2">
-        <Input
-          aria-label="Your message"
-          placeholder="Your message..."
-          name="entry"
-          type="text"
-          required
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-2">
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormControl>
+                <Input
+                  aria-label="Your message"
+                  placeholder="Your message..."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <SubmitButton/>
-      </div>
-    </form>
-  );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button
-      variant="secondary"
-      size="md"
-      disabled={pending}
-      type="submit"
-      className="text-base w-fit"
-    >
-      Sign!
-    </Button>
-  );
-}
-
-export function GuestBookPopOverForm() {
-  const formRef = useRef<HTMLFormElement>(null);
-
-  return (
-    <form
-      ref={formRef}
-      action={async (formData) => {
-        await saveGuestbookEntry(formData);
-        formRef.current?.reset();
-      }}
-    >
-      <div className="flex flex-col gap-2 justify-center items-center">
-        <Input
-          aria-label="Enter a code"
-          id="code-code"
-          placeholder="Enter a code..."
-          type="text"
-          name="code"
-          required
-        />
-        <Input
-          aria-label="Your displayed name"
-          id="code-name"
-          placeholder="Enter a name to be displayed..."
-          type="text"
-          name="name"
-          required
-        />
-        <Textarea
-          aria-label="Your message"
-          placeholder="Type your message here..."
-          name="entry"
-          required
-          className="h-24"
-        />
-        <SubmitButton/>
-      </div>
-    </form>
+        <Button
+          variant="secondary"
+          size="md"
+          type="submit"
+        >
+          Sign!
+        </Button>
+      </form>
+    </Form>
   );
 }

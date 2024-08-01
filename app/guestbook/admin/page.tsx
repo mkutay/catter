@@ -33,7 +33,6 @@ export default async function Page() {
   return (
     <DoublePane>
       <h1>Admin</h1>
-      <hr/>
       <Form entries={entries}/>
       <div className="justify-end flex not-prose mt-4">
         <Button asChild variant="ghost" size="sm">

@@ -5,14 +5,14 @@ import { siteConfig } from '@/config/site';
 
 export async function GET() {
   const feed = new Rss({
-    title: 'Kutay\'s Blog',
-    description: 'A blog where uni student Kutay posts about things he likes, from maths to computer science',
+    title: siteConfig.name,
+    description: siteConfig.description,
     generator: 'RSS for Node and Next.js',
     feed_url: `${siteConfig.url}/feed.xml`,
     site_url: siteConfig.url,
-    managingEditor: 'hello@mkutay.dev (Mehmet Kutay Bozkurt)',
-    webMaster: 'hello@mkutay.dev (Mehmet Kutay Bozkurt)',
-    copyright: `Copyright ${new Date().getFullYear().toString()}, Mehmet Kutay Bozkurt`,
+    managingEditor: `${siteConfig.authorEmail} (${siteConfig.author})`,
+    webMaster: `${siteConfig.authorEmail} (${siteConfig.author})`,
+    copyright: `Copyright ${new Date().getFullYear().toString()}, ${siteConfig.author}`,
     language: 'en-UK',
     pubDate: new Date().toISOString().split('T')[0],
     ttl: 60,
@@ -26,7 +26,7 @@ export async function GET() {
       description: post.meta.description,
       url: `${siteConfig.url}/posts/${post.slug}`,
       date: new Date(post.meta.date).toISOString().split('T')[0],
-      author: 'hello@mkutay.dev (Mehmet Kutay Bozkurt)',
+      author: `${siteConfig.authorEmail} (${siteConfig.author})`,
       categories: post.meta.tags || [],
     });
   });
