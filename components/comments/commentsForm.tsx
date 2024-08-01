@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { SignOut } from '@/components/commentsButtons';
+import { SignOut } from '@/components/comments/commentsButtons';
 import { revalidatePost, saveComment } from '@/lib/dataBaseActions';
 import { commentsFormSchema } from '@/config/schema';
 

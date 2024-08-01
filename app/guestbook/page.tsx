@@ -1,15 +1,13 @@
 import { Suspense } from 'react';
-import Link from 'next/link';
 import { unstable_cache } from 'next/cache';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
 import DoublePane from '@/components/doublePane';
-import { GuestBookSignIn, GuestBookSignOut, RevalidateGuestbook } from '@/components/guestBookButtons';
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
 import { cn } from '@/lib/utils';
 import { entryMeta, siteConfig } from '@/config/site';
+import { GuestBookSignIn, GuestBookSignOut, RevalidateGuestbook } from '@/app/guestbook/buttons';
 import GuestbookZodForm from '@/app/guestbook/form';
 import { GuestbookDialog } from '@/app/guestbook/dialog';
 
@@ -41,7 +39,6 @@ export default function Page() {
         <Suspense fallback={<GuestbookEntriesFallback/>}>
           <GuestbookEntries/>
         </Suspense>
-        {/* <GuestbookEntriesFallback/> */}
         <div className="flex flex-row justify-end gap-2 items-center not-prose">
           <RevalidateGuestbook/>
           <GuestbookDialog/>
@@ -75,6 +72,7 @@ const getCachedGuestbookEntries = unstable_cache(
 );
 
 // text-rosewater text-flamingo text-pink text-mauve text-red text-maroon text-peach text-yellow text-green text-teal text-sky text-sapphire text-blue text-lavender
+// List all entries in the guestbook with respect to their color and names
 async function GuestbookEntries() {
   const entries = await getCachedGuestbookEntries();
 

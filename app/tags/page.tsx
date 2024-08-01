@@ -21,7 +21,6 @@ export default function Page() {
       <h1>
       List of Tags on the Posts
       </h1>
-      <hr/>
       <TagsButtonGrid/>
     </DoublePane>
   )

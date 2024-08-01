@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { getPosts } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { postMeta } from '@/config/site';
-import { turnTagString } from './tagsButtonGrid';
 
 export default function ListPosts({
   startInd,
@@ -26,7 +25,7 @@ export default function ListPosts({
 
   return (
     <div className="flex flex-col divide-y divide-muted">
-      {posts.map((post, index) => (
+      {posts.map((post) => (
         <div key={post.slug} className="prose-h2:my-0 flex flex-col gap-4 py-8 first:pt-0">
           <h2 className="font-normal tracking-tight">
             <Link href={`/posts/${post.slug}`} className="not-prose underline">

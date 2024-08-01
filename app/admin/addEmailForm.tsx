@@ -15,9 +15,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { addAdminFormSchema } from '@/config/schema';
 import { addAdmin } from '@/lib/dataBaseActions';
+import { addAdminFormSchema } from '@/config/schema';
 
+// Component to add admins that can control the website
 export default function AddEmailForm() {
   const form = useForm<z.infer<typeof addAdminFormSchema>>({
     resolver: zodResolver(addAdminFormSchema),
@@ -35,14 +36,14 @@ export default function AddEmailForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
+        <FormLabel>
+          Add Admin
+        </FormLabel>
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>
-                Email
-              </FormLabel>
+            <FormItem>
               <FormControl>
                 <Input
                   aria-label="Email"
@@ -50,9 +51,6 @@ export default function AddEmailForm() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                Email of the admin added.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -61,10 +59,7 @@ export default function AddEmailForm() {
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>
-                Name
-              </FormLabel>
+            <FormItem>
               <FormControl>
                 <Input
                   aria-label="Name"
@@ -72,16 +67,16 @@ export default function AddEmailForm() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                Name of the admin added.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormDescription className="not-prose">
+          Add admin to control the website.
+        </FormDescription>
         <Button
           variant="secondary"
-          size="sm"
+          size="default"
           type="submit"
           className="w-fit"
         >

@@ -6,12 +6,12 @@ import { math, mathHtml } from 'micromark-extension-math';
 import parse from 'html-react-parser';
 
 import { Label } from '@/components/ui/label';
-import { DeleteComment, SignIn } from '@/components/commentsButtons';
-import { CommentForm } from '@/components/commentsForm';
+import { Skeleton } from '@/components/ui/skeleton';
+import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
+import { CommentForm } from '@/components/comments/commentsForm';
 import { auth } from '@/lib/auth';
 import { getComments, isAdmin } from '@/lib/dataBaseQueries';
-import { commentMeta, siteConfig } from '@/config/site';
-import { Skeleton } from './ui/skeleton';
+import { commentMeta } from '@/config/site';
 import React from 'react';
 
 const getCachedComments = unstable_cache(

@@ -1,18 +1,15 @@
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
-import { Skeleton } from '@/components/ui/skeleton';
 import TagsButtonGrid from '@/components/tagsButtonGrid';
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
 import DoublePane from '@/components/doublePane';
-import { TotalBlogViews } from '@/components/totalBlogViews';
 import { getPostsLength } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
 export function generateMetadata({ params }: { params: { id: string } }) {
   const id = Number(params.id);
-  const postsLength = getPostsLength({ });
+  const postsLength = getPostsLength({ disallowTags: ['project'] });
 
   return {
     title: `Posts and Tags On the Blog | Page ${id}`,
@@ -48,11 +45,6 @@ export default function Page({ params }: { params: { id: string } }) {
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
       <hr/>
       <TagsButtonGrid/>
-      <div className="mt-8">
-        <Suspense fallback={<Skeleton className="h-8 w-[10ch]"/>}>
-          <TotalBlogViews/>
-        </Suspense>
-      </div>
     </DoublePane>
   )
 }

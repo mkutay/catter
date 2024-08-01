@@ -15,11 +15,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
-import { deleteAdmins, deleteGuestbookEntries } from '@/lib/dataBaseActions';
+import { deleteGuestbookEntries } from '@/lib/dataBaseActions';
 import { entryMeta } from '@/config/site';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
+// Delete entries from the guestbook
 export default function GuestbookAdminForm({ entries }: { entries: entryMeta[] }) {
   const deleteGuestbookEntryFormSchema = z.object({
     items: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -40,7 +41,7 @@ export default function GuestbookAdminForm({ entries }: { entries: entryMeta[] }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="items"
@@ -97,8 +98,8 @@ export default function GuestbookAdminForm({ entries }: { entries: entryMeta[] }
           )}
         />
         <div className="flex flex-row items-center not-prose gap-2">
-          <Button type="submit" size="sm" variant="destructive">Delete Entries</Button>
-          <Button asChild variant="ghost" size="sm">
+          <Button type="submit" size="default" variant="destructive">Delete Entries</Button>
+          <Button asChild variant="ghost" size="default">
             <Link href="/guestbook">
               Return to Guest Book
             </Link>

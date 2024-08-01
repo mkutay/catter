@@ -17,6 +17,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox';
 import { deleteAdmins } from '@/lib/dataBaseActions';
 
+// Delete current admins on the website so that they no longer have control over the blog
 export default function DeleteAdminForm({ admins }: { admins: { id: number, email: string, name: string }[] }) {
   const deleteAdminFormSchema = z.object({
     items: z.array(z.number()).refine((value) => value.some((item) => item), {
@@ -37,7 +38,7 @@ export default function DeleteAdminForm({ admins }: { admins: { id: number, emai
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="items"
@@ -86,7 +87,7 @@ export default function DeleteAdminForm({ admins }: { admins: { id: number, emai
             </FormItem>
           )}
         />
-        <Button type="submit" size="sm" variant="destructive">Delete Admins</Button>
+        <Button type="submit" size="default" variant="destructive">Delete Admins</Button>
       </form>
     </Form>
   );
