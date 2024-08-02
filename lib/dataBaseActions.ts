@@ -5,7 +5,6 @@ import { PostgresError } from 'postgres';
 import {
   revalidatePath,
   unstable_noStore as noStore,
-  revalidateTag
 } from 'next/cache';
 
 import { auth } from '@/lib/auth';
@@ -236,7 +235,7 @@ export async function deleteComment({ comment }: { comment: commentMeta }) {
     WHERE id = (${comment.id})
   `;
 
-  revalidateTag('nextjs-blog-comments');
+  revalidatePath(`/posts/${comment.slug}`);
 }
 
 export async function revalidatePost({ slug }: { slug: string }) {

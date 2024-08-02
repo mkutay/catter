@@ -1,6 +1,5 @@
 import { micromark } from 'micromark';
 import { format } from 'date-fns';
-import { unstable_cache } from 'next/cache';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
 import { math, mathHtml } from 'micromark-extension-math';
 import parse from 'html-react-parser';
@@ -14,18 +13,9 @@ import { getComments, isAdmin } from '@/lib/dataBaseQueries';
 import { commentMeta } from '@/config/site';
 import React from 'react';
 
-const getCachedComments = unstable_cache(
-  async ({ slug }: { slug: string }) => getComments({ slug }),
-  [`nextjs-blog-comments`],
-  {
-    tags: [`nextjs-blog-comments`],
-    revalidate: 180, // 3 minutes
-  }
-);
-
 export default async function Comments({ slug }: { slug: string }) {
   const session = await auth();
-  const comments: commentMeta[] = await getCachedComments({ slug });
+  const comments: commentMeta[] = await getComments({ slug });
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">

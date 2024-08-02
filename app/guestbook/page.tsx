@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { unstable_cache } from 'next/cache';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import DoublePane from '@/components/doublePane';
@@ -63,18 +62,10 @@ async function GuestbookForm() {
   );
 }
 
-const getCachedGuestbookEntries = unstable_cache(
-  async () => getGuestbookEntries(),
-  ['nextjs-blog-guestbook-entries'],
-  {
-    revalidate: 900, // 15 minutes
-  }
-);
-
 // text-rosewater text-flamingo text-pink text-mauve text-red text-maroon text-peach text-yellow text-green text-teal text-sky text-sapphire text-blue text-lavender
 // List all entries in the guestbook with respect to their color and names
 async function GuestbookEntries() {
-  const entries = await getCachedGuestbookEntries();
+  const entries = await getGuestbookEntries();
 
   if (entries.length === 0) {
     return null;

@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
-import { unstable_cache } from 'next/cache';
 
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries, isAdmin, getAdmins } from '@/lib/dataBaseQueries';
@@ -17,14 +16,6 @@ export const metadata: Metadata = {
   },
 };
 
-const getCachedGuestbookEntries = unstable_cache(
-  async () => getGuestbookEntries(),
-  ['nextjs-blog-guestbook-entries'],
-  {
-    revalidate: 900, // 15 minutes
-  }
-);
-
 // Needs admin session or loads when there is no admin on the site
 export default async function Page() {
   const session = await auth();
@@ -34,7 +25,7 @@ export default async function Page() {
   }
   
   const admins = await getAdmins();
-  const entries = await getCachedGuestbookEntries();
+  const entries = await getGuestbookEntries();
 
   return (
     <section className="prose max-w-prose mx-auto px-4">
