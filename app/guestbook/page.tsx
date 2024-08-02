@@ -1,11 +1,9 @@
 import { Suspense } from 'react';
-import Link from 'next/link';
 import { unstable_cache } from 'next/cache';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
 import DoublePane from '@/components/doublePane';
-import { GuestBookSignIn, GuestBookSignOut, RevalidateGuestbook } from '@/components/guestBookButtons';
+import { GuestBookSignIn, GuestBookSignOut } from '@/app/guestbook/buttons';
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
 import { cn } from '@/lib/utils';
@@ -41,18 +39,6 @@ export default function Page() {
         <Suspense fallback={<GuestbookEntriesFallback/>}>
           <GuestbookEntries/>
         </Suspense>
-        {/* <GuestbookEntriesFallback/> */}
-        <div className="flex flex-row justify-between items-center not-prose">
-          <RevalidateGuestbook/>
-          <div className="flex flex-row gap-2 items-center">
-            <Button variant="ghost" size="sm" className="w-fit" asChild>
-              <Link href="/guestbook/admin" className="text-foreground">
-                Admin
-              </Link>
-            </Button>
-            <GuestbookDialog/>
-          </div>
-        </div>
       </main>
     </DoublePane>
   );
@@ -64,7 +50,10 @@ async function GuestbookForm() {
   return session?.user ? (
     <div className="flex flex-col gap-2">
       <GuestbookZodForm/>
-      <GuestBookSignOut/>
+      <div className="flex flex-row gap-2 items-center not-prose">
+        <GuestbookDialog/>
+        <GuestBookSignOut/>
+      </div>
     </div>
   ) : (
     <div className="items-center justify-center flex">

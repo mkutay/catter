@@ -6,13 +6,13 @@ import { math, mathHtml } from 'micromark-extension-math';
 import parse from 'html-react-parser';
 
 import { Label } from '@/components/ui/label';
-import { DeleteComment, SignIn } from '@/components/commentsButtons';
-import { CommentForm } from '@/components/commentsForm';
+import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
+import { CommentForm } from '@/components/comments/commentsForm';
 import { auth } from '@/lib/auth';
 import { getComments } from '@/lib/dataBaseQueries';
 import { commentMeta, siteConfig } from '@/config/site';
-import { Skeleton } from './ui/skeleton';
-import React from 'react';
+import { Skeleton } from '../ui/skeleton';
+import React, { Suspense } from 'react';
 
 const getCachedComments = unstable_cache(
   async ({ slug }: { slug: string }) => getComments({ slug }),
@@ -36,7 +36,9 @@ export default async function Comments({ slug }: { slug: string }) {
       )}
       <div className="flex flex-col gap-6">
         {comments.map((comment) => (
-          <Comment comment={comment} key={comment.id}/>
+          <Suspense key={comment.id} fallback={<CommentsFallback/>}>
+            <Comment comment={comment}/>
+          </Suspense>
         ))}
       </div>
     </div>
@@ -55,7 +57,7 @@ export function CommentAuth({ slug }: { slug: string }) {
 export async function Comment({ comment }: { comment: commentMeta }) {
   const session = await auth();
   
-  const admin = session && session.user && siteConfig.comments.siteAdmins.includes(session.user?.email as string);
+  const admin = session && session.user && siteConfig.admins.includes(session.user?.email as string);
   const isUsers = session && session.user && session.user.email == comment.email;
 
   return (

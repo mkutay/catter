@@ -15,19 +15,19 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { SignOut } from '@/components/commentsButtons';
+import { SignOut } from '@/components/comments/commentsButtons';
 import { revalidatePost, saveComment } from '@/lib/dataBaseActions';
-import { CommentsFormSchema } from '@/config/schema';
+import { commentsFormSchema } from '@/config/schema';
 
 export function CommentForm({ slug }: { slug: string }) {
-  const form = useForm<z.infer<typeof CommentsFormSchema>>({
-    resolver: zodResolver(CommentsFormSchema),
+  const form = useForm<z.infer<typeof commentsFormSchema>>({
+    resolver: zodResolver(commentsFormSchema),
     defaultValues: {
       message: "",
     },
   });
  
-  const onSubmit = async (values: z.infer<typeof CommentsFormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof commentsFormSchema>) => {
     await saveComment({ slug, message: values.message });
     form.reset();
   };
@@ -48,14 +48,9 @@ export function CommentForm({ slug }: { slug: string }) {
             </FormItem>
           )}
         />
-        <div className="flex flex-row gap-2 justify-between items-center">
-          <Button type="button"  aria-label="Revalidate Comments" variant="ghost" size="icon" onClick={() => revalidatePost({ slug })}>
-            <TbReload size="20px" strokeWidth="2.5px"/>
-          </Button>
-          <div className="flex flex-row gap-2 items-center">
-            <SignOut/>
-            <Button variant="default" size="default" type="submit">Post</Button>
-          </div>
+        <div className="flex flex-row gap-2 justify-end items-center">
+          <SignOut/>
+          <Button variant="default" size="default" type="submit">Post</Button>
         </div>
       </form>
     </Form>

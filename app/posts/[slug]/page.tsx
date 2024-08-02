@@ -13,7 +13,7 @@ import { getPostFiles, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
-import Comments, { CommentsFallback } from '@/components/comments';
+import Comments, { CommentsFallback } from '@/components/comments/comments';
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const props = getProps('content/posts', params.slug);

@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Cross1Icon, HamburgerMenuIcon } from '@radix-ui/react-icons';
+import { SVGProps } from 'react';
 
-import { Logo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,6 +14,35 @@ import {
 } from '@/components/ui/dropdown';
 import ThemeChanger from '@/components/themeChanger';
 import { siteConfig } from '@/config/site';
+
+export type IconSvgProps = SVGProps<SVGSVGElement> & {
+  size?: number;
+};
+
+// This is the logo that will be displayed on the navbar. You can change this as you desire
+export const Logo: React.FC<IconSvgProps> = ({
+  size = 36,
+  width,
+  height,
+  ...props
+}) => (
+  <svg
+    fill="none"
+    height={size || height}
+    viewBox="286 300 1400 1400"
+    width={size || width}
+    {...props}
+  >
+    <g clipPath="url(#ArtboardFrame)">
+      <path d="M1949.61 48.7391L1949.61 1950.77L1293.66 1950.77L1293.66 48.7391L1949.61 48.7391Z" fill="none" opacity="1" stroke="currentColor" strokeLinecap="butt" strokeLinejoin="miter" strokeWidth="120"/>
+      <path d="M678.17 48.7391L678.17 1950.77L50.2695 1950.77L50.2695 48.7391L678.17 48.7391Z" fill="none" opacity="1" stroke="currentColor" strokeLinecap="butt" strokeLinejoin="miter" strokeWidth="120"/>
+        <path d="M999.997 1176.75L648.478 822.756" fill="none" opacity="1" stroke="currentColor" strokeLinecap="butt" strokeLinejoin="round" strokeWidth="120"/>
+        <path d="M356.343 1169.82L714.94 822.99" fill="none" opacity="1" stroke="currentColor" strokeLinecap="butt" strokeLinejoin="round" strokeWidth="120"/>
+        <path d="M971.827 823.375L1324.59 1176.14" fill="none" opacity="1" stroke="currentColor" strokeLinecap="butt" strokeLinejoin="round" strokeWidth="120"/>
+        <path d="M1615.5 828.052L1258.13 1176.14" fill="none" opacity="1" stroke="currentColor" strokeLinecap="butt" strokeLinejoin="round" strokeWidth="120"/>
+    </g>
+  </svg>
+);
 
 export default function NavBar() {
   const [triggered, setTriggered] = useState(false);
@@ -27,6 +56,7 @@ export default function NavBar() {
         </Link>
       </div>
       <div className="flex flex-row place-items-center gap-4">
+        <div><ThemeChanger/></div>
         <div className="hidden lg:flex flex-row gap-4">
           {siteConfig.navItems.map((item) => (
             <Link
@@ -38,7 +68,6 @@ export default function NavBar() {
             </Link>
           ))}
         </div>
-        <div><ThemeChanger/></div>
         <div className="flex lg:hidden">
           <DropdownMenu onOpenChange={() => setTriggered(triggered ? false : true)}>
             <DropdownMenuTrigger asChild>

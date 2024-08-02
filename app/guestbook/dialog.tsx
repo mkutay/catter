@@ -42,7 +42,7 @@ import {
 import { saveGuestbookEntry } from '@/lib/dataBaseActions';
 import { cn } from '@/lib/utils';
 import { guestbookColors } from '@/config/site';
-import { PopOverFormSchema } from '@/config/schema';
+import { guestbookDialogFormSchema } from '@/config/schema';
 
 export function GuestbookDialog() {
   return (
@@ -63,8 +63,8 @@ export function GuestbookDialog() {
 }
 
 export function GuestBookDialogForm() {
-  const form = useForm<z.infer<typeof PopOverFormSchema>>({
-    resolver: zodResolver(PopOverFormSchema),
+  const form = useForm<z.infer<typeof guestbookDialogFormSchema>>({
+    resolver: zodResolver(guestbookDialogFormSchema),
     defaultValues: {
       color: "text",
       username: "",
@@ -72,7 +72,7 @@ export function GuestBookDialogForm() {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof PopOverFormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof guestbookDialogFormSchema>) => {
     await saveGuestbookEntry({
       message: values.message,
       username: values.username,
@@ -116,7 +116,7 @@ export function GuestBookDialogForm() {
                       placeholder="Search colour..."
                       className="h-9"
                     />
-                    <CommandList>
+                    <CommandList className="lg:h-96 h-40">
                       <CommandEmpty>No colour found.</CommandEmpty>
                       <CommandGroup className="py-1">
                         {guestbookColors.map((color) => (

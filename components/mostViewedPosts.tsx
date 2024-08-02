@@ -4,10 +4,10 @@ import { ArrowRightIcon } from '@radix-ui/react-icons';
 import { unstable_cache } from 'next/cache';
 
 import { getViewsCount } from '@/lib/dataBaseQueries';
-import { getPosts } from '@/lib/contentQueries';
+import { getPosts, getProps } from '@/lib/contentQueries';
 
 const getCachedViewsCount = unstable_cache(
-  async () => getViewsCount(),
+  async (postNum: number) => getViewsCount(postNum),
   ['nextjs-blog-views-count'],
   {
     revalidate: 900, // 15 minutes = 900 seconds
@@ -15,28 +15,21 @@ const getCachedViewsCount = unstable_cache(
 );
 
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
-  const views = await getCachedViewsCount();
-  const posts = getPosts({ });
-
-  const postsWithViews = posts.map(post => {
-    const viewsForSlug = views && views.find((view) => view.slug === post.slug);
-    const number = viewsForSlug?.count || 0;
-
+  const views = await getCachedViewsCount(postNum);
+  const posts = views.map(view => {
+    const props = getProps('content/posts', view.slug);
+    
     return {
-      slug: post.slug,
-      meta: post.meta,
-      content: post.content,
-      views: number,
-    }
+      slug: props.slug,
+      meta: props.meta,
+      content: props.content,
+      views: view.count,
+    };
   });
-
-  postsWithViews.sort((a, b) => (
-    b.views - a.views
-  ));
 
   return (
     <ul className="px-0">
-      {postsWithViews.slice(0, postNum).map((post) => (
+      {posts.slice(0, postNum).map((post) => (
         <li key={post.slug} className="group pl-0 hover:pl-2 transition-all px-0 my-0 flex flex-row items-baseline text-lg prose-a:text-foreground text-foreground">
           <div className="pr-4 group-hover:pr-2 transition-all">
             <ArrowRightIcon stroke="currentColor" strokeWidth="1.7px"/>

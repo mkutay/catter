@@ -1,20 +1,9 @@
-import { unstable_cache } from 'next/cache';
-
 import { Skeleton } from '@/components/ui/skeleton';
-import { getViewsCount } from '@/lib/dataBaseQueries';
-
-const getCachedViewsCount = unstable_cache(
-  async () => getViewsCount(),
-  ['nextjs-blog-views-count'],
-  {
-    revalidate: 120,
-  },
-);
+import { getViewCount } from '@/lib/dataBaseQueries';
 
 export default async function ViewCounter({ slug }: { slug: string }) {
-  let allViews = await getCachedViewsCount();
-  const viewsForSlug = allViews && allViews.find((view) => view.slug === slug);
-  const number = new Number(viewsForSlug?.count || 0);
+  const viewCount = await getViewCount(slug);
+  const number = viewCount.length === 0 ? 0 : Number(viewCount[0].count);
 
   return (
     <span>

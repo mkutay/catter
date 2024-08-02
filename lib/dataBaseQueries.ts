@@ -22,7 +22,7 @@ export async function getBlogViews() {
   return views.reduce((acc, curr) => acc + Number(curr.count), 0);
 }
 
-export async function getViewsCount(): Promise<
+export async function getViewsCount(postNum: number): Promise<
   { slug: string; count: number }[]
 > {
   if (!process.env.POSTGRES_URL) {
@@ -32,6 +32,22 @@ export async function getViewsCount(): Promise<
   return sql`
     SELECT slug, count
     FROM views
+    ORDER BY count DESC
+    LIMIT ${postNum}
+  `;
+}
+
+export async function getViewCount(slug: string): Promise<
+  { slug: string; count: number }[]
+> {
+  if (!process.env.POSTGRES_URL) {
+    return [];
+  }
+
+  return sql`
+    SELECT slug, count
+    FROM views
+    WHERE slug=(${slug})
   `;
 }
 
@@ -61,6 +77,21 @@ export async function getComments({ slug }: { slug: string }): Promise<
     SELECT id, body, created_by, created_at, updated_at, email
     FROM comments
     WHERE slug = (${slug})
+    ORDER BY created_at DESC
+    LIMIT 15
+  `;
+}
+
+export async function getEveryComment(): Promise<
+  commentMeta[]
+> {
+  if (!process.env.POSTGRES_URL) {
+    return [];
+  }
+  
+  return sql`
+    SELECT id, slug, body, created_by, created_at, updated_at, email
+    FROM comments
     ORDER BY created_at DESC
     LIMIT 15
   `;
