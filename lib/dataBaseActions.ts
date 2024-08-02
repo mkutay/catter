@@ -138,7 +138,7 @@ export async function saveGuestbookEntry({
   }
 
   revalidatePath('/guestbook');
-  revalidatePath('/guestbook/admin');
+  revalidatePath('/admin');
 }
 
 export async function deleteGuestbookEntries(selectedEntries: string[]) {
@@ -158,12 +158,7 @@ export async function deleteGuestbookEntries(selectedEntries: string[]) {
   `;
 
   revalidatePath('/guestbook');
-  revalidatePath('/guestbook/admin');
-}
-
-export async function revalidateGuestbook() {
-  revalidatePath('/guestbook');
-  revalidatePath('/guestbook/admin');
+  revalidatePath('/admin');
 }
 
 export async function saveComment({ slug, message }: { slug: string, message: string }) {
@@ -236,10 +231,6 @@ export async function deleteComment({ comment }: { comment: commentMeta }) {
   `;
 
   revalidatePath(`/posts/${comment.slug}`);
-}
-
-export async function revalidatePost({ slug }: { slug: string }) {
-  revalidatePath(`/posts/${slug}`);
 }
 
 export async function addAdmin({ email, name }: { email: string, name: string }) {

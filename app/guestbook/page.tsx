@@ -6,7 +6,7 @@ import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
 import { cn } from '@/lib/utils';
 import { entryMeta, siteConfig } from '@/config/site';
-import { GuestBookSignIn, GuestBookSignOut, RevalidateGuestbook } from '@/app/guestbook/buttons';
+import { GuestBookSignIn, GuestBookSignOut } from '@/app/guestbook/buttons';
 import GuestbookZodForm from '@/app/guestbook/form';
 import { GuestbookDialog } from '@/app/guestbook/dialog';
 
@@ -39,7 +39,6 @@ export default function Page() {
           <GuestbookEntries/>
         </Suspense>
         <div className="flex flex-row justify-end gap-2 items-center not-prose">
-          <RevalidateGuestbook/>
           <GuestbookDialog/>
         </div>
       </main>
