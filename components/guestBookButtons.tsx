@@ -2,8 +2,10 @@
 
 import { signIn, signOut } from 'next-auth/react';
 import { FaDiscord, FaGithub, FaSpotify } from 'react-icons/fa';
+import { TbReload } from 'react-icons/tb';
 
 import { Button } from '@/components/ui/button';
+import { revalidateGuestbook } from '@/lib/dataBaseActions';
 
 export function GuestBookSignOut() {
   return (
@@ -40,5 +42,13 @@ export function GuestBookSignIn() {
         </span>
       </Button>
     </div>
+  );
+}
+
+export function RevalidateGuestbook() {
+  return (
+    <Button type="button" aria-label="Revalidate Guestbook" variant="ghost" size="icon" onClick={() => revalidateGuestbook()}>
+      <TbReload size="16px" strokeWidth="3px"/>
+    </Button>
   );
 }

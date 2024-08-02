@@ -1,21 +1,31 @@
 import { micromark } from 'micromark';
 import { format } from 'date-fns';
+import { unstable_cache } from 'next/cache';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
 import { math, mathHtml } from 'micromark-extension-math';
 import parse from 'html-react-parser';
 
 import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
-import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
-import { CommentForm } from '@/components/comments/commentsForm';
+import { DeleteComment, SignIn } from '@/components/commentsButtons';
+import { CommentForm } from '@/components/commentsForm';
 import { auth } from '@/lib/auth';
-import { getComments, isAdmin } from '@/lib/dataBaseQueries';
-import { commentMeta } from '@/config/site';
+import { getComments } from '@/lib/dataBaseQueries';
+import { commentMeta, siteConfig } from '@/config/site';
+import { Skeleton } from './ui/skeleton';
 import React from 'react';
+
+const getCachedComments = unstable_cache(
+  async ({ slug }: { slug: string }) => getComments({ slug }),
+  [`nextjs-blog-comments`],
+  {
+    tags: [`nextjs-blog-comments`],
+    revalidate: 180, // 3 minutes
+  }
+);
 
 export default async function Comments({ slug }: { slug: string }) {
   const session = await auth();
-  const comments: commentMeta[] = await getComments({ slug });
+  const comments: commentMeta[] = await getCachedComments({ slug });
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
@@ -45,7 +55,7 @@ export function CommentAuth({ slug }: { slug: string }) {
 export async function Comment({ comment }: { comment: commentMeta }) {
   const session = await auth();
   
-  const admin = session && session.user && (await isAdmin(session.user?.email as string));
+  const admin = session && session.user && siteConfig.comments.siteAdmins.includes(session.user?.email as string);
   const isUsers = session && session.user && session.user.email == comment.email;
 
   return (

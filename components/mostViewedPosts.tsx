@@ -1,12 +1,21 @@
 import Link from 'next/link';
-import { ArrowRightIcon } from '@radix-ui/react-icons';
-
 import { Skeleton } from '@/components/ui/skeleton';
+import { ArrowRightIcon } from '@radix-ui/react-icons';
+import { unstable_cache } from 'next/cache';
+
 import { getViewsCount } from '@/lib/dataBaseQueries';
 import { getPosts } from '@/lib/contentQueries';
 
+const getCachedViewsCount = unstable_cache(
+  async () => getViewsCount(),
+  ['nextjs-blog-views-count'],
+  {
+    revalidate: 900, // 15 minutes = 900 seconds
+  },
+);
+
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
-  const views = await getViewsCount();
+  const views = await getCachedViewsCount();
   const posts = getPosts({ });
 
   const postsWithViews = posts.map(post => {

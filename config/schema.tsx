@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-import { guestbookColors } from '@/config/site';
+import { guestbookColorsValue } from '@/config/site';
 
-export const guestbookDialogFormSchema = z.object({
-  color: z.enum(guestbookColors, {
+export const PopOverFormSchema = z.object({
+  color: z.enum(guestbookColorsValue, {
     required_error: 'A colour is required.',
   }),
   username: z.string().min(1, {
@@ -12,35 +12,24 @@ export const guestbookDialogFormSchema = z.object({
     message: 'Username must be at most 30 characters.',
   }),
   message: z.string().min(1, {
-    message: 'Message must be at least 1 character.'
+    message: 'Message must be at least 1 characters.'
   }).max(500, {
     message: 'Message must be at most 500 characters.'
   }),
 });
 
-export const guestbookFormSchema = z.object({
+export const GuestbookFormSchema = z.object({
   message: z.string().min(1, {
-    message: 'Message must be at least 1 character.'
+    message: 'Message must be at least 1 characters.'
   }).max(500, {
     message: 'Message must be at most 500 characters.'
   }),
 });
 
-export const commentsFormSchema = z.object({
+export const CommentsFormSchema = z.object({
   message: z.string().min(1, {
-    message: 'Comment must be at least 1 character.'
+    message: 'Comment must be at least 1 characters.'
   }).max(1000, {
     message: 'Comment must be at most 1000 characters.'
-  }),
-});
-
-export const addAdminFormSchema = z.object({
-  email: z.string().email({
-    message: 'Must be a valid email.'
-  }),
-  name: z.string().min(0, {
-    message: 'Name must be at least 1 character.'
-  }).max(30, {
-    message: 'Name must be at most 30 characters.'
   }),
 });

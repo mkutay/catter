@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
 import DoublePane from '@/components/doublePane';
+import { TotalBlogViews } from '@/components/totalBlogViews';
 import TagsButtonGrid, { turnTagString } from '@/components/tagsButtonGrid';
 import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
@@ -25,6 +28,7 @@ export function generateMetadata({ params }: { params: { tag: string, id: string
 export default function Page({ params }: { params: { tag: string, id: string } }) {
   const id = Number(params.id);
   const tag = params.tag;
+
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;
   const postsLength = getPostsLength({ tags: [tag] });
@@ -47,6 +51,11 @@ export default function Page({ params }: { params: { tag: string, id: string } }
       <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
       <hr/>
       <TagsButtonGrid/>
+      <div className="mt-8">
+        <Suspense fallback={<Skeleton className="h-8 w-[10ch]"/>}>
+          <TotalBlogViews/>
+        </Suspense>
+      </div>
     </DoublePane>
   )
 }

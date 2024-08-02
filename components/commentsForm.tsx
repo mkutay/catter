@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { TbReload } from 'react-icons/tb';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -14,19 +15,19 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { SignOut } from '@/components/comments/commentsButtons';
-import { saveComment } from '@/lib/dataBaseActions';
-import { commentsFormSchema } from '@/config/schema';
+import { SignOut } from '@/components/commentsButtons';
+import { revalidatePost, saveComment } from '@/lib/dataBaseActions';
+import { CommentsFormSchema } from '@/config/schema';
 
 export function CommentForm({ slug }: { slug: string }) {
-  const form = useForm<z.infer<typeof commentsFormSchema>>({
-    resolver: zodResolver(commentsFormSchema),
+  const form = useForm<z.infer<typeof CommentsFormSchema>>({
+    resolver: zodResolver(CommentsFormSchema),
     defaultValues: {
       message: "",
     },
   });
  
-  const onSubmit = async (values: z.infer<typeof commentsFormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof CommentsFormSchema>) => {
     await saveComment({ slug, message: values.message });
     form.reset();
   };
@@ -47,9 +48,14 @@ export function CommentForm({ slug }: { slug: string }) {
             </FormItem>
           )}
         />
-        <div className="flex flex-row gap-2 items-center justify-end">
-          <SignOut/>
-          <Button variant="default" size="default" type="submit">Post</Button>
+        <div className="flex flex-row gap-2 justify-between items-center">
+          <Button type="button"  aria-label="Revalidate Comments" variant="ghost" size="icon" onClick={() => revalidatePost({ slug })}>
+            <TbReload size="20px" strokeWidth="2.5px"/>
+          </Button>
+          <div className="flex flex-row gap-2 items-center">
+            <SignOut/>
+            <Button variant="default" size="default" type="submit">Post</Button>
+          </div>
         </div>
       </form>
     </Form>

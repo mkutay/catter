@@ -4,16 +4,16 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { format } from 'date-fns';
 import { Suspense } from 'react';
 
-import Comments, { CommentsFallback } from '@/components/comments/comments';
 import ViewCounter from '@/components/viewCounter';
 import { ViewCounterFallback } from '@/components/viewCounter';
 import DoublePane from '@/components/doublePane';
 import CopyToClipboard from '@/components/copyToClipboard';
 import { incrementViews } from '@/lib/dataBaseActions';
-import { getPostSlugs, getProps } from '@/lib/contentQueries';
+import { getPostFiles, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
+import Comments, { CommentsFallback } from '@/components/comments';
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const props = getProps('content/posts', params.slug);
@@ -57,6 +57,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           <h1>
             {props.meta.title}
           </h1>
+          {/* <hr/> */}
           <div className="text-lg font-semibold text-text">
             <span>
               {formattedDate}
@@ -66,7 +67,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             </span>
             {props.meta.tags.map((tag: string) => (
               <span key={tag} className="not-prose text-description">
-                [<Link href={`/tags/${tag}/page/1`} className="underline">{tag}</Link>]
+                [<Link href={`/tags/${tag}/page/1`} className="underline hover:italic">{tag}</Link>]
               </span>
             ))}
           </div>
@@ -90,5 +91,9 @@ export default function Page({ params }: { params: { slug: string } }) {
 }
 
 export async function generateStaticParams() {
-  return getPostSlugs();
+  const postFiles = getPostFiles();
+
+  return postFiles.map(filename => ({
+    slug: filename.replace('.mdx', ''),
+  }));
 }

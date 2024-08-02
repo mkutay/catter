@@ -3,7 +3,6 @@ import Rss from 'rss';
 import { getPosts } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
-// Returns a .xml file populated with posts on the blog
 export async function GET() {
   const feed = new Rss({
     title: siteConfig.name,

@@ -14,17 +14,17 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { saveGuestbookEntry } from '@/lib/dataBaseActions';
-import { guestbookFormSchema } from '@/config/schema';
+import { GuestbookFormSchema } from '@/config/schema';
 
 export default function GuestbookZodForm() {
-  const form = useForm<z.infer<typeof guestbookFormSchema>>({
-    resolver: zodResolver(guestbookFormSchema),
+  const form = useForm<z.infer<typeof GuestbookFormSchema>>({
+    resolver: zodResolver(GuestbookFormSchema),
     defaultValues: {
       message: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof guestbookFormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof GuestbookFormSchema>) => {
     await saveGuestbookEntry({
       message: values.message,
     });

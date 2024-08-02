@@ -5,11 +5,9 @@ import { notFound } from 'next/navigation';
 
 import { postMeta } from '@/config/site';
 
-export function getPostSlugs() {
-  return fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8')
-    .map((filename) => 
-      filename.replace('.mdx', '')
-    );
+export function getPostFiles() {
+  const postFiles = fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
+  return postFiles;
 }
 
 export function getProps(pathTo: string, slug: string) {
@@ -21,11 +19,11 @@ export function getProps(pathTo: string, slug: string) {
     notFound();
   }
 
-  const { data: meta, content } = matter(markdownFile);
+  const { data: frontMatter, content } = matter(markdownFile);
 
   return {
     slug: slug,
-    meta: meta as postMeta,
+    meta: frontMatter as postMeta,
     content: content,
   };
 }
@@ -46,24 +44,23 @@ export function getPosts({
   disallowTags = disallowTags ?? [];
   tags = tags ?? [];
 
-  const postSlugs = getPostSlugs();
+  const postFiles = getPostFiles();
 
-  const posts: {
+  let posts: {
     slug: string,
     content: string,
     meta: postMeta,
   }[] = [];
   
-  postSlugs.forEach((slug) => {
+  postFiles.forEach((filename) => {
+    const slug = filename.replace('.mdx', '');
     const props = getProps('content/posts', slug);
-
     let disallowFlag: boolean = false;
     let allowFlag: boolean = false;
 
     props.meta.tags.forEach((tag) => {
       if (disallowTags.includes(tag)) {
         disallowFlag = true;
-        return;
       }
       if (tags.includes(tag)) {
         allowFlag = true;
@@ -71,7 +68,6 @@ export function getPosts({
     });
 
     if (disallowFlag) return;
-    
     if (tags.length == 0 || allowFlag) {
       posts.push(props);
     }
