@@ -4,7 +4,6 @@ import { type Session } from 'next-auth';
 import { PostgresError } from 'postgres';
 import {
   revalidatePath,
-  unstable_noStore as noStore,
 } from 'next/cache';
 
 import { auth } from '@/lib/auth';
@@ -18,8 +17,6 @@ import {
 import { getAdmins, isAdmin } from '@/lib/dataBaseQueries';
 
 export async function incrementViews(slug: string) {
-  noStore();
-
   let session = await auth();
 
   if (session && session.user && (await isAdmin(session.user?.email as string))) {
