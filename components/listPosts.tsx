@@ -1,11 +1,10 @@
 import Link from 'next/link';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import { MDXRemote } from "next-mdx-remote-client/rsc";
 
 import { Button } from '@/components/ui/button';
 import { getPosts } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { postMeta } from '@/config/site';
-import { turnTagString } from './tagsButtonGrid';
 
 export default function ListPosts({
   startInd,

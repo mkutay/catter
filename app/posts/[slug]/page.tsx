@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import { MDXRemote } from "next-mdx-remote-client/rsc";
 import { format } from 'date-fns';
 import { Suspense } from 'react';
 

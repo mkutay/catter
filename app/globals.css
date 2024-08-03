@@ -9,7 +9,6 @@
   @apply prose-headings:tracking-tighter;
   /* @apply prose-code:text-[#c6d0f5] dark:prose-code:text-[#c6d0f5] prose-code:bg-[#303446] dark:prose-code:bg-[#303446]; */
   @apply prose-blockquote:text-foreground prose-blockquote:bg-muted prose-blockquote:border-muted;
-  @apply prose-pre:text-foreground prose-pre:bg-background-dark;
   @apply prose-li:text-foreground prose-ul:text-foreground prose-ol:text-foreground prose-li:marker:text-description;
   @apply prose-li:my-0.5;
   @apply prose-h2:mt-9 prose-h2:mb-[18px] prose-h3:mt-6 prose-h3:mb-[9px];

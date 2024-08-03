@@ -4,12 +4,12 @@ import { ThemeProvider } from 'next-themes';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
-import '@/app/globals.css';
-import '@/public/styles/katex.min.css';
+import { Toaster } from '@/components/ui/toaster';
 import NavBar from '@/components/navBar';
 import Footer from '@/components/footer';
+import '@/app/globals.css';
+import '@/public/styles/katex.min.css';
 import { siteConfig } from '@/config/site';
-import { Toaster } from '@/components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
 
