@@ -28,14 +28,14 @@ export default function ListPosts({
     <div className="flex flex-col gap-6">
       {posts.map((post, index) => (
         <div key={post.slug} className="flex flex-col gap-4">
-          <h3 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight first:mt-0 mt-6">
+          <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight first:mt-0 mt-6">
             <Link href={`/posts/${post.slug}`} className="hover:text-foreground/80 transition-all duration-100">
               {post.meta.title}
             </Link>
-          </h3>
-          <h4 className="text-description italic font-medium">
+          </h2>
+          <h3 className="text-description italic font-medium">
             {post.meta.description}
-          </h4>
+          </h3>
           <div className="prose">
             <MDXRemote source={post.meta.excerpt} options={options} components={components}/>
           </div>
