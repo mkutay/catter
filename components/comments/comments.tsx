@@ -1,24 +1,20 @@
-import { micromark } from 'micromark';
 import { format } from 'date-fns';
 import { unstable_cache } from 'next/cache';
-import { gfm, gfmHtml } from 'micromark-extension-gfm';
-import { math, mathHtml } from 'micromark-extension-math';
-import parse from 'html-react-parser';
+import React from 'react';
 
 import { Label } from '@/components/ui/label';
+import { Skeleton } from '@/components/ui/skeleton';
 import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
 import { auth } from '@/lib/auth';
 import { getComments } from '@/lib/dataBaseQueries';
 import { commentMeta, siteConfig } from '@/config/site';
-import { Skeleton } from '../ui/skeleton';
-import React, { Suspense } from 'react';
 
 const getCachedComments = unstable_cache(
   async ({ slug }: { slug: string }) => getComments({ slug }),
-  [`nextjs-blog-comments`],
+  ['nextjs-blog-comments'],
   {
-    tags: [`nextjs-blog-comments`],
+    tags: ['nextjs-blog-comments'],
     revalidate: 180, // 3 minutes
   }
 );
@@ -36,9 +32,7 @@ export default async function Comments({ slug }: { slug: string }) {
       )}
       <div className="flex flex-col gap-6">
         {comments.map((comment) => (
-          <Suspense key={comment.id} fallback={<CommentsFallback/>}>
-            <Comment comment={comment}/>
-          </Suspense>
+          <Comment comment={comment} key={comment.id}/>
         ))}
       </div>
     </div>
@@ -63,11 +57,8 @@ export async function Comment({ comment }: { comment: commentMeta }) {
   return (
     <div id={comment.id} className="flex flex-col gap-2 w-full">
       <Label htmlFor="user">{`${comment.created_by} on ${format(comment.created_at, 'PP')}`}</Label>
-      <div className="border border-border shadow-sm rounded-md px-3 py-2 prose-p:my-2">
-        {parse(micromark(comment.body, {
-          extensions: [gfm(), math()],
-          htmlExtensions: [gfmHtml(), mathHtml()],
-        }))}
+      <div className="border border-border shadow-sm rounded-md px-3 py-2">
+        {comment.body}
       </div>
       {(admin || isUsers) && (
         <div className="flex flex-row justify-end">

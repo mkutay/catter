@@ -25,34 +25,33 @@ export default async function Page() {
   const props = getProps('content/pages', 'about');
 
   return (
-    <DoublePane>
-      <h1>
-        {props.meta.title}
-      </h1>
-      <p className="text-right italic not-prose text-description">
-        {props.meta.description}
-      </p>
-      <Image
-        alt={`${siteConfig.author} portrait image`}
-        src={me}
-        sizes="100vw"
-        style={{ width: "100%", height: "auto" }}
-        priority
-        placeholder="blur"
-        className="rounded-full shadow-md max-w-64 float-right lg:flex hidden"
-      />
-      <main>
-        <MDXRemote source={props.content} options={options} components={components}/>
-      </main>
-      <Image
-        alt={`${siteConfig.author} portrait image`}
-        src={me}
-        sizes="100vw"
-        style={{ width: "100%", height: "auto" }}
-        priority
-        placeholder="blur"
-        className="rounded-full shadow-md max-w-64 lg:hidden flex mx-auto"
-      />
-    </DoublePane>
+    <div>
+      <div className="bg-secondary w-screen h-fit py-6 lg:space-y-16 lg:pt-24 pt-16 pb-6">
+        <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-secondary-foreground lg:space-y-4 space-y-2">
+          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+            {props.meta.title}
+          </h1>
+          <p className="leading-7 [&:not(:first-child)]:mt-6">
+            {props.meta.description}
+          </p>
+        </div>
+      </div>
+      <DoublePane>
+        <div className="my-6">
+          <Image
+            alt={`${siteConfig.author} portrait image`}
+            src={me}
+            sizes="100vw"
+            style={{ width: "100%", height: "auto" }}
+            priority
+            placeholder="blur"
+            className="rounded-full shadow-md max-w-64 lg:float-right mx-auto"
+          />
+        </div>
+        <main className="prose">
+          <MDXRemote source={props.content} options={options} components={components}/>
+        </main>
+      </DoublePane>
+    </div>
   );
 }

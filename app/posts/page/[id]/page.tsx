@@ -38,12 +38,13 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <DoublePane>
-      <h1>
+      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-secondary uppercase my-6">
         List of All Posts and Tags
       </h1>
       <ListPosts startInd={startInd} endInd={endInd} disallowTags={['project']}/>
-      <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
-      <hr/>
+      <div className="mt-4 mb-8">
+        <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
+      </div>
       <TagsButtonGrid/>
     </DoublePane>
   )

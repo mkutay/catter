@@ -4,7 +4,7 @@ import { ArrowRightIcon } from '@radix-ui/react-icons';
 import { unstable_cache } from 'next/cache';
 
 import { getViewsCount } from '@/lib/dataBaseQueries';
-import { getPosts, getProps } from '@/lib/contentQueries';
+import { getProps } from '@/lib/contentQueries';
 
 const getCachedViewsCount = unstable_cache(
   async (postNum: number) => getViewsCount(postNum),
@@ -28,30 +28,22 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
   });
 
   return (
-    <ul className="px-0">
+    <ul className="flex flex-col gap-2">
       {posts.slice(0, postNum).map((post) => (
-        <li key={post.slug} className="group pl-0 hover:pl-2 transition-all px-0 my-0 flex flex-row items-baseline text-lg prose-a:text-foreground text-foreground">
-          <div className="pr-4 group-hover:pr-2 transition-all">
-            <ArrowRightIcon stroke="currentColor" strokeWidth="1.7px"/>
+        <li key={post.slug} className="group pl-0 hover:pl-2 transition-all animate-in flex flex-row items-start">
+          <div className="pr-4 group-hover:pr-2 transition-all animate-in mt-1.5">
+            <ArrowRightIcon stroke="currentColor" strokeWidth="1.8px" width="18px" height="18px"/>
           </div>
-          <div>
-            <span className="pr-1 not-prose">
-              <Link
-                href={'/posts/' + post.slug}
-                passHref
-                key={post.slug}
-                className="text-foreground underline font-semibold"
-              >
-                {post.meta.title}
-              </Link>
-            </span>
-            <span className="px-2 text-2xl">
-              ·
-            </span>
-            <span className="italic">
-              {`${post.views} views`}
-            </span>
-          </div>
+          <h3 className="scroll-m-20 text-xl font-medium tracking-tight">
+            <Link
+              href={'/posts/' + post.slug}
+              passHref
+              key={post.slug}
+              className="text-foreground underline font-semibold"
+            >
+              {post.meta.title}
+            </Link>
+          </h3>
         </li>
       ))}
     </ul>
@@ -63,17 +55,12 @@ export async function MostViewedPostsFallback({ postNum }: { postNum: number }) 
   
   for (let i = 0; i < postNum; i++) {
     posts.push(
-      <div key={i} className="flex flex-row items-center group pl-0 hover:pl-2 transition-all px-0">
-        <div className="pr-4 group-hover:pr-2 transition-all">
-          <ArrowRightIcon stroke="currentColor" strokeWidth="1.7px"/>
-        </div>
-        <Skeleton className="h-6 w-full my-2"/>
-      </div>
+      <Skeleton className="w-full h-7"/>
     );
   }
 
   return (
-    <ul className="px-0">
+    <ul className="flex flex-col gap-3">
       {posts}
     </ul>
   );

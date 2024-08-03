@@ -22,7 +22,7 @@ export default function PaginationArrows({ totalPages, currentId, href }: { tota
   }
 
   return (
-    <Pagination className="not-prose">
+    <Pagination>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious href={`${href}/${currentId - 1}`} isDisabled={!prevPage}/>

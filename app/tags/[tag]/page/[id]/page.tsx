@@ -41,12 +41,13 @@ export default function Page({ params }: { params: { tag: string, id: string } }
 
   return (
     <DoublePane>
-      <h1>
-        Posts With Tag: <span className="text-secondary">{turnTagString(tag)}</span>
+      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-secondary uppercase my-6">
+        Posts With Tag: <span className="font-bold text-foreground">{turnTagString(tag)}</span>
       </h1>
       <ListPosts startInd={startInd} endInd={endInd} tags={[tag]}/>
-      <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
-      <hr/>
+      <div className="mt-4 mb-8">
+        <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
+      </div>
       <TagsButtonGrid/>
     </DoublePane>
   )

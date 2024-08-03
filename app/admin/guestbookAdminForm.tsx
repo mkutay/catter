@@ -61,7 +61,7 @@ export function GuestbookAdminForm({ entries }: { entries: entryMeta[] }) {
                         <FormControl>
                           <Checkbox
                             id={entry.id.toString()}
-                            className="mt-[3px]"
+                            className="mt-1.5"
                             checked={field.value?.includes(entry.id)}
                             onCheckedChange={(checked) => {
                               console.log(field.value);
@@ -75,7 +75,7 @@ export function GuestbookAdminForm({ entries }: { entries: entryMeta[] }) {
                             }}
                           />
                         </FormControl>
-                        <FormLabel className="text-sm font-normal">
+                        <FormLabel className="text-md font-normal">
                           <div className="break-words">
                             <span className={cn("mr-1 font-bold tracking-tight", (entry.color === '' || entry.color === null) ? 'text-foreground' : `text-${entry.color}`)}>
                               {entry.created_by}:
@@ -94,7 +94,7 @@ export function GuestbookAdminForm({ entries }: { entries: entryMeta[] }) {
             </FormItem>
           )}
         />
-        <div className="flex flex-row items-center not-prose gap-2">
+        <div className="flex flex-row items-center gap-2">
           <Button type="submit" size="default" variant="destructive">Delete Entries</Button>
           <Button asChild variant="ghost" size="default">
             <Link href="/guestbook">

@@ -13,7 +13,7 @@ export default function TagsButtonGrid() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="gap-4 grid grid-flow-row sm:grid-cols-3 grid-cols-2 items-center not-prose">
+      <div className="gap-4 grid grid-flow-row sm:grid-cols-3 grid-cols-2 items-center">
         {tags.map((tag) => (
           <Button key={tag} variant="outline" size="lg" asChild className="text-lg font-bold tracking-tight">
             <Link href={`/tags/${tag}/page/1`}>

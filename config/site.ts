@@ -24,6 +24,7 @@ export const siteConfig = {
       { title: 'Admin', link: '/admin' },
     ],
   },
+  newsletterSubscribe: 'https://mkutay.substack.com/subscribe',
   date: new Date().toISOString().split('T')[0],
   tagsThatShouldBeCapital: [
     'ib',
@@ -31,8 +32,6 @@ export const siteConfig = {
   lastModifiedIsTrue: true,
   lastModifiedDate: new Date('2024-07-24'),
   admins: ['me@mkutay.dev', 'hello@mkutay.dev'],
-  newsletterSubscribe: 'https://mkutay.substack.com/subscribe',
-  adSenseClient: 'ca-pub-9198023121523009',
   postNumPerPage: 5,
 };
 
@@ -71,24 +70,6 @@ export type commentMeta = {
 };
 
 export const guestbookColors = [
-  { label: 'Rosewater', value: 'rosewater'},
-  { label: 'Flamingo', value: 'flamingo'},
-  { label: 'Pink', value: 'pink'},
-  { label: 'Mauve', value: 'mauve'},
-  { label: 'Red', value: 'red'},
-  { label: 'Maroon', value: 'maroon'},
-  { label: 'Peach', value: 'peach'},
-  { label: 'Yellow', value: 'yellow'},
-  { label: 'Green', value: 'green'},
-  { label: 'Teal', value: 'teal'},
-  { label: 'Sky', value: 'sky'},
-  { label: 'Sapphire', value: 'sapphire'},
-  { label: 'Blue', value: 'blue'},
-  { label: 'Lavender', value: 'lavender'},
-  { label: 'Text', value: 'text'},
-];
-
-export const guestbookColorsValue = [
   'rosewater',
   'flamingo',
   'pink',

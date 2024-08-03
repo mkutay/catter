@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-import { guestbookColorsValue } from '@/config/site';
+import { guestbookColors } from '@/config/site';
 
 export const guestbookDialogFormSchema = z.object({
-  color: z.enum(guestbookColorsValue, {
+  color: z.enum(guestbookColors, {
     required_error: 'A colour is required.',
   }),
   username: z.string().min(1, {

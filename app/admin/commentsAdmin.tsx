@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Comment } from '@/components/comments/comments';
 import { commentMeta } from '@/config/site';
 import { getProps } from '@/lib/contentQueries';
@@ -32,7 +34,11 @@ export function CommentsAdmin({ comments }: { comments: commentMeta[] }) {
     <div className="flex flex-col">
       {commentsWithSlug.map((comments) => (
         <div key={comments.slug}>
-          <h3>{getProps('content/posts', comments.slug).meta.title}</h3>
+          <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-4 mb-2">
+            <Link href={`/posts/${comments.slug}`} className="underline hover:text-foreground/80 transition-all">
+              {getProps('content/posts', comments.slug).meta.title}
+            </Link>
+          </h3>
           {comments.comments.map((comment) => (
             <div key={comment.id}>
               <Comment comment={comment}/>

@@ -10,7 +10,6 @@ import NavBar from '@/components/navBar';
 import Footer from '@/components/footer';
 import { siteConfig } from '@/config/site';
 import { Toaster } from '@/components/ui/toaster';
-import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,9 +25,9 @@ export const metadata: Metadata = {
   generator: 'Next.js',
   applicationName: siteConfig.name,
   referrer: 'origin-when-cross-origin',
-  authors: [{ name: 'Mehmet Kutay Bozkurt', url: 'https://www.mkutay.dev' }],
-  creator: 'Mehmet Kutay Bozkurt',
-  publisher: 'Mehmet Kutay Bozkurt',
+  authors: [{ name: siteConfig.author, url: siteConfig.url }],
+  creator: siteConfig.author,
+  publisher: siteConfig.author,
   keywords: ['computer science', 'mathematics', 'blog', 'school'],
   openGraph: {
     title: {
@@ -44,7 +43,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     types: {
-      'application/rss+xml': 'https://mkutay.dev/feed.xml',
+      'application/rss+xml': `${siteConfig.url}/feed.xml`,
     },
     canonical: './',
   },
@@ -62,14 +61,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${siteConfig.adSenseClient}`}
-          crossOrigin="anonymous"
-          strategy="lazyOnload"
-        />
-      </head>
       <body className={`${inter.className} text-foreground bg-background`}>
         <ThemeProvider attribute="class">
           <main className="flex flex-col min-h-screen">

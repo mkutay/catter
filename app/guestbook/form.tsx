@@ -13,10 +13,12 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
+import { GuestbookDialog } from '@/app/guestbook/dialog';
+import { GuestBookSignOut } from '@/app/guestbook/buttons';
 import { saveGuestbookEntry } from '@/lib/dataBaseActions';
 import { guestbookFormSchema } from '@/config/schema';
 
-export default function GuestbookZodForm() {
+export default function GuestbookForm() {
   const form = useForm<z.infer<typeof guestbookFormSchema>>({
     resolver: zodResolver(guestbookFormSchema),
     defaultValues: {
@@ -33,7 +35,7 @@ export default function GuestbookZodForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-2">
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="message"
@@ -50,14 +52,20 @@ export default function GuestbookZodForm() {
             </FormItem>
           )}
         />
+      </form>
+      <div className="flex flex-row justify-between">
+        <div className="flex flex-row gap-2 items-center">
+          <GuestbookDialog/>
+          <GuestBookSignOut/>
+        </div>
         <Button
           variant="secondary"
-          size="md"
+          size="default"
           type="submit"
         >
           Sign!
         </Button>
-      </form>
+      </div>
     </Form>
   );
 }

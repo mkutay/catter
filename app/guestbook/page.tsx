@@ -3,13 +3,12 @@ import { unstable_cache } from 'next/cache';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import DoublePane from '@/components/doublePane';
-import { GuestBookSignIn, GuestBookSignOut } from '@/app/guestbook/buttons';
+import { GuestBookSignIn } from '@/app/guestbook/buttons';
+import GuestbookForm from '@/app/guestbook/form';
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
 import { cn } from '@/lib/utils';
 import { entryMeta, siteConfig } from '@/config/site';
-import GuestbookZodForm from '@/app/guestbook/form';
-import { GuestbookDialog } from '@/app/guestbook/dialog';
 
 export const metadata = {
   title: 'Sign and Mark My Guestbook',
@@ -29,12 +28,15 @@ export const metadata = {
 export default function Page() {
   return (
     <DoublePane>
-      <h1>
-        Sign My Guestbook!
+      <h1 className="hidden">
+        {`${siteConfig.name} Guestbook`}
       </h1>
+      <h2 className="scroll-m-20 text-2xl font-semibold tracking-wide text-secondary uppercase my-6">
+        Sign My Guestbook!
+      </h2>
       <main className="flex flex-col gap-4">
         <Suspense fallback={<Skeleton className="h-12 md:w-2/5 w-full"/>}>
-          <GuestbookForm/>
+          <Form/>
         </Suspense>
         <Suspense fallback={<GuestbookEntriesFallback/>}>
           <GuestbookEntries/>
@@ -44,16 +46,12 @@ export default function Page() {
   );
 }
 
-async function GuestbookForm() {
+async function Form() {
   const session = await auth();
 
   return session?.user ? (
     <div className="flex flex-col gap-2">
-      <GuestbookZodForm/>
-      <div className="flex flex-row gap-2 items-center not-prose">
-        <GuestbookDialog/>
-        <GuestBookSignOut/>
-      </div>
+      <GuestbookForm/>
     </div>
   ) : (
     <div className="items-center justify-center flex">
@@ -79,9 +77,9 @@ async function GuestbookEntries() {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div>
       {entries.map((entry: entryMeta) => (
-        <div key={entry.id} className="w-full break-words">
+        <p key={entry.id} className="w-full break-words lg:text-lg text-md leading-7 [&:not(:first-child)]:mt-2">
           <span className={cn(
             "mr-1 font-bold tracking-tight",
             (entry.color === '' || entry.color === null) ? 'text-foreground' : `text-${entry.color}`
@@ -91,7 +89,7 @@ async function GuestbookEntries() {
           <span className="text-foreground">
             {entry.body}
           </span>
-        </div>
+        </p>
       ))}
     </div>
   );
@@ -102,12 +100,12 @@ function GuestbookEntriesFallback() {
 
   for (let i = 0; i < 8; i++) {
     entries.push(
-      <Skeleton className="h-6 w-[65ch]" key={i}/>
+      <Skeleton key={i} className="h-6 w-full leading-7 [&:not(:first-child)]:mt-4"/>
     );
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div>
       {entries}
     </div>
   );

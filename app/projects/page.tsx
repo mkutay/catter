@@ -23,10 +23,10 @@ export default function Page() {
 
   return (
     <DoublePane>
-      <h1>
+      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-secondary uppercase my-6">
         Different Coding Projects I Did
       </h1>
-      <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
+      <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 my-6">
         {projects.map((project) => (
           <ProjectCard props={project} key={project.slug}/>
         ))}

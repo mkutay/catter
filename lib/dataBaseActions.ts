@@ -151,11 +151,6 @@ export async function deleteGuestbookEntries(selectedEntries: number[]) {
   revalidatePath('/guestbook');
 }
 
-export async function revalidateGuestbook() {
-  revalidatePath('/admin');
-  revalidatePath('/guestbook');
-}
-
 export async function saveComment({ slug, message }: { slug: string, message: string }) {
   const session = await auth();
   
@@ -227,8 +222,4 @@ export async function deleteComment({ comment }: { comment: commentMeta }) {
 
   // revalidatePath(`/posts/${comment.slug}`);
   revalidateTag('nextjs-blog-comments');
-}
-
-export async function revalidatePost({ slug }: { slug: string }) {
-  revalidatePath(`/posts/${slug}`);
 }

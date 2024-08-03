@@ -25,22 +25,22 @@ export default function ListPosts({
   }[] = getPosts({ startInd, endInd, tags, disallowTags });
 
   return (
-    <div className="flex flex-col divide-y divide-muted">
+    <div className="flex flex-col gap-6">
       {posts.map((post, index) => (
-        <div key={post.slug} className="prose-h2:my-0 flex flex-col gap-4 py-8 first:pt-0">
-          <h2 className="font-normal tracking-tight">
-            <Link href={`/posts/${post.slug}`} className="not-prose underline">
+        <div key={post.slug} className="flex flex-col gap-4">
+          <h3 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight first:mt-0 mt-6">
+            <Link href={`/posts/${post.slug}`} className="hover:text-foreground/80 transition-all duration-100">
               {post.meta.title}
             </Link>
-          </h2>
-          <em className="text-description not-prose">
+          </h3>
+          <h4 className="text-description italic font-medium">
             {post.meta.description}
-          </em>
-          <div className="prose-p:my-0">
+          </h4>
+          <div className="prose">
             <MDXRemote source={post.meta.excerpt} options={options} components={components}/>
           </div>
-          <div className="not-prose flex flex-row justify-end">
-            <Button asChild variant="default" size="md" className="w-fit">
+          <div className="flex flex-row justify-end">
+            <Button asChild variant="outline" size="default" className="w-fit">
               <Link href={`/posts/${post.slug}`}>
                 {`Read More: ${post.meta.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
               </Link>

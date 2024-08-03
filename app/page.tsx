@@ -9,19 +9,16 @@ import { siteConfig } from '@/config/site';
 export default function Home() {
   return (
     <DoublePane>
-      <div className="flex flex-col">
-        <h1>
-          Recently Published
-        </h1>
-        {/* <hr/> */}
-        <ListPosts startInd={0} endInd={siteConfig.postNumPerPage} disallowTags={['project']}/>
-        <Button asChild variant="secondary" className="not-prose mx-auto mt-4 mb-2" size="lg">
-          <Link href="/posts/page/1" className="flex flex-row gap-3">
-            <Telescope stroke="currentColor" strokeWidth="1.8px"/>
-            <div>Look At My Other Posts!</div>
-          </Link>
-        </Button>
-      </div>
+      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-secondary uppercase my-6">
+        Recently Published
+      </h1>
+      <ListPosts startInd={0} endInd={siteConfig.postNumPerPage} disallowTags={['project']}/>
+      <Button asChild variant="secondary" className="flex mx-auto w-fit mt-6" size="lg">
+        <Link href="/posts/page/1" className="flex flex-row gap-3">
+          <Telescope stroke="currentColor" strokeWidth="1.8px"/>
+          <div>Look At My Other Posts!</div>
+        </Link>
+      </Button>
     </DoublePane>
   )
 }

@@ -24,7 +24,7 @@ export default function ProjectCard({
   }
 }) {
   return (
-    <Card className="not-prose">
+    <Card>
       <div className="m-2">
         <Image
           alt={`Project ${props.meta.title}'s cover square image`}

@@ -2,16 +2,14 @@
 
 import { signIn, signOut } from 'next-auth/react';
 import { FaDiscord, FaGithub, FaSpotify } from 'react-icons/fa';
-import { TbReload } from 'react-icons/tb';
 
 import { Button } from '@/components/ui/button';
-import { revalidateGuestbook } from '@/lib/dataBaseActions';
 
 export function GuestBookSignOut() {
   return (
     <Button
       variant="ghost"
-      size="sm"
+      size="default"
       onClick={() => signOut()}
       className="w-fit"
     >
@@ -22,33 +20,19 @@ export function GuestBookSignOut() {
 
 export function GuestBookSignIn() {
   return (
-    <div className="flex md:flex-row flex-col gap-4 items-center mx-auto w-fit">
+    <div className="flex md:flex-row flex-col md:gap-2 gap-3 items-center mx-auto w-fit">
       <Button variant="secondary" size="default" className="flex flex-row gap-3 items-center" onClick={() => signIn('github')}>
-        <FaGithub/>
-        <span>
-          Sign in with GitHub
-        </span>
+        <FaGithub size="20px"/>
+        Sign in with GitHub
       </Button>
       <Button variant="secondary" size="default" className="flex flex-row gap-3 items-center" onClick={() => signIn('discord')}>
-        <FaDiscord/>
-        <span>
-          Sign in with Discord
-        </span>
+        <FaDiscord size="20px"/>
+        Sign in with Discord
       </Button>
       <Button variant="secondary" size="default" className="flex flex-row gap-3 items-center" onClick={() => signIn('spotify')}>
-        <FaSpotify/>
-        <span>
-          Sign in with Spotify
-        </span>
+        <FaSpotify size="20px"/>
+        Sign in with Spotify
       </Button>
     </div>
-  );
-}
-
-export function RevalidateGuestbook() {
-  return (
-    <Button type="button" aria-label="Revalidate Guestbook" variant="ghost" size="icon" onClick={() => revalidateGuestbook()}>
-      <TbReload size="16px" strokeWidth="3px"/>
-    </Button>
   );
 }

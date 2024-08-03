@@ -2,7 +2,17 @@
 
 import { FaDiscord, FaGithub, FaSpotify } from 'react-icons/fa';
 import { signIn, signOut } from 'next-auth/react';
+import { useState } from 'react';
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { deleteComment } from '@/lib/dataBaseActions';
 import { commentMeta } from '@/config/site';
@@ -41,9 +51,34 @@ export function SignIn({ slug }: { slug: string }) {
 }
 
 export function DeleteComment({ comment }: { comment: commentMeta }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Button variant="destructive" size="sm" onClick={() => deleteComment({ comment })}>
-      Delete Comment
-    </Button>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button id={comment.id} variant="destructive" size="sm">
+          Delete Comment
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you absolutely you want to delete the comment?</DialogTitle>
+          <DialogDescription>
+            This action cannot be undone. This will permanently delete the comment.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="border border-border shadow-sm rounded-md px-3 py-2">
+          {comment.body}
+        </div>
+        <DialogFooter>
+          <Button type="submit" variant="destructive" size="sm" onClick={() => {
+            deleteComment({ comment });
+            setOpen(false);
+          }}>
+            Delete Comment
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

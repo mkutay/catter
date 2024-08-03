@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/*.json$', '/*.js$', '/vercel/', '/pages/'],
+      disallow: ['/*.json$', '/*.js$', '/vercel/'],
     },
     sitemap: `${siteConfig.url}/sitemap.xml`,
   }

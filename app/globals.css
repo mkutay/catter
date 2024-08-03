@@ -3,19 +3,17 @@
 @tailwind utilities;
 
 .prose {
-  @apply prose-headings:text-[#4c4f69] dark:prose-headings:text-[#cdd6f4] prose-headings:mb-4 prose-headings:mt-8;
-  @apply prose-p:text-[#4c4f69] dark:prose-p:text-[#cdd6f4] prose-p:my-4 prose-p:py-0;
-  @apply dark:prose-hr:border-[#313244] prose-hr:border-[#ccd0da] prose-hr:my-8;
-  @apply dark:prose-a:text-[#89b4fa] prose-a:text-[#1e66f5];
-  @apply prose-strong:text-[#4c4f69] dark:prose-strong:text-[#cdd6f4];
-  @apply prose-em:text-[#4c4f69] dark:prose-em:text-[#cdd6f4];
-  @apply prose-code:text-[#c6d0f5] dark:prose-code:text-[#c6d0f5] prose-code:bg-[#303446] dark:prose-code:bg-[#303446];
-  @apply prose-blockquote:text-[#c6d0f5] dark:prose-blockquote:text-[#c6d0f5] prose-blockquote:bg-[#303446] dark:prose-blockquote:bg-[#303446] prose-blockquote:my-4 prose-blockquote:pr-2;
-  @apply prose-pre:text-[#c6d0f5] dark:prose-pre:text-[#c6d0f5] prose-pre:bg-[#303446] dark:prose-pre:bg-[#303446];
+  @apply prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-em:text-foreground;
+  @apply prose-hr:border-muted;
+  @apply prose-a:text-link;
   @apply prose-headings:tracking-tighter;
-  @apply prose-blockquote:bg-[#e6e9ef] prose-blockquote:dark:bg-[#181825] prose-blockquote:text-[#4c4f69] prose-blockquote:dark:text-[#cdd6f4] prose-blockquote:border-[#7c7f93] prose-blockquote:dark:border-[#9399b2];
-  @apply prose-li:my-0 prose-li:py-0;
-  @apply dark:prose-li:text-[#cdd6f4] prose-li:text-[#4c4f69] dark:prose-ul:text-[#cdd6f4] prose-ul:text-[#4c4f69] dark:prose-ol:text-[#cdd6f4] prose-ol:text-[#4c4f69] dark:prose-li:marker:text-[#a6adc8] prose-li:marker:text-[#6c6f85];
+  /* @apply prose-code:text-[#c6d0f5] dark:prose-code:text-[#c6d0f5] prose-code:bg-[#303446] dark:prose-code:bg-[#303446]; */
+  @apply prose-blockquote:text-foreground prose-blockquote:bg-muted prose-blockquote:border-muted;
+  @apply prose-pre:text-foreground prose-pre:bg-background-dark;
+  @apply prose-li:text-foreground prose-ul:text-foreground prose-ol:text-foreground prose-li:marker:text-description;
+  @apply prose-li:my-0.5;
+  @apply prose-h2:mt-9 prose-h2:mb-[18px] prose-h3:mt-6 prose-h3:mb-[9px];
+  @apply prose-hr:my-9;
 }
 
 .data-footnote-backref {
@@ -23,7 +21,7 @@
 }
 
 .katex-display {
-  @apply text-[#4c4f69] dark:text-[#cdd6f4];
+  @apply text-foreground;
 }
 
 @layer base {
