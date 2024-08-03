@@ -103,7 +103,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function ViewCounter({ slug }: { slug: string }) {
+async function ViewCounter({ slug }: { slug: string }) {
   const viewCount = await getViewCount(slug);
   const number = viewCount.length === 0 ? 0 : Number(viewCount[0].count);
 
@@ -114,7 +114,7 @@ export async function ViewCounter({ slug }: { slug: string }) {
   );
 }
 
-export async function ViewCounterFallback() {
+async function ViewCounterFallback() {
   return (
     <Skeleton className="h-6 w-[9ch]"/>
   );
