@@ -35,8 +35,8 @@ export const options: MDXRemoteOptions = {
 
 export const components: MDXComponents = {
   Image: (props: ImageProps) => (
-    <div className="my-8 flex place-content-center">
-      <Image {...props} alt={props.alt} className="my-0"/>
+    <div className="my-6 flex place-content-center">
+      <Image {...props} alt={props.alt} className="my-0 lg:rounded-md rounded-sm"/>
     </div>
   ),
   Link: (props: any) => (

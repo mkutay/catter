@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
 import { unstable_cache } from 'next/cache';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import { getViewsCount } from '@/lib/dataBaseQueries';
 import { getProps } from '@/lib/contentQueries';
 

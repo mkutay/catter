@@ -4,6 +4,8 @@ import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
 import { MoonIcon, SunIcon } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
+
 export default function ThemeChanger() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -17,18 +19,17 @@ export default function ThemeChanger() {
   }
 
   return (
-    <div>
-      <button
-        onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-        className="rounded-md w-7 h-7 flex items-center justify-center transition-all"
-      >
-        <span className="sr-only">Toggle mode</span>
-        {theme === 'dark' ? (
-          <SunIcon/>
-        ) : (
-          <MoonIcon/>
-        )}
-      </button>
-    </div>
+    <Button
+      size="icon"
+      variant="ghost"
+      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+    >
+      <span className="sr-only">Toggle mode</span>
+      {theme === 'dark' ? (
+        <SunIcon/>
+      ) : (
+        <MoonIcon/>
+      )}
+    </Button>
   );
 }

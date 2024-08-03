@@ -1,21 +1,20 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { MDXRemote } from "next-mdx-remote-client/rsc";
+import { MDXRemote } from 'next-mdx-remote-client/rsc';
 import { format } from 'date-fns';
 import { Suspense } from 'react';
 
-import ViewCounter from '@/components/viewCounter';
-import { ViewCounterFallback } from '@/components/viewCounter';
+import { Skeleton } from '@/components/ui/skeleton';
 import DoublePane from '@/components/doublePane';
 import CopyToClipboard from '@/components/copyToClipboard';
+import Comments, { CommentsFallback } from '@/components/comments/comments';
+import { turnTagString } from '@/components/tagsButtonGrid';
 import { incrementViews } from '@/lib/dataBaseActions';
 import { getPostFiles, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
+import { getViewCount } from '@/lib/dataBaseQueries';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
-import Comments, { CommentsFallback } from '@/components/comments/comments';
-import { Skeleton } from '@/components/ui/skeleton';
-import { turnTagString } from '@/components/tagsButtonGrid';
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
   const props = getProps('content/posts', params.slug);
@@ -102,4 +101,21 @@ export async function generateStaticParams() {
   return postFiles.map(filename => ({
     slug: filename.replace('.mdx', ''),
   }));
+}
+
+export async function ViewCounter({ slug }: { slug: string }) {
+  const viewCount = await getViewCount(slug);
+  const number = viewCount.length === 0 ? 0 : Number(viewCount[0].count);
+
+  return (
+    <span>
+      {`${number.toLocaleString()} views`}
+    </span>
+  );
+}
+
+export async function ViewCounterFallback() {
+  return (
+    <Skeleton className="h-6 w-[9ch]"/>
+  );
 }

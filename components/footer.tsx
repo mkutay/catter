@@ -15,7 +15,7 @@ export default function Footer() {
           </p>
         </div>
         <p className="text-sm text-description lg:flex hidden">
-          © 2023-present Mehmet Kutay Bozkurt. All Rights Reserved.
+          {`© 2023-present ${siteConfig.author}. All Rights Reserved.`}
         </p>
       </div>
       <div className="flex flex-row gap-16 h-fit">
@@ -53,7 +53,7 @@ export default function Footer() {
         </div>
       </div>
       <p className="text-sm text-description lg:hidden flex text-center justify-center">
-        © 2023-present Mehmet Kutay Bozkurt. All Rights Reserved.
+        {`© 2023-present ${siteConfig.author}. All Rights Reserved.`}
       </p>
     </footer>
   );
