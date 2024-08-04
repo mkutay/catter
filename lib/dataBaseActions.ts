@@ -95,8 +95,13 @@ export async function saveGuestbookEntry({
     };
   }
 
-  const email = session.user.email as string;
   const created_by = validationPopOver.success ? username : session.user.name as string;
+  const email = session.user.email as string;
+
+  if (!validationPopOver.success) {
+    color = 'text';
+  }
+
 
   try {
     await sql`
