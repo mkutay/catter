@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
-import { unstable_cache } from 'next/cache';
 
 import { GuestbookAdminForm } from '@/app/admin/guestbookAdminForm';
 import { CommentsAdmin } from '@/app/admin/commentsAdmin';
@@ -18,14 +17,6 @@ export const metadata: Metadata = {
   },
 };
 
-const getCachedGuestbookEntries = unstable_cache(
-  async () => getGuestbookEntries(),
-  ['nextjs-blog-guestbook-entries'],
-  {
-    revalidate: 900, // 15 minutes
-  }
-);
-
 // Needs admin session
 export default async function Page() {
   const session = await auth();
@@ -34,7 +25,7 @@ export default async function Page() {
     redirect('/');
   }
   
-  const entries = await getCachedGuestbookEntries();
+  const entries = await getGuestbookEntries();
   const comments = await getEveryComment();
 
   return (

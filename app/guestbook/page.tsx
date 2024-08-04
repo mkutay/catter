@@ -64,7 +64,7 @@ const getCachedGuestbookEntries = unstable_cache(
   async () => getGuestbookEntries(),
   ['nextjs-blog-guestbook-entries'],
   {
-    revalidate: 900, // 15 minutes
+    revalidate: 300, // 15 minutes
   }
 );
 

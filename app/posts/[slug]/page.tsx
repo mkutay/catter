@@ -10,9 +10,9 @@ import CopyToClipboard from '@/components/copyToClipboard';
 import Comments, { CommentsFallback } from '@/components/comments/comments';
 import { turnTagString } from '@/components/tagsButtonGrid';
 import { incrementViews } from '@/lib/dataBaseActions';
+import { getViewCount } from '@/lib/dataBaseQueries';
 import { getPostFiles, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { getViewCount } from '@/lib/dataBaseQueries';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
 
@@ -114,7 +114,7 @@ async function ViewCounter({ slug }: { slug: string }) {
   );
 }
 
-async function ViewCounterFallback() {
+function ViewCounterFallback() {
   return (
     <Skeleton className="h-6 w-[9ch]"/>
   );
