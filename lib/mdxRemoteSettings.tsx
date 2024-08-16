@@ -40,7 +40,7 @@ export const components: MDXComponents = {
     </div>
   ),
   Link: (props: any) => (
-    <Link {...props} className="text-link underline hover:text-link/80">
+    <Link {...props} className="text-primary underline hover:text-primary/80 transition-all">
       {props.children}
     </Link>
   ),

@@ -8,6 +8,7 @@ import coverResults from '@/public/images/results-of-my-lifes-last-two-years-are
 import coverLonely from '@/public/images/why-mathematics-is-lonely/cover.jpeg';
 import coverStartpage from '@/public/images/purple-startpage/cover.png';
 import coverSlang from '@/public/images/turkish-slang-dictionary/cover.png';
+import coverCatter from '@/public/images/catter-blog/cover.png';
 
 export const images: { [key: string]: StaticImageData } = {
   'why-do-people-just-hate-mathematics': coverHate,
@@ -18,4 +19,5 @@ export const images: { [key: string]: StaticImageData } = {
   'why-mathematics-is-lonely': coverLonely,
   'purple-startpage': coverStartpage,
   'turkish-slang-dictionary': coverSlang,
+  'catter-blog': coverCatter,
 };
