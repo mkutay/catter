@@ -49,7 +49,7 @@ export default function NavBar() {
 
   return (
     <nav className="my-4 max-w-prose lg:max-w-6xl mx-auto flex flex-row items-center justify-between px-4">
-      <div className="place-items-center text-[#8839ef] dark:text-[#cba6f7] hover:underline font-extrabold text-lg gap-2 flex flex-row items-center">
+      <div className="place-items-center text-primary hover:text-primary/80 transition-all font-extrabold text-lg gap-2 flex flex-row items-center">
         <Link href="/" className="flex flex-row items-center gap-2">
           <Logo className="flex-none"/>
           Kutay&#39;s Blog
@@ -62,7 +62,7 @@ export default function NavBar() {
             <Link
               key={item.href}
               href={`${item.href}`}
-              className="text-center hover:text-[#1e66f5] hover:dark:text-[#89b4fa] hover:underline"
+              className="text-center hover:text-primary transition-all"
             >
               {item.label}
             </Link>

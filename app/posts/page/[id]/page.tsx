@@ -38,7 +38,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <DoublePane>
-      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-secondary uppercase my-6">
+      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
         List of All Posts and Tags
       </h1>
       <ListPosts startInd={startInd} endInd={endInd} disallowTags={['project']}/>

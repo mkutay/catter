@@ -59,7 +59,7 @@ export default function GuestbookForm() {
           <GuestBookSignOut/>
         </div>
         <Button
-          variant="secondary"
+          variant="default"
           size="default"
           type="submit"
         >

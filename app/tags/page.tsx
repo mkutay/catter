@@ -18,8 +18,8 @@ export function generateMetadata() {
 export default function Page() {
   return (
     <DoublePane>
-      <h1>
-      List of Tags on the Posts
+      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
+        List of Tags on the Blog
       </h1>
       <hr/>
       <TagsButtonGrid/>

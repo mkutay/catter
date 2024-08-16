@@ -5,14 +5,15 @@
 .prose {
   @apply prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-em:text-foreground;
   @apply prose-hr:border-muted;
-  @apply prose-a:text-link;
+  @apply prose-a:text-primary;
   @apply prose-headings:tracking-tighter;
-  /* @apply prose-code:text-[#c6d0f5] dark:prose-code:text-[#c6d0f5] prose-code:bg-[#303446] dark:prose-code:bg-[#303446]; */
-  @apply prose-blockquote:text-foreground prose-blockquote:bg-muted prose-blockquote:border-muted;
-  @apply prose-li:text-foreground prose-ul:text-foreground prose-ol:text-foreground prose-li:marker:text-description;
+  @apply prose-blockquote:text-foreground prose-blockquote:bg-muted prose-blockquote:border-muted-foreground;
+  @apply prose-blockquote:rounded-md prose-blockquote:pr-2;
+  @apply prose-li:text-foreground prose-ul:text-foreground prose-ol:text-foreground prose-li:marker:text-muted-foreground;
   @apply prose-li:my-0.5;
   @apply prose-h2:mt-9 prose-h2:mb-[18px] prose-h3:mt-6 prose-h3:mb-[9px];
   @apply prose-hr:my-9;
+  @apply hover:prose-a:text-primary/80 prose-a:transition-all;
 }
 
 .data-footnote-backref {
@@ -39,18 +40,43 @@
     --sapphire: 189 70 42;
     --blue: 220 91 54;
     --lavender: 231 97 72;
-    --text: 234 16 35;
-    --subtext-1: 233 13 41;
-    --subtext-0: 233 10 47;
-    --overlay-2: 232 10 53;
-    --overlay-1: 231 10 59;
-    --overlay-0: 228 11 65;
-    --surface-2: 227 12 71;
-    --surface-1: 225 14 77;
-    --surface-0: 223 16 83;
-    --base: 220 23 99;
-    --mantle: 220 22 92;
-    --crust: 220 21 89;
+
+    --background: 220 23.076923191547394% 94.90196108818054%; /* base */
+    --foreground: 234 16.022099554538727% 35.49019694328308%; /* text */
+
+    --muted: 223 15.909090638160706% 82.74509906768799%; /* surface0 */
+    --muted-foreground: 233 12.796208262443542% 41.372549533843994%; /* subtext1 */
+
+    --popover: 220 23.076923191547394% 94.90196108818054%; /* base */
+    --popover-foreground: 234 16.022099554538727% 35.49019694328308%; /* text */
+
+    --card: 220 23.076923191547394% 94.90196108818054%; /* base */
+    --card-foreground: 234 16.022099554538727% 35.49019694328308%; /* text */
+
+    --border: 225 13.55932205915451% 76.86274647712708%; /* surface1 */
+    --input: 225 13.55932205915451% 76.86274647712708%; /* surface1 */
+
+    --primary: 266 85.04672646522522% 58.03921818733215%; /* accent - Mauve */
+    --primary-foreground: 220 23.076923191547394% 94.90196108818054%; /* base */
+
+    --secondary: 223 15.909090638160706% 82.74509906768799%; /* surface0 */
+    --secondary-foreground: 234 16.022099554538727% 35.49019694328308%; /* text */
+
+    --accent: 223 15.909090638160706% 82.74509906768799%; /* surface0 */
+    --accent-foreground: 234 16.022099554538727% 35.49019694328308%; /* text */
+
+    --destructive: 347 86.66666746139526% 44.117647409439087%; /* red */
+    --destructive-foreground: 220 21.95121943950653% 91.96078181266785%; /* mantle */
+
+    --ring: 234 16.022099554538727% 35.49019694328308%; /* text */
+
+    --radius: 5rem;
+
+    --chart-1: 347 86.66666746139526% 44.117647409439087%; /* red */
+    --chart-2: 183 73.86363744735718% 34.50980484485626%; /* teal */
+    --chart-3: 220 91.4893627166748% 53.92156839370728%; /* blue */
+    --chart-4: 35 76.98412537574768% 49.41176474094391%; /* yellow */
+    --chart-5: 109 57.63546824455261% 39.803922176361084%; /* green */
   }
 
   .dark {
@@ -68,17 +94,42 @@
     --sapphire: 199 76 69;
     --blue: 217 92 76;
     --lavender: 232 97 85;
-    --text: 226 64 88;
-    --subtext-1: 227 35 80;
-    --subtext-0: 228 24 72;
-    --overlay-2: 228 17 64;
-    --overlay-1: 230 13 55;
-    --overlay-0: 231 11 47;
-    --surface-2: 233 12 39;
-    --surface-1: 234 13 31;
-    --surface-0: 237 16 23;
-    --base: 240 21 13;
-    --mantle: 240 21 12;
-    --crust: 240 23 9;
+    
+    --background: 240 21.052631735801697% 14.901961386203766%; /* base */
+    --foreground: 226 63.93442749977112% 88.03921341896057%; /* text */
+
+    --muted: 237 16.239316761493683% 22.94117659330368%; /* surface0 */
+    --muted-foreground: 227 35.29411852359772% 80.0000011920929%; /* subtext1 */
+
+    --popover: 240 21.052631735801697% 14.901961386203766%; /* base */
+    --popover-foreground: 226 63.93442749977112% 88.03921341896057%; /* text */
+
+    --card: 240 21.052631735801697% 14.901961386203766%; /* base */
+    --card-foreground: 226 63.93442749977112% 88.03921341896057%; /* text */
+
+    --border: 234 13.20754736661911% 31.17647171020508%; /* surface1 */
+    --input: 234 13.20754736661911% 31.17647171020508%; /* surface1 */
+
+    --primary: 267 83.50515365600586% 80.98039031028748%; /* accent - Mauve */
+    --primary-foreground: 240 21.052631735801697% 14.901961386203766%; /* base */
+
+    --secondary: 237 16.239316761493683% 22.94117659330368%; /* surface0 */
+    --secondary-foreground: 226 63.93442749977112% 88.03921341896057%; /* text */
+
+    --accent: 237 16.239316761493683% 22.94117659330368%; /* surface0 */
+    --accent-foreground: 226 63.93442749977112% 88.03921341896057%; /* text */
+
+    --destructive: 343 81.25% 74.90196228027344%; /* red */
+    --destructive-foreground: 240 21.311475336551666% 11.96078434586525%; /* mantle */
+
+    --ring: 226 63.93442749977112% 88.03921341896057%; /* text */
+
+    --radius: 5rem;
+
+    --chart-1: 343 81.25% 74.90196228027344%; /* red */
+    --chart-2: 170 57.35294222831726% 73.33333492279053%; /* teal */
+    --chart-3: 217 91.86992049217224% 75.88235139846802%; /* blue */
+    --chart-4: 41 86.04651093482971% 83.13725590705872%; /* yellow */
+    --chart-5: 115 54.09836173057556% 76.07843279838562%; /* green */
   }
 }

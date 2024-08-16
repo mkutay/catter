@@ -92,7 +92,7 @@ export function GuestbookDialog() {
                           role="combobox"
                           className={cn(
                             "w-[200px] justify-between",
-                            !field.value && "text-description"
+                            !field.value && "text-muted-foreground"
                           )}
                         >
                           {field.value

@@ -102,7 +102,6 @@ export async function saveGuestbookEntry({
     color = 'text';
   }
 
-
   try {
     await sql`
       INSERT INTO guestbook (id, email, body, created_by, created_at, color)

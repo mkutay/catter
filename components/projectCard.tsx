@@ -44,7 +44,7 @@ export default function ProjectCard({
         <MDXRemote source={props.meta.excerpt} options={options} components={components}/>
       </CardContent>
       <CardFooter>
-        <Button asChild>
+        <Button asChild variant="outline">
           <Link href={`/posts/${props.slug}`} className="text-foreground">
             {`Read More: ${props.meta.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
           </Link>

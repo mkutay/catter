@@ -45,20 +45,20 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div>
-      <div className="bg-secondary w-screen h-fit py-6 lg:space-y-16 space-y-10">
+      <div className="bg-primary w-screen h-fit py-6 lg:space-y-16 space-y-10">
         <div className="lg:max-w-6xl max-w-prose mx-auto px-4 space-y-2">
-          <p className="text-lg font-semibold text-secondary-foreground">
+          <p className="text-lg font-semibold text-primary-foreground">
             {formattedDate}
           </p>
           <div className="flex flex-row gap-4">
             {props.meta.tags.map((tag: string) => (
-              <p key={tag} className="text-secondary-foreground uppercase text-sm underline hover:text-secondary-foreground/80 transition-all">
+              <p key={tag} className="text-primary-foreground uppercase text-sm underline hover:text-primary-foreground/80 transition-all">
                 <Link href={`/tags/${tag}/page/1`}>{turnTagString(tag)}</Link>
               </p>
             ))}
           </div>
         </div>
-        <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-secondary-foreground lg:space-y-4 space-y-2">
+        <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-primary-foreground lg:space-y-4 space-y-2">
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
             {props.meta.title}
           </h1>

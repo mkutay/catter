@@ -32,7 +32,7 @@ export default function ListPosts({
               {post.meta.title}
             </Link>
           </h2>
-          <h3 className="text-description italic font-medium">
+          <h3 className="text-muted-foreground italic font-medium">
             {post.meta.description}
           </h3>
           <div className="prose">

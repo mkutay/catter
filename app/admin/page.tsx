@@ -30,7 +30,7 @@ export default async function Page() {
 
   return (
     <DoublePane>
-      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-secondary uppercase my-6">Admin</h1>
+      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">Admin</h1>
       <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6 mb-2">Guestbook</h2>
       <GuestbookAdminForm entries={entries}/>
       <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6">Comments</h2>

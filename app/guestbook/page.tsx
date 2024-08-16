@@ -31,7 +31,7 @@ export default function Page() {
       <h1 className="hidden">
         {`${siteConfig.name} Guestbook`}
       </h1>
-      <h2 className="scroll-m-20 text-2xl font-semibold tracking-wide text-secondary uppercase my-6">
+      <h2 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
         Sign My Guestbook!
       </h2>
       <main className="flex flex-col gap-4">
