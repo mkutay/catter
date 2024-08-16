@@ -5,10 +5,10 @@ import { siteConfig } from '@/config/site';
 export function generateMetadata() {
   return {
     title: `List of Tags on the Posts`,
-    description: `List and buttons of all the tags that posts have on Kutay's Blog.`,
+    description: `List and buttons of all the tags that posts have on ${siteConfig.name}.`,
     openGraph: {
       title: `List of Tags on the Posts`,
-      description: `List and buttons of all the tags that posts have on Kutay's Blog.`,
+      description: `List and buttons of all the tags that posts have on ${siteConfig.name}.`,
       url: `${siteConfig.url}/tags`,
       images: ['images/favicon.png'],
     },

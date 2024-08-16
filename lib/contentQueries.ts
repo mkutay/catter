@@ -3,7 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { notFound } from 'next/navigation';
 
-import { postMeta } from '@/config/site';
+import { postMetaType } from '@/config/schema';
 
 export function getPostFiles() {
   const postFiles = fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
@@ -23,7 +23,7 @@ export function getProps(pathTo: string, slug: string) {
 
   return {
     slug: slug,
-    meta: frontMatter as postMeta,
+    meta: frontMatter as postMetaType,
     content: content,
   };
 }
@@ -49,7 +49,7 @@ export function getPosts({
   let posts: {
     slug: string,
     content: string,
-    meta: postMeta,
+    meta: postMetaType,
   }[] = [];
   
   postFiles.forEach((filename) => {

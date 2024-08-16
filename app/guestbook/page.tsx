@@ -8,7 +8,8 @@ import GuestbookForm from '@/app/guestbook/form';
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
 import { cn } from '@/lib/utils';
-import { entryMeta, siteConfig } from '@/config/site';
+import { entryType } from '@/config/schema';
+import { siteConfig } from '@/config/site';
 
 export const metadata = {
   title: 'Sign and Mark My Guestbook',
@@ -78,7 +79,7 @@ async function GuestbookEntries() {
 
   return (
     <div>
-      {entries.map((entry: entryMeta) => (
+      {entries.map((entry: entryType) => (
         <p key={entry.id} className="w-full break-words lg:text-lg text-md leading-7 [&:not(:first-child)]:mt-2">
           <span className={cn(
             "mr-1 font-bold tracking-tight",

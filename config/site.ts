@@ -24,65 +24,11 @@ export const siteConfig = {
       { title: 'Admin', link: '/admin' },
     ],
   },
-  newsletterSubscribe: 'https://mkutay.substack.com/subscribe',
-  date: new Date().toISOString().split('T')[0],
   tagsThatShouldBeCapital: [
     'ib',
   ],
-  lastModifiedIsTrue: true,
-  lastModifiedDate: new Date('2024-07-24'),
-  admins: ['me@mkutay.dev', 'hello@mkutay.dev'],
   postNumPerPage: 5,
+  newsletterSubscribe: 'https://mkutay.substack.com/subscribe',
+  admins: ['me@mkutay.dev', 'hello@mkutay.dev'],
+  date: new Date().toISOString().split('T')[0],
 };
-
-export type postMeta = {
-  title: string,
-  description: string,
-  date: string,
-  excerpt: string,
-  locale: string,
-  tags: string[],
-  cover: string,
-  coverSquare: string,
-  lastModified: string,
-  keywords: string[],
-  shortened: string,
-};
-
-export type entryMeta = {
-  id: number,
-  body: string,
-  created_by: string,
-  created_at: string,
-  updated_at: string,
-  email: string,
-  color: string,
-};
-
-export type commentMeta = {
-  id: string,
-  slug: string,
-  body: string,
-  created_by: string,
-  created_at: string,
-  updated_at: string,
-  email: string,
-};
-
-export const guestbookColors = [
-  'rosewater',
-  'flamingo',
-  'pink',
-  'mauve',
-  'red',
-  'maroon',
-  'peach',
-  'yellow',
-  'green',
-  'teal',
-  'sky',
-  'sapphire',
-  'blue',
-  'lavender',
-  'text',
-] as const;

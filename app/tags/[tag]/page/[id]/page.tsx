@@ -13,10 +13,10 @@ export function generateMetadata({ params }: { params: { tag: string, id: string
 
   return {
     title: `Posts With Tag: ${tag} | Page ${id}`,
-    description: `List of all the tags that posts have on Kutay's Blog, currently displaying tag ${tag} on page ${id} out of ${Math.ceil(posts.length / siteConfig.postNumPerPage)}.`,
+    description: `List of all the tags that posts have on ${siteConfig.name}, currently displaying tag ${tag} on page ${id} out of ${Math.ceil(posts.length / siteConfig.postNumPerPage)}.`,
     openGraph: {
       title: `Posts With Tag: ${tag} | Page ${id}`,
-      description: `List of all the tags that posts have on Kutay's Blog, currently displaying tag ${tag} on page ${id} out of ${Math.ceil(posts.length / siteConfig.postNumPerPage)}.`,
+      description: `List of all the tags that posts have on ${siteConfig.name}, currently displaying tag ${tag} on page ${id} out of ${Math.ceil(posts.length / siteConfig.postNumPerPage)}.`,
       url: `${siteConfig.url}/tags/${tag}/page/${id}`,
     },
   };

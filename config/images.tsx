@@ -1,3 +1,5 @@
+import { StaticImageData } from 'next/image';
+
 import coverHate from '@/public/images/why-do-people-just-hate-mathematics/cover-cropped.jpeg';
 import coverArt from '@/public/images/how-to-practice-mathematics-as-an-art/cover.jpeg';
 import coverLeaks from '@/public/images/ib-leaks/cover.jpeg';
@@ -7,7 +9,7 @@ import coverLonely from '@/public/images/why-mathematics-is-lonely/cover.jpeg';
 import coverStartpage from '@/public/images/purple-startpage/cover.png';
 import coverSlang from '@/public/images/turkish-slang-dictionary/cover.png';
 
-export const images: { [key: string]: any } = {
+export const images: { [key: string]: StaticImageData } = {
   'why-do-people-just-hate-mathematics': coverHate,
   'how-to-practice-mathematics-as-an-art': coverArt,
   'ib-leaks': coverLeaks,

@@ -8,7 +8,8 @@ import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
 import { auth } from '@/lib/auth';
 import { getComments } from '@/lib/dataBaseQueries';
-import { commentMeta, siteConfig } from '@/config/site';
+import { commentType } from '@/config/schema';
+import { siteConfig } from '@/config/site';
 
 const getCachedComments = unstable_cache(
   async ({ slug }: { slug: string }) => getComments({ slug }),
@@ -21,7 +22,7 @@ const getCachedComments = unstable_cache(
 
 export default async function Comments({ slug }: { slug: string }) {
   const session = await auth();
-  const comments: commentMeta[] = await getCachedComments({ slug });
+  const comments: commentType[] = await getCachedComments({ slug });
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
@@ -48,7 +49,7 @@ export function CommentAuth({ slug }: { slug: string }) {
   );
 }
 
-export async function Comment({ comment }: { comment: commentMeta }) {
+export async function Comment({ comment }: { comment: commentType }) {
   const session = await auth();
   
   const admin = session && session.user && siteConfig.admins.includes(session.user?.email as string);

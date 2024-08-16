@@ -1,13 +1,13 @@
 import Link from 'next/link';
 
 import { Comment } from '@/components/comments/comments';
-import { commentMeta } from '@/config/site';
+import { commentType } from '@/config/schema';
 import { getProps } from '@/lib/contentQueries';
 
-export function CommentsAdmin({ comments }: { comments: commentMeta[] }) {
+export function CommentsAdmin({ comments }: { comments: commentType[] }) {
   const commentsWithSlug: {
     slug: string,
-    comments: commentMeta[],
+    comments: commentType[],
   }[] = [];
 
   comments.forEach((comment) => {

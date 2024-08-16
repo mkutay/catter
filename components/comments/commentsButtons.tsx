@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { deleteComment } from '@/lib/dataBaseActions';
-import { commentMeta } from '@/config/site';
+import { commentType } from '@/config/schema';
 
 export function SignOut() {
   return (
@@ -50,7 +50,7 @@ export function SignIn({ slug }: { slug: string }) {
   );
 }
 
-export function DeleteComment({ comment }: { comment: commentMeta }) {
+export function DeleteComment({ comment }: { comment: commentType }) {
   const [open, setOpen] = useState(false);
 
   return (

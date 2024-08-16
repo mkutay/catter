@@ -17,12 +17,12 @@ import {
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { deleteGuestbookEntries } from '@/lib/dataBaseActions';
-import { entryMeta } from '@/config/site';
+import { entryType } from '@/config/schema';
 import { deleteGuestbookEntryFormSchema } from '@/config/schema';
 import { cn } from '@/lib/utils';
 
 // Delete entries from the guestbook
-export function GuestbookAdminForm({ entries }: { entries: entryMeta[] }) {
+export function GuestbookAdminForm({ entries }: { entries: entryType[] }) {
   const form = useForm<z.infer<typeof deleteGuestbookEntryFormSchema>>({
     resolver: zodResolver(deleteGuestbookEntryFormSchema),
     defaultValues: {

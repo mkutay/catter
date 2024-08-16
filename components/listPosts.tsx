@@ -4,7 +4,7 @@ import { MDXRemote } from 'next-mdx-remote-client/rsc';
 import { Button } from '@/components/ui/button';
 import { getPosts } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { postMeta } from '@/config/site';
+import { postMetaType } from '@/config/schema';
 
 export default function ListPosts({
   startInd,
@@ -19,7 +19,7 @@ export default function ListPosts({
 }) { // half-open interval
   const posts: {
     slug: string,
-    meta: postMeta,
+    meta: postMetaType,
     content: string,
   }[] = getPosts({ startInd, endInd, tags, disallowTags });
 

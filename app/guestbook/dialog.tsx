@@ -40,7 +40,7 @@ import {
 } from '@/components/ui/popover';
 import { saveGuestbookEntry } from '@/lib/dataBaseActions';
 import { cn } from '@/lib/utils';
-import { guestbookColors } from '@/config/site';
+import { guestbookColors } from '@/config/schema';
 import { guestbookDialogFormSchema } from '@/config/schema';
 
 export function GuestbookDialog() {

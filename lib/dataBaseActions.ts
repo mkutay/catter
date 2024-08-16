@@ -6,7 +6,8 @@ import { PostgresError } from 'postgres';
 
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
-import { commentMeta, siteConfig } from '@/config/site';
+import { commentType } from '@/config/schema';
+import { siteConfig } from '@/config/site';
 import { commentsFormSchema, guestbookFormSchema, guestbookDialogFormSchema } from '@/config/schema';
 
 export async function incrementViews(slug: string) {
@@ -211,7 +212,7 @@ export async function saveComment({ slug, message }: { slug: string, message: st
   revalidatePath(`/posts/${slug}`);
 }
 
-export async function deleteComment({ comment }: { comment: commentMeta }) {
+export async function deleteComment({ comment }: { comment: commentType }) {
   let session = await getSession();
   let email = session.user?.email as string;
 

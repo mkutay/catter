@@ -12,7 +12,7 @@ export default function DoublePane({
   children: React.ReactNode;
 }>) {
   return (
-    <section className="justify-center px-4 flex lg:flex-row flex-col lg:gap-16 gap-0 lg:max-w-6xl max-w-prose mx-auto">
+    <section className="justify-center px-4 flex lg:flex-row flex-col lg:gap-16 gap-0 lg:max-w-6xl max-w-prose mx-auto md:mb-12 mb-6">
       <div className="w-full lg:mx-0 mx-auto">
         {children}
       </div>
@@ -29,9 +29,9 @@ export default function DoublePane({
   );
 }
 
-export function EmailSubButton() {
+function EmailSubButton() {
   return (
-    <div className="flex flex-col gap-4 my-6">
+    <div className="flex flex-col gap-4 mt-6">
       <p className="text-lg col-auto leading-7 [&:not(:first-child)]:mt-6">
         Subscribe to my newsletter to get updates on new posts and email only specials.
       </p>

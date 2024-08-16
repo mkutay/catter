@@ -12,14 +12,14 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { postMeta } from '@/config/site';
+import { postMetaType } from '@/config/schema';
 
 export default function ProjectCard({
   props
 }: {
   props: {
     slug: string,
-    meta: postMeta,
+    meta: postMetaType,
     content: string,
   }
 }) {
