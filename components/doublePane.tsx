@@ -17,7 +17,10 @@ export default function DoublePane({
         {children}
       </div>
       <div className="w-fit lg:mx-0 mx-auto sticky top-16 h-fit">
-        <h2 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase lg:my-6 mt-12 mb-6">
+        <p className="leading-tight text-2xl lg:my-6 mt-12 p-4 px-5 bg-primary text-primary-foreground rounded-lg">
+          Look at my first ever product: <Link className="underline hover:text-primary-foreground/80 text-primary-foreground transition-all" href="https://todon3.com">Todon3</Link>, conquer your tasks.
+        </p>
+        <h2 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase mb-6 lg:my-6 mt-12">
           Popular Content
         </h2>
         <Suspense fallback={<MostViewedPostsFallback postNum={siteConfig.postNumPerPage}/>}>
@@ -35,7 +38,7 @@ function EmailSubButton() {
       <p className="text-lg col-auto leading-7 [&:not(:first-child)]:mt-6">
         Subscribe to my newsletter to get updates on new posts and email only specials.
       </p>
-      <Button variant="default" size="lg" className="flex mx-auto" asChild>
+      <Button variant="secondary" size="lg" className="flex mx-auto" asChild>
         <Link href={siteConfig.newsletterSubscribe} className="flex flex-row gap-3 w-fit">
           <Mailbox stroke="currentColor" strokeWidth="1.8px"/>
           <div>Subscribe!</div>
