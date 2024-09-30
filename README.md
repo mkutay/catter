@@ -1,4 +1,16 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Catter
+
+This is a minimal and responsive blog created with [Next.js](https://nextjs.org), [MDX](https://github.com/ipikuka/next-mdx-remote-client), [TailwindCSS](https://tailwindcss.com/), and [Shadcn's UI](https://ui.shadcn.com/) components. Catter
+- is beautifully designed with colours from [Catppuccin](https://github.com/catppuccin/catppuccin),
+- has support for Markdown and MDX,
+- has a custom designed comment system,
+- has view counter for every post,
+- has a page where anyone on the internet can sign and mark their presence,
+- has LaTeX and syntax highlighting support,
+- has a page for projects you do,
+- has a system for tags for posts.
+
+See my [blog](https://www.mkutay.dev) for a working example that is based on this repository.
 
 ## Getting Started
 
@@ -16,21 +28,18 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Copy `.env.example` and populate `.env.local`. Use GitHub, Discord, and Spotify OAuth for guestbook and comments. Also, add the information from your Postgres database you use. In addition, you don't need to run any commands manually to set the database schema, as it is automatically done by Catter.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Change the values in `config/site.ts` to change the config of your site. Importantly, add your email to `admins` to access the admin page on your site, where you can delete comments and guestbook entries.
 
-## Learn More
+## Deploying
 
-To learn more about Next.js, take a look at the following resources:
+You can fork this repository and add it to Vercel manually, or you can use the following button.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmkutay%2Fcatter)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Contributing
 
-## Deploy on Vercel
+Any and all contributions are welcome as a pull request. You can also open an issue if you have any questions or problems.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![Catter example blog main page](https://www.mkutay.dev/images/catter-blog/cover.png)
