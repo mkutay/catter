@@ -1,9 +1,8 @@
 import { notFound, redirect } from 'next/navigation';
 import { format } from 'date-fns';
 
-import { getPosts, getProps } from '@/lib/contentQueries';
+import { getPosts } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
-import { waitForDebugger } from 'node:inspector/promises';
 
 export function generateMetadata({ params }: { params: { shortened: string } }) {
   const { shortened } = params;
@@ -36,8 +35,7 @@ export default function Page({ params }: { params: { shortened: string } }) {
   const posts = getPosts({ });
 
   posts.forEach((post) => {
-    if (post.meta.shortened == shortened) {
-      console.log(shortened);
+    if (post.meta.shortened === shortened) {
       redirect(`/posts/${post.slug}`);
     }
   });
