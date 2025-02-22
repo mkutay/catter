@@ -9,6 +9,7 @@ import coverLonely from '@/public/images/why-mathematics-is-lonely/cover.jpeg';
 import coverStartpage from '@/public/images/purple-startpage/cover.png';
 import coverSlang from '@/public/images/turkish-slang-dictionary/cover.png';
 import coverCatter from '@/public/images/catter-blog/cover.png';
+import coverClone from '@/public/images/creating-a-clone-of-yourself/cover.jpeg';
 
 export const images: { [key: string]: StaticImageData } = {
   'why-do-people-just-hate-mathematics': coverHate,
@@ -20,4 +21,5 @@ export const images: { [key: string]: StaticImageData } = {
   'purple-startpage': coverStartpage,
   'turkish-slang-dictionary': coverSlang,
   'catter-blog': coverCatter,
+  'creating-a-clone-of-yourself': coverClone,
 };

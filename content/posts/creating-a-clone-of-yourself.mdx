@@ -1,0 +1,105 @@
+---
+title: Creating a clone of yourself
+description: ...as a text messaging AI model using OpenAI's fine-tuning capabilities.
+date: 2025-02-22
+excerpt: After OpenAI become mainstream enough, I started becoming fascinated by searching for the existence of an AI model that would mimic myself or another person’s text messages. It would basically work by scraping and refactoring messages from a platform (Discord or WhatsApp) and creating a fine-tuned model, which would be served as a bot on Discord (or on any other platform)."
+locale: en_UK
+tags: [thoughts, code, python, AI]
+cover: "/images/creating-a-clone-of-yourself/cover.jpeg"
+coverSquare: "/images/creating-a-clone-of-yourself/cover-cropped.jpeg"
+lastModified: 2025-02-22
+keywords: [thoughts, ai, python, cloning, llm, chatgpt]
+shortened: clone
+---
+After OpenAI become mainstream enough, I started becoming fascinated by searching for the existence of an AI model that would mimic myself or another person’s text messages. It would basically work by scraping and refactoring messages from a platform (Discord or WhatsApp) and creating a fine-tuned model, which would be served as a bot on Discord (or on any other platform).
+
+This interest led me to dig deep and so in the summer of 2022, I decided to use OpenAI’s fine-tuning API for this project. Note that at the time, the newest model from OpenAI was GPT-3 and ChatGPT wasn’t even released. The only way to use the models was by giving it a prompt and getting a completion of said prompt. You weren’t able to have a back-and-forth conversation with the AI—though that technology originates from having a single prompt and completion pair; but now, that idea is abstracted enough to easily have long conversations with the models.
+
+At that time, OpenAI’s fine-tuning API worked by training the current GPT-3 model with a given dataset of prompt and completion pairs, so you would have a model that was made on top of the current LLMs. This allowed people to create sentiment analysers, structured outputters, and chatbots. My use case would be under the chatbot category, but I didn’t want the bot to have perfect English, I wanted it to mimic _a person’s English and writing_—people don’t use punctuation, people shorten their words, people use words/phrases that they created themselves or have been created in a friend group they are a part of, and most importantly, people have a tone and style that they use that is really, really hard to describe. This is why this problem is difficult. You cannot go and describe how they write and their experiences and their backstory, there will always be some nuances in their messages that’s not possible to put into words in a finite space (or at least in a small space that is useful). And, on top all of this, the data I was working with wasn’t only English, it was a mixture of Turkish and English. I was working with English words that had Turkish suffixes, which weren’t even consistent between different English words. This is why fine-tuning is of such importance: it allows the AI to _learn_ the person—and if you have enough data, it might even be able to “clone” them.
+
+Some further context for the data I was working with:
+
+- I was taking messages from a single group that mostly talked in Turkish but also had some parts of conversations in English.
+    
+- The group was large, and one-to-one conversations between people were rare, so there was a lot of messages between the messages of the person that we wanted to make an AI model of.
+    
+- People don’t write their entire messages in a single sentence or in a single message but divide their messages and send them separately, so we need to combine those messages in some way.
+    
+- When a person asks two questions one after another, the second person might not answer them sequentially.
+    
+- People aren’t chronically online all the time (most of the time at least), and cannot answer questions asked to them instantly but are able to answer them later when it’s convenient for them (much after the context of that conversation is over).
+
+<Image
+  alt="An example message chain"
+  src="/images/creating-a-clone-of-yourself/message-chain.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+These were and are the problems that I thought about while creating the AI models. As I’ve mentioned, I started this journey in 2022, and I also have worked on it last month, so I’m going to go through the main approaches I tried and how I’ve looked at solving some of the problems.
+
+# The summer of 2022
+
+The world was a beautiful place back then… without the AI generated bullshit we see today. ChatGPT didn’t exist, AI art was just starting to be more “realistic,” and AI alignment wasn’t that much prominent of an issue. To train the GPT-3 model, I had to create a training dataset consisting of prompts and completions. Something like this:
+
+```txt
+{"prompt": "...", "completion": "..."}
+```
+
+To train a model to your desire, it was possible to need hundreds or maybe thousands of examples (in my case, I only used a 1000). I had to refactor the scraped messages in such a way that the model would learn from them and then _be_ the person. If you simplify the problem and only have a single message from the assistant, we would have something like this:
+
+```txt
+{"prompt": "User: [MESSAGE OF PERSON 1]\nUser: [MESSAGE OF PERSON 2]\nUser: [MESSAGE OF PERSON 3]\nUser: [MESSAGE OF PERSON 1]\nUser: [MESSAGE OF PERSON 3]\nAssistant:", "completion": " [MESSAGE OF THE PERSON WE ARE CREATING A MODEL OF]\n"}
+```
+
+Here, we are not distinguishing people in the group; and, to the AI model, it just seems as a single “User”. We also have newlines between messages from **different** people, and we can use periods for separating different sequential messages from the same person: `User: [MESSAGE 1]. [MESSAGE 2]. [MESSAGE 3]`. To add back-and-forth messages between the assistant and the user, we could do something like this:
+
+```txt
+{"prompt": "User: [MESSAGE OF USER]\nAssistant: [MESSAGE OF ASSISTANT]\nUser: [MESSAGE OF USER]\nAssistant: [MESSAGE OF ASSISTANT]\nUser: [MESSAGE OF USER]\nAssistant:", "completion": " [RESPONSE OF ASSISTANT]\n"}
+```
+
+After gathering all of the data, we can start the training—though the training happened to be pretty expensive as the technology was quite new. What’s more, we need a way to converse with the bot after training, so I decided to create a Discord bot that converts the messages received into prompts and gets the completion of the prompt. For this, I decided to have a `log` variable (hard-limited at 20 entries) that holds the messages from both the “User” and the “Assistant”. When a new message is received, by using the `log` variable, a prompt is created and sent to the model, and the response is sent as a message to the Discord channel.
+
+The important thing here is that, even though the dataset contained serried messages from different users, the prompts sent to the model after training wasn’t like that. The bot was answering _every single message_, so the `log` would only contain alternating messages from the user and the assistant (I talk about this issue later on). In the end, however, the model was a half-success: the messages felt like the person that was trained on as it used phrases that person would use, but the messages themselves didn’t make much sense. The bot didn’t even seemed to understand what we were saying to it—it would just ramble on. After playing with the settings and hand-picking the training data, it wasn’t much different either. So in the end, I decided to scrap the idea until the technology improved and focused on my studies.
+
+(p.s. While writing this, I’ve come to realise that, instead of not distinguishing people by only writing “User”, I could’ve mentioned people by their name and done the same thing on the Discord side as well, which would’ve allowed the AI model to have some more context of the data given to it.)
+
+# Two and a half years later
+
+Well… Now, we have ChatGPT, we have GPT-4 and even self-reasoning models, and we are talking about AI alignment. The technology has improved so much, and the practical applications of AI didn’t stop growing either. Two and a half years later, I finally decided to try my project I put off a while back—and oh boy, the technology has apparently improved a lot more than I thought.
+
+With the current API, we don’t need to have a _single_ pair of a prompt and a completion. Instead, we can now have back-and-forth conversations—just like how ChatGPT is implemented. We don’t need to add the assistant’s messages into the prompt over and over again, and instead we can do something like this:
+
+```txt
+{"messages": [{"role": "user", "content": "[MESSAGE 1]"}, {"role": "user", "content": "MESSAGE 2"}, {"role": "assistant", "content": "MESSAGE 3"}, {"role": "user", "content": "[MESSAGE 4]"}, {"role": "assistant", "content": "[MESSAGE 5]"}]}
+```
+
+While the model only learns from the last assistant message (somewhat similar to the previous API specification), it is now much easier for the model to distinguish between assistant messages and user inputs. Furthermore, we can add tags (“name” and “weight”) to the messages and also a general “system” prompt at the start, so it would look like this:
+
+```txt
+{"messages": [{"role": "system", "content": "[A GENERAL DESCRIPTION OF WHO THE ASSISTANT IS]"}, {"role": "user", "content": "[MESSAGE 1]", "name": "[NAME OF USER 1]"}, {"role": "assistant", "content": "MESSAGE 3", "name": "[NAME OF ASSISTANT]"}]}
+```
+
+This allows the model to learn who the assistant is communicating with, as people tend to write the names of the people they are talking to in their messages directly; essentially, it gives the model a wider context. Secondly, we can define a general system prompt that captures the context of messages. It is not possible to write every single detail of the person we are trying create a model of, but by using a concise system prompt, we can increase the consistency of the model and actually make it _understand_ the person.
+
+I won’t go through each iteration I had with the API, but I will describe the one that was the best overall. I learned that the system message is really vital: it allows the AI to stabilise. It shouldn’t be too long and not too short. It should only contain general information and, if you want, how the person writes their messages. Different messages from different people should be distinguished by sequentially placing them and giving them a “name” (this name should be consistent when talking to the bot, too), instead of writing them all in a single message. Different messages from the same person, sent in series, should be separated by newlines. Finally, it is important to divide the entire group chat messages into different “contexts” or “sessions.” I, for instance, hard-coded a limit, meaning that if there is a difference between 4-5 minutes between messages, then those messages are in different contexts (i.e. on different lines in the dataset).
+
+After training the dataset, we can consider how we’re going to interact with the model. Similarly, we will use a Discord bot, but this time, we won’t send the messages received every time someone writes a message. Instead, we will only send a request to the API once 20-30 seconds have passed since the last message. This conceives for a more _authentic messaging experience_.
+
+This time, the clones truly felt like clones—they spoke and behaved like the individuals they were modeled after. Nearly half the time, we had some sort of conversations with the bots, but during the other half, the bots would fixate on a single phrase, repeating it endlessly until we reset their “log” or stumbling upon a new phrase to latch onto. I’m not sure how this behavior came to be, but once a bot entered this loop, it was impossible to break it. The interesting thing is that the training data didn’t reflect such tendencies. For instance, one AI repeatedly said “LOL” or “lol” regardless of input, laughing incessantly—even though the person it was modeled after used the phrase quite rarely and never to this extent. As a whole, working on this project was an incredible experience, and it was exciting to see people genuinely interested in interacting with the AIs. I’m eager to continue developing this project by exploring new approaches and hand-picking some of the training data to achieve better results. I’d also love to hear from you, the readers—have you tried any different methods for tackling this problem or a similar one?
+
+# We were so preoccupied with whether we could, we didn’t stop to think if we should
+
+Before anything, I honestly think that we should consider **not** continuing with our AI research. It’s a real possibility that the net impact of AI might not entirely be positive. We might dip into negative 100 years into the future, 5 years from now, or even tomorrow morning. There’s no way of knowing how an AGI might effect our lives in the long-term. Yet again, it might be the case that a **correctly aligned** superintelligent AI will be the biggest leap in the history of mankind.
+
+With that said, it is important to consider if we _**should**_ create a way to, essentially, copy people and create clones of them. In science fiction and in research, we are talking about creating clones by copying our brains and our neurons, but instead of doing that, we can create clones of ourselves in a single point in time from our _messages with people_, as I’ve talked so far in this post.
+
+What’s more, instead of trying to copy the organs, the brain, and the neurons of a person, we can try to mimic what that person does in an environment/situation. If we gather all of the data of the environment that the person is in (the surroundings, the people, the climate, what people are saying, etc.) and what that person said or did in that environment, we can train a model to predict what that person might do in a given situation. This seems as an easier problem to solve than mapping the human brain. Also, this approach allows us to think of the human body as a whole, instead of different parts that do different things in different cases. Yeah, adrenaline concentration in the blood might increase in a stressful situation, but we don’t care about that, we only care about the conclusion from it, that is: what the person does. What makes this whole thing crazy is that we can create actual, physical human-like robots from these models in the future, which would _be_ the clone.
+
+The method of abstracting the human body and mind into a single thing that gathers information and outputs action can be most easily used with LLMs, I think. This is getting speculative, but even describing the environment in sentences using another AI model would be useful to train our main LLM. This seems as the perfect way to go on about this problem, as it would learn all the nuances about human interactions. Unfortunately, as any model, we need _**data**_—tonnes of it actually—and that slides into the problem of privacy and ethics.
+
+I obtained permission from all the parties involved in this project. They agreed to allow their messages to be used for training the model and for the model itself to be used as a Discord bot for our entertainment, so if you're planning to undertake a similar project, please be transparent and avoid doing it without proper consent. It’s also easy to see that what the bot says is not a reflection of the person that the bot represents (the person is **not** a Nazi, a pedophile, or scurrilous—even though the bot randomly says those bad things).
+
+After running the bots for a while, I decided to shut down the scripts. It wasn’t because I feared they might become sentient in time, but simply because they turned out to be a flop. They weren’t particularly useful or consistently fun to interact with—just a one-time joke I created, we had a good laugh over, and we moved on from. As to whether we _should_ create clones of ourselves with fine-tuned models, I’d say no. But the current technology won’t allow this either, so trying some stuff and creating things and looking at this problem is fun, meaning that I’ll definitely be trying new approaches—I will let you know if any of them works!
