@@ -2,7 +2,10 @@ import { siteConfig } from '@/config/site';
 import { getPosts, getProps } from '@/lib/contentQueries';
 
 export default async function sitemap() {
-  const siteMap = [];
+  const siteMap: {
+    url: string,
+    lastModified: string,
+  }[] = [];
 
   siteMap.push({
     url: siteConfig.url,
