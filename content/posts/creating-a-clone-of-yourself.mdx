@@ -54,7 +54,7 @@ To train a model to your desire, it was possible to need hundreds or maybe thous
 {"prompt": "User: [MESSAGE OF PERSON 1]\nUser: [MESSAGE OF PERSON 2]\nUser: [MESSAGE OF PERSON 3]\nUser: [MESSAGE OF PERSON 1]\nUser: [MESSAGE OF PERSON 3]\nAssistant:", "completion": " [MESSAGE OF THE PERSON WE ARE CREATING A MODEL OF]\n"}
 ```
 
-Here, we are not distinguishing people in the group; and, to the AI model, it just seems as a single “User”. We also have newlines between messages from **different** people, and we can use periods for separating different sequential messages from the same person: `User: [MESSAGE 1]. [MESSAGE 2]. [MESSAGE 3]`. To add back-and-forth messages between the assistant and the user, we could do something like this:
+Here, we are not distinguishing people in the group; and, to the AI model, it just seems as a single “User”. We also have newlines between messages from **different** people, and we can use periods for separating different sequential messages from the same person: _`User: [MESSAGE 1]. [MESSAGE 2]. [MESSAGE 3]`_. To add back-and-forth messages between the assistant and the user, we could do something like this:
 
 ```txt
 {"prompt": "User: [MESSAGE OF USER]\nAssistant: [MESSAGE OF ASSISTANT]\nUser: [MESSAGE OF USER]\nAssistant: [MESSAGE OF ASSISTANT]\nUser: [MESSAGE OF USER]\nAssistant:", "completion": " [RESPONSE OF ASSISTANT]\n"}

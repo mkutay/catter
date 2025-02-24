@@ -14,6 +14,7 @@
   @apply prose-h2:mt-9 prose-h2:mb-[18px] prose-h3:mt-6 prose-h3:mb-[9px];
   @apply prose-hr:my-9;
   @apply hover:prose-a:text-primary/80 prose-a:transition-all;
+  
 }
 
 .data-footnote-backref {

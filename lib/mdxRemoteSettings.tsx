@@ -48,11 +48,11 @@ export const components: MDXComponents = {
   ),
   MyCode: async ({ codeblock }: { codeblock: RawCode }) => {
     const highlighted = await highlight(codeblock, "github-dark");
-    return <Pre code={highlighted} handlers={[wordWrap, lineNumbers]} className="px-1 py-3 dark:bg-black/60 bg-black/80" />
+    return <Pre code={highlighted} handlers={[wordWrap, lineNumbers]} className="px-1 py-3 not-prose bg-[#0d1117]" />
   },
   MyInlineCode: async ({ codeblock }: { codeblock: RawCode }) => {
     const highlighted = await highlight(codeblock, "github-dark");
-    return <Inline code={highlighted} style={highlighted.style} />
+    return <Inline code={highlighted} style={highlighted.style} className="px-1 py-0.5" />
   },
 };
 
