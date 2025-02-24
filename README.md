@@ -6,9 +6,10 @@ This is a minimal and responsive blog created with [Next.js](https://nextjs.org)
 - has a custom designed comment system,
 - has view counter for every post,
 - has a page where anyone on the internet can sign and mark their presence,
-- has LaTeX and syntax highlighting support,
+- has LaTeX support in markdown,
 - has a page for projects you do,
-- has a system for tags for posts.
+- has a system for tags for posts,
+- uses [CodeHike](https://codehike.org/) for beautifully designed code blocks.
 
 See my [blog](https://www.mkutay.dev) for a working example that is based on this repository.
 
