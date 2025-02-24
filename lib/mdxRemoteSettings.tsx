@@ -83,7 +83,7 @@ export const lineNumbers: AnnotationHandler = {
     return (
       <div className="flex">
         <span
-          className="text-right opacity-50 select-none"
+          className="text-right select-none"
           style={{ minWidth: `${width}ch` }}
         >
           {props.lineNumber}
