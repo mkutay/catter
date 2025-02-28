@@ -8,7 +8,7 @@ import { siteConfig } from '@/config/site';
 
 export default function Home() {
   return (
-    <DoublePane>
+    <DoublePane hideFollowLink={true}>
       <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
         Recently Published
       </h1>

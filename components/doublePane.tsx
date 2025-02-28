@@ -8,13 +8,22 @@ import { siteConfig } from '@/config/site';
 
 export default function DoublePane({
   children,
-  }: Readonly<{
+  hideFollowLink,
+}: Readonly<{
   children: React.ReactNode;
+  hideFollowLink?: boolean,
 }>) {
   return (
     <section className="justify-center px-4 flex lg:flex-row flex-col lg:gap-16 gap-0 lg:max-w-6xl max-w-prose mx-auto md:mb-12 mb-6">
-      <div className="w-full lg:mx-0 mx-auto">
-        {children}
+      <div className="w-full lg:mx-0 mx-auto flex flex-col gap-6">
+        <div>
+          {children}
+        </div>
+        {!hideFollowLink && <div className="flex flex-row items-center justify-center">
+          <Link href="/follow-link" className="p-4 text-primary-foreground bg-primary hover:bg-primary/80 transition-all text-xl w-fit rounded-xl font-semibold">
+            Find out who to follow next!
+          </Link>
+        </div>}
       </div>
       <div className="w-fit lg:mx-0 mx-auto sticky top-16 h-fit">
         <p className="leading-tight text-2xl lg:my-6 mt-12 p-4 px-5 bg-primary text-primary-foreground rounded-lg">
