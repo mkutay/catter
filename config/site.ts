@@ -3,7 +3,7 @@ export const siteConfig = {
   name: 'The Deterministic',
   author: 'Mehmet Kutay Bozkurt',
   authorEmail: 'hello@mkutay.dev',
-  description: 'A blog where university student Kutay posts about things he likes, from mathematics to computer science.',
+  description: 'A blog that talks about various things from mathematics to computer science and from philosophy to life updates.',
   navItems: [
     { label: 'About', href: '/about' },
     { label: 'Guest Book', href: '/guestbook' },
