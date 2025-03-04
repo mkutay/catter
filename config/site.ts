@@ -1,6 +1,6 @@
 export const siteConfig = {
   url: 'https://www.mkutay.dev',
-  name: 'Kutay\'s Blog',
+  name: 'The Deterministic',
   author: 'Mehmet Kutay Bozkurt',
   authorEmail: 'hello@mkutay.dev',
   description: 'A blog where university student Kutay posts about things he likes, from mathematics to computer science.',
