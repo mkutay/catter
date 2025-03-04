@@ -12,10 +12,10 @@ export const siteConfig = {
   ],
   footerItems: {
     connections: [
-      { title: 'Twitter/X', link: 'https://x.com/mkutaybozkurt' },
+      { title: 'BlueSky', link: 'https://bsky.app/profile/mkutay.substack.com' },
       { title: 'Instagram', link: 'https://www.instagram.com/mkutaybozkurt' },
       { title: 'GitHub', link: 'https://github.com/mkutay' },
-      { title: 'Resume', link: '/pdfs/mehmet-kutay-bozkurt.pdf' },
+      { title: 'Resume (Old)', link: '/pdfs/mehmet-kutay-bozkurt.pdf' },
     ],
     blog: [
       { title: 'Sponsor Me', link: 'https://github.com/sponsors/mkutay?o=esb' },
