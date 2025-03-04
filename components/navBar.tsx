@@ -53,7 +53,7 @@ export default function NavBar() {
         <div className="place-items-center text-primary hover:text-primary/80 transition-all font-extrabold text-lg gap-2 flex flex-row items-center">
           <Link href="/" className="flex flex-row items-center gap-2">
             <Logo className="flex-none"/>
-            Kutay&#39;s Blog
+            {siteConfig.name}
           </Link>
         </div>
         <div className="flex flex-row place-items-center gap-4">
