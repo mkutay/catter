@@ -1,5 +1,6 @@
-import DoublePane from '@/components/doublePane';
 import Link from 'next/link';
+
+import DoublePane from '@/components/doublePane';
 
 const websites = [
   {
