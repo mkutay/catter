@@ -44,8 +44,8 @@ export default function Page({ params }: { params: { slug: string } }) {
   incrementViews(props.slug);
 
   return (
-    <div>
-      <div className="bg-primary w-screen h-fit py-6 lg:space-y-16 space-y-10">
+    <>
+      <div className="bg-primary w-full h-fit py-6 lg:space-y-16 space-y-10">
         <div className="lg:max-w-6xl max-w-prose mx-auto px-4 space-y-2">
           <p className="text-lg font-semibold text-primary-foreground">
             {formattedDate}
@@ -91,7 +91,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         </main>
         <Suspense fallback={<CommentsFallback/>}><Comments slug={props.slug}/></Suspense>
       </DoublePane>
-    </div>
+    </>
   );
 }
 
