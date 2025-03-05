@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { postMetaType } from '@/config/schema';
+import { squareImages } from "@/config/images";
 
 export default function ProjectCard({
   props
@@ -23,17 +24,18 @@ export default function ProjectCard({
     content: string,
   }
 }) {
+  const image = squareImages[props.slug] ? squareImages[props.slug] : props.meta.coverSquare;
+
   return (
     <Card>
       <div className="m-2">
         <Image
           alt={`Project ${props.meta.title}'s cover square image`}
-          src={props.meta.coverSquare}
-          width={0}
-          height={0}
+          src={image}
           sizes="100vw"
           style={{ width: "100%", height: "auto" }}
           className="rounded-xl shadow-md"
+          placeholder="blur"
         />
       </div>
       <CardHeader>

@@ -11,6 +11,10 @@ import coverSlang from '@/public/images/turkish-slang-dictionary/cover.png';
 import coverCatter from '@/public/images/catter-blog/cover.png';
 import coverClone from '@/public/images/creating-a-clone-of-yourself/cover.jpeg';
 
+import coverSquareStartpage from '@/public/images/purple-startpage/square.jpeg';
+import coverSquareSlang from '@/public/images/turkish-slang-dictionary/square.png';
+import coverSquareCatter from '@/public/images/catter-blog/square.png';
+
 export const images: { [key: string]: StaticImageData } = {
   'why-do-people-just-hate-mathematics': coverHate,
   'how-to-practice-mathematics-as-an-art': coverArt,
@@ -22,4 +26,10 @@ export const images: { [key: string]: StaticImageData } = {
   'turkish-slang-dictionary': coverSlang,
   'catter-blog': coverCatter,
   'creating-a-clone-of-yourself': coverClone,
+};
+
+export const squareImages: { [key: string]: StaticImageData } = {
+  'purple-startpage': coverSquareStartpage,
+  'turkish-slang-dictionary': coverSquareSlang,
+  'catter-blog': coverSquareCatter,
 };
