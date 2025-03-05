@@ -31,4 +31,15 @@ export const siteConfig = {
   newsletterSubscribe: 'https://mkutay.substack.com/subscribe',
   admins: ['me@mkutay.dev', 'hello@mkutay.dev'],
   date: new Date().toISOString().split('T')[0],
+  homePage: {
+    leftSideSlugs: [
+      'why-do-people-just-hate-mathematics',
+      'why-mathematics-is-lonely',
+    ],
+    rightSideSlugs: [
+      'how-to-practice-mathematics-as-an-art',
+      'procrastination',
+    ],
+    middleSlug: 'creating-a-clone-of-yourself',
+  }
 };
