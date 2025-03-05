@@ -89,6 +89,7 @@ const config: Config = {
   plugins: [
     require('@tailwindcss/typography'),
     require("tailwindcss-animate"),
+    require('@designbycode/tailwindcss-text-stroke')
   ],
 };
 export default config;

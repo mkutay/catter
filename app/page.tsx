@@ -40,14 +40,14 @@ export default function Home() {
 
   return (
     <div>
-      <div className="bg-primary text-primary-foreground w-full h-fit py-6">
+      <div className="bg-primary text-primary-foreground w-full h-fit lg:py-6 py-4">
         <div className="md:max-w-6xl max-w-prose mx-auto px-4 md:mt-32 mt-20">
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl w-full text-left">
             Hey! I&apos;m Kutay!
           </h1>
         </div>
       </div>
-      <div className="flex md:flex-row flex-col gap-6 md:max-w-6xl max-w-prose mx-auto px-4 mt-4 mb-12">
+      <div className="flex md:flex-row flex-col gap-6 md:max-w-6xl max-w-prose mx-auto px-4 lg:mt-6 mt-4 mb-12">
         <div className="w-1/4 md:flex flex-col gap-12 hidden">
           {leftSide.map((post) => (
             <SidePostDisplay key={post.slug} image={images[post.slug]} post={post} />
@@ -92,8 +92,8 @@ function SidePostDisplay({
         className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
         placeholder="blur"
       />
-      <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight text-foreground transition-all duration-300 ease-in-out">
-        <span className="bg-left-bottom bg-gradient-to-r pb-0.5 from-foreground to-foreground bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+      <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight text-foreground text-stroke-medium text-stroke-background fix-text-stroke">
+        <span className="bg-[0%_87%] bg-gradient-to-r pb-0.5 from-foreground to-foreground bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
           {post.meta.title}
         </span>
       </h2>
@@ -131,8 +131,8 @@ function MiddlePostDisplay({
           className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
           placeholder="blur"
         />
-        <h2 className="lg:text-5xl md:text-4xl text-3xl leading-7 font-normal tracking-tighter text-foreground transition-all duration-300 ease-in-out">
-          <span className="bg-left-bottom bg-gradient-to-r from-foreground to-foreground bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+        <h2 className="lg:text-5xl/tight md:text-4xl/tight text-3xl/tight font-normal tracking-tighter text-stroke-medium text-stroke-background fix-text-stroke">
+          <span className="lg:bg-[0%_90%] md:bg-[0%_89%] bg-[0%_90%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
             {post.meta.title}
           </span>
         </h2>
@@ -153,6 +153,7 @@ function MiddlePostDisplay({
 }
 
 async function ViewDisplay({ slug }: { slug: string }) {
+  return;
   const views = await getViewCount(slug);
   if (views.length === 0) return;
 
