@@ -12,6 +12,7 @@ export type postMetaType = {
   lastModified: string,
   keywords: string[],
   shortened: string,
+  shortExcerpt?: string,
 };
 
 export type entryType = {
