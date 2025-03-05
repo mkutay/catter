@@ -153,7 +153,6 @@ function MiddlePostDisplay({
 }
 
 async function ViewDisplay({ slug }: { slug: string }) {
-  return;
   const views = await getViewCount(slug);
   if (views.length === 0) return;
 
