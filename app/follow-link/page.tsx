@@ -29,7 +29,7 @@ export default function Page() {
       </h1>
       <div className="grid sm:grid-cols-2 grid-cols-1 gap-2">
         {websites.map((website) => (
-          <Link key={website.title} href={website.link} className="text-center rounded-lg border border-border p-4 text-lg font-semibold bg-background text-foreground hover:bg-muted hover:text-muted-foreground transition-all">
+          <Link key={website.title} href={website.link} target="_blank" className="text-center rounded-lg border border-border p-4 text-lg font-semibold bg-background text-foreground hover:bg-muted hover:text-muted-foreground transition-all">
             {website.title}
           </Link>
         ))}
