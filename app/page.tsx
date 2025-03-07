@@ -5,13 +5,13 @@ import { format } from 'date-fns';
 import { Suspense } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { getPosts } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { getViewCount } from '@/lib/dataBaseQueries';
+import { getPosts } from '@/lib/contentQueries';
+import { cn } from '@/lib/utils';
 import { images } from '@/config/images';
 import { postMetaType } from '@/config/schema';
 import { siteConfig } from '@/config/site';
-import { cn } from '@/lib/utils';
 
 export default function Home() {
   const posts = getPosts({ });
@@ -92,7 +92,7 @@ function PostDisplay({
             </span>
           </h2>
         ) : (
-          <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight text-foreground text-stroke-medium text-stroke-background fix-text-stroke">
+          <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight text-foreground text-stroke-thick text-stroke-background fix-text-stroke">
             <span className="bg-[0%_87%] bg-gradient-to-r pb-0.5 from-foreground to-foreground bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
               {post.meta.title}
             </span>
