@@ -26,6 +26,7 @@ export const siteConfig = {
   },
   tagsThatShouldBeCapital: [
     'ib',
+    'ai',
   ],
   postNumPerPage: 5,
   newsletterSubscribe: 'https://mkutay.substack.com/subscribe',
@@ -34,11 +35,11 @@ export const siteConfig = {
   homePage: {
     leftSideSlugs: [
       'why-do-people-just-hate-mathematics',
-      'why-mathematics-is-lonely',
+      'skip-list',
     ],
     rightSideSlugs: [
+      'why-mathematics-is-lonely',
       'how-to-practice-mathematics-as-an-art',
-      'procrastination',
     ],
     middleSlug: 'creating-a-clone-of-yourself',
   }

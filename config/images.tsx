@@ -10,10 +10,12 @@ import coverStartpage from '@/public/images/purple-startpage/cover.png';
 import coverSlang from '@/public/images/turkish-slang-dictionary/cover.png';
 import coverCatter from '@/public/images/catter-blog/cover.png';
 import coverClone from '@/public/images/creating-a-clone-of-yourself/cover.jpeg';
+import coverSkip from '@/public/images/skip-list/cover.jpeg';
 
 import coverSquareStartpage from '@/public/images/purple-startpage/square.jpeg';
 import coverSquareSlang from '@/public/images/turkish-slang-dictionary/square.png';
 import coverSquareCatter from '@/public/images/catter-blog/square.png';
+import coverSquareSkip from '@/public/images/skip-list/cover-square.jpg';
 
 export const images: { [key: string]: StaticImageData } = {
   'why-do-people-just-hate-mathematics': coverHate,
@@ -26,10 +28,12 @@ export const images: { [key: string]: StaticImageData } = {
   'turkish-slang-dictionary': coverSlang,
   'catter-blog': coverCatter,
   'creating-a-clone-of-yourself': coverClone,
+  'skip-list': coverSkip,
 };
 
 export const squareImages: { [key: string]: StaticImageData } = {
   'purple-startpage': coverSquareStartpage,
   'turkish-slang-dictionary': coverSquareSlang,
   'catter-blog': coverSquareCatter,
+  'skip-list': coverSquareSkip,
 };

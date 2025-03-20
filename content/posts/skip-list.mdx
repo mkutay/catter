@@ -1,0 +1,446 @@
+---
+title: An actual binary search on a linked list???
+description: A data structure that can simulate a binary search on a linked list? Yes, please!
+date: 2025-03-20
+excerpt: During my last data structures lecture, our professor was talking about priority queues, selection and insertion sorts. And he mentioned, as a non-examable material, how we might achieve a faster insertion when considering a sorted sequence-based priority queueue.
+locale: en_UK
+tags: [code, algorithms]
+cover: "/images/skip-list/cover.jpeg"
+coverSquare: "/images/skip-list/cover-square.jpg"
+lastModified: 2025-03-20
+keywords: [thoughts, code, skip list, data structure]
+shortened: skip
+shortExcerpt: During my last data structures lecture, our professor was talking about priority queues, selection and insertion sorts. And he mentioned, as a non-examable material, how we might achieve a faster insertion when considering a sorted sequence-based priority queueue.
+---
+
+During my last data structures lecture, our professor was talking about priority queues, selection and insertion sorts. And he mentioned, as a non-examable material, how we might achieve a faster insertion when considering a sorted sequence-based priority queueue.
+
+## Sequence-based priority queue on a sorted list
+
+Considering the interface of a priority queue, we need to implement three main methods:
+
+- _cpp`push(T x)`_ for inserting a new element into the priority queue,
+- _cpp`top()`_ for getting the minimum element, and
+- _cpp`pop()`_ for removing the minimum element from the priority queue.
+
+We note that the last two methods could also be implemented as one: _cpp`removeMin()`_ which in addition to removing the minimum element, it also returns it. What's more, the implementation details what we mean by a "sequence-based priority queue on a sorted list". Specifically, the implementation for this data structure would be to store elements inside the priority queue (as the elements are pushed) as a sorted list, so that _cpp`top()`_ and _cpp`pop()`_ would be $O(1)$ in time complexity.
+
+A naïve approach to this would be to, as inserting into the priority queue, going through the entire list and finding where that element belongs. Consider the example below, when we're adding 52 to the sorted list, we need to compare 52 with all of the numbers in the priority queue: 7, 9, 13, and 21. This means that an insertion would take $O(n)$ time.
+
+<Image
+  alt="An example of a sequence-based priority queue on a sorted list with trivial insertion."
+  src="/images/skip-list/n-squared-insertion.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+What's unlucky is, if we were to implement a sorting algorithm from this, we would get $O(n^2)$ time complexity, due to the insertion taking too long. How do we improve this?
+
+## Ohhh, right... Let's binary search, then. Not so _fast_.
+
+My first thought to this problem was to just binary search the elements already inside the priority queue. We already know that the list is sorted, so we could just search the elements in $O(\log n)$ time. The tricky thing is we want to _insert_ into the list, and the list is stored as a continuous array, meaning that, even if we were to find the index we want to insert in $O(\log n)$ time, we still need to copy over the elements to hold the structure of the array — it still has to be continuous in memory — which would take $O(n)$ time. So... We aren't so fast after all.
+
+Okay, so we need to find a way to insert quite quickly in a list... And it hit me: the answer is linked list. If we were to store the elements as a linked list, when we find the location of the insertion, adding the element is as simple as changing the head pointers. But, how do we _find_ where to insert the element. It's not like we can binary search a linked list — _spoilers..._
+
+## Space-time trade off
+
+Well, the current data structure only uses $O(n)$ memory — just for storing the list — so could we use some more memory to get a lower time complexity? Let's try storing the partial solutions somewhere as we insert into the priority queue, just to avoid some recalculations. We once more consider the example given above. From the elements already inside the priority queue, we had already calculated that $21 > 7, 9, 13$. When 52 came in, we should probably directly compare 52 with 21, without comparing with all of the other numbers.
+
+Let's try thinking about this with a linked list. We say we want to insert 19 to the linked list:
+
+<Image
+  alt="An example situation of inserting into the list a number."
+  src="/images/skip-list/example-situation.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+For this case, we would compare with 7, 9, 13, and 21. When we see that $19 < 21$, we would put 19 in between 13 and 21. As expected this takes $O(n)$ time, only if there was a faster way to do this by _skipping_ some nodes in the linked list. What if we had something like:
+
+<Image
+  alt="An example situation of inserting into the list a number with an express lane."
+  src="/images/skip-list/express-lane.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+This would allow us to compare with 7, use the _express lane_ to 13, compare with 13, and finally compare with 21. If we had this in a large list with optimally placed express lanes, this could save tremendous amounts of time. More formally, we would have something like:
+
+<Image
+  alt="Some formal structure of the linked list with express lanes."
+  src="/images/skip-list/first-look-at-the-structure.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+With this kind of linked list, if we were to add 32, we would insert it as:
+
+<Image
+  alt="Some formal structure of the linked list with express lanes including a search path."
+  src="/images/skip-list/first-look-at-the-structure-search-path.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+This just takes three comparisons, instead of the usual seven. This seems like a good start, but how do we _construct_ this linked list? How do we know where to put these express lanes? I mean, it seems quite arbitrary...
+
+## Some formalism
+
+This data structure is called a _skip list_ or a _skip linked list_, since we have these _express_ lanes to **skip** over some elements.
+
+For ease of implementation, we need to add a _sentinal_ or _head_ node to the beginning of the skip list. This allows us to easily add to or remove from the start of the skip list.
+
+<Image
+  alt="Some formal structure of the skip list with head nodes."
+  src="/images/skip-list/structure-with-head.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+Furthermore, when we think of skip lists conceptually, we see that they are a sequence of singly linked lists $L_{0}, L_{1}, \cdots, L_{n}$, where each $L_{i}$ contains a subset of the items in $L_{i - 1}$.
+
+<Image
+  alt="Some formal structure of the skip list with layer names."
+  src="/images/skip-list/structure-with-layers.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+As you can see, $L_{0}$ can be considered to be the given list that will be inserted to the skip list. We also say that for an element $x$ in a skip list, we call the height of $x$ the largest value $i$ such that $x$ appears in $L_{i}$. So, for example, elements that only appear in $L_{0}$ have a height of zero.
+
+Finally, we see that the expected length of the search path for any node _`u`_ in $L_{0}$ is at most $2\log n + O(1) = O(\log n)$. I will upload another blog post with the proof, but for now, you can just assume this finding. This result shows us the power of this data structure: we can now find an element in logarithmic time, with a type of linked list that allows us easy deletion and insertion.
+
+## Some memory stuff
+
+Before discussing the actual construction of the skip list, let's look at how we will be storing the information of the skip list.
+
+We define a Node _`u`_ to be consisting of a data value _`val`_, and an array _`next`_ of pointers, where _cpp`u.next[i]`_ points to _`u`_'s successor in the list $L_{i}$. For our example, if _`u`_ is the first node (with the value 1), then we say _cpp`u.next[0]`_ is the second node (with the value 7), or _cpp`u.next[3]`_ is the sixth node (with the value 21).
+
+<Image
+  alt="Some formal structure of the skip list with node names on the bottom."
+  src="/images/skip-list/structure-with-nodes.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+An implementation of this node structure in C++ would be as follows.
+
+```cpp
+template<typename T>
+class Node {
+public:
+    T val;
+    vector<Node<T> *> next;
+    Node(T _val, int h) : val(_val) {
+        next = vector<Node<T> *>(h + 1);
+    }
+};
+```
+
+This way of implementing the structure allows us to have low space complexity. If $n$ is the length of our skip list and $h$ is the height of our skip list, then the memory complexity would be $O(h \times n)$. What's more, we already know the value of $h$. Since the search path of finding an element is no greater than $O(\log n)$, the height can't be greater than $\log n$ too, meaning that the memory complexity of this data structure is actually $O(n\log n)$. Quite good, huh?
+
+## Spoilers...
+
+Do you remember when I said the heights and the placement of these express lanes were quite arbitrary? In fact... they are random! We are actually able to generate $L_{i}$ from $L_{i - 1}$ by throwing coins. Specifically, for each element $x$ in $L_{i - 1}$, we throw a coin, and if it comes up tails, we add that element to $L_{i}$. This process ends when we create a list that is empty.
+
+If you had a keen eye, you would spot that this doesn't help much in our case, since we're not creating a skip list from a known list of elements, we are adding to the skip list one-by-one — that is literally the whole point of a priority queue. But if you had an even more keen eye, you would see that the height of an element $x$ corresponds to this thought experiment:
+
+> Toss a coin repeatedly until the first time it comes up heads. How many times did it come up tails?
+
+When we are adding an element $x$ into the skip list, we can recreate this to determine the height of $x$.
+
+Also notice that this probabilistic behaviour doesn't need to be limited by a coin toss (which is a $\frac{1}{2}$ probability), we can change this value to change the memory and time complexity to be as desired.
+
+## Time to write some code
+
+First, let's look at the main structure of our skip list class.
+
+```cpp
+template<typename T>
+class SkipListPQ {
+public:
+    int MAX_LEVEL;
+    double PROB;
+    int level;
+    int size;
+    Node<T> *head;
+
+    SkipListPQ(int max_level, double prob) : MAX_LEVEL(max_level), PROB(prob) {
+        level = size = 0;
+        head = new Node<T>(T(), MAX_LEVEL);
+    }
+
+    int get_size() { return size; }
+};
+```
+
+In the constructor, we set the maximum level (the height) that the skip list can have and the probability value mentioned above. We also create the head (or the sentinel) node which will be the entry point to our skip list.
+
+To add an element $x$ into the priority queue, we must first find the location we want to add; in other words, we need to find the greatest element $y$ such that $y < x$.
+
+Following the search path for $y$ is easy enough: when situated at some node _`u`_ in $L_{i}$, we look right to _cpp`u.next[i].val`_. If _cpp`x >= u.next[i].val`_, then we take a step to the right in $L_{i}$, otherwise we move down into $L_{i-1}$.
+
+```cpp
+Node<T> *u = head;
+for (int i = level; i >= 0; i--) {
+    while (u->next[i] != nullptr && u->next[i]->val < x) {
+        u = u->next[i];
+    }
+}
+```
+
+In the end, _`u`_ would be pointing to the element $y$ we want. Now, we can just roll for the height of the new element and change the connections inside the linked lists.
+
+<Image
+  alt="Some formal search path on an actual skip list."
+  src="/images/skip-list/formal-search-path.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+The problem is... We're not going to just connect the new element from $L_{0}$. We might roll quite unluckly and get a tall node, which we would need to connect it with the previous nodes from the start. This means that we need to store some of the nodes as we process through the skip list — going downwards. For this, we just need to keep track of the nodes at which the search path goes down from some list $L_{i}$ to $L_{i - 1}$. We can store this in an array (or a _cpp`std::vector`_ for you C++ heads) _`update`_. Precisely, _cpp`update[i]`_ is the node in $L_{i}$ where the search path proceeds down to $L_{i-1}$. Therefore, the nodes that we will modify to insert the new element are precisely the nodes _txt`update[0], update[1], ..., update[r]`_. Keeping track of the _`update`_ vector is easy for the search path too. The change is:
+
+```cpp
+Node<T> *u = head;
+vector<Node<T> *> update(MAX_LEVEL + 1);
+for (int i = level; i >= 0; i--) {
+    while (u->next[i] != nullptr && u->next[i]->val < x) {
+        u = u->next[i];
+    }
+    update[i] = u;
+}
+```
+
+Now, we need to get the height of the new element: _cpp`int h = random_level();`_. For this, we can continously get a random number and check if it is less than our _`PROB`_ value.
+
+```cpp
+int random_level() {
+    int h = 0;
+    double r = rand() / (double) RAND_MAX;
+    while (h < MAX_LEVEL && r < PROB) {
+        h++;
+        r = rand() / (double) RAND_MAX;
+    }
+    return h;
+}
+```
+
+Note that, since I'm using C++ here, _cpp`rand()`_ returns a random integer value, instead of a random number between 0 and 1, like most other programming languages, which is why we need to divide by _`RAND_MAX`_. That while loop can be done with a do-while loop, but I leave that to you to be more cool.
+
+As a side note, you can also generate a random integer and check the number of leading ones to determine the height.
+
+If the new height we get from the method is greater than the height of the skip list, we need to increase it.
+
+```cpp
+int h = random_level();
+if (h > level) {
+    for (int i = level + 1; i <= h + 1; i++) {
+        update[i] = head;
+    }
+    level = h;
+}
+```
+
+Finally, we create our new node and connect it up with the rest of the skip list.
+
+```cpp
+Node<T> *n = new Node<T>(x, h);
+for (int i = 0; i <= h; i++) {
+    n->next[i] = update[i]->next[i];
+    update[i]->next[i] = n;
+}
+```
+
+All in all, we have the following for adding an element into the skip list.
+
+```cpp
+void push(T x) {
+    Node<T> *u = head;
+    vector<Node<T> *> update(MAX_LEVEL + 1);
+    for (int i = level; i >= 0; i--) {
+        while (u->next[i] != nullptr && u->next[i]->val < x) {
+            u = u->next[i];
+        }
+        update[i] = u;
+    }
+    
+    int h = random_level();
+    if (h > level) {
+        // We need to increase the height of the skip list
+        for (int i = level + 1; i <= h + 1; i++) {
+            update[i] = head;
+        }
+        level = h;
+    }
+    
+    Node<T> *n = new Node<T>(x, h);
+    for (int i = 0; i <= h; i++) {
+        n->next[i] = update[i]->next[i];
+        update[i]->next[i] = n;
+    }
+    
+    size++;
+}
+```
+
+Continuing on, _cpp`top()`_ is trivial. We only need to get the first element, and we use _`head`_.
+
+```cpp
+T top() {
+    if (size == 0) return T();
+    return head->next[0]->val;
+}
+```
+
+I'm returning the default value for our type here, but you could also just throw an exception if the size is zero.
+
+Finally, we only got _cpp`pop()`_ to implement. Since, we're just removing the first element from the skip list, we can just change the pointers of _`head`_ to the element after the element that it is currently pointing at. We also need to consider the height of our entire skip list going down, which only happens when the element we removed had no successors.
+
+```cpp
+bool pop() {
+    if (size == 0) return false;
+    for (int i = level; i >= 0; i--) {
+        // We only remove from the head
+        if (head->next[i] != nullptr) {
+            head->next[i] = head->next[i]->next[i];
+            if (head->next[i] == nullptr) {
+                // Skip list size has gone down
+                level--;
+            }
+        }
+    }
+    size--;
+    return true;
+}
+```
+
+And... That's it! If we put everything together, we get the following.
+
+```cpp
+template<typename T>
+class Node {
+public:
+    T val;
+    vector<Node<T> *> next;
+    Node(T _val, int h) : val(_val) {
+        next = vector<Node<T> *>(h + 1);
+    }
+};
+```
+
+<div className="my-6"></div>
+
+```cpp
+template<typename T>
+class SkipListPQ {
+public:
+    int MAX_LEVEL;
+    double PROB;
+    int level;
+    int size;
+    Node<T> *head;
+      
+    SkipListPQ(int max_level, double prob) : MAX_LEVEL(max_level), PROB(prob) {
+        level = size = 0;
+        head = new Node<T>(T(), MAX_LEVEL);
+    }
+    
+    int get_size() { return size; } 
+    
+    int random_level() {
+        int h = 0;
+        double r = rand() / (double) RAND_MAX;
+        while (h < MAX_LEVEL && r < PROB) {
+            h++;
+            r = rand() / (double) RAND_MAX;
+        }
+        return h;
+    }
+      
+    void push(T x) {
+        Node<T> *u = head;
+        vector<Node<T> *> update(MAX_LEVEL + 1);
+        for (int i = level; i >= 0; i--) {
+            while (u->next[i] != nullptr && u->next[i]->val < x) {
+                u = u->next[i];
+            }
+            update[i] = u;
+        }
+          
+        int h = random_level();
+        if (h > level) {
+            // We need to increase the height of the skip list
+            for (int i = level + 1; i <= h + 1; i++) {
+                update[i] = head;
+            }
+            level = h;
+        }
+        
+        Node<T> *n = new Node<T>(x, h);
+        for (int i = 0; i <= h; i++) {
+            n->next[i] = update[i]->next[i];
+            update[i]->next[i] = n;
+        }
+          
+        size++;
+    }
+      
+    T top() {
+        if (size == 0) return T();
+        return head->next[0]->val;
+    }
+      
+    bool pop() {
+        if (size == 0) return false;
+        for (int i = level; i >= 0; i--) {
+            // We only remove from the head
+            if (head->next[i] != nullptr) {
+                head->next[i] = head->next[i]->next[i];
+                if (head->next[i] == nullptr) {
+                    // Skip list size has gone down
+                    level--;
+                }
+            }
+        }
+        size--;
+        return true;
+    }
+};
+```
+
+## Further discussion
+
+In this blog post so far, I've talked about how a skip list structure can be used to implement the interface of a priority queue; however, skip lists are much more than that. Particularly, we can use them to implement a set. Skip list implemention of a set have the same asymptotic expected time bounds as balanced trees (or red-black trees, just like how C++ _cpp`std::set`_ implements it) and are simpler, faster, and use less space. You can find that implementation on the [GitHub repo](https://github.com/mkutay/skip-linked-list) for this post, in addition to the priority queue implementation of skip list in C++ and Java.
+
+Apart from using this algorithm in a job interview, skip lists are highly useful in implementing concurrent priority queues with less lock contention (see: [Skiplist-Based Concurrent Priority Queues](https://ieeexplore.ieee.org/document/845994)). This is useful in decentralised contexts.
+
+But, do you know what's the issue with skip lists? It's obviously that I can't access and modify **any** element I want. But, in fact, we _can_ create an efficient random-access list/vector/array implementation with skip lists. To do it, we only need to consider the "length" of these express lanes inside the skip list.
+
+<Image
+  alt="An example with lengths written on the skip list."
+  src="/images/skip-list/list-interface.png"
+  width={0}
+  height={0}
+  sizes="100vw"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+Notice that the length of the upper layers is the sum of the lengths of the layer underneath it. This way, we can go through the skip list, counting all the lengths until we find our desired location. I've added this implementation in the [GitHub repo](https://github.com/mkutay/skip-linked-list/blob/main/cpp-src/list.cpp) as well.
