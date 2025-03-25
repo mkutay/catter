@@ -48,6 +48,11 @@ export const components: MDXComponents = {
       {props.children}
     </Link>
   ),
+  a: (props: any) => {
+    return <Link {...props} className={cn("text-primary underline hover:text-primary/80 transition-all", props.className)}>
+      {props.children}
+    </Link>
+  },
   MyCode: async ({ codeblock }: { codeblock: RawCode }) => {
     const highlighted = await highlight(codeblock, "github-dark");
     return <Pre code={highlighted} handlers={[wordWrap, lineNumbers]} className="mt-6 px-1 py-3 rounded-lg bg-[#0d1117]" />
