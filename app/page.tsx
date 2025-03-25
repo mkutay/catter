@@ -99,7 +99,7 @@ function PostDisplay({
           </h2>
         )}
       </Link>
-      {isMiddle && <div className="prose leading-normal">
+      {isMiddle && <div className="leading-normal">
         <MDXRemote source={post.meta.shortExcerpt || post.meta.excerpt} options={options} components={components}/>
       </div>}
       <div className="text-sm text-foreground tracking-tight font-light flex flex-row justify-between">

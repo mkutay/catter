@@ -7,8 +7,10 @@ import { AnnotationHandler, highlight, Inline, InnerLine, InnerPre, InnerToken, 
 import Image, { ImageProps } from 'next/image';
 import Link from 'next/link';
 import { MDXComponents, MDXRemoteOptions } from 'next-mdx-remote-client/rsc';
+import { BlockquoteHTMLAttributes, DetailedHTMLProps, HTMLAttributes } from 'react';
 
 import { siteConfig } from '@/config/site';
+import { cn } from '@/lib/utils';
 
 // CodeHike configuration for code blocks
 const chConfig: CodeHikeConfig = {
@@ -42,18 +44,56 @@ export const components: MDXComponents = {
     </div>
   ),
   Link: (props: any) => (
-    <Link {...props} className="text-primary underline hover:text-primary/80 transition-all">
+    <Link {...props} className={cn("text-primary underline hover:text-primary/80 transition-all", props.className)}>
       {props.children}
     </Link>
   ),
   MyCode: async ({ codeblock }: { codeblock: RawCode }) => {
     const highlighted = await highlight(codeblock, "github-dark");
-    return <Pre code={highlighted} handlers={[wordWrap, lineNumbers]} className="px-1 py-3 not-prose rounded-lg bg-[#0d1117]" />
+    return <Pre code={highlighted} handlers={[wordWrap, lineNumbers]} className="mt-6 px-1 py-3 rounded-lg bg-[#0d1117]" />
   },
   MyInlineCode: async ({ codeblock }: { codeblock: RawCode }) => {
     const highlighted = await highlight(codeblock, "github-dark");
     return <Inline code={highlighted} style={highlighted.style} className="px-1 py-0.5 rounded-sm" />
   },
+  p: (props: DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>) => (
+    <p {...props} className={cn("font-normal leading-7 [&:not(:first-child)]:mt-6", props.className)}>
+      {props.children}
+    </p>
+  ),
+  h1: (props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) => (
+    <h1 {...props} className={cn("scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl [&:not(:first-child)]:mt-12", props.className)}>
+      {props.children}
+    </h1>
+  ),
+  h2: (props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) => (
+    <h2 {...props} className={cn("mt-10 scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0", props.className)}>
+      {props.children}
+    </h2>
+  ),
+  h3: (props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) => (
+    <h3 {...props} className={cn("mt-8 scroll-m-20 text-2xl font-semibold tracking-tight", props.className)}>
+      {props.children}
+    </h3>
+  ),
+  h4: (props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) => (
+    <h4 {...props} className={cn("scroll-m-20 text-xl font-semibold tracking-tight", props.className)}>
+      {props.children}
+    </h4>
+  ),
+  blockquote: (props: DetailedHTMLProps<BlockquoteHTMLAttributes<HTMLQuoteElement>, HTMLQuoteElement>) => (
+    <blockquote {...props} className={cn("mt-4 border-l-2 border-foreground pl-6 italic", props.className)}>
+      {props.children}
+    </blockquote>
+  ),
+  ul: (props: DetailedHTMLProps<HTMLAttributes<HTMLUListElement>, HTMLUListElement>) => (
+    <ul {...props} className={cn("my-6 ml-6 list-disc [&>li]:mt-2", props.className)}>
+      {props.children}
+    </ul>
+  ),
+  hr: (props: DetailedHTMLProps<HTMLAttributes<HTMLHRElement>, HTMLHRElement>) => (
+    <hr {...props} className="my-6 border-t-2 border-muted" />
+  ),
 };
 
 // Handler for CodeHike to wrap code that exceeds the width.
