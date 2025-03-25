@@ -12,12 +12,12 @@
   @apply mt-6;
 }
 
-.footnotes a {
-  @apply text-foreground transition-all hover:text-foreground/80;
+[data-footnote-backref] {
+  @apply no-underline;
 }
 
 [data-footnote-ref] {
-  @apply text-muted-foreground transition-all hover:text-muted-foreground/80;
+  @apply no-underline;
 }
 
 /* Place `[` and `]` around footnote references. */
