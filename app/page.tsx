@@ -87,19 +87,19 @@ function PostDisplay({
         />
         {isMiddle ? (
           <h2 className="lg:text-5xl/tight md:text-4xl/tight text-3xl/tight font-normal tracking-tighter text-stroke-thick text-stroke-background fix-text-stroke">
-            <span className="lg:bg-[0%_90%] md:bg-[0%_89%] bg-[0%_90%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+            <span className="lg:bg-[0%_92%] md:bg-[0%_89%] bg-[0%_90%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
               {post.meta.title}
             </span>
           </h2>
         ) : (
           <h2 className="scroll-m-20 text-2xl font-semibold tracking-tight text-foreground text-stroke-medium text-stroke-background fix-text-stroke">
-            <span className="bg-[0%_90%] bg-gradient-to-r pb-0.5 from-foreground to-foreground bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+            <span className="bg-[0%_92%] bg-gradient-to-r pb-0.5 from-foreground to-foreground bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
               {post.meta.title}
             </span>
           </h2>
         )}
       </Link>
-      {isMiddle && <div className="prose leading-normal">
+      {isMiddle && <div className="leading-normal">
         <MDXRemote source={post.meta.shortExcerpt || post.meta.excerpt} options={options} components={components}/>
       </div>}
       <div className="text-sm text-foreground tracking-tight font-light flex flex-row justify-between">

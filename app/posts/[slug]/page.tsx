@@ -84,7 +84,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             <CopyToClipboard text={props.meta.shortened}/>
           </div>
         </header>
-        <main className="prose">
+        <main>
           <Suspense fallback={<Skeleton className="w-full"/>}>
             <MDXRemote source={props.content} options={options} components={components}/>
           </Suspense>

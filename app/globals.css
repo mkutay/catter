@@ -7,25 +7,29 @@
   paint-order: stroke fill;
 }
 
-.prose {
-  @apply prose-headings:text-foreground prose-p:text-foreground prose-strong:text-foreground prose-em:text-foreground;
-  @apply prose-hr:border-muted;
-  @apply prose-a:text-primary;
-  @apply prose-headings:tracking-tighter;
-  @apply prose-blockquote:text-foreground prose-blockquote:bg-muted prose-blockquote:border-muted-foreground;
-  @apply prose-blockquote:rounded-md prose-blockquote:pr-2;
-  @apply prose-li:text-foreground prose-ul:text-foreground prose-ol:text-foreground prose-li:marker:text-muted-foreground;
-  @apply prose-li:my-0.5;
-  @apply prose-h2:mt-9 prose-h2:mb-[18px] prose-h3:mt-6 prose-h3:mb-[9px];
-  @apply prose-hr:my-9;
-  @apply hover:prose-a:text-primary/80 prose-a:transition-all;
-  
+/* Style the footnotes section. */
+[data-footnotes] {
+  @apply mt-6;
 }
 
-.data-footnote-backref {
-  @apply no-underline;
+.footnotes a {
+  @apply text-foreground transition-all hover:text-foreground/80;
 }
 
+[data-footnote-ref] {
+  @apply text-muted-foreground transition-all hover:text-muted-foreground/80;
+}
+
+/* Place `[` and `]` around footnote references. */
+[data-footnote-ref]::before {
+  content: '[';
+}
+
+[data-footnote-ref]::after {
+  content: ']';
+}
+
+/* fixes the colour for latex text in posts */
 .katex-display {
   @apply text-foreground;
 }

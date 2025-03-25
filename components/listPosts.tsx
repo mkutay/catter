@@ -35,7 +35,7 @@ export default function ListPosts({
           <h3 className="text-muted-foreground italic font-medium">
             {post.meta.description}
           </h3>
-          <div className="prose">
+          <div>
             <MDXRemote source={post.meta.excerpt} options={options} components={components}/>
           </div>
           <div className="flex flex-row justify-end">

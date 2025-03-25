@@ -48,7 +48,7 @@ export default async function Page() {
             className="rounded-full shadow-md max-w-64 lg:float-right mx-auto"
           />
         </div>
-        <main className="prose">
+        <main>
           <MDXRemote source={props.content} options={options} components={components}/>
         </main>
       </DoublePane>
