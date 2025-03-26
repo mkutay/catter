@@ -107,11 +107,10 @@ export async function generateStaticParams() {
 
 async function ViewCounter({ slug }: { slug: string }) {
   const viewCount = await getViewCount(slug);
-  const number = viewCount.length === 0 ? 0 : Number(viewCount[0].count);
 
   return (
     <span>
-      {`${number.toLocaleString()} views`}
+      {`${viewCount.count.toLocaleString()} views`}
     </span>
   );
 }

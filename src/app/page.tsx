@@ -116,11 +116,10 @@ function PostDisplay({
 
 async function ViewDisplay({ slug }: { slug: string }) {
   const views = await getViewCount(slug);
-  if (views.length === 0) return;
 
   return (
     <p>
-      {views[0].count} views
+      {views.count} views
     </p>
   );
 }
