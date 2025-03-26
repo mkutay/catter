@@ -45,7 +45,8 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className="mt-4 mb-8">
         <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
       </div>
-      <TagsButtonGrid/>
+      {/* Removing grid for the tags */}
+      {/* <TagsButtonGrid/> */}
     </DoublePane>
   )
 }

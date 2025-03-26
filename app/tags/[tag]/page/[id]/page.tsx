@@ -31,10 +31,10 @@ export default function Page({ params }: { params: { tag: string, id: string } }
   const postsLength = getPostsLength({ tags: [tag] });
   
   if (
-    /^-?\d+$/.test(params.id) == false || 
+    /^-?\d+$/.test(params.id) === false || 
     startInd >= postsLength ||
     endInd <= 0 ||
-    getListOfAllTags().includes(tag) == false
+    getListOfAllTags().includes(tag) === false
   ) {
     notFound();
   }
@@ -48,7 +48,8 @@ export default function Page({ params }: { params: { tag: string, id: string } }
       <div className="mt-4 mb-8">
         <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
       </div>
-      <TagsButtonGrid/>
+      {/* Removing the grid for the tags */}
+      {/* <TagsButtonGrid/> */}
     </DoublePane>
   )
 }
