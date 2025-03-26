@@ -26,9 +26,6 @@ export default function DoublePane({
         </div>}
       </div>
       <div className="w-fit lg:mx-0 mx-auto sticky top-16 h-fit">
-        <p className="leading-tight text-2xl lg:my-6 mt-12 p-4 px-5 bg-primary text-primary-foreground rounded-lg">
-          Look at my first ever product: <Link className="underline hover:text-primary-foreground/80 text-primary-foreground transition-all" href="https://todon3.com">Todon3</Link>, conquer your tasks.
-        </p>
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase mb-6 lg:my-6 mt-12">
           Popular Content
         </h2>
