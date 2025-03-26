@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import { SignOut } from '@/components/comments/commentsButtons';
-import { saveComment } from '@/lib/dataBaseActions';
+import { saveComment } from '@/lib/database-actions/comments';
 import { commentsFormSchema } from '@/config/schema';
 
 export function CommentForm({ slug }: { slug: string }) {

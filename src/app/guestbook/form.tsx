@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/form';
 import { GuestbookDialog } from '@/app/guestbook/dialog';
 import { GuestBookSignOut } from '@/app/guestbook/buttons';
-import { saveGuestbookEntryData } from '@/lib/dataBaseActions';
+import { saveGuestbookEntryData } from '@/lib/database-actions/guestbook';
 import { guestbookFormSchema } from '@/config/schema';
 
 export default function GuestbookForm() {

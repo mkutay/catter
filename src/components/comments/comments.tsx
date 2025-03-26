@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
 import { auth } from '@/lib/auth';
-import { getComments } from '@/lib/dataBaseQueries';
+import { getComments } from '@/lib/database-queries/comments';
 import { CommentData } from '@/config/types';
 import { siteConfig } from '@/config/site';
 
