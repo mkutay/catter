@@ -2,7 +2,7 @@ import DoublePane from '@/components/doublePane';
 
 export default function NotFound() {
   return (
-    <DoublePane hideFollowLink={true}>
+    <DoublePane hideFollowLink>
       <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mt-6">
         404
       </h1>

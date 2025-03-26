@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { Mailbox } from 'lucide-react';
+import { ArrowRightIcon, Mailbox } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { MostViewedPosts, MostViewedPostsFallback } from '@/components/mostViewedPosts';
@@ -19,11 +19,7 @@ export default function DoublePane({
         <div>
           {children}
         </div>
-        {!hideFollowLink && <div className="flex flex-row items-center justify-center">
-          <Link href="/follow-link" className="p-4 text-primary-foreground bg-primary hover:bg-primary/80 transition-all text-xl w-fit rounded-xl font-semibold">
-            Find out who to follow next!
-          </Link>
-        </div>}
+        {!hideFollowLink && <FollowNext />}
       </div>
       <div className="w-fit lg:mx-0 mx-auto sticky top-16 h-fit">
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase mb-6 lg:my-6 mt-12">
@@ -52,4 +48,17 @@ function EmailSubButton() {
       </Button>
     </div>
   );
+}
+
+function FollowNext() {
+  return (
+    <div className="text-primary group pl-0 hover:pl-2 transition-all animate-in flex flex-row items-start justify-end">
+      <div className="pr-4 group-hover:pr-2 transition-all animate-in mt-[5px]">
+        <ArrowRightIcon stroke="currentColor" strokeWidth="3px" width="18px" height="18px" />
+      </div>
+      <Link href="/follow-next" className="text-xl font-normal tracking-wider uppercase text-right">
+        find out who to follow next
+      </Link>
+    </div>
+  )
 }
