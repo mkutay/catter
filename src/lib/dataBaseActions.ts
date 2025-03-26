@@ -1,8 +1,9 @@
 'use server';
 
 import { type Session } from 'next-auth';
-import { revalidatePath, unstable_noStore as noStore, revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { PostgresError } from 'postgres';
+import { connection } from 'next/server';
 
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
@@ -11,7 +12,7 @@ import { siteConfig } from '@/config/site';
 import { commentsFormSchema, guestbookFormSchema, guestbookDialogFormSchema } from '@/config/schema';
 
 export async function incrementViews(slug: string) {
-  noStore();
+  await connection();
 
   let session = await auth();
 

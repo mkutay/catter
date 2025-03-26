@@ -1,11 +1,8 @@
 'use server';
 
-import {
-  unstable_noStore as noStore,
-} from 'next/cache';
-
 import { sql } from '@/lib/postgres';
 import { CommentData, EntryData } from '@/config/types';
+import { connection } from 'next/server';
 
 
 export async function getBlogViews() {
@@ -13,7 +10,7 @@ export async function getBlogViews() {
     return [];
   }
 
-  noStore();
+  await connection();
   let views = await sql`
     SELECT count
     FROM views;
