@@ -56,7 +56,7 @@ function FollowNext() {
       <div className="pr-4 group-hover:pr-2 transition-all animate-in mt-[5px]">
         <ArrowRightIcon stroke="currentColor" strokeWidth="3px" width="18px" height="18px" />
       </div>
-      <Link href="/follow-link" className="text-xl font-normal tracking-wider uppercase text-right">
+      <Link href="/follow-next" className="text-xl font-normal tracking-wider uppercase text-right">
         find out who to follow next
       </Link>
     </div>

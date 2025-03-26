@@ -1,11 +1,12 @@
 import Link from 'next/link';
 
+import Image, { StaticImageData } from 'next/image';
+import { MDXRemote } from 'next-mdx-remote-client/rsc';
+
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import DoublePane from '@/components/doublePane';
 import { siteConfig } from '@/config/site';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import Image, { StaticImageData } from 'next/image';
-import { Button } from '@/components/ui/button';
-import { MDXRemote } from 'next-mdx-remote-client/rsc';
 import { components, options } from '@/lib/mdxRemoteSettings';
 
 export default function Page() {
