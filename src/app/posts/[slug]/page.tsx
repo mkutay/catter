@@ -16,7 +16,8 @@ import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata(functionProps: { params: Promise<{ slug: string }> }) {
+  const params = await functionProps.params;
   const props = getProps('content/posts', params.slug);
   const formattedDate = format(props.meta.date, 'PP');
 
@@ -37,7 +38,8 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   };
 }
 
-export default function Page({ params }: { params: { slug: string } }) {
+export default async function Page(functionProps: { params: Promise<{ slug: string }> }) {
+  const params = await functionProps.params;
   const props = getProps('content/posts', params.slug);
   const formattedDate = format(props.meta.date, 'PP');
 

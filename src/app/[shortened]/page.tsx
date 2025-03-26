@@ -4,7 +4,8 @@ import { format } from 'date-fns';
 import { getPosts } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
-export function generateMetadata({ params }: { params: { shortened: string } }) {
+export async function generateMetadata(functionProps: { params: Promise<{ shortened: string }> }) {
+  const params = await functionProps.params;
   const { shortened } = params;
   const posts = getPosts({ });
 
@@ -30,7 +31,8 @@ export function generateMetadata({ params }: { params: { shortened: string } }) 
   };
 }
 
-export default function Page({ params }: { params: { shortened: string } }) {
+export default async function Page(props: { params: Promise<{ shortened: string }> }) {
+  const params = await props.params;
   const { shortened } = params;
   const posts = getPosts({ });
 
