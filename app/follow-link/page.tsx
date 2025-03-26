@@ -1,25 +1,12 @@
 import Link from 'next/link';
 
 import DoublePane from '@/components/doublePane';
-
-const websites = [
-  {
-    title: 'melikechan\'s blog',
-    link: 'https://melikechan.vercel.app/',
-  },
-  {
-    title: 'Josh Comeau\'s Blog',
-    link: 'https://www.joshwcomeau.com/',
-  },
-  {
-    title: 'Eli Bendersky\'s Website',
-    link: 'https://eli.thegreenplace.net/',
-  },
-  {
-    title: 'Sophie\'s Personal Website',
-    link: 'https://localghost.dev/',
-  }
-]
+import { siteConfig } from '@/config/site';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import Image, { StaticImageData } from 'next/image';
+import { Button } from '@/components/ui/button';
+import { MDXRemote } from 'next-mdx-remote-client/rsc';
+import { components, options } from '@/lib/mdxRemoteSettings';
 
 export default function Page() {
   return (
@@ -27,13 +14,52 @@ export default function Page() {
       <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
         Follow all these awesome people
       </h1>
-      <div className="grid sm:grid-cols-2 grid-cols-1 gap-2">
-        {websites.map((website) => (
-          <Link key={website.title} href={website.link} target="_blank" className="text-center rounded-lg border border-border p-4 text-lg font-semibold bg-background text-foreground hover:bg-muted hover:text-muted-foreground transition-all">
-            {website.title}
-          </Link>
+      <div className="flex flex-col gap-2">
+        {siteConfig.followNext.map((website) => (
+          <FollowCard key={website.title} website={website} />
         ))}
       </div>
     </DoublePane>
+  );
+}
+
+function FollowCard({ website }: {
+  website: {
+    title: string,
+    link: string,
+    description: string,
+    image: StaticImageData,
+  },
+}) {
+  return (
+    <Card className="sm:flex-row flex-col flex">
+      <div className="sm:m-2 m-4 sm:w-1/3">
+        <Image
+          alt={`An image about ${website.title}`}
+          src={website.image}
+          sizes="100vw"
+          style={{ width: "100%", height: "auto" }}
+          className="rounded-xl shadow-md"
+          placeholder="blur"
+        />
+      </div>
+      <div className="sm:w-2/3 flex flex-col justify-between">
+        <div>
+          <CardHeader>
+            <CardTitle>{website.title}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <MDXRemote source={website.description} options={options} components={components} />
+          </CardContent>
+        </div>
+        <CardFooter className="flex justify-end">
+          <Button asChild variant="outline">
+            <Link href={website.link} className="text-foreground">
+              {`Go To ${website.title.toLowerCase().split(' ').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`}
+            </Link>
+          </Button>
+        </CardFooter>
+      </div>
+    </Card>
   );
 }
