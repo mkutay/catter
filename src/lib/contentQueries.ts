@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-import { type PostData, PostMeta } from '@/config/types';
+import { PostData, PostMeta } from '@/config/types';
 
 let postFilesCache: string[] | null = null;
 const postsCache: Map<string, PostData> = new Map();

@@ -7,7 +7,8 @@ import TagsButtonGrid, { turnTagString } from '@/components/tagsButtonGrid';
 import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
-export function generateMetadata({ params }: { params: { tag: string, id: string } }) {
+export async function generateMetadata(props: { params: Promise<{ tag: string, id: string }> }) {
+  const params = await props.params;
   const { id, tag } = params;
   const posts = getPosts({ tags: [tag] });
 
@@ -22,14 +23,15 @@ export function generateMetadata({ params }: { params: { tag: string, id: string
   };
 }
 
-export default function Page({ params }: { params: { tag: string, id: string } }) {
+export default async function Page(props: { params: Promise<{ tag: string, id: string }> }) {
+  const params = await props.params;
   const id = Number(params.id);
   const tag = params.tag;
 
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;
   const postsLength = getPostsLength({ tags: [tag] });
-  
+
   if (
     /^-?\d+$/.test(params.id) === false || 
     startInd >= postsLength ||

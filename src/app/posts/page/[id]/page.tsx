@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 
-import TagsButtonGrid from '@/components/tagsButtonGrid';
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
 import DoublePane from '@/components/doublePane';
 import { getPostsLength } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
-export function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const id = Number(params.id);
   const postsLength = getPostsLength({ });
 
@@ -22,7 +22,8 @@ export function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const id = Number(params.id);
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;

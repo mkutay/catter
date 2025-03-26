@@ -2,9 +2,10 @@ import { notFound, redirect } from 'next/navigation';
 
 import { getListOfAllTags } from '@/lib/contentQueries';
 
-export default function Page({ params }: { params: { tag: string } }) {
+export default async function Page(props: { params: Promise<{ tag: string }> }) {
+  const params = await props.params;
   const { tag } = params;
-  
+
   if (!getListOfAllTags().includes(tag)) {
     notFound();
   }
