@@ -4,7 +4,7 @@ import { ThemeProvider } from 'next-themes';
 import PlausibleProvider from 'next-plausible'
 
 import '@/app/globals.css';
-import '@/../public/styles/katex.min.css';
+import '@/public/styles/katex.min.css';
 import { Toaster } from '@/components/ui/toaster';
 import NavBar from '@/components/navBar';
 import Footer from '@/components/footer';

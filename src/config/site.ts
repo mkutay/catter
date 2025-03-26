@@ -1,7 +1,7 @@
-import melikechan from '@/../public/follow-next-images/melikechan.png';
-import comeau from '@/../public/follow-next-images/comeau.png';
-import bendersky from '@/../public/follow-next-images/bendersky.png';
-import sophie from '@/../public/follow-next-images/localghost.png';
+import melikechan from '@/public/follow-next-images/melikechan.png';
+import comeau from '@/public/follow-next-images/comeau.png';
+import bendersky from '@/public/follow-next-images/bendersky.png';
+import sophie from '@/public/follow-next-images/localghost.png';
 
 const followNext = [
   {
