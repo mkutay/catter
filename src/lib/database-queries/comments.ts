@@ -12,7 +12,7 @@ export async function getComments({ slug }: { slug: string }): Promise<CommentDa
   }
 
   if (!doesPostWithSlugExist(slug)) {
-    throw new Error(`Post with slug ${slug} not found.`);
+    throw new Error(`Post not found.`);
   }
   
   return sql`
@@ -32,7 +32,7 @@ export async function getEveryComment(limit?: number): Promise<CommentData[]> {
   limit = limit || 15;
 
   if (limit <= 0 || limit > 100) {
-    throw new Error('Limit must be between 1 and 100.');
+    throw new Error('Limit out of allowed range.');
   }
   
   return sql`
