@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-import { siteConfig } from './../src/config/site.ts';
-import { type postMetaType } from './../src/config/types.ts';
+import { siteConfig } from '@/config/site';
+import { type postMetaType } from '@/config/types';
 
 function getPostFiles() {
   const postFiles = fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
