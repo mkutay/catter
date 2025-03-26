@@ -5,7 +5,7 @@ import {
 } from 'next/cache';
 
 import { sql } from '@/lib/postgres';
-import { commentType, entryType } from '@/config/types';
+import { CommentData, EntryData } from '@/config/types';
 
 
 export async function getBlogViews() {
@@ -52,7 +52,7 @@ export async function getViewCount(slug: string): Promise<
 }
 
 export async function getGuestbookEntries(): Promise<
-  entryType[]
+  EntryData[]
 > {
   if (!process.env.POSTGRES_URL) {
     return [];
@@ -67,7 +67,7 @@ export async function getGuestbookEntries(): Promise<
 }
 
 export async function getComments({ slug }: { slug: string }): Promise<
-  commentType[]
+  CommentData[]
 > {
   if (!process.env.POSTGRES_URL) {
     return [];
@@ -83,7 +83,7 @@ export async function getComments({ slug }: { slug: string }): Promise<
 }
 
 export async function getEveryComment(): Promise<
-  commentType[]
+  CommentData[]
 > {
   if (!process.env.POSTGRES_URL) {
     return [];

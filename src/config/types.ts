@@ -1,4 +1,11 @@
-export type postMetaType = {
+export type PostData = {
+  slug: string;
+  content: string;
+  meta: PostMeta;
+};
+
+// Frontmatter on posts
+export type PostMeta = {
   title: string,
   description: string,
   date: string,
@@ -13,7 +20,7 @@ export type postMetaType = {
   shortExcerpt?: string,
 };
 
-export type entryType = {
+export type EntryData = {
   id: number,
   body: string,
   created_by: string,
@@ -23,7 +30,7 @@ export type entryType = {
   color: string,
 };
 
-export type commentType = {
+export type CommentData = {
   id: string,
   slug: string,
   body: string,
@@ -50,3 +57,5 @@ export const guestbookColors = [
   'lavender',
   'text',
 ] as const;
+
+export type GuestbookColorsType = "rosewater" | "flamingo" | "pink" | "mauve" | "red" | "maroon" | "peach" | "yellow" | "green" | "teal" | "sky" | "sapphire" | "blue" | "lavender" | "text";

@@ -10,7 +10,7 @@ import { getViewCount } from '@/lib/dataBaseQueries';
 import { getPosts } from '@/lib/contentQueries';
 import { cn } from '@/lib/utils';
 import { images } from '@/config/images';
-import { postMetaType } from '@/config/types';
+import { PostMeta } from '@/config/types';
 import { siteConfig } from '@/config/site';
 
 export default function Home() {
@@ -69,7 +69,7 @@ function PostDisplay({
   post: {
     slug: string;
     content: string;
-    meta: postMetaType;
+    meta: PostMeta;
   },
   image: StaticImageData,
   isMiddle?: boolean,

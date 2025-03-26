@@ -6,7 +6,7 @@ import { PostgresError } from 'postgres';
 
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
-import { commentType } from '@/config/types';
+import { CommentData } from '@/config/types';
 import { siteConfig } from '@/config/site';
 import { commentsFormSchema, guestbookFormSchema, guestbookDialogFormSchema } from '@/config/schema';
 
@@ -60,7 +60,7 @@ async function getSession(): Promise<Session> {
   return session;
 }
 
-export async function saveGuestbookEntry({
+export async function saveGuestbookEntryData({
   color,
   username,
   message
@@ -212,7 +212,7 @@ export async function saveComment({ slug, message }: { slug: string, message: st
   revalidatePath(`/posts/${slug}`);
 }
 
-export async function deleteComment({ comment }: { comment: commentType }) {
+export async function deleteComment({ comment }: { comment: CommentData }) {
   let session = await getSession();
   let email = session.user?.email as string;
 
