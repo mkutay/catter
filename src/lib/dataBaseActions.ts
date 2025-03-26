@@ -6,7 +6,7 @@ import { PostgresError } from 'postgres';
 
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
-import { commentType } from '@/config/schema';
+import { commentType } from '@/config/types';
 import { siteConfig } from '@/config/site';
 import { commentsFormSchema, guestbookFormSchema, guestbookDialogFormSchema } from '@/config/schema';
 

@@ -5,7 +5,7 @@ import {
 } from 'next/cache';
 
 import { sql } from '@/lib/postgres';
-import { commentType, entryType } from '@/config/schema';
+import { commentType, entryType } from '@/config/types';
 
 
 export async function getBlogViews() {

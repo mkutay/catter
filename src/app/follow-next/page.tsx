@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import { MDXRemote } from 'next-mdx-remote-client/rsc';
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import DoublePane from '@/components/doublePane';
 import { siteConfig } from '@/config/site';
 import { components, options } from '@/lib/mdxRemoteSettings';
+import { followNextImages } from '@/config/images';
 
 export default function Page() {
   return (
@@ -29,15 +30,17 @@ function FollowCard({ website }: {
     title: string,
     link: string,
     description: string,
-    image: StaticImageData,
+    imagePath: string,
+    shortened: string,
   },
 }) {
+  const image = followNextImages[website.shortened];
   return (
     <Card className="sm:flex-row flex-col flex">
       <div className="sm:m-2 m-4 sm:w-1/3">
         <Image
           alt={`An image about ${website.title}`}
-          src={website.image}
+          src={image}
           sizes="100vw"
           style={{ width: "100%", height: "auto" }}
           className="rounded-xl shadow-md"

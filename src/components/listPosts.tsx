@@ -4,7 +4,7 @@ import { MDXRemote } from 'next-mdx-remote-client/rsc';
 import { Button } from '@/components/ui/button';
 import { getPosts } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { postMetaType } from '@/config/schema';
+import { postMetaType } from '@/config/types';
 
 export default function ListPosts({
   startInd,
