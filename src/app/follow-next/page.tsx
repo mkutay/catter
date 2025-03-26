@@ -1,5 +1,4 @@
 import Link from 'next/link';
-
 import Image from 'next/image';
 import { MDXRemote } from 'next-mdx-remote-client/rsc';
 
@@ -17,15 +16,15 @@ export default function Page() {
         Follow all these awesome people
       </h1>
       <div className="flex flex-col gap-2">
-        {siteConfig.followNext.map((website) => (
-          <FollowCard key={website.title} website={website} />
+        {siteConfig.followNext.map((website, index) => (
+          <FollowCard key={website.title} website={website} index={index} />
         ))}
       </div>
     </DoublePane>
   );
 }
 
-function FollowCard({ website }: {
+function FollowCard({ website, index }: {
   website: {
     title: string,
     link: string,
@@ -33,10 +32,11 @@ function FollowCard({ website }: {
     imagePath: string,
     shortened: string,
   },
+  index: number,
 }) {
   const image = followNextImages[website.shortened];
   return (
-    <Card className="sm:flex-row flex-col flex">
+    <Card className="sm:odd:flex-row sm:even:flex-row-reverse flex-col flex">
       <div className="sm:m-2 m-4 sm:w-1/3">
         <Image
           alt={`An image about ${website.title}`}
@@ -56,7 +56,7 @@ function FollowCard({ website }: {
             <MDXRemote source={website.description} options={options} components={components} />
           </CardContent>
         </div>
-        <CardFooter className="flex justify-end">
+        <CardFooter className={`flex ${index % 2 === 0 ? 'sm:justify-end' : 'sm:justify-start'} justify-end`}>
           <Button asChild variant="outline">
             <Link href={website.link} className="text-foreground">
               {`Go To ${website.title.toLowerCase().split(' ').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`}
