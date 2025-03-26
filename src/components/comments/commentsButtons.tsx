@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { deleteComment } from '@/lib/dataBaseActions';
-import { commentType } from '@/config/schema';
+import { commentType } from '@/config/types';
 
 export function SignOut() {
   return (

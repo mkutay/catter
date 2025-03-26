@@ -3,7 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { notFound } from 'next/navigation';
 
-import { postMetaType } from '@/config/schema';
+import { postMetaType } from '@/config/types';
 
 export function getPostFiles() {
   const postFiles = fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');

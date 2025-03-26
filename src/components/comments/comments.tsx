@@ -7,7 +7,7 @@ import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
 import { auth } from '@/lib/auth';
 import { getComments } from '@/lib/dataBaseQueries';
-import { commentType } from '@/config/schema';
+import { commentType } from '@/config/types';
 import { siteConfig } from '@/config/site';
 
 export default async function Comments({ slug }: { slug: string }) {

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { postMetaType } from '@/config/schema';
+import { postMetaType } from '@/config/types';
 import { squareImages } from "@/config/images";
 
 export default function ProjectCard({

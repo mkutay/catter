@@ -1,31 +1,30 @@
-import melikechan from '@/../public/follow-next-images/melikechan.png';
-import comeau from '@/../public/follow-next-images/comeau.png';
-import bendersky from '@/../public/follow-next-images/bendersky.png';
-import sophie from '@/../public/follow-next-images/localghost.png';
-
 const followNext = [
   {
+    shortened: 'melikechan',
     title: 'melikechan\'s blog',
     link: 'https://melikechan.vercel.app/',
-    image: melikechan,
+    imagePath: '/follow-next-images/melikechan.png',
     description: 'Melike\'s blog is a place where she shares various things, including AI and being a researchering student.',
   },
   {
+    shortened: 'comeau',
     title: 'Josh Comeau\'s Blog',
     link: 'https://www.joshwcomeau.com/',
-    image: comeau,
+    imagePath: '/follow-next-images/comeau.png',
     description: 'Josh Comeau is a front-end developer who writes about various things, including CSS and React.',
   },
   {
+    shortened: 'bendersky',
     title: 'Eli Bendersky\'s Website',
     link: 'https://eli.thegreenplace.net/',
-    image: bendersky,
+    imagePath: '/follow-next-images/bendersky.png',
     description: 'Eli\'s blog is a place where he talks about programming, C++, Python, maths, and more.',
   },
   {
+    shortened: 'sophie',
     title: 'Sophie\'s Localghost',
     link: 'https://localghost.dev/',
-    image: sophie,
+    imagePath: '/follow-next-images/localghost.png',
     description: 'Sophie\'s website is a cool place with an awesome design where she shares things about tech, web development, and mental health.',
   }
 ];

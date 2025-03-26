@@ -7,7 +7,7 @@ import GuestbookForm from '@/app/guestbook/form';
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
 import { cn } from '@/lib/utils';
-import { entryType } from '@/config/schema';
+import { entryType } from '@/config/types';
 import { siteConfig } from '@/config/site';
 
 export const metadata = {

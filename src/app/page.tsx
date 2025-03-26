@@ -10,7 +10,7 @@ import { getViewCount } from '@/lib/dataBaseQueries';
 import { getPosts } from '@/lib/contentQueries';
 import { cn } from '@/lib/utils';
 import { images } from '@/config/images';
-import { postMetaType } from '@/config/schema';
+import { postMetaType } from '@/config/types';
 import { siteConfig } from '@/config/site';
 
 export default function Home() {

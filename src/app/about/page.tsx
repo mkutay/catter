@@ -5,7 +5,7 @@ import DoublePane from '@/components/doublePane';
 import { getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
-import me from '@/../public/images/me.jpg';
+import me from '@/public/images/me.jpg';
 
 export function generateMetadata() {
   const props = getProps('content/pages', 'about');

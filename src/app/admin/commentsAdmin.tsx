@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { Comment } from '@/components/comments/comments';
-import { commentType } from '@/config/schema';
+import { commentType } from '@/config/types';
 import { getProps } from '@/lib/contentQueries';
 
 export function CommentsAdmin({ comments }: { comments: commentType[] }) {
