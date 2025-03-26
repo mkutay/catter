@@ -38,9 +38,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { saveGuestbookEntry } from '@/lib/dataBaseActions';
+import { saveGuestbookEntryData } from '@/lib/dataBaseActions';
 import { cn } from '@/lib/utils';
-import { guestbookColors } from '@/config/types';
+import { guestbookColors, GuestbookColorsType } from '@/config/types';
 import { guestbookDialogFormSchema } from '@/config/schema';
 
 export function GuestbookDialog() {
@@ -56,7 +56,7 @@ export function GuestbookDialog() {
   });
   
   const onSubmit = async (values: z.infer<typeof guestbookDialogFormSchema>) => {
-    await saveGuestbookEntry({
+    await saveGuestbookEntryData({
       message: values.message,
       username: values.username,
       color: values.color,
@@ -74,7 +74,7 @@ export function GuestbookDialog() {
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Customize Your Guestbook Entry</DialogTitle>
+          <DialogTitle>Customize Your Guestbook EntryData</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="lg:space-y-4 space-y-2">
@@ -116,7 +116,7 @@ export function GuestbookDialog() {
                                 value={color.charAt(0).toUpperCase() + color.slice(1)}
                                 key={color}
                                 onSelect={() => {
-                                  form.setValue("color", color as "rosewater" | "flamingo" | "pink" | "mauve" | "red" | "maroon" | "peach" | "yellow" | "green" | "teal" | "sky" | "sapphire" | "blue" | "lavender" | "text");
+                                  form.setValue("color", color as GuestbookColorsType);
                                 }}
                                 className={`text-${color}`}
                               >

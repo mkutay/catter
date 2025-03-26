@@ -17,7 +17,9 @@ export const metadata: Metadata = {
   },
 };
 
-// Needs admin session
+/**
+ * Needs admin access to view this page.
+ */
 export default async function Page() {
   const session = await auth();
   

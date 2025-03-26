@@ -3,7 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 
 import { siteConfig } from '@/config/site';
-import { type postMetaType } from '@/config/types';
+import { type PostMeta } from '@/config/types';
 
 function getPostFiles() {
   const postFiles = fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
@@ -23,7 +23,7 @@ function getProps(pathTo: string, slug: string) {
 
   return {
     slug: slug,
-    meta: frontMatter as postMetaType,
+    meta: frontMatter as PostMeta,
     content: content,
   };
 }
@@ -34,7 +34,7 @@ function getPosts() {
   const posts: {
     slug: string,
     content: string,
-    meta: postMetaType,
+    meta: PostMeta,
   }[] = [];
   
   postFiles.forEach((filename) => {

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { postMetaType } from '@/config/types';
+import { PostMeta } from '@/config/types';
 import { squareImages } from "@/config/images";
 
 export default function ProjectCard({
@@ -20,7 +20,7 @@ export default function ProjectCard({
 }: {
   props: {
     slug: string,
-    meta: postMetaType,
+    meta: PostMeta,
     content: string,
   }
 }) {

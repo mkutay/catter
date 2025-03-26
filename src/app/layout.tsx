@@ -3,13 +3,14 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import PlausibleProvider from 'next-plausible'
 
-import '@/app/globals.css';
-import '@/public/styles/katex.min.css';
+import '@/styles/globals.css';
+import '@/styles/katex.min.css';
 import { Toaster } from '@/components/ui/toaster';
 import NavBar from '@/components/navBar';
 import Footer from '@/components/footer';
 import { siteConfig } from '@/config/site';
 
+/* Fonts */
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -59,16 +60,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <PlausibleProvider domain="mkutay.dev" customDomain="https://pl.mkutay.dev" selfHosted={true}/>
+        <PlausibleProvider domain="mkutay.dev" customDomain="https://pl.mkutay.dev" selfHosted={true} />
       </head>
       <body className={`${inter.className} text-foreground bg-background`}>
         <ThemeProvider attribute="class">
           <main className="flex flex-col min-h-screen">
-            <NavBar/>
-            <div className="flex-1">{children}</div>
-            <Footer/>
+            <NavBar />
+            <div className="flex-1">
+              {children}
+            </div>
+            <Footer />
           </main>
-          <Toaster/>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

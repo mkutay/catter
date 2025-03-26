@@ -7,7 +7,7 @@ import GuestbookForm from '@/app/guestbook/form';
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/dataBaseQueries';
 import { cn } from '@/lib/utils';
-import { entryType } from '@/config/types';
+import { EntryData } from '@/config/types';
 import { siteConfig } from '@/config/site';
 
 export const metadata = {
@@ -70,7 +70,7 @@ async function GuestbookEntries() {
 
   return (
     <div>
-      {entries.map((entry: entryType) => (
+      {entries.map((entry: EntryData) => (
         <p key={entry.id} className="w-full break-words lg:text-lg text-md leading-7 [&:not(:first-child)]:mt-2">
           <span className={cn(
             "mr-1 font-bold tracking-tight",

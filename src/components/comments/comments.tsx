@@ -7,12 +7,12 @@ import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
 import { auth } from '@/lib/auth';
 import { getComments } from '@/lib/dataBaseQueries';
-import { commentType } from '@/config/types';
+import { CommentData } from '@/config/types';
 import { siteConfig } from '@/config/site';
 
 export default async function Comments({ slug }: { slug: string }) {
   const session = await auth();
-  const comments: commentType[] = await getComments({ slug });
+  const comments: CommentData[] = await getComments({ slug });
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
@@ -39,7 +39,7 @@ export function CommentAuth({ slug }: { slug: string }) {
   );
 }
 
-export async function Comment({ comment }: { comment: commentType }) {
+export async function Comment({ comment }: { comment: CommentData }) {
   const session = await auth();
   
   const admin = session && session.user && siteConfig.admins.includes(session.user?.email as string);

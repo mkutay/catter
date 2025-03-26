@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/form';
 import { GuestbookDialog } from '@/app/guestbook/dialog';
 import { GuestBookSignOut } from '@/app/guestbook/buttons';
-import { saveGuestbookEntry } from '@/lib/dataBaseActions';
+import { saveGuestbookEntryData } from '@/lib/dataBaseActions';
 import { guestbookFormSchema } from '@/config/schema';
 
 export default function GuestbookForm() {
@@ -27,7 +27,7 @@ export default function GuestbookForm() {
   });
 
   const onSubmit = async (values: z.infer<typeof guestbookFormSchema>) => {
-    await saveGuestbookEntry({
+    await saveGuestbookEntryData({
       message: values.message,
     });
     form.reset();

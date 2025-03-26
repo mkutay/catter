@@ -19,7 +19,10 @@ export default function Error({
         Error
       </h1>
       <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg">
-        Oh no, something went wrong... maybe refresh?
+        Oh no, something went wrong... Maybe refresh?
+      </p>
+      <p className="leading-7 mt-12 text-sm text-muted-foreground/80">
+        {error.message}
       </p>
     </section>
   );
