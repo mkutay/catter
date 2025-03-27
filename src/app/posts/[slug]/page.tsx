@@ -110,7 +110,7 @@ async function ViewCounter({ slug }: { slug: string }) {
 
   return (
     <span>
-      {`${viewCount.toLocaleString()} views`}
+      {viewCount} views
     </span>
   );
 }
