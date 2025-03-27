@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { getListOfAllTags } from '@/lib/contentQueries';
-import { getBlogViews } from '@/lib/dataBaseQueries';
+import { getBlogViews } from '@/lib/database-queries/views';
 import { siteConfig } from '@/config/site';
 import { Skeleton } from '@/components/ui/skeleton';
 

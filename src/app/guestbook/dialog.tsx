@@ -38,7 +38,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { saveGuestbookEntryData } from '@/lib/dataBaseActions';
+import { saveGuestbookEntryData } from '@/lib/database-actions/guestbook';
 import { cn } from '@/lib/utils';
 import { guestbookColors, GuestbookColorsType } from '@/config/types';
 import { guestbookDialogFormSchema } from '@/config/schema';

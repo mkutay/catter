@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { getViewsCount } from '@/lib/dataBaseQueries';
+import { getViewsCount } from '@/lib/database-queries/views';
 import { getProps } from '@/lib/contentQueries';
 
 export async function MostViewedPosts({ postNum }: { postNum: number }) {

@@ -5,7 +5,7 @@ import DoublePane from '@/components/doublePane';
 import { GuestBookSignIn } from '@/app/guestbook/buttons';
 import GuestbookForm from '@/app/guestbook/form';
 import { auth } from '@/lib/auth';
-import { getGuestbookEntries } from '@/lib/dataBaseQueries';
+import { getGuestbookEntries } from '@/lib/database-queries/guestbook';
 import { cn } from '@/lib/utils';
 import { EntryData } from '@/config/types';
 import { siteConfig } from '@/config/site';

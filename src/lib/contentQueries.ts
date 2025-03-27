@@ -19,8 +19,20 @@ export function getPostFiles(): string[] {
   return postFilesCache;
 }
 
+export function doesPostWithSlugExist(slug: string): boolean {
+  return getPostFiles().includes(slug + '.mdx');
+}
+
+export function getPageProps(slug: string): PostData {
+  return getProps('content/pages', slug);
+}
+
+export function getPostProps(slug: string): PostData {
+  return getProps('content/posts', slug);
+}
+
 /**
- * Get post properties for a specific slug.
+ * Get properties for a specific slug in a path (post or page).
  */
 export function getProps(pathTo: string, slug: string): PostData {
   const cacheKey = `${pathTo}/${slug}`;

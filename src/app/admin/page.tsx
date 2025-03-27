@@ -4,7 +4,8 @@ import { Metadata } from 'next';
 import { GuestbookAdminForm } from '@/app/admin/guestbookAdminForm';
 import { CommentsAdmin } from '@/app/admin/commentsAdmin';
 import { auth } from '@/lib/auth';
-import { getEveryComment, getGuestbookEntries } from '@/lib/dataBaseQueries';
+import { getEveryComment } from '@/lib/database-queries/comments';
+import { getGuestbookEntries } from '@/lib/database-queries/guestbook';
 import { siteConfig } from '@/config/site';
 import DoublePane from '@/components/doublePane';
 

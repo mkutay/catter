@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { deleteComment } from '@/lib/dataBaseActions';
+import { deleteComment } from '@/lib/database-actions/comments';
 import { CommentData } from '@/config/types';
 
 export function SignOut() {

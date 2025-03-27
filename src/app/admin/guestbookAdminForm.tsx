@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
-import { deleteGuestbookEntries } from '@/lib/dataBaseActions';
+import { deleteGuestbookEntries } from '@/lib/database-actions/guestbook';
 import { EntryData } from '@/config/types';
 import { deleteGuestbookEntryDataFormSchema } from '@/config/schema';
 import { cn } from '@/lib/utils';

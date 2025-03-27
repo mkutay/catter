@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { getViewCount } from '@/lib/dataBaseQueries';
+import { getViewCount } from '@/lib/database-queries/views';
 import { getPosts } from '@/lib/contentQueries';
 import { cn } from '@/lib/utils';
 import { images } from '@/config/images';
@@ -116,11 +116,10 @@ function PostDisplay({
 
 async function ViewDisplay({ slug }: { slug: string }) {
   const views = await getViewCount(slug);
-  if (views.length === 0) return;
 
   return (
     <p>
-      {views[0].count} views
+      {views} views
     </p>
   );
 }

@@ -59,3 +59,8 @@ export const guestbookColors = [
 ] as const;
 
 export type GuestbookColorsType = "rosewater" | "flamingo" | "pink" | "mauve" | "red" | "maroon" | "peach" | "yellow" | "green" | "teal" | "sky" | "sapphire" | "blue" | "lavender" | "text";
+
+export type ViewCount = {
+  slug: string;
+  count: number;
+};

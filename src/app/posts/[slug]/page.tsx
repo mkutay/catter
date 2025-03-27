@@ -9,8 +9,8 @@ import DoublePane from '@/components/doublePane';
 import CopyToClipboard from '@/components/copyToClipboard';
 import Comments, { CommentsFallback } from '@/components/comments/comments';
 import { turnTagString } from '@/components/tagsButtonGrid';
-import { incrementViews } from '@/lib/dataBaseActions';
-import { getViewCount } from '@/lib/dataBaseQueries';
+import { incrementViews } from '@/lib/database-actions/views';
+import { getViewCount } from '@/lib/database-queries/views';
 import { getPostFiles, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
@@ -107,11 +107,10 @@ export async function generateStaticParams() {
 
 async function ViewCounter({ slug }: { slug: string }) {
   const viewCount = await getViewCount(slug);
-  const number = viewCount.length === 0 ? 0 : Number(viewCount[0].count);
 
   return (
     <span>
-      {`${number.toLocaleString()} views`}
+      {viewCount} views
     </span>
   );
 }
