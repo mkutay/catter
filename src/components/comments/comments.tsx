@@ -12,7 +12,14 @@ import { siteConfig } from '@/config/site';
 
 export default async function Comments({ slug }: { slug: string }) {
   const session = await auth();
-  const comments: CommentData[] = await getComments({ slug });
+  const commentsPromise = getComments({ slug });
+  const comments = await commentsPromise;
+
+  if (comments.isErr()) {
+    // TODO: Handle error
+    console.error(comments.error);
+    return;
+  }
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
@@ -22,7 +29,7 @@ export default async function Comments({ slug }: { slug: string }) {
         <CommentAuth slug={slug}/>
       )}
       <div className="flex flex-col gap-6">
-        {comments.map((comment) => (
+        {comments.value.map((comment) => (
           <Comment comment={comment} key={comment.id}/>
         ))}
       </div>

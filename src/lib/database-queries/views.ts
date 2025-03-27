@@ -3,44 +3,90 @@
 import { sql } from '@/lib/postgres';
 import { doesPostWithSlugExist } from '@/lib/contentQueries';
 import { ViewCount } from '@/config/types';
+import { err, ok, Result, ResultAsync } from 'neverthrow';
 
-export async function getBlogViews(): Promise<number> {
-  const views = await sql<{ count: number }[]>`
+interface GetBlogViewsError {
+  message: string;
+  code: 'DATABASE_ERROR';
+};
+
+interface GetViewsCountError {
+  message: string;
+  code: 'LIMIT_OUT_OF_RANGE' | 'DATABASE_ERROR'; 
+};
+
+interface GetViewCountError {
+  message: string;
+  code: 'POST_NOT_FOUND' | 'DATABASE_ERROR' | 'NO_VIEWS_FOUND';
+};
+
+export async function getBlogViews(): Promise<Result<number, GetBlogViewsError>> {
+  const promise = sql<{ count: number }[]>`
     SELECT count
     FROM views;
   `;
 
-  return views.reduce((acc, curr) => acc + Number(curr.count), 0);
+  const databasePromise = ResultAsync.fromPromise(promise, () => ({
+    message: 'Failed to fetch blog views. Database error.',
+    code: 'DATABASE_ERROR',
+  } as GetBlogViewsError));
+
+  const totalViewsPromise = databasePromise.map((views) => {
+    return views.reduce((acc, curr) => acc + Number(curr.count), 0);
+  });
+
+  return totalViewsPromise;
 }
 
-export async function getViewsCount(postNum: number): Promise<ViewCount[]> {
+export async function getViewsCount(postNum: number): Promise<Result<ViewCount[], GetViewsCountError>> {
   if (postNum < 1 || postNum > 100) {
-    throw new Error('Post number out of allowed range.');
+    return err({
+      message: 'Limit out of allowed range.',
+      code: 'LIMIT_OUT_OF_RANGE',
+    });
   }
 
-  return await sql<ViewCount[]>`
+  const promise = sql<ViewCount[]>`
     SELECT slug, count
     FROM views
     ORDER BY count DESC
     LIMIT ${postNum};
   `;
+
+  return ResultAsync.fromPromise(promise, () => ({
+    message: 'Failed to fetch views count. Database error.',
+    code: 'DATABASE_ERROR',
+  }));
 }
 
-export async function getViewCount(slug: string): Promise<number> {
+export async function getViewCount(slug: string): Promise<Result<number, GetViewCountError>> {
   if (!doesPostWithSlugExist(slug)) {
-    throw new Error('Post does not exist.');
+    return err({
+      message: 'Post not found.',
+      code: 'POST_NOT_FOUND',
+    });
   }
 
-  const views = await sql<ViewCount[]>`
+  const promise = sql<ViewCount[]>`
     SELECT slug, count
     FROM views
     WHERE slug=(${slug});
   `;
 
-  if (views.length !== 1) {
-    console.error(`Post does not exist in views table on slug ${slug}`);
-    return 0;
-  }
+  const databasePromise = ResultAsync.fromPromise(promise, () => ({
+    message: 'Failed to fetch view count. Database error.',
+    code: 'DATABASE_ERROR',
+  } as GetViewCountError));
 
-  return views[0].count;
+  const viewsPromise = databasePromise.andThen((views) => {
+    if (views.length === 0 || !views[0]) {
+      return err({
+        message: 'No views found for this post.',
+        code: 'NO_VIEWS_FOUND',
+      } as GetViewCountError);
+    }
+    return ok(views[0].count);
+  });
+
+  return viewsPromise;
 }

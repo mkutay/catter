@@ -47,9 +47,15 @@ export function turnTagString(tag: string) {
 export async function TotalBlogViews() {
   const views = await getBlogViews();
 
+  if (views.isErr()) {
+    // TODO: Handle error
+    console.error(views.error);
+    return;
+  }
+
   return (
     <div className="flex justify-center items-center text-primary font-bold tracking-tight text-lg">
-      {`${views} total views`}
+      {`${views.value} total views`}
     </div>
   );
 }

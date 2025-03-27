@@ -106,7 +106,15 @@ export async function generateStaticParams() {
 }
 
 async function ViewCounter({ slug }: { slug: string }) {
-  const viewCount = await getViewCount(slug);
+  const viewCountResult = await getViewCount(slug);
+
+  if (viewCountResult.isErr()) {
+    // TODO: Handle error
+    console.error(viewCountResult.error);
+    return;
+  }
+
+  const viewCount = viewCountResult.value;
 
   return (
     <span>
