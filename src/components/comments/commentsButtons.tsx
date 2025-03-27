@@ -53,6 +53,15 @@ export function SignIn({ slug }: { slug: string }) {
 export function DeleteComment({ comment }: { comment: CommentData }) {
   const [open, setOpen] = useState(false);
 
+  const handleDelete = async () => {
+    const result = await deleteComment({ comment });
+    if (result.isErr()) {
+      console.error('Error deleting comment:', result.error.message);
+      return;
+    }
+    setOpen(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -71,10 +80,7 @@ export function DeleteComment({ comment }: { comment: CommentData }) {
           {comment.body}
         </div>
         <DialogFooter>
-          <Button type="submit" variant="destructive" size="sm" onClick={() => {
-            deleteComment({ comment });
-            setOpen(false);
-          }}>
+          <Button type="submit" variant="destructive" size="sm" onClick={handleDelete}>
             Delete Comment
           </Button>
         </DialogFooter>
