@@ -119,7 +119,7 @@ async function ViewDisplay({ slug }: { slug: string }) {
 
   return (
     <p>
-      {views.count} views
+      {views} views
     </p>
   );
 }

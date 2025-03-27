@@ -2,8 +2,9 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { PostgresError } from 'postgres';
+import { connection } from 'next/server';
 
-import { auth, getSession } from '@/lib/auth';
+import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
 import { CommentData } from '@/config/types';
 import { siteConfig } from '@/config/site';
@@ -23,51 +24,25 @@ export async function saveComment({ slug, message }: { slug: string, message: st
   });
 
   if (!validation.success) {
-    return {
-      errors: validation.error.issues,
-    };
+    throw new Error('Invalid comment: ' + validation.error.issues);
   }
 
-  const email = session.user?.email as string;
-  const created_by = session.user?.name as string;
+  const email = session.user.email as string;
+  const created_by = session.user.name as string;
 
-  try {
-    await sql`
-      INSERT INTO comments (id, slug, email, body, created_by, created_at)
-      VALUES (${random}, ${slug}, ${email}, ${message}, ${created_by}, NOW())
-    `;
-  } catch (error) {
-    if ((error as PostgresError).code === '42P01') {
-      // Table does not exist, so create the table
-      await sql`
-        CREATE TABLE IF NOT EXISTS comments (
-          id SERIAL PRIMARY KEY,
-          email VARCHAR(255) NOT NULL,
-          slug TEXT NOT NULL,
-          body TEXT NOT NULL,
-          created_by VARCHAR(255) NOT NULL,
-          created_at TIMESTAMP NOT NULL,
-          updated_at TIMESTAMP
-        )
-      `;
-
-      // Retry the insert after creating the table
-      await sql`
-        INSERT INTO comments (id, slug, email, body, created_by, created_at)
-        VALUES (${random}, ${slug}, ${email}, ${message}, ${created_by}, NOW())
-      `;
-    } else {
-      // Rethrow the error if it's not related to table existence
-      throw error;
-    }
-  }
+  await insertIntoComments(random, slug, email, message, created_by);
 
   revalidatePath(`/posts/${slug}`);
 }
 
 export async function deleteComment({ comment }: { comment: CommentData }) {
-  let session = await getSession();
-  let email = session.user?.email as string;
+  const session = await auth();
+  
+  if (!session || !session.user) {
+    throw new Error('Unauthorized');
+  }
+
+  const email = session.user.email as string;
 
   if (!siteConfig.admins.includes(email) && comment.email !== email) {
     throw new Error('Unauthorized');
@@ -80,4 +55,11 @@ export async function deleteComment({ comment }: { comment: CommentData }) {
 
   // revalidatePath(`/posts/${comment.slug}`);
   revalidateTag('nextjs-blog-comments');
+}
+
+async function insertIntoComments(random: number, slug: string, email: string, message: string, created_by: string) {
+  await sql`
+    INSERT INTO comments (id, slug, email, body, created_by, created_at)
+    VALUES (${random}, ${slug}, ${email}, ${message}, ${created_by}, NOW())
+  `;
 }

@@ -22,13 +22,3 @@ export const {
     }),
   ],
 });
-
-export async function getSession(): Promise<Session> {
-  let session = await auth();
-  
-  if (!session || !session.user) {
-    throw new Error('Unauthorized');
-  }
-
-  return session;
-}

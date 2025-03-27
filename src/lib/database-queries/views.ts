@@ -5,10 +5,6 @@ import { doesPostWithSlugExist } from '@/lib/contentQueries';
 import { ViewCount } from '@/config/types';
 
 export async function getBlogViews(): Promise<number> {
-  if (!process.env.POSTGRES_URL) {
-    throw new Error('Postgres URL is not defined.');
-  }
-
   const views = await sql<{ count: number }[]>`
     SELECT count
     FROM views;
@@ -18,10 +14,6 @@ export async function getBlogViews(): Promise<number> {
 }
 
 export async function getViewsCount(postNum: number): Promise<ViewCount[]> {
-  if (!process.env.POSTGRES_URL) {
-    throw new Error('Postgres URL is not defined.');
-  }
-
   if (postNum < 1 || postNum > 100) {
     throw new Error('Post number out of allowed range.');
   }
@@ -34,11 +26,7 @@ export async function getViewsCount(postNum: number): Promise<ViewCount[]> {
   `;
 }
 
-export async function getViewCount(slug: string): Promise<ViewCount> {
-  if (!process.env.POSTGRES_URL) {
-    throw new Error('Postgres URL is not defined.');
-  }
-
+export async function getViewCount(slug: string): Promise<number> {
   if (!doesPostWithSlugExist(slug)) {
     throw new Error('Post does not exist.');
   }
@@ -50,8 +38,9 @@ export async function getViewCount(slug: string): Promise<ViewCount> {
   `;
 
   if (views.length !== 1) {
-    throw new Error('Post does not exist.');
+    console.error(`Post does not exist in views table on slug ${slug}`);
+    return 0;
   }
 
-  return views[0];
+  return views[0].count;
 }

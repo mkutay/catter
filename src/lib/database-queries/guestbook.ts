@@ -4,10 +4,6 @@ import { sql } from '@/lib/postgres';
 import { EntryData } from '@/config/types';
 
 export async function getGuestbookEntries(limit?: number): Promise<EntryData[]> {
-  if (!process.env.POSTGRES_URL) {
-    throw new Error('Postgres database URL is not defined.');
-  }
-
   limit = limit || 100;
 
   if (limit <= 0 || limit > 200) {
