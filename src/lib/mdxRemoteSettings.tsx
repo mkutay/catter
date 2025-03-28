@@ -7,7 +7,8 @@ import { AnnotationHandler, highlight, Inline, InnerLine, InnerPre, InnerToken, 
 import Image, { ImageProps } from 'next/image';
 import Link from 'next/link';
 import { MDXComponents, MDXRemoteOptions } from 'next-mdx-remote-client/rsc';
-import { BlockquoteHTMLAttributes, DetailedHTMLProps, HTMLAttributes } from 'react';
+import { AnchorHTMLAttributes, BlockquoteHTMLAttributes, DetailedHTMLProps, HTMLAttributes } from 'react';
+import { ComponentProps } from 'react';
 
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
@@ -43,13 +44,21 @@ export const components: MDXComponents = {
       <Image {...props} alt={props.alt} className="my-0 lg:rounded-md rounded-sm"/>
     </div>
   ),
-  Link: (props: any) => (
+  Link: (props: ComponentProps<typeof Link>) => (
     <Link {...props} className={cn("text-primary underline hover:text-primary/80 transition-all", props.className)}>
       {props.children}
     </Link>
   ),
-  a: (props: any) => {
-    return <Link {...props} className={cn("text-primary underline hover:text-primary/80 transition-all", props.className)}>
+  a: (props: DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>) => {
+    const { href, ...rest } = props;
+    
+    if (!href) {
+      return <span {...rest} className={cn("text-primary underline hover:text-primary/80 transition-all", props.className)}>
+        {props.children}
+      </span>;
+    }
+    
+    return <Link href={href} {...rest} className={cn("text-primary underline hover:text-primary/80 transition-all", props.className)}>
       {props.children}
     </Link>
   },

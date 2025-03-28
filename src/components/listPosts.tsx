@@ -25,7 +25,7 @@ export default function ListPosts({
 
   return (
     <div className="flex flex-col gap-6">
-      {posts.map((post, index) => (
+      {posts.map((post) => (
         <div key={post.slug} className="flex flex-col gap-4">
           <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight first:mt-0 mt-6">
             <Link href={`/posts/${post.slug}`} className="hover:text-foreground/80 transition-all duration-100">

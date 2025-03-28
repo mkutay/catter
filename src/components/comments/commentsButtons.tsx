@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 import { deleteComment } from '@/lib/database-actions/comments';
 import { CommentData } from '@/config/types';
 
@@ -52,11 +53,17 @@ export function SignIn({ slug }: { slug: string }) {
 
 export function DeleteComment({ comment }: { comment: CommentData }) {
   const [open, setOpen] = useState(false);
+  const { toast } = useToast();
 
   const handleDelete = async () => {
     const result = await deleteComment({ comment });
-    if (result.isErr()) {
-      console.error('Error deleting comment:', result.error.message);
+    if (result.code !== 'SUCCESS') {
+      console.error('Error deleting comment:', result.message);
+      toast({
+        title: 'Error',
+        description: 'Error deleting comment. Please try again later.',
+        variant: 'destructive',
+      });
       return;
     }
     setOpen(false);

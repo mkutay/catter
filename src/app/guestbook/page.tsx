@@ -63,17 +63,19 @@ async function Form() {
 // text-rosewater text-flamingo text-pink text-mauve text-red text-maroon text-peach text-yellow text-green text-teal text-sky text-sapphire text-blue text-lavender
 async function GuestbookEntries() {
   const entriesResult = await getGuestbookEntries();
+
   if (entriesResult.isErr()) {
-    // TODO: Handle error
-    console.error(entriesResult.error);
-    return;
+    console.error("Error in displaying guestbook entries in /guestbook:", entriesResult.error.message);
+    return (
+      <div>
+        <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+          There was an error loading the guestbook entries. Please try again later.
+        </p>
+      </div>
+    );
   }
   
   const entries = entriesResult.value;
-
-  if (entries.length === 0) {
-    return;
-  }
 
   return (
     <div>

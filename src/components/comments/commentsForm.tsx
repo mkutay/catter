@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { TbReload } from 'react-icons/tb';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -15,11 +14,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
 import { SignOut } from '@/components/comments/commentsButtons';
 import { saveComment } from '@/lib/database-actions/comments';
 import { commentsFormSchema } from '@/config/schema';
 
 export function CommentForm({ slug }: { slug: string }) {
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof commentsFormSchema>>({
     resolver: zodResolver(commentsFormSchema),
     defaultValues: {
@@ -29,9 +31,14 @@ export function CommentForm({ slug }: { slug: string }) {
  
   const onSubmit = async (values: z.infer<typeof commentsFormSchema>) => {
     const saved = await saveComment({ slug, message: values.message });
-    if (saved.isErr()) {
-      // TODO: Handle error
-      console.error(saved.error.message);
+
+    if (saved.code !== 'SUCCESS') {
+      console.error(`Could not save comment on post ${slug}:`, saved.message);
+      toast({
+        title: "Error",
+        description: "Could not save comment. Please try again later.",
+        variant: "destructive",
+      });
       return;
     }
     form.reset();

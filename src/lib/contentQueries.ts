@@ -44,8 +44,8 @@ export function getProps(pathTo: string, slug: string): PostData {
   let markdownFile;
   try {
     markdownFile = fs.readFileSync(path.join(process.cwd(), path.join(pathTo, slug + '.mdx')), 'utf-8');
-  } catch(error) {
-    throw new Error(`Post ${slug} not found.`);
+  } catch (error) {
+    throw new Error(`Post ${slug} not found: ${error}`);
   }
 
   const { data: frontMatter, content } = matter(markdownFile);
@@ -82,7 +82,7 @@ export function getPosts({
   }
   
   const postFiles = getPostFiles();
-  let posts: PostData[] = [];
+  const posts: PostData[] = [];
   
   postFiles.forEach((filename) => {
     const slug = filename.replace('.mdx', '');

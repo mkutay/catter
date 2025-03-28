@@ -63,7 +63,7 @@ export async function getViewsCount(postNum: number): Promise<Result<ViewCount[]
 export async function getViewCount(slug: string): Promise<Result<number, GetViewCountError>> {
   if (!doesPostWithSlugExist(slug)) {
     return err({
-      message: 'Post not found.',
+      message: 'Post not found with slug: ' + slug,
       code: 'POST_NOT_FOUND',
     });
   }

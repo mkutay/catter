@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
 import DoublePane from '@/components/doublePane';
-import TagsButtonGrid, { turnTagString } from '@/components/tagsButtonGrid';
+import { turnTagString } from '@/components/tagsButtonGrid';
 import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 

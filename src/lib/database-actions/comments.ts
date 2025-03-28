@@ -16,22 +16,22 @@ interface DatabaseError {
 
 interface SaveCommentError {
   message: string;
-  code: 'UNAUTHORISED' | 'INVALID_COMMENT' | 'DATABASE_ERROR';
+  code: 'UNAUTHORISED' | 'INVALID_COMMENT' | 'DATABASE_ERROR' | 'SUCCESS';
 };
 
 interface DeleteCommentError {
   message: string;
-  code: 'UNAUTHORISED' | 'DATABASE_ERROR';
+  code: 'UNAUTHORISED' | 'DATABASE_ERROR' | 'SUCCESS';
 };
 
-export async function saveComment({ slug, message }: { slug: string, message: string }): Promise<Result<void, SaveCommentError>> {
+export async function saveComment({ slug, message }: { slug: string, message: string }): Promise<SaveCommentError> {
   const session = await auth();
   
   if (!session || !session.user) {
-    return err({
-      message: 'Unauthorized',
+    return {
+      message: 'Session not found.',
       code: 'UNAUTHORISED',
-    });
+    }
   }
 
   const random = Math.floor(Math.random() * 10000000);
@@ -41,10 +41,10 @@ export async function saveComment({ slug, message }: { slug: string, message: st
   });
 
   if (!validation.success) {
-    return err({
+    return {
       message: 'Invalid comment: ' + validation.error.issues,
       code: 'INVALID_COMMENT',
-    });
+    };
   }
 
   const email = session.user.email as string;
@@ -53,48 +53,54 @@ export async function saveComment({ slug, message }: { slug: string, message: st
   const inserted = await insertIntoComments(random, slug, email, message, created_by);
 
   if (inserted.isErr()) {
-    return err({
+    return {
       message: inserted.error.message,
       code: inserted.error.code,
-    });
+    };
   }
 
   revalidatePath(`/posts/${slug}`);
 
-  return ok();
+  return {
+    message: 'Comment saved successfully.',
+    code: 'SUCCESS',
+  }
 }
 
-export async function deleteComment({ comment }: { comment: CommentData }): Promise<Result<void, DeleteCommentError>> {
+export async function deleteComment({ comment }: { comment: CommentData }): Promise<DeleteCommentError> {
   const session = await auth();
   
   if (!session || !session.user) {
-    return err({
+    return {
       message: 'Session not found.',
       code: 'UNAUTHORISED',
-    });
+    };
   }
 
   const email = session.user.email as string;
 
   if (!siteConfig.admins.includes(email) && comment.email !== email) {
-    return err({
-      message: 'Unauthorized to delete this comment.',
+    return {
+      message: 'You are not authorized to delete this comment.',
       code: 'UNAUTHORISED',
-    });
+    };
   }
 
   const deleted = await deleteFromComments(comment.id);
   if (deleted.isErr()) {
-    return err({
+    return {
       message: deleted.error.message,
       code: deleted.error.code,
-    });
+    };
   }
 
   // revalidatePath(`/posts/${comment.slug}`);
   revalidateTag('nextjs-blog-comments');
 
-  return ok();
+  return {
+    message: 'Comment deleted successfully.',
+    code: 'SUCCESS',
+  };
 }
 
 async function deleteFromComments(id: string): Promise<Result<void, DatabaseError>> {

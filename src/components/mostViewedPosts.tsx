@@ -9,9 +9,12 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
   const viewsResult = await getViewsCount(postNum);
 
   if (viewsResult.isErr()) {
-    // TODO: Handle error
-    console.error(viewsResult.error);
-    return;
+    console.error("Error in getting the view count in MostViewedPosts:", viewsResult.error.message);
+    return (
+      <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+        Sorry. Could not fetch the most viewed posts.
+      </p>
+    );
   }
 
   const views = viewsResult.value;

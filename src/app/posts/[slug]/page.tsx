@@ -47,8 +47,9 @@ export default async function Page(functionProps: { params: Promise<{ slug: stri
 
   if (incremented.isErr()) {
     if (incremented.error.code === 'DATABASE_ERROR') {
-      // TODO: Properly handle error
       console.error('Database error in incrementing view:', incremented.error.message);
+    } else {
+      console.log('Not incrementing views:', incremented.error.message);
     }
   }
 
@@ -116,8 +117,7 @@ async function ViewCounter({ slug }: { slug: string }) {
   const viewCountResult = await getViewCount(slug);
 
   if (viewCountResult.isErr()) {
-    // TODO: Handle error
-    console.error(viewCountResult.error);
+    console.error("Error in displaying view count for post " + slug + ":", viewCountResult.error.message);
     return;
   }
 

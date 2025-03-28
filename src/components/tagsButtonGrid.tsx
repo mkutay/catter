@@ -48,8 +48,7 @@ export async function TotalBlogViews() {
   const views = await getBlogViews();
 
   if (views.isErr()) {
-    // TODO: Handle error
-    console.error(views.error);
+    console.error("Could not display total blog views:", views.error.message);
     return;
   }
 

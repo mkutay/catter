@@ -54,7 +54,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
 export async function generateStaticParams() {
   const postsLength = getPostsLength({ disallowTags: ['project'] });
-  let ret: {id: string}[] = [];
+  const ret: { id: string }[] = [];
 
   for (let i = 1; i <= Math.ceil(postsLength / siteConfig.postNumPerPage); i++) {
     ret.push({ id: i.toString() });

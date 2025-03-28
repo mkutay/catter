@@ -41,14 +41,14 @@ export async function doesAllEntriesExist(ids: number[]): Promise<Result<boolean
     });
   }
 
-  const promise = sql<EntryData[]>`
+  const promise = sql<{ id: number }[]>`
     SELECT id
     FROM guestbook
-    WHERE id IN (${sql(ids)});
+    WHERE id IN ${sql(ids)};
   `;
 
-  return ResultAsync.fromPromise(promise, () => ({
-    message: 'Failed to fetch guestbook entries. Database error.',
+  return ResultAsync.fromPromise(promise, (e) => ({
+    message: 'Failed to fetch guestbook entries. Database error. ' + e,
     code: 'DATABASE_ERROR'
   } as GetGuestbookEntriesError)).andThen((result) => {
     if (result.length !== ids.length) {

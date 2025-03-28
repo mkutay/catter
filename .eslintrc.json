@@ -1,12 +1,16 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript"
+  ],
+  "plugins": ["neverthrow"],
   "rules": {
-    "import/no-cycle": [
-      "error",
-      {
-        "maxDepth": 10,
-        "ignoreExternal": true
-      }
-    ]
+    "neverthrow/must-use-result": "error"
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   }
 }

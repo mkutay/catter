@@ -16,9 +16,12 @@ export default async function Comments({ slug }: { slug: string }) {
   const comments = await commentsPromise;
 
   if (comments.isErr()) {
-    // TODO: Handle error
-    console.error(comments.error);
-    return;
+    console.error("Error in displaying the comments in post " + slug + ":", comments.error.message);
+    return (
+      <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+        Sorry. Could not fetch the comments.
+      </p>
+    );
   }
 
   return (

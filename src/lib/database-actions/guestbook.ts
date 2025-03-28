@@ -12,7 +12,7 @@ import { EntryData } from '@/config/types';
 
 interface SaveGuestbookEntryError {
   message: string;
-  code: 'DATABASE_ERROR' | 'VALIDATION_ERROR' | 'UNAUTHORISED';
+  code: 'DATABASE_ERROR' | 'VALIDATION_ERROR' | 'UNAUTHORISED' | 'SUCCESS';
 };
 
 interface DatabaseError {
@@ -22,7 +22,7 @@ interface DatabaseError {
 
 interface DeleteGuestbookEntriesError {
   message: string;
-  code: 'DATABASE_ERROR' | 'UNAUTHORISED' | 'NOT_ALL_ENTRIES_EXIST';
+  code: 'DATABASE_ERROR' | 'UNAUTHORISED' | 'NOT_ALL_ENTRIES_EXIST' | 'SUCCESS';
 };
 
 export async function saveGuestbookEntryData({
@@ -33,14 +33,14 @@ export async function saveGuestbookEntryData({
   color?: string,
   username?: string,
   message: string
-}): Promise<Result<void, SaveGuestbookEntryError>> {
+}): Promise<SaveGuestbookEntryError> {
   const session = await auth();
 
   if (!session || !session.user) {
-    return err({
+    return {
       message: 'Unauthorized.',
       code: 'UNAUTHORISED',
-    });
+    };
   }
 
   username = username || '';
@@ -59,10 +59,10 @@ export async function saveGuestbookEntryData({
   });
 
   if (!validationPopOver.success && !validationGuestbook.success) {
-    return err({
+    return {
       message: 'Validation error: ' + validationPopOver.error.message + ', ' + validationGuestbook.error.message,
       code: 'VALIDATION_ERROR',
-    })
+    };
   }
 
   const created_by = validationPopOver.success ? username : session.user.name as string;
@@ -75,16 +75,19 @@ export async function saveGuestbookEntryData({
   const inserted = await insertIntoGuestbook(random, email, message, created_by, color);
 
   if (inserted.isErr()) {
-    return err({
+    return {
       message: 'Failed to insert guestbook entry. Database error.',
       code: 'DATABASE_ERROR',
-    } as SaveGuestbookEntryError);
+    };
   }
 
   revalidatePath('/guestbook');
   revalidatePath('/admin');
 
-  return ok();
+  return {
+    message: 'Saved guestbook entry successfully.',
+    code: 'SUCCESS',
+  };
 }
 
 async function insertIntoGuestbook(random: number, email: string, message: string, created_by: string, color: string): Promise<Result<void, DatabaseError>> {
@@ -116,54 +119,57 @@ async function insertIntoGuestbook(random: number, email: string, message: strin
   });
 }
 
-export async function deleteGuestbookEntries(selectedEntries: number[]): Promise<Result<void, DeleteGuestbookEntriesError>> {
+export async function deleteGuestbookEntries(selectedEntries: number[]): Promise<DeleteGuestbookEntriesError> {
   const session = await auth();
   
   if (!session || !session.user) {
-    return err({
+    return {
       message: 'Session not found. Unauthorized.',
       code: 'UNAUTHORISED',
-    });
+    };
   }
 
   const email = session.user.email as string;
 
   if (!siteConfig.admins.includes(email)) {
-    return err({
+    return {
       message: 'Not an admin. Unauthorized.',
       code: 'UNAUTHORISED',
-    });
+    };
   }
 
   const exists = await doesAllEntriesExist(selectedEntries);
 
   if (exists.isErr()) {
-    return err({
-      message: 'Failed to check guestbook entries. Database error.',
+    return {
+      message: 'Failed to check guestbook entries. Database error. ' + exists.error.message,
       code: 'DATABASE_ERROR',
-    });
+    };
   }
   if (!exists.value) {
-    return err({
+    return {
       message: 'Not all entries exist. Not performing.',
       code: 'NOT_ALL_ENTRIES_EXIST',
-    });
+    };
   }
 
   const arrayLiteral = `{${selectedEntries.join(',')}}`;
   const deleted = await deleteFromGuestbook(arrayLiteral);
 
   if (deleted.isErr()) {
-    return err({
+    return {
       message: 'Failed to delete guestbook entry. Database error.',
       code: 'DATABASE_ERROR',
-    });
+    };
   }
 
   revalidatePath('/admin');
   revalidatePath('/guestbook');
 
-  return ok();
+  return {
+    message: 'Deleted guestbook entries successfully.',
+    code: 'SUCCESS',
+  };
 }
 
 async function deleteFromGuestbook(arrayLiteral: string): Promise<Result<void, DatabaseError>> {

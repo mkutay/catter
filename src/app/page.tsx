@@ -118,8 +118,8 @@ async function ViewDisplay({ slug }: { slug: string }) {
   const viewsResult = await getViewCount(slug);
 
   if (viewsResult.isErr()) {
-    // TODO: Handle error
-    console.error(viewsResult.error);
+    console.error("Error in displaying view count:", viewsResult.error.message);
+    // It's better to display nothing than an error message
     return;
   }
 

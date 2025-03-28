@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useToast } from '@/components/ui/use-toast';
 import { deleteGuestbookEntries } from '@/lib/database-actions/guestbook';
 import { EntryData } from '@/config/types';
 import { deleteGuestbookEntryDataFormSchema } from '@/config/schema';
@@ -23,6 +24,8 @@ import { cn } from '@/lib/utils';
 
 // Delete entries from the guestbook
 export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof deleteGuestbookEntryDataFormSchema>>({
     resolver: zodResolver(deleteGuestbookEntryDataFormSchema),
     defaultValues: {
@@ -31,8 +34,17 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
   });
   
   const onSubmit = async (values: z.infer<typeof deleteGuestbookEntryDataFormSchema>) => {
-    console.log(values);
-    await deleteGuestbookEntries(values.items);
+    const deleted = await deleteGuestbookEntries(values.items);
+    if (deleted.code !== 'SUCCESS') {
+      console.error(deleted.message);
+      toast({
+        title: 'Error deleting entries.',
+        description: deleted.message,
+        variant: 'destructive',
+      });
+      return;
+    }
+    form.reset();
   };
 
   return (

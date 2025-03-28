@@ -32,24 +32,26 @@ export default async function Page() {
   const comments = await getEveryComment();
 
   if (comments.isErr()) {
-    // TODO: Handle error
-    console.error(comments.error);
-    return;
+    console.error("Error in displaying all comements:", comments.error.message);
   }
 
   if (entries.isErr()) {
-    // TODO: Handle error
-    console.error(entries.error);
-    return;
+    console.error("Error in displaying guestbook entries:", entries.error.message);
   }
 
   return (
     <DoublePane>
       <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">Admin</h1>
       <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6 mb-2">Guestbook</h2>
-      <GuestbookAdminForm entries={entries.value}/>
+      {(entries.isErr() ? <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+          Could not display guestbook entries. Please try again later.
+        </p> : <GuestbookAdminForm entries={entries.value} />
+      )}
       <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6">Comments</h2>
-      <CommentsAdmin comments={comments.value}/>
+      {(comments.isErr() ? <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+          Could not display comments. Please try again later.
+        </p> : <CommentsAdmin comments={comments.value} />
+      )}
     </DoublePane>
   );
 }
