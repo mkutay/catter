@@ -47,7 +47,7 @@ export default function GuestbookForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-2">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-2">
         <FormField
           control={form.control}
           name="message"
@@ -64,20 +64,18 @@ export default function GuestbookForm() {
             </FormItem>
           )}
         />
-        <div className="flex flex-row justify-between">
-          <div className="flex flex-row gap-2 items-center">
-            <GuestbookDialog/>
-            <GuestBookSignOut/>
-          </div>
-          <Button
-            variant="default"
-            size="default"
-            type="submit"
-          >
-            Sign!
-          </Button>
-        </div>
+        <Button
+          variant="default"
+          size="md"
+          type="submit"
+        >
+          Sign!
+        </Button>
       </form>
+      <div className="w-fit flex flex-row gap-2 items-center">
+        <GuestbookDialog/>
+        <GuestBookSignOut/>
+      </div>
     </Form>
   );
 }
