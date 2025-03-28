@@ -43,7 +43,14 @@ export default async function Page(functionProps: { params: Promise<{ slug: stri
   const props = getProps('content/posts', params.slug);
   const formattedDate = format(props.meta.date, 'PP');
 
-  incrementViews(props.slug);
+  const incremented = await incrementViews(props.slug);
+
+  if (incremented.isErr()) {
+    if (incremented.error.code === 'DATABASE_ERROR') {
+      // TODO: Properly handle error
+      console.error('Database error in incrementing view:', incremented.error.message);
+    }
+  }
 
   return (
     <>

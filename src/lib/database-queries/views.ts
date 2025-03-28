@@ -1,9 +1,10 @@
 'use server';
 
+import { err, ok, Result, ResultAsync } from 'neverthrow';
+
 import { sql } from '@/lib/postgres';
 import { doesPostWithSlugExist } from '@/lib/contentQueries';
 import { ViewCount } from '@/config/types';
-import { err, ok, Result, ResultAsync } from 'neverthrow';
 
 interface GetBlogViewsError {
   message: string;

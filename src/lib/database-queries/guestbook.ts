@@ -1,8 +1,9 @@
 'use server';
 
+import { err, ok, Result, ResultAsync } from 'neverthrow';
+
 import { sql } from '@/lib/postgres';
 import { EntryData } from '@/config/types';
-import { err, errAsync, Result, ResultAsync } from 'neverthrow';
 
 interface GetGuestbookEntriesError {
   message: string;
@@ -30,4 +31,30 @@ export async function getGuestbookEntries(limit?: number): Promise<Result<EntryD
     message: 'Failed to fetch guestbook entries. Database error.',
     code: 'DATABASE_ERROR'
   }));
+}
+
+export async function doesAllEntriesExist(ids: number[]): Promise<Result<boolean, GetGuestbookEntriesError>> {
+  if (ids.length === 0) {
+    return err({
+      message: 'No entries to check.',
+      code: 'LIMIT_OUT_OF_RANGE',
+    });
+  }
+
+  const promise = sql<EntryData[]>`
+    SELECT id
+    FROM guestbook
+    WHERE id IN (${sql(ids)});
+  `;
+
+  return ResultAsync.fromPromise(promise, () => ({
+    message: 'Failed to fetch guestbook entries. Database error.',
+    code: 'DATABASE_ERROR'
+  } as GetGuestbookEntriesError)).andThen((result) => {
+    if (result.length !== ids.length) {
+      return ok(false);
+    }
+
+    return ok(true);
+  });
 }
