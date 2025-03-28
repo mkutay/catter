@@ -62,10 +62,17 @@ async function Form() {
 
 // text-rosewater text-flamingo text-pink text-mauve text-red text-maroon text-peach text-yellow text-green text-teal text-sky text-sapphire text-blue text-lavender
 async function GuestbookEntries() {
-  const entries = await getGuestbookEntries();
+  const entriesResult = await getGuestbookEntries();
+  if (entriesResult.isErr()) {
+    // TODO: Handle error
+    console.error(entriesResult.error);
+    return;
+  }
+  
+  const entries = entriesResult.value;
 
   if (entries.length === 0) {
-    return null;
+    return;
   }
 
   return (

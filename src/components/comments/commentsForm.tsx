@@ -28,7 +28,12 @@ export function CommentForm({ slug }: { slug: string }) {
   });
  
   const onSubmit = async (values: z.infer<typeof commentsFormSchema>) => {
-    await saveComment({ slug, message: values.message });
+    const saved = await saveComment({ slug, message: values.message });
+    if (saved.isErr()) {
+      // TODO: Handle error
+      console.error(saved.error.message);
+      return;
+    }
     form.reset();
   };
 

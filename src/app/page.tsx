@@ -115,7 +115,15 @@ function PostDisplay({
 }
 
 async function ViewDisplay({ slug }: { slug: string }) {
-  const views = await getViewCount(slug);
+  const viewsResult = await getViewCount(slug);
+
+  if (viewsResult.isErr()) {
+    // TODO: Handle error
+    console.error(viewsResult.error);
+    return;
+  }
+
+  const views = viewsResult.value;
 
   return (
     <p>
