@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import DoublePane from '@/components/doublePane';
 import { GuestBookSignIn } from '@/app/guestbook/buttons';
 import GuestbookForm from '@/app/guestbook/form';
 import { auth } from '@/lib/auth';
@@ -27,7 +26,7 @@ export const metadata = {
 
 export default function Page() {
   return (
-    <DoublePane>
+    <>
       <h1 className="hidden">
         {`${siteConfig.name} Guestbook`}
       </h1>
@@ -42,7 +41,7 @@ export default function Page() {
           <GuestbookEntries />
         </Suspense>
       </main>
-    </DoublePane>
+    </>
   );
 }
 

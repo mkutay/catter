@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
-import DoublePane from '@/components/doublePane';
 import { turnTagString } from '@/components/tagsButtonGrid';
 import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
@@ -42,7 +41,7 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
   }
 
   return (
-    <DoublePane>
+    <>
       <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
         Posts With Tag: <span className="font-bold text-foreground">{turnTagString(tag)}</span>
       </h1>
@@ -52,7 +51,7 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
       </div>
       {/* Removing the grid for the tags */}
       {/* <TagsButtonGrid/> */}
-    </DoublePane>
+    </>
   )
 }
 

@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
-import DoublePane from '@/components/doublePane';
 import { getPostsLength } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
@@ -38,7 +37,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   }
 
   return (
-    <DoublePane>
+    <>
       <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
         List of All Posts and Tags
       </h1>
@@ -48,7 +47,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       </div>
       {/* Removing grid for the tags */}
       {/* <TagsButtonGrid/> */}
-    </DoublePane>
+    </>
   )
 }
 

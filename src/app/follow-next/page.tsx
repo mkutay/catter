@@ -4,14 +4,13 @@ import { MDXRemote } from 'next-mdx-remote-client/rsc';
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import DoublePane from '@/components/doublePane';
 import { siteConfig } from '@/config/site';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { followNextImages } from '@/config/images';
 
 export default function Page() {
   return (
-    <DoublePane hideFollowLink>
+    <>
       <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
         Follow all these awesome people
       </h1>
@@ -20,7 +19,7 @@ export default function Page() {
           <FollowCard key={website.title} website={website} index={index} />
         ))}
       </div>
-    </DoublePane>
+    </>
   );
 }
 
