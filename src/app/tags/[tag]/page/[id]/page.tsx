@@ -1,5 +1,8 @@
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
+import { TotalBlogViews } from '@/app/posts/page/[id]/page';
+import { Skeleton } from '@/components/ui/skeleton';
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
 import { turnTagString } from '@/components/tagsButtonGrid';
@@ -49,6 +52,9 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
       <div className="mt-4 mb-8">
         <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
       </div>
+      <Suspense fallback={<Skeleton className="h-8 w-[10ch]" />}>
+        <TotalBlogViews />
+      </Suspense>
       {/* Removing the grid for the tags */}
       {/* <TagsButtonGrid/> */}
     </>
