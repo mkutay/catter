@@ -58,7 +58,7 @@ function FollowCard({ website, index }: {
         </div>
         <CardFooter className={`flex ${index % 2 === 0 ? 'sm:justify-end' : 'sm:justify-start'} justify-end`}>
           <Button asChild variant="outline">
-            <Link href={website.link} className="text-foreground">
+            <Link href={website.link} className="text-foreground" target='_blank'>
               {`Go To ${website.title.toLowerCase().split(' ').map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`}
             </Link>
           </Button>
