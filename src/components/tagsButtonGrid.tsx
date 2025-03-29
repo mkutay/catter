@@ -1,11 +1,8 @@
 import Link from 'next/link';
-import { Suspense } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { getListOfAllTags } from '@/lib/contentQueries';
-import { getBlogViews } from '@/lib/database-queries/views';
 import { siteConfig } from '@/config/site';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export default function TagsButtonGrid() {
   const tags = getListOfAllTags();
@@ -21,9 +18,6 @@ export default function TagsButtonGrid() {
           </Button>
         ))}
       </div>
-      <Suspense fallback={<Skeleton className="h-8 w-[10ch]"/>}>
-        <TotalBlogViews/>
-      </Suspense>
     </div>
   );
 }
@@ -42,19 +36,4 @@ export function turnTagString(tag: string) {
       return word[0].toUpperCase() + word.slice(1);
     })
     .join(' ');
-}
-
-export async function TotalBlogViews() {
-  const views = await getBlogViews();
-
-  if (views.isErr()) {
-    console.error("Could not display total blog views:", views.error.message);
-    return;
-  }
-
-  return (
-    <div className="flex justify-center items-center text-primary font-bold tracking-tight text-lg">
-      {`${views.value} total views`}
-    </div>
-  );
 }

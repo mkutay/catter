@@ -1,7 +1,10 @@
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
+import { getBlogViews } from '@/lib/database-queries/views';
 import { getPostsLength } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
@@ -45,6 +48,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       <div className="mt-4 mb-8">
         <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
       </div>
+      <Suspense fallback={<Skeleton className="h-8 w-[10ch]" />}>
+        <TotalBlogViews />
+      </Suspense>
       {/* Removing grid for the tags */}
       {/* <TagsButtonGrid/> */}
     </>
@@ -60,4 +66,19 @@ export async function generateStaticParams() {
   }
 
   return ret;
+}
+
+export async function TotalBlogViews() {
+  const views = await getBlogViews();
+
+  if (views.isErr()) {
+    console.error("Could not display total blog views:", views.error.message);
+    return;
+  }
+
+  return (
+    <div className="flex justify-center items-center text-primary font-bold tracking-tight text-lg">
+      {`${views.value} total views`}
+    </div>
+  );
 }
