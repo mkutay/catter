@@ -7,11 +7,11 @@ import { AnnotationHandler, highlight, Inline, InnerLine, InnerPre, InnerToken, 
 import Image, { ImageProps } from 'next/image';
 import Link from 'next/link';
 import { MDXComponents, MDXRemoteOptions } from 'next-mdx-remote-client/rsc';
-import { AnchorHTMLAttributes, BlockquoteHTMLAttributes, DetailedHTMLProps, HTMLAttributes } from 'react';
-import { ComponentProps } from 'react';
+import { ComponentProps, AnchorHTMLAttributes, BlockquoteHTMLAttributes, DetailedHTMLProps, HTMLAttributes, ImgHTMLAttributes } from 'react';
 
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
+import { postImages } from '@/config/images';
 
 // CodeHike configuration for code blocks
 const chConfig: CodeHikeConfig = {
@@ -43,6 +43,19 @@ export const components: MDXComponents = {
     <div className="my-6 flex place-content-center">
       <Image {...props} alt={props.alt} className="my-0 lg:rounded-md rounded-sm"/>
     </div>
+  ),
+  img: (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => (
+    <Image
+      alt={props.alt || ''}
+      src={postImages[props.src || '']}
+      className="my-6 lg:rounded-md rounded-sm"
+      sizes="100vw"
+      style={{
+        width: '100%',
+        height: 'auto',
+      }}
+      placeholder="blur"
+    />
   ),
   Link: (props: ComponentProps<typeof Link>) => (
     <Link {...props} className={cn("text-primary underline hover:text-primary/80 transition-all", props.className)}>

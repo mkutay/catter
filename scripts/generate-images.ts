@@ -15,8 +15,8 @@ function getProps(pathTo: string, slug: string) {
 
   try {
     markdownFile = fs.readFileSync(path.join(process.cwd(), path.join(pathTo, slug + '.mdx')), 'utf-8');
-  } catch(error) {
-    throw new Error(`File not found: ${path.join(process.cwd(), path.join(pathTo, slug + '.mdx'))}`);
+  } catch (e) {
+    throw new Error(`File not found: ${path.join(process.cwd(), path.join(pathTo, slug + '.mdx'))}: ${e}`);
   }
 
   const { data: frontMatter, content } = matter(markdownFile);
@@ -51,6 +51,18 @@ function uppercaseFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function getImagesFromPostContent(content: string) {
+  const regex = /!\[.*?\]\((.*?)\)/g;
+  const images: string[] = [];
+  let match;
+
+  while ((match = regex.exec(content)) !== null) {
+    images.push(match[1]);
+  }
+
+  return images;
+}
+
 const posts = getPosts();
 
 type imageType = {
@@ -59,9 +71,10 @@ type imageType = {
   slug: string,
 };
 
-let coverImages: imageType[] = [];
-let coverSquareImages: imageType[] = [];
-let followNextImages: imageType[] = [];
+const coverImages: imageType[] = [];
+const coverSquareImages: imageType[] = [];
+const followNextImages: imageType[] = [];
+const postImages: imageType[] = [];
 
 posts.forEach((post) => {
   if (post.meta.coverSquare) {
@@ -89,6 +102,14 @@ posts.forEach((post) => {
       slug: post.slug,
     });
   }
+
+  getImagesFromPostContent(post.content).forEach((image) => {
+    postImages.push({
+      slug: image,
+      importPath: path.join(process.cwd(), 'public', image),
+      importName: image.replace(/\//g, '_').replace(/-/g, '_').replace(/\./g, '_'),
+    });
+  });
 });
 
 siteConfig.followNext.forEach((website) => {
@@ -106,10 +127,11 @@ siteConfig.followNext.forEach((website) => {
 
 // Function to generate the images.tsx content:
 function generateImagesCode(): string {
-  let imports = [];
-  let imagesObject = [];
-  let squareImagesObject = [];
-  let followNextImagesObject = [];
+  const imports = [];
+  const imagesObject = [];
+  const squareImagesObject = [];
+  const followNextImagesObject = [];
+  const postImagesObject = [];
 
   imports.push(`import { StaticImageData } from 'next/image';`);
   imports.push('');
@@ -128,6 +150,12 @@ function generateImagesCode(): string {
 
   // Generate imports for follow next images
   followNextImages.forEach((image) => {
+    const relativePath = image.importPath.split('public')[1].replace(/\\/g, '/');
+    imports.push(`import ${image.importName} from '@/public${relativePath}';`);
+  });
+
+  // Generate imports for post images
+  postImages.forEach((image) => {
     const relativePath = image.importPath.split('public')[1].replace(/\\/g, '/');
     imports.push(`import ${image.importName} from '@/public${relativePath}';`);
   });
@@ -155,13 +183,22 @@ function generateImagesCode(): string {
   followNextImages.forEach((image) => {
     followNextImagesObject.push(`  '${image.slug}': ${image.importName},`);
   });
-  followNextImagesObject.push(`}`);
+  followNextImagesObject.push(`};`);
+  followNextImagesObject.push('');
+
+  // Generate the postImages object
+  postImagesObject.push(`export const postImages: { [key: string]: StaticImageData } = {`);
+  postImages.forEach((image) => {
+    postImagesObject.push(`  '${image.slug}': ${image.importName},`);
+  });
+  postImagesObject.push(`}`);
 
   return [
     ...imports,
     ...imagesObject,
     ...squareImagesObject,
-    ...followNextImagesObject
+    ...followNextImagesObject,
+    ...postImagesObject,
   ].join('\n');
 }
 

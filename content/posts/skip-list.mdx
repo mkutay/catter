@@ -27,14 +27,7 @@ We note that the last two methods could also be implemented as one: _cpp`removeM
 
 A naïve approach to this would be to, as inserting into the priority queue, going through the entire list and finding where that element belongs. Consider the example below, when we're adding 52 to the sorted list, we need to compare 52 with all of the numbers in the priority queue: 7, 9, 13, and 21. This means that an insertion would take $O(n)$ time.
 
-<Image
-  alt="An example of a sequence-based priority queue on a sorted list with trivial insertion."
-  src="/images/skip-list/n-squared-insertion.png"
-  width={0}
-  height={0}
-  sizes="100vw"
-  style={{ width: "100%", height: "auto" }}
-/>
+![An example of a sequence-based priority queue on a sorted list with trivial insertion.](/images/skip-list/n-squared-insertion.png)
 
 What's unlucky is, if we were to implement a sorting algorithm from this, we would get $O(n^2)$ time complexity, due to the insertion taking too long. How do we improve this?
 
@@ -50,47 +43,19 @@ Well, the current data structure only uses $O(n)$ memory — just for storing th
 
 Let's try thinking about this with a linked list. We say we want to insert 19 to the linked list:
 
-<Image
-  alt="An example situation of inserting into the list a number."
-  src="/images/skip-list/example-situation.png"
-  width={0}
-  height={0}
-  sizes="100vw"
-  style={{ width: "100%", height: "auto" }}
-/>
+![An example situation of inserting into the list a number.](/images/skip-list/example-situation.png)
 
 For this case, we would compare with 7, 9, 13, and 21. When we see that $19 < 21$, we would put 19 in between 13 and 21. As expected this takes $O(n)$ time, only if there was a faster way to do this by _skipping_ some nodes in the linked list. What if we had something like:
 
-<Image
-  alt="An example situation of inserting into the list a number with an express lane."
-  src="/images/skip-list/express-lane.png"
-  width={0}
-  height={0}
-  sizes="100vw"
-  style={{ width: "100%", height: "auto" }}
-/>
+![An example situation of inserting into the list a number with an express lane.](/images/skip-list/express-lane.png)
 
 This would allow us to compare with 7, use the _express lane_ to 13, compare with 13, and finally compare with 21. If we had this in a large list with optimally placed express lanes, this could save tremendous amounts of time. More formally, we would have something like:
 
-<Image
-  alt="Some formal structure of the linked list with express lanes."
-  src="/images/skip-list/first-look-at-the-structure.png"
-  width={0}
-  height={0}
-  sizes="100vw"
-  style={{ width: "100%", height: "auto" }}
-/>
+![Some formal structure of the linked list with express lanes.](/images/skip-list/first-look-at-the-structure.png)
 
 With this kind of linked list, if we were to add 32, we would insert it as:
 
-<Image
-  alt="Some formal structure of the linked list with express lanes including a search path."
-  src="/images/skip-list/first-look-at-the-structure-search-path.png"
-  width={0}
-  height={0}
-  sizes="100vw"
-  style={{ width: "100%", height: "auto" }}
-/>
+![Some formal structure of the linked list with express lanes including a search path.](/images/skip-list/first-look-at-the-structure-search-path.png)
 
 This just takes three comparisons, instead of the usual seven. This seems like a good start, but how do we _construct_ this linked list? How do we know where to put these express lanes? I mean, it seems quite arbitrary...
 
@@ -100,25 +65,11 @@ This data structure is called a _skip list_ or a _skip linked list_, since we ha
 
 For ease of implementation, we need to add a _sentinal_ or _head_ node to the beginning of the skip list. This allows us to easily add to or remove from the start of the skip list.
 
-<Image
-  alt="Some formal structure of the skip list with head nodes."
-  src="/images/skip-list/structure-with-head.png"
-  width={0}
-  height={0}
-  sizes="100vw"
-  style={{ width: "100%", height: "auto" }}
-/>
+![Some formal structure of the skip list with head nodes.](/images/skip-list/structure-with-head.png)
 
 Furthermore, when we think of skip lists conceptually, we see that they are a sequence of singly linked lists $L_{0}, L_{1}, \cdots, L_{n}$, where each $L_{i}$ contains a subset of the items in $L_{i - 1}$.
 
-<Image
-  alt="Some formal structure of the skip list with layer names."
-  src="/images/skip-list/structure-with-layers.png"
-  width={0}
-  height={0}
-  sizes="100vw"
-  style={{ width: "100%", height: "auto" }}
-/>
+![Some formal structure of the skip list with layer names.](/images/skip-list/structure-with-layers.png)
 
 As you can see, $L_{0}$ can be considered to be the given list that will be inserted to the skip list. We also say that for an element $x$ in a skip list, we call the height of $x$ the largest value $i$ such that $x$ appears in $L_{i}$. So, for example, elements that only appear in $L_{0}$ have a height of zero.
 
@@ -130,14 +81,7 @@ Before discussing the actual construction of the skip list, let's look at how we
 
 We define a Node _`u`_ to be consisting of a data value _`val`_, and an array _`next`_ of pointers, where _cpp`u.next[i]`_ points to _`u`_'s successor in the list $L_{i}$. For our example, if _`u`_ is the first node (with the value 1), then we say _cpp`u.next[0]`_ is the second node (with the value 7), or _cpp`u.next[3]`_ is the sixth node (with the value 21).
 
-<Image
-  alt="Some formal structure of the skip list with node names on the bottom."
-  src="/images/skip-list/structure-with-nodes.png"
-  width={0}
-  height={0}
-  sizes="100vw"
-  style={{ width: "100%", height: "auto" }}
-/>
+![Some formal structure of the skip list with node names on the bottom.](/images/skip-list/structure-with-nodes.png)
 
 An implementation of this node structure in C++ would be as follows.
 
@@ -207,14 +151,7 @@ for (int i = level; i >= 0; i--) {
 
 In the end, _`u`_ would be pointing to the element $y$ we want. Now, we can just roll for the height of the new element and change the connections inside the linked lists.
 
-<Image
-  alt="Some formal search path on an actual skip list."
-  src="/images/skip-list/formal-search-path.png"
-  width={0}
-  height={0}
-  sizes="100vw"
-  style={{ width: "100%", height: "auto" }}
-/>
+![Some formal search path on an actual skip list.](/images/skip-list/formal-search-path.png)
 
 The problem is... We're not going to just connect the new element from $L_{0}$. We might roll quite unluckly and get a tall node, which we would need to connect it with the previous nodes from the start. This means that we need to store some of the nodes as we process through the skip list — going downwards. For this, we just need to keep track of the nodes at which the search path goes down from some list $L_{i}$ to $L_{i - 1}$. We can store this in an array (or a _cpp`std::vector`_ for you C++ heads) _`update`_. Precisely, _cpp`update[i]`_ is the node in $L_{i}$ where the search path proceeds down to $L_{i-1}$. Therefore, the nodes that we will modify to insert the new element are precisely the nodes _txt`update[0], update[1], ..., update[r]`_. Keeping track of the _`update`_ vector is easy for the search path too. The change is:
 
@@ -434,13 +371,6 @@ Apart from using this algorithm in a job interview, skip lists are highly useful
 
 But, do you know what's the issue with skip lists? It's obviously that I can't access and modify **any** element I want. But, in fact, we _can_ create an efficient random-access list/vector/array implementation with skip lists. To do it, we only need to consider the "length" of these express lanes inside the skip list.
 
-<Image
-  alt="An example with lengths written on the skip list."
-  src="/images/skip-list/list-interface.png"
-  width={0}
-  height={0}
-  sizes="100vw"
-  style={{ width: "100%", height: "auto" }}
-/>
+![An example with lengths written on the skip list.](/images/skip-list/list-interface.png)
 
 Notice that the length of the upper layers is the sum of the lengths of the layer underneath it. This way, we can go through the skip list, counting all the lengths until we find our desired location. I've added this implementation in the [GitHub repo](https://github.com/mkutay/skip-linked-list/blob/main/cpp-src/list.cpp) as well.
