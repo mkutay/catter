@@ -58,3 +58,17 @@ export async function doesAllEntriesExist(ids: number[]): Promise<Result<boolean
     return ok(true);
   });
 }
+
+export async function getGuestbookEntriesByEmail(email: string): Promise<Result<EntryData[], GetGuestbookEntriesError>> {
+  const promise = sql<EntryData[]>`
+    SELECT *
+    FROM guestbook
+    WHERE email = ${email}
+    ORDER BY created_at DESC;
+  `;
+
+  return ResultAsync.fromPromise(promise, () => ({
+    message: 'Failed to fetch guestbook entries. Database error.',
+    code: 'DATABASE_ERROR'
+  }));
+}

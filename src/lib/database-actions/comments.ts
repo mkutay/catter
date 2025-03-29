@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
 
+import { getCommentsByEmail } from '@/lib/database-queries/comments';
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
 import { CommentData } from '@/config/types';
@@ -16,7 +17,7 @@ interface DatabaseError {
 
 interface SaveCommentError {
   message: string;
-  code: 'UNAUTHORISED' | 'INVALID_COMMENT' | 'DATABASE_ERROR' | 'SUCCESS';
+  code: 'UNAUTHORISED' | 'INVALID_COMMENT' | 'DATABASE_ERROR' | 'SUCCESS' | 'RATE_LIMIT';
 };
 
 interface DeleteCommentError {
@@ -49,6 +50,26 @@ export async function saveComment({ slug, message }: { slug: string, message: st
 
   const email = session.user.email as string;
   const created_by = session.user.name as string;
+
+  const commentsOfEmailResult = await getCommentsByEmail(email);
+  if (commentsOfEmailResult.isErr()) {
+    return {
+      message: 'Failed to fetch comments of user. Database error.',
+      code: 'DATABASE_ERROR',
+    };
+  }
+  const commentsOfEmail = commentsOfEmailResult.value;
+  if (commentsOfEmail.length > 0) {
+    const newestDate = new Date(commentsOfEmail[0].created_at);
+
+    // Rate limit check
+    if (Date.now() - newestDate.getTime() < 1000 * 60 * 5) {
+      return {
+        message: 'Rate limit exceeded. Please wait before submitting again.',
+        code: 'RATE_LIMIT',
+      };
+    }
+  }
 
   const inserted = await insertIntoComments(random, slug, email, message, created_by);
 

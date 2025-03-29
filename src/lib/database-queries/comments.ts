@@ -62,3 +62,17 @@ export async function getEveryComment(limit?: number): Promise<Result<CommentDat
     code: 'DATABASE_ERROR'
   }));
 }
+
+export async function getCommentsByEmail(email: string): Promise<Result<CommentData[], GetCommentsError>> {
+  const promise = sql<CommentData[]>`
+    SELECT id, slug, body, created_by, created_at, updated_at
+    FROM comments
+    WHERE email = (${email})
+    ORDER BY created_at DESC;
+  `;
+
+  return ResultAsync.fromPromise(promise, () => ({
+    message: 'Failed to fetch comments. Database error.',
+    code: 'DATABASE_ERROR'
+  }));
+}

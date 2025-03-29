@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { err, ok, Result, ResultAsync } from 'neverthrow';
 
-import { doesAllEntriesExist } from '@/lib/database-queries/guestbook';
+import { doesAllEntriesExist, getGuestbookEntriesByEmail } from '@/lib/database-queries/guestbook';
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
 import { siteConfig } from '@/config/site';
@@ -12,7 +12,7 @@ import { EntryData } from '@/config/types';
 
 interface SaveGuestbookEntryError {
   message: string;
-  code: 'DATABASE_ERROR' | 'VALIDATION_ERROR' | 'UNAUTHORISED' | 'SUCCESS';
+  code: 'DATABASE_ERROR' | 'VALIDATION_ERROR' | 'UNAUTHORISED' | 'RATE_LIMIT' | 'SUCCESS';
 };
 
 interface DatabaseError {
@@ -70,6 +70,28 @@ export async function saveGuestbookEntryData({
 
   if (!validationPopOver.success) {
     color = 'text';
+  }
+
+  const entriesOfEmailResult = await getGuestbookEntriesByEmail(email);
+
+  if (entriesOfEmailResult.isErr()) {
+    return {
+      message: 'Failed to fetch guestbook entries of user. Database error.',
+      code: 'DATABASE_ERROR',
+    };
+  }
+
+  const entriesOfEmail = entriesOfEmailResult.value;
+  if (entriesOfEmail.length !== 0) {
+    const newestDate = new Date(entriesOfEmail[0].created_at);
+
+    // Rate limit check
+    if (Date.now() - newestDate.getTime() < 1000 * 60 * 5) {
+      return {
+        message: 'Rate limit exceeded. Please wait before submitting again.',
+        code: 'RATE_LIMIT',
+      };
+    }
   }
 
   const inserted = await insertIntoGuestbook(random, email, message, created_by, color);
