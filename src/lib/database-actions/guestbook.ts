@@ -86,7 +86,7 @@ export async function saveGuestbookEntryData({
     const newestDate = new Date(entriesOfEmail[0].created_at);
 
     // Rate limit check
-    if (Date.now() - newestDate.getTime() < 1000 * 60 * 5) {
+    if (Date.now() - newestDate.getTime() < 1000 * 15) {
       return {
         message: 'Rate limit exceeded. Please wait before submitting again.',
         code: 'RATE_LIMIT',
