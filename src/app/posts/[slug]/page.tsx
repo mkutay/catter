@@ -10,10 +10,12 @@ import CopyToClipboard from '@/components/copyToClipboard';
 import Comments, { CommentsFallback } from '@/components/comments/comments';
 import { turnTagString } from '@/components/tagsButtonGrid';
 import { PostViewCounter } from '@/components/postViewCounter';
-import { getProps } from '@/lib/contentQueries';
+import { getPostFiles, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
+
+export const dynamic = 'force-static';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -98,6 +100,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       </DoublePane>
     </>
   );
+}
+
+export function generateStaticParams() {
+  const postFiles = getPostFiles();
+
+  return postFiles.map(filename => ({
+    slug: filename.replace('.mdx', ''),
+  }));
 }
 
 function ViewCounterFallback() {
