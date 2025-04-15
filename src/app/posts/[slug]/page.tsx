@@ -114,7 +114,7 @@ export async function generateStaticParams() {
 }
 
 async function ViewCounter({ slug }: { slug: string }) {
-  const viewCountResult = await getViewCount(slug);
+  const viewCountResult = await getViewCount({ slug });
 
   if (viewCountResult.isErr()) {
     console.error("Error in displaying view count for post " + slug + ":", viewCountResult.error.message);

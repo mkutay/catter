@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { err, ok, Result, ResultAsync } from 'neverthrow';
+import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
 import { getCommentsByEmail } from '@/lib/database-queries/comments';
 import { auth } from '@/lib/auth';
@@ -10,29 +10,24 @@ import { CommentData } from '@/config/types';
 import { siteConfig } from '@/config/site';
 import { commentsFormSchema } from '@/config/schema';
 
-interface DatabaseError {
-  message: string;
-  code: 'DATABASE_ERROR';
-};
-
-interface SaveCommentError {
+interface SaveCommentResult {
   message: string;
   code: 'UNAUTHORISED' | 'INVALID_COMMENT' | 'DATABASE_ERROR' | 'SUCCESS' | 'RATE_LIMIT';
 };
 
-interface DeleteCommentError {
+interface DeleteCommentResult {
   message: string;
   code: 'UNAUTHORISED' | 'DATABASE_ERROR' | 'SUCCESS';
 };
 
-export async function saveComment({ slug, message }: { slug: string, message: string }): Promise<SaveCommentError> {
+export const saveComment = async ({ slug, message }: { slug: string, message: string }) => {
   const session = await auth();
   
   if (!session || !session.user) {
     return {
       message: 'Session not found.',
       code: 'UNAUTHORISED',
-    }
+    } as SaveCommentResult;
   }
 
   const random = Math.floor(Math.random() * 10000000);
@@ -45,18 +40,18 @@ export async function saveComment({ slug, message }: { slug: string, message: st
     return {
       message: 'Invalid comment: ' + validation.error.issues,
       code: 'INVALID_COMMENT',
-    };
+    } as SaveCommentResult;
   }
 
   const email = session.user.email as string;
   const created_by = session.user.name as string;
 
-  const commentsOfEmailResult = await getCommentsByEmail(email);
+  const commentsOfEmailResult = await getCommentsByEmail({ email });
   if (commentsOfEmailResult.isErr()) {
     return {
       message: 'Failed to fetch comments of user. Database error.',
       code: 'DATABASE_ERROR',
-    };
+    } as SaveCommentResult;
   }
   const commentsOfEmail = commentsOfEmailResult.value;
   if (commentsOfEmail.length > 0) {
@@ -67,7 +62,7 @@ export async function saveComment({ slug, message }: { slug: string, message: st
       return {
         message: 'Rate limit exceeded. Please wait before submitting again.',
         code: 'RATE_LIMIT',
-      };
+      } as SaveCommentResult;
     }
   }
 
@@ -77,7 +72,7 @@ export async function saveComment({ slug, message }: { slug: string, message: st
     return {
       message: inserted.error.message,
       code: inserted.error.code,
-    };
+    } as SaveCommentResult;
   }
 
   revalidatePath(`/posts/${slug}`);
@@ -85,17 +80,17 @@ export async function saveComment({ slug, message }: { slug: string, message: st
   return {
     message: 'Comment saved successfully.',
     code: 'SUCCESS',
-  }
+  } as SaveCommentResult;
 }
 
-export async function deleteComment({ comment }: { comment: CommentData }): Promise<DeleteCommentError> {
+export const deleteComment = async ({ comment }: { comment: CommentData }) => {
   const session = await auth();
   
   if (!session || !session.user) {
     return {
       message: 'Session not found.',
       code: 'UNAUTHORISED',
-    };
+    } as DeleteCommentResult;
   }
 
   const email = session.user.email as string;
@@ -104,7 +99,7 @@ export async function deleteComment({ comment }: { comment: CommentData }): Prom
     return {
       message: 'You are not authorized to delete this comment.',
       code: 'UNAUTHORISED',
-    };
+    } as DeleteCommentResult;
   }
 
   const deleted = await deleteFromComments(comment.id);
@@ -112,7 +107,7 @@ export async function deleteComment({ comment }: { comment: CommentData }): Prom
     return {
       message: deleted.error.message,
       code: deleted.error.code,
-    };
+    } as DeleteCommentResult;
   }
 
   // revalidatePath(`/posts/${comment.slug}`);
@@ -121,10 +116,10 @@ export async function deleteComment({ comment }: { comment: CommentData }): Prom
   return {
     message: 'Comment deleted successfully.',
     code: 'SUCCESS',
-  };
+  } as DeleteCommentResult;
 }
 
-async function deleteFromComments(id: string): Promise<Result<void, DatabaseError>> {
+const deleteFromComments = (id: string) => {
   const promise = sql<CommentData[]>`
     DELETE FROM comments
     WHERE id = (${id})
@@ -134,28 +129,28 @@ async function deleteFromComments(id: string): Promise<Result<void, DatabaseErro
   return ResultAsync
     .fromPromise(promise, () => ({
       message: 'Failed to delete comment. Database error.',
-      code: 'DATABASE_ERROR'
-    } as DatabaseError))
+      code: 'DATABASE_ERROR' as const,
+    }))
     .andThen((result) => {
       if (!result || result.length === 0) {
-        return err({
+        return errAsync({
           message: 'Comment not deleted from the database. Database error.',
-          code: 'DATABASE_ERROR'
-        } as DatabaseError);
+          code: 'DATABASE_ERROR' as const,
+        });
       }
 
       if (result[0].id !== id) {
-        return err({
+        return errAsync({
           message: 'Comment ID mismatch. Comment not deleted correctly. Database error.',
-          code: 'DATABASE_ERROR'
-        } as DatabaseError);
+          code: 'DATABASE_ERROR' as const,
+        });
       }
 
-      return ok();
+      return okAsync();
     });
 }
 
-async function insertIntoComments(random: number, slug: string, email: string, message: string, created_by: string): Promise<Result<void, DatabaseError>> {
+const insertIntoComments = (random: number, slug: string, email: string, message: string, created_by: string) => {
   const promise = sql<CommentData[]>`
     INSERT INTO comments (id, slug, email, body, created_by, created_at)
     VALUES (${random}, ${slug}, ${email}, ${message}, ${created_by}, NOW())
@@ -165,23 +160,23 @@ async function insertIntoComments(random: number, slug: string, email: string, m
   return ResultAsync
     .fromPromise(promise, () => ({
       message: 'Failed to save comment. Database error.',
-      code: 'DATABASE_ERROR'
-    } as DatabaseError))
+      code: 'DATABASE_ERROR' as const
+    }))
     .andThen((result) => {
       if (!result || result.length === 0) {
-        return err({
+        return errAsync({
           message: 'Comment not saved to the database. Database error.',
-          code: 'DATABASE_ERROR'
-        } as DatabaseError);
+          code: 'DATABASE_ERROR' as const
+        });
       }
 
       if (result[0].slug !== slug) {
-        return err({
+        return errAsync({
           message: 'Comment slug mismatch. Comment not saved correctly. Database error.',
-          code: 'DATABASE_ERROR'
-        } as DatabaseError);
+          code: 'DATABASE_ERROR' as const
+        });
       }
 
-      return ok();
+      return okAsync();
     });
 }

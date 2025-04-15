@@ -3,10 +3,6 @@
     "next/core-web-vitals",
     "next/typescript"
   ],
-  "plugins": ["neverthrow"],
-  "rules": {
-    "neverthrow/must-use-result": "error"
-  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2021,

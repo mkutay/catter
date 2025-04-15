@@ -1,6 +1,6 @@
 'use server';
 
-import { err, ok, Result, ResultAsync } from 'neverthrow';
+import { errAsync, okAsync, Result, ResultAsync } from 'neverthrow';
 
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
@@ -12,41 +12,36 @@ interface IncrementViewsError {
   code: 'DATABASE_ERROR' | 'AUTHORISED' | 'IN_DEVELOPMENT';
 };
 
-interface DatabaseError {
-  message: string;
-  code: 'DATABASE_ERROR';
-};
-
-export async function incrementViews(slug: string): Promise<Result<void, IncrementViewsError>> {
+export const incrementViews = async (slug: string): Promise<Result<void, IncrementViewsError>> => {
+  if (process.env.NODE_ENV === 'development') {
+    return errAsync({
+      message: 'Increment views is disabled in development.',
+      code: 'IN_DEVELOPMENT',
+    } as IncrementViewsError);
+  }
+  
   const session = await auth();
 
   if (session && session.user && siteConfig.admins.includes(session.user.email as string)) {
-    return err({
-      message: 'Unauthorized.',
+    return errAsync({
+      message: 'Authorised as admin.',
       code: 'AUTHORISED',
-    });
-  }
-
-  if (process.env.NODE_ENV === 'development') {
-    return err({
-      message: 'Increment views is disabled in development.',
-      code: 'IN_DEVELOPMENT',
-    });
+    } as IncrementViewsError);
   }
   
   const inserted = await insertIntoViews(slug);
 
   if (inserted.isErr()) {
-    return err({
+    return errAsync({
       message: 'Failed to increment views.',
       code: 'DATABASE_ERROR',
-    });
+    } as IncrementViewsError);
   }
 
-  return ok();
+  return okAsync();
 }
 
-async function insertIntoViews(slug: string): Promise<Result<void, DatabaseError>> {
+const insertIntoViews = (slug: string) => {
   const promise = sql<ViewCount[]>`
     INSERT INTO views (slug, count)
     VALUES (${slug}, 1)
@@ -58,22 +53,22 @@ async function insertIntoViews(slug: string): Promise<Result<void, DatabaseError
 
   return ResultAsync.fromPromise(promise, () => ({
     message: 'Failed to increment views. Database error.',
-    code: 'DATABASE_ERROR',
-  } as DatabaseError)).andThen((result) => {
+    code: 'DATABASE_ERROR' as const,
+  })).andThen((result) => {
     if (!result || result.length === 0) {
-      return err({
+      return errAsync({
         message: 'Not inserted into the views table. Database error.',
-        code: 'DATABASE_ERROR',
-      } as DatabaseError);
+        code: 'DATABASE_ERROR' as const,
+      });
     }
 
     if (result[0].slug !== slug) {
-      return err({
+      return errAsync({
         message: 'Inserted incorrectly into the views table. Database error.',
-        code: 'DATABASE_ERROR',
-      } as DatabaseError);
+        code: 'DATABASE_ERROR' as const,
+      });
     }
 
-    return ok();
+    return okAsync();
   });
 }

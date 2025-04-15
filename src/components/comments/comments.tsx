@@ -7,22 +7,23 @@ import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
 import { auth } from '@/lib/auth';
 import { getComments } from '@/lib/database-queries/comments';
-import { CommentData } from '@/config/types';
 import { siteConfig } from '@/config/site';
+import { CommentData } from '@/config/types';
 
 export default async function Comments({ slug }: { slug: string }) {
   const session = await auth();
-  const commentsPromise = getComments({ slug });
-  const comments = await commentsPromise;
+  const commentsResult = await getComments({ slug });
 
-  if (comments.isErr()) {
-    console.error("Error in displaying the comments in post " + slug + ":", comments.error.message);
+  if (commentsResult.isErr()) {
+    console.error("Error in displaying the comments in post " + slug + ":", commentsResult.error.message);
     return (
       <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
         Sorry. Could not fetch the comments.
       </p>
     );
   }
+
+  const comments = commentsResult.value;
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
@@ -32,7 +33,7 @@ export default async function Comments({ slug }: { slug: string }) {
         <CommentAuth slug={slug}/>
       )}
       <div className="flex flex-col gap-6">
-        {comments.value.map((comment) => (
+        {comments.map((comment) => (
           <Comment comment={comment} key={comment.id}/>
         ))}
       </div>
@@ -49,7 +50,11 @@ export function CommentAuth({ slug }: { slug: string }) {
   );
 }
 
-export async function Comment({ comment }: { comment: CommentData }) {
+export async function Comment({
+  comment,
+}: {
+  comment: CommentData;
+}) {
   const session = await auth();
   
   const admin = session && session.user && siteConfig.admins.includes(session.user?.email as string);

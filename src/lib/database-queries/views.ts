@@ -1,6 +1,4 @@
-'use server';
-
-import { err, ok, Result, ResultAsync } from 'neverthrow';
+import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
 import { sql } from '@/lib/postgres';
 import { doesPostWithSlugExist } from '@/lib/contentQueries';
@@ -21,7 +19,7 @@ interface GetViewCountError {
   code: 'POST_NOT_FOUND' | 'DATABASE_ERROR' | 'NO_VIEWS_FOUND';
 };
 
-export async function getBlogViews(): Promise<Result<number, GetBlogViewsError>> {
+export const getBlogViews = () => {
   const promise = sql<{ count: number }[]>`
     SELECT count
     FROM views;
@@ -39,12 +37,12 @@ export async function getBlogViews(): Promise<Result<number, GetBlogViewsError>>
   return totalViewsPromise;
 }
 
-export async function getViewsCount(postNum: number): Promise<Result<ViewCount[], GetViewsCountError>> {
+export const getViewsCount = ({ postNum }: { postNum: number }) => {
   if (postNum < 1 || postNum > 100) {
-    return err({
+    return errAsync({
       message: 'Limit out of allowed range.',
       code: 'LIMIT_OUT_OF_RANGE',
-    });
+    } as GetViewsCountError);
   }
 
   const promise = sql<ViewCount[]>`
@@ -57,15 +55,15 @@ export async function getViewsCount(postNum: number): Promise<Result<ViewCount[]
   return ResultAsync.fromPromise(promise, () => ({
     message: 'Failed to fetch views count. Database error.',
     code: 'DATABASE_ERROR',
-  }));
+  } as GetViewsCountError));
 }
 
-export async function getViewCount(slug: string): Promise<Result<number, GetViewCountError>> {
+export const getViewCount = ({ slug }: { slug: string }) => {
   if (!doesPostWithSlugExist(slug)) {
-    return err({
+    return errAsync({
       message: 'Post not found with slug: ' + slug,
       code: 'POST_NOT_FOUND',
-    });
+    } as GetViewCountError);
   }
 
   const promise = sql<ViewCount[]>`
@@ -81,12 +79,12 @@ export async function getViewCount(slug: string): Promise<Result<number, GetView
 
   const viewsPromise = databasePromise.andThen((views) => {
     if (views.length === 0 || !views[0]) {
-      return err({
+      return errAsync({
         message: 'No views found for this post.',
         code: 'NO_VIEWS_FOUND',
       } as GetViewCountError);
     }
-    return ok(views[0].count);
+    return okAsync(views[0].count);
   });
 
   return viewsPromise;

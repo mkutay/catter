@@ -1,6 +1,4 @@
-'use server';
-
-import { err, Result, ResultAsync } from 'neverthrow';
+import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
 import { doesPostWithSlugExist } from '@/lib/contentQueries';
 import { sql } from '@/lib/postgres';
@@ -16,63 +14,65 @@ interface GetEveryCommentError {
   code: 'LIMIT_OUT_OF_RANGE' | 'DATABASE_ERROR';
 };
 
+interface GetCommentsByEmailError {
+  message: string;
+  code: 'DATABASE_ERROR';
+};
+
 /* Limiting to 15 to avoid loading too many comments at once. */
+export const getComments = ({ slug }: { slug: string }) =>
+  !doesPostWithSlugExist(slug)
+    ? errAsync({
+        message: 'Post not found.',
+        code: 'POST_NOT_FOUND',
+      } as GetCommentsError)
+    : ResultAsync.fromPromise(
+        sql<CommentData[]>`
+          SELECT id, body, created_by, created_at, updated_at, email
+          FROM comments
+          WHERE slug = (${slug})
+          ORDER BY created_at DESC
+          LIMIT 15;
+        `,
+        () => ({
+          message: 'Failed to fetch comments. Database error.',
+          code: 'DATABASE_ERROR'
+        } as GetCommentsError)
+      )
+      .map((comments) => comments as CommentData[])
 
-export async function getComments({ slug }: { slug: string }): Promise<Result<CommentData[], GetCommentsError>> {
-  if (!doesPostWithSlugExist(slug)) {
-    return err({
-      message: 'Post not found.',
-      code: 'POST_NOT_FOUND',
-    });
-  }
+export const getEveryComment = (props?: { limit: number }) => 
+  okAsync(props ? props.limit : 15)
+  .andThen((limit) =>
+    limit <= 0 || limit > 100
+      ? errAsync({
+          message: 'Limit out of allowed range.',
+          code: 'LIMIT_OUT_OF_RANGE',
+        } as GetEveryCommentError)
+      : ResultAsync.fromPromise(
+          sql<CommentData[]>`
+            SELECT id, slug, body, created_by, created_at, updated_at, email
+            FROM comments
+            ORDER BY created_at DESC
+            LIMIT ${limit};
+          `,
+          () => ({
+            message: 'Failed to fetch comments. Database error.',
+            code: 'DATABASE_ERROR'
+          } as GetEveryCommentError)
+        )
+  );
 
-  const promise = sql<CommentData[]>`
-    SELECT id, body, created_by, created_at, updated_at, email
-    FROM comments
-    WHERE slug = (${slug})
-    ORDER BY created_at DESC
-    LIMIT 15;
-  `;
-
-  return ResultAsync.fromPromise(promise, () => ({
-    message: 'Failed to fetch comments. Database error.',
-    code: 'DATABASE_ERROR'
-  }));
-}
-
-export async function getEveryComment(limit?: number): Promise<Result<CommentData[], GetEveryCommentError>> {
-  limit = limit || 15;
-
-  if (limit <= 0 || limit > 100) {
-    return err({
-      message: 'Limit out of allowed range.',
-      code: 'LIMIT_OUT_OF_RANGE',
-    });
-  }
-
-  const promise = sql<CommentData[]>`
-    SELECT id, slug, body, created_by, created_at, updated_at, email
-    FROM comments
-    ORDER BY created_at DESC
-    LIMIT ${limit};
-  `;
-
-  return ResultAsync.fromPromise(promise, () => ({
-    message: 'Failed to fetch comments. Database error.',
-    code: 'DATABASE_ERROR'
-  }));
-}
-
-export async function getCommentsByEmail(email: string): Promise<Result<CommentData[], GetCommentsError>> {
-  const promise = sql<CommentData[]>`
-    SELECT id, slug, body, created_by, created_at, updated_at
-    FROM comments
-    WHERE email = (${email})
-    ORDER BY created_at DESC;
-  `;
-
-  return ResultAsync.fromPromise(promise, () => ({
-    message: 'Failed to fetch comments. Database error.',
-    code: 'DATABASE_ERROR'
-  }));
-}
+export const getCommentsByEmail = ({ email }: { email: string }) =>
+  ResultAsync.fromPromise(
+    sql<CommentData[]>`
+      SELECT id, slug, body, created_by, created_at, updated_at
+      FROM comments
+      WHERE email = (${email})
+      ORDER BY created_at DESC;
+    `,
+    () => ({
+      message: 'Failed to fetch comments. Database error.',
+      code: 'DATABASE_ERROR'
+    } as GetCommentsByEmailError)
+  );

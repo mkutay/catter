@@ -115,7 +115,7 @@ function PostDisplay({
 }
 
 async function ViewDisplay({ slug }: { slug: string }) {
-  const viewsResult = await getViewCount(slug);
+  const viewsResult = await getViewCount({ slug });
 
   if (viewsResult.isErr()) {
     console.error("Error in displaying view count:", viewsResult.error.message);

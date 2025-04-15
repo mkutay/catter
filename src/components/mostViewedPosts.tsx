@@ -6,7 +6,7 @@ import { getViewsCount } from '@/lib/database-queries/views';
 import { getProps } from '@/lib/contentQueries';
 
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
-  const viewsResult = await getViewsCount(postNum);
+  const viewsResult = await getViewsCount({ postNum });
 
   if (viewsResult.isErr()) {
     console.error("Error in getting the view count in MostViewedPosts:", viewsResult.error.message);
