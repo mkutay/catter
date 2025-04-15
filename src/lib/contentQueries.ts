@@ -1,22 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { notFound } from 'next/navigation';
 
 import { PostData, PostMeta } from '@/config/types';
-
-let postFilesCache: string[] | null = null;
-const postsCache: Map<string, PostData> = new Map();
-const filteredPostsCache: Map<string, PostData[]> = new Map();
-let tagsCache: string[] | null = null;
 
 /**
  * Get all post files from the posts directory.
  */
 export function getPostFiles(): string[] {
-  if (!postFilesCache) {
-    postFilesCache = fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
-  }
-  return postFilesCache;
+  return fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
 }
 
 export function doesPostWithSlugExist(slug: string): boolean {
@@ -35,17 +28,12 @@ export function getPostProps(slug: string): PostData {
  * Get properties for a specific slug in a path (post or page).
  */
 export function getProps(pathTo: string, slug: string): PostData {
-  const cacheKey = `${pathTo}/${slug}`;
-  
-  if (postsCache.has(cacheKey)) {
-    return postsCache.get(cacheKey)!;
-  }
-  
   let markdownFile;
   try {
     markdownFile = fs.readFileSync(path.join(process.cwd(), path.join(pathTo, slug + '.mdx')), 'utf-8');
   } catch (error) {
-    throw new Error(`Post ${slug} not found: ${error}`);
+    console.log(error);
+    notFound();
   }
 
   const { data: frontMatter, content } = matter(markdownFile);
@@ -56,7 +44,6 @@ export function getProps(pathTo: string, slug: string): PostData {
     content: content,
   };
   
-  postsCache.set(cacheKey, postData);
   return postData;
 }
 
@@ -74,13 +61,6 @@ export function getPosts({
   tags?: string[],
   disallowTags?: string[]
 }): PostData[] {
-  // Create a cache key based on the filter parameters
-  const cacheKey = `${startInd}-${endInd}-${tags.join(',')}-${disallowTags.join(',')}`;
-  
-  if (filteredPostsCache.has(cacheKey)) {
-    return filteredPostsCache.get(cacheKey)!;
-  }
-  
   const postFiles = getPostFiles();
   const posts: PostData[] = [];
   
@@ -110,7 +90,6 @@ export function getPosts({
   ));
 
   const result = posts.slice(startInd, endInd);
-  filteredPostsCache.set(cacheKey, result);
   return result;
 }
 
@@ -132,10 +111,6 @@ export function getProjectsLength(): number {
  * Get list of all tags used across posts.
  */
 export function getListOfAllTags(): string[] {
-  if (tagsCache) {
-    return tagsCache;
-  }
-  
   const posts = getPosts({});
   const tags = new Set<string>();
 
@@ -145,16 +120,5 @@ export function getListOfAllTags(): string[] {
     });
   });
 
-  tagsCache = Array.from(tags);
-  return tagsCache;
-}
-
-/**
- * Helper to clear all caches to refresh data.
- */
-export function refreshContentCache(): void {
-  postFilesCache = null;
-  postsCache.clear();
-  filteredPostsCache.clear();
-  tagsCache = null;
+  return Array.from(tags);
 }

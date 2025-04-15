@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { MDXRemote } from 'next-mdx-remote-client/rsc';
+import { evaluate } from 'next-mdx-remote-client/rsc';
 import { format } from 'date-fns';
 import { Suspense } from 'react';
 
@@ -10,7 +10,7 @@ import CopyToClipboard from '@/components/copyToClipboard';
 import Comments, { CommentsFallback } from '@/components/comments/comments';
 import { turnTagString } from '@/components/tagsButtonGrid';
 import { PostViewCounter } from '@/components/postViewCounter';
-import { getPostFiles, getProps } from '@/lib/contentQueries';
+import { getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
@@ -41,6 +41,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const { slug } = await params;
   const props = getProps('content/posts', slug);
   const formattedDate = format(props.meta.date, 'PP');
+
+  const { content } = await evaluate({
+    source: props.content,
+    options,
+    components,
+  });
 
   return (
     <>
@@ -84,7 +90,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </div>
         </div>
         <main>
-          <MDXRemote source={props.content} options={options} components={components} />
+          {content}
         </main>
         <Suspense fallback={<CommentsFallback/>}>
           <Comments slug={props.slug}/>
@@ -92,14 +98,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       </DoublePane>
     </>
   );
-}
-
-export function generateStaticParams() {
-  const postFiles = getPostFiles();
-
-  return postFiles.map(filename => ({
-    slug: filename.replace('.mdx', ''),
-  }));
 }
 
 function ViewCounterFallback() {
