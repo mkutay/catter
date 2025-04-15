@@ -1,6 +1,8 @@
 import { incrementViews } from "@/lib/database-actions/views";
 import { getViewCount } from "@/lib/database-queries/views";
 
+export const dynamic = 'force-dynamic';
+
 export async function PostViewCounter({ slug }: { slug: string }) {
   const incremented = await incrementViews(slug);
 

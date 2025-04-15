@@ -16,6 +16,7 @@ import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
 
 export const dynamic = 'force-static';
+export const revalidate = 15;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
