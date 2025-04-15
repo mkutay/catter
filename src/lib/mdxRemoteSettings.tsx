@@ -2,7 +2,7 @@ import remarkGfm from 'remark-gfm';
 import remarkLint from 'remark-lint';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import { remarkCodeHike, recmaCodeHike, CodeHikeConfig } from 'codehike/mdx';
+import { remarkCodeHike, CodeHikeConfig } from 'codehike/mdx';
 import { AnnotationHandler, highlight, Inline, InnerLine, InnerPre, InnerToken, Pre, RawCode } from 'codehike/code';
 import Image, { ImageProps } from 'next/image';
 import Link from 'next/link';
@@ -30,9 +30,6 @@ export const options: MDXRemoteOptions = {
       remarkLint,
       remarkMath,
       [remarkCodeHike, chConfig],
-    ],
-    recmaPlugins: [
-      [recmaCodeHike, chConfig],
     ],
     rehypePlugins: [rehypeKatex],
   }

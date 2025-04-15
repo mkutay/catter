@@ -16,9 +16,9 @@ import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import { images } from '@/config/images';
 
-export async function generateMetadata(functionProps: { params: Promise<{ slug: string }> }) {
-  const params = await functionProps.params;
-  const props = getProps('content/posts', params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const props = getProps('content/posts', slug);
   const formattedDate = format(props.meta.date, 'PP');
 
   return {
@@ -38,9 +38,9 @@ export async function generateMetadata(functionProps: { params: Promise<{ slug: 
   };
 }
 
-export default async function Page(functionProps: { params: Promise<{ slug: string }> }) {
-  const params = await functionProps.params;
-  const props = getProps('content/posts', params.slug);
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const props = getProps('content/posts', slug);
   const formattedDate = format(props.meta.date, 'PP');
 
   const incremented = await incrementViews(props.slug);
@@ -78,7 +78,7 @@ export default async function Page(functionProps: { params: Promise<{ slug: stri
         </div>
       </div>
       <DoublePane>
-        <header>
+        <div>
           {props.meta.cover && (<div className="my-6"><Image
             alt={`${props.meta.title} post cover image`}
             src={images[props.slug]}
@@ -93,19 +93,19 @@ export default async function Page(functionProps: { params: Promise<{ slug: stri
             </Suspense>
             <CopyToClipboard text={props.meta.shortened}/>
           </div>
-        </header>
+        </div>
         <main>
-          <Suspense fallback={<Skeleton className="w-full"/>}>
-            <MDXRemote source={props.content} options={options} components={components}/>
-          </Suspense>
+          <MDXRemote source={props.content} options={options} components={components} />
         </main>
-        <Suspense fallback={<CommentsFallback/>}><Comments slug={props.slug}/></Suspense>
+        <Suspense fallback={<CommentsFallback/>}>
+          <Comments slug={props.slug}/>
+        </Suspense>
       </DoublePane>
     </>
   );
 }
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
   const postFiles = getPostFiles();
 
   return postFiles.map(filename => ({
