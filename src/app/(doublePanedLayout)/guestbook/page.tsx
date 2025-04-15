@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { GuestBookSignIn } from '@/app/guestbook/buttons';
-import GuestbookForm from '@/app/guestbook/form';
+import { GuestBookSignIn } from '@/app/(doublePanedLayout)/guestbook/buttons';
+import GuestbookForm from '@/app/(doublePanedLayout)/guestbook/form';
 import { auth } from '@/lib/auth';
 import { getGuestbookEntries } from '@/lib/database-queries/guestbook';
 import { cn } from '@/lib/utils';

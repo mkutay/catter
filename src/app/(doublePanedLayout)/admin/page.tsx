@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 
-import { GuestbookAdminForm } from '@/app/admin/guestbookAdminForm';
-import { CommentsAdmin } from '@/app/admin/commentsAdmin';
+import { GuestbookAdminForm } from '@/app/(doublePanedLayout)/admin/guestbookAdminForm';
+import { CommentsAdmin } from '@/app/(doublePanedLayout)/admin/commentsAdmin';
 import { auth } from '@/lib/auth';
 import { getEveryComment } from '@/lib/database-queries/comments';
 import { getGuestbookEntries } from '@/lib/database-queries/guestbook';

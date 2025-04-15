@@ -9,8 +9,7 @@ import DoublePane from '@/components/doublePane';
 import CopyToClipboard from '@/components/copyToClipboard';
 import Comments, { CommentsFallback } from '@/components/comments/comments';
 import { turnTagString } from '@/components/tagsButtonGrid';
-import { incrementViews } from '@/lib/database-actions/views';
-import { getViewCount } from '@/lib/database-queries/views';
+import { PostViewCounter } from '@/components/postViewCounter';
 import { getPostFiles, getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
@@ -42,16 +41,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const { slug } = await params;
   const props = getProps('content/posts', slug);
   const formattedDate = format(props.meta.date, 'PP');
-
-  const incremented = await incrementViews(props.slug);
-
-  if (incremented.isErr()) {
-    if (incremented.error.code === 'DATABASE_ERROR') {
-      console.error('Database error in incrementing view:', incremented.error.message);
-    } else {
-      console.log('Not incrementing views:', incremented.error.message);
-    }
-  }
 
   return (
     <>
@@ -89,7 +78,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           /></div>)}
           <div className="my-4 flex flex-row items-center gap-4 justify-end text-foreground text-lg">
             <Suspense fallback={<ViewCounterFallback/>}>
-              <ViewCounter slug={props.slug}/>
+              <PostViewCounter slug={props.slug}/>
             </Suspense>
             <CopyToClipboard text={props.meta.shortened}/>
           </div>
@@ -111,23 +100,6 @@ export function generateStaticParams() {
   return postFiles.map(filename => ({
     slug: filename.replace('.mdx', ''),
   }));
-}
-
-async function ViewCounter({ slug }: { slug: string }) {
-  const viewCountResult = await getViewCount({ slug });
-
-  if (viewCountResult.isErr()) {
-    console.error("Error in displaying view count for post " + slug + ":", viewCountResult.error.message);
-    return;
-  }
-
-  const viewCount = viewCountResult.value;
-
-  return (
-    <span>
-      {viewCount} views
-    </span>
-  );
 }
 
 function ViewCounterFallback() {

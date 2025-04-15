@@ -14,8 +14,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useToast } from '@/components/ui/use-toast';
-import { GuestbookDialog } from '@/app/guestbook/dialog';
-import { GuestBookSignOut } from '@/app/guestbook/buttons';
+import { GuestbookDialog } from '@/app/(doublePanedLayout)/guestbook/dialog';
+import { GuestBookSignOut } from '@/app/(doublePanedLayout)/guestbook/buttons';
 import { saveGuestbookEntryData } from '@/lib/database-actions/guestbook';
 import { guestbookFormSchema } from '@/config/schema';
 
