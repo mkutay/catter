@@ -59,7 +59,7 @@ export async function MostViewedPostsFallback({ postNum }: { postNum: number }) 
   
   for (let i = 0; i < postNum; i++) {
     posts.push(
-      <Skeleton key={i} className="w-full h-7"/>
+      <Skeleton key={i} className="w-full h-6"/>
     );
   }
 
