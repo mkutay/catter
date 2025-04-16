@@ -1,23 +1,30 @@
-import remarkGfm from 'remark-gfm';
-import remarkLint from 'remark-lint';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import { remarkCodeHike, CodeHikeConfig } from 'codehike/mdx';
-import { AnnotationHandler, highlight, Inline, InnerLine, InnerPre, InnerToken, Pre, RawCode } from 'codehike/code';
-import Image, { ImageProps } from 'next/image';
-import Link from 'next/link';
-import { MDXComponents, MDXRemoteOptions } from 'next-mdx-remote-client/rsc';
 import { ComponentProps, AnchorHTMLAttributes, BlockquoteHTMLAttributes, DetailedHTMLProps, HTMLAttributes, ImgHTMLAttributes } from 'react';
+import { MDXComponents, MDXRemoteOptions } from 'next-mdx-remote-client/rsc';
+import { remarkCodeHike, CodeHikeConfig } from 'codehike/mdx';
+import Image, { ImageProps } from 'next/image';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
+import remarkLint from 'remark-lint';
+import remarkGfm from 'remark-gfm';
+import Link from 'next/link';
 
 import { siteConfig } from '@/config/site';
 import { cn } from '@/lib/utils';
 import { postImages } from '@/config/images';
+import { TypographyParagraph } from '@/components/typography/paragraph';
+import { TypographyH1, TypographyH2, TypographyH3, TypographyH4 } from '@/components/typography/headings';
+import { TypographyBlockquote } from '@/components/typography/blockquote';
+import { TypographyList } from '@/components/typography/list';
+import { MyCode, MyInlineCode } from '@/components/typography/code-block';
 
 // CodeHike configuration for code blocks
 const chConfig: CodeHikeConfig = {
   components: {
     code: 'MyCode',
     inlineCode: 'MyInlineCode',
+  },
+  syntaxHighlighting: {
+    theme: 'github-dark',
   },
 };
 
@@ -72,88 +79,44 @@ export const components: MDXComponents = {
       {props.children}
     </Link>
   },
-  MyCode: async ({ codeblock }: { codeblock: RawCode }) => {
-    const highlighted = await highlight(codeblock, "github-dark");
-    return <Pre code={highlighted} handlers={[wordWrap, lineNumbers]} className="mt-6 px-1 py-3 rounded-lg bg-[#0d1117]" />
-  },
-  MyInlineCode: async ({ codeblock }: { codeblock: RawCode }) => {
-    const highlighted = await highlight(codeblock, "github-dark");
-    return <Inline code={highlighted} style={highlighted.style} className="px-1 py-0.5 rounded-sm" />
-  },
+  MyCode,
+  MyInlineCode,
   p: (props: DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>) => (
-    <p {...props} className={cn("font-normal leading-7 [&:not(:first-child)]:mt-6", props.className)}>
+    <TypographyParagraph {...props}>
       {props.children}
-    </p>
+    </TypographyParagraph>
   ),
   h1: (props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) => (
-    <h1 {...props} className={cn("scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl [&:not(:first-child)]:mt-12", props.className)}>
+    <TypographyH1 {...props}>
       {props.children}
-    </h1>
+    </TypographyH1>
   ),
   h2: (props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) => (
-    <h2 {...props} className={cn("mt-10 scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0", props.className)}>
+    <TypographyH2 {...props}>
       {props.children}
-    </h2>
+    </TypographyH2>
   ),
   h3: (props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) => (
-    <h3 {...props} className={cn("mt-8 scroll-m-20 text-2xl font-semibold tracking-tight", props.className)}>
+    <TypographyH3 {...props}>
       {props.children}
-    </h3>
+    </TypographyH3>
   ),
   h4: (props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) => (
-    <h4 {...props} className={cn("scroll-m-20 text-xl font-semibold tracking-tight", props.className)}>
+    <TypographyH4 {...props}>
       {props.children}
-    </h4>
+    </TypographyH4>
   ),
   blockquote: (props: DetailedHTMLProps<BlockquoteHTMLAttributes<HTMLQuoteElement>, HTMLQuoteElement>) => (
-    <blockquote {...props} className={cn("mt-4 border-l-2 border-foreground pl-6 italic", props.className)}>
+    <TypographyBlockquote {...props}>
       {props.children}
-    </blockquote>
+    </TypographyBlockquote>
   ),
   ul: (props: DetailedHTMLProps<HTMLAttributes<HTMLUListElement>, HTMLUListElement>) => (
-    <ul {...props} className={cn("my-6 ml-6 list-disc [&>li]:mt-2", props.className)}>
+    <TypographyList {...props}>
       {props.children}
-    </ul>
+    </TypographyList>
   ),
   hr: (props: DetailedHTMLProps<HTMLAttributes<HTMLHRElement>, HTMLHRElement>) => (
-    <hr {...props} className="my-6 border-t-2 border-muted" />
+    <hr {...props} className={cn("my-6 border-t-2 border-muted", props.className)} />
   ),
 };
-
-// Handler for CodeHike to wrap code that exceeds the width.
-export const wordWrap: AnnotationHandler = {
-  name: "word-wrap",
-  Pre: (props) => <InnerPre merge={props} className="whitespace-pre-wrap" />,
-  Line: (props) => (
-    <InnerLine merge={props}>
-      <div
-        style={{
-          textIndent: `${-props.indentation}ch`,
-          marginLeft: `${props.indentation}ch`,
-        }}
-      >
-        {props.children}
-      </div>
-    </InnerLine>
-  ),
-  Token: (props) => <InnerToken merge={props} style={{ textIndent: 0 }} />,
-}
-
-// Handler for CodeHike to add line numbers.
-export const lineNumbers: AnnotationHandler = {
-  name: 'line-numbers',
-  Line: (props) => {
-    const width = props.totalLines.toString().length + 1;
-    return (
-      <div className="flex">
-        <span
-          className="text-right select-none"
-          style={{ minWidth: `${width}ch` }}
-        >
-          {props.lineNumber}
-        </span>
-        <InnerLine merge={props} className="flex-1 pl-2" />
-      </div>
-    );
-  },
-}
