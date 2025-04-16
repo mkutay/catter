@@ -8,7 +8,7 @@ import { turnTagString } from "@/components/tagsButtonGrid";
 import { getProps } from "@/lib/contentQueries";
 import { PostViewCounter } from "@/components/postViewCounter";
 import CopyToClipboard from "@/components/copyToClipboard";
-import Comments, { CommentsFallback } from "@/components/comments/comments";
+import Comments from "@/components/comments/comments";
 import { Skeleton } from "@/components/ui/skeleton";
 import { images } from "@/config/images";
 
@@ -65,9 +65,7 @@ export default async function Layout({
           </div>
         </div>
         {children}
-        <Suspense fallback={<CommentsFallback />}>
-          <Comments slug={props.slug}/>
-        </Suspense>
+        <Comments slug={props.slug}/>
       </DoublePane>
     </>
   );

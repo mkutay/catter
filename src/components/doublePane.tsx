@@ -9,9 +9,11 @@ import { siteConfig } from '@/config/site';
 export default function DoublePane({
   children,
   hideFollowLink,
+  loadingState,
 }: Readonly<{
   children: React.ReactNode;
-  hideFollowLink?: boolean,
+  hideFollowLink?: boolean;
+  loadingState?: boolean;
 }>) {
   return (
     <section className="justify-center px-4 flex lg:flex-row flex-col lg:gap-16 gap-0 lg:max-w-6xl max-w-prose mx-auto md:mb-12 mb-6">
@@ -25,9 +27,11 @@ export default function DoublePane({
         <h2 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase mb-6 lg:my-6 mt-12">
           Popular Content
         </h2>
-        <Suspense fallback={<MostViewedPostsFallback postNum={siteConfig.postNumPerPage}/>}>
-          <MostViewedPosts postNum={siteConfig.postNumPerPage}/>
-        </Suspense>
+        {loadingState
+          ? <MostViewedPostsFallback postNum={siteConfig.postNumPerPage} />
+          : <Suspense fallback={<MostViewedPostsFallback postNum={siteConfig.postNumPerPage} />}>
+              <MostViewedPosts postNum={siteConfig.postNumPerPage}/>
+            </Suspense>}
         <EmailSubButton/>
       </div>
     </section>

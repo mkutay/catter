@@ -2,9 +2,7 @@ import { MDXRemote } from 'next-mdx-remote-client/rsc';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { Suspense } from 'react';
 
-import { Skeleton } from '@/components/ui/skeleton';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { getViewCount } from '@/lib/database-queries/views';
 import { getPosts } from '@/lib/contentQueries';
@@ -76,7 +74,7 @@ function PostDisplay({
 }) {
   return (
     <div className={cn("flex flex-col", isMiddle ? "gap-4" : "gap-2")}>
-      <Link href={`/posts/${post.slug}`} className={cn("flex flex-col group", isMiddle ? "gap-4" : "gap-2")}>
+      <Link href={`/posts/${post.slug}`} className={cn("flex flex-col group", isMiddle ? "gap-4" : "gap-2")} prefetch={false}>
         <Image
           src={image}
           alt={`${post.meta.title} post cover image`}
@@ -106,9 +104,7 @@ function PostDisplay({
         <p>
           {format(post.meta.date, 'PP')}
         </p>
-        <Suspense fallback={<ViewDisplayFallback />}>
-          <ViewDisplay slug={post.slug} />
-        </Suspense>
+        <ViewDisplay slug={post.slug} />
       </div>
     </div>
   );
@@ -129,11 +125,5 @@ async function ViewDisplay({ slug }: { slug: string }) {
     <p>
       {views} views
     </p>
-  );
-}
-
-function ViewDisplayFallback() {
-  return (
-    <Skeleton className="h-5 w-16" />
   );
 }

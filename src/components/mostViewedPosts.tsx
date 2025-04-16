@@ -42,6 +42,7 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
               href={'/posts/' + post.slug}
               passHref
               key={post.slug}
+              prefetch={false}
               className="text-foreground underline font-semibold"
             >
               {post.meta.title}

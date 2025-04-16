@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 
 import { getPostFiles, getPostProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
+import { incrementViews } from '@/lib/database-actions/views';
 import { siteConfig } from '@/config/site';
 
 export const dynamicParams = false; // results in not-found when params that was not generated from generateStaticParams is found
@@ -32,6 +33,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const props = getPostProps(slug);
+
+  const incremented = await incrementViews(slug);
+
+  if (incremented.isErr()) {
+    if (incremented.error.code === 'DATABASE_ERROR') {
+      console.error('Database error in incrementing view:', incremented.error.message);
+    } else {
+      console.log('Not incrementing views:', incremented.error.message);
+    }
+  }
 
   return (
     <main>
