@@ -1,12 +1,5 @@
 const followNext = [
   {
-    shortened: 'melikechan',
-    title: 'melikechan\'s blog',
-    link: 'https://melikechan.vercel.app/',
-    imagePath: '/follow-next-images/melikechan.png',
-    description: 'Melike\'s blog is a place where she shares various things, including AI and being a researchering student.',
-  },
-  {
     shortened: 'comeau',
     title: 'Josh Comeau\'s Blog',
     link: 'https://www.joshwcomeau.com/',
@@ -26,7 +19,14 @@ const followNext = [
     link: 'https://localghost.dev/',
     imagePath: '/follow-next-images/localghost.png',
     description: 'Sophie\'s website is a cool place with an awesome design where she shares things about tech, web development, and mental health.',
-  }
+  },
+  {
+    shortened: 'melikechan',
+    title: 'melikechan\'s blog',
+    link: 'https://melikechan.vercel.app/',
+    imagePath: '/follow-next-images/melikechan.png',
+    description: 'Melike\'s blog is a place where she shares various things, including AI and being a researchering student.',
+  },
 ];
 
 export const siteConfig = {

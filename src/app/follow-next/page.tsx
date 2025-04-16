@@ -14,7 +14,7 @@ export default function Page() {
       <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
         Follow all these awesome people
       </h1>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col sm:gap-2 gap-4">
         {siteConfig.followNext.map((website, index) => (
           <FollowCard key={website.title} website={website} index={index} />
         ))}
