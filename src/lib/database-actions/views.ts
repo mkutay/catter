@@ -1,6 +1,7 @@
 'use server';
 
 import { errAsync, okAsync, Result, ResultAsync } from 'neverthrow';
+import { unstable_noStore } from 'next/cache';
 
 import { auth } from '@/lib/auth';
 import { sql } from '@/lib/postgres';
@@ -13,6 +14,7 @@ interface IncrementViewsError {
 };
 
 export const incrementViews = async (slug: string): Promise<Result<void, IncrementViewsError>> => {
+  unstable_noStore();
   if (process.env.NODE_ENV === 'development') {
     return errAsync({
       message: 'Increment views is disabled in development.',

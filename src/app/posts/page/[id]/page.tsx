@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
@@ -8,9 +7,10 @@ import { getBlogViews } from '@/lib/database-queries/views';
 import { getPostsLength } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
-export async function generateMetadata(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const id = Number(params.id);
+export const dynamicParams = false;
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const postsLength = getPostsLength({ });
 
   return {
@@ -31,14 +31,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const endInd = siteConfig.postNumPerPage * id;
   const postsLength = getPostsLength({ disallowTags: ['project'] });
 
-  if (
-    /^-?\d+$/.test(params.id) == false || 
-    startInd >= postsLength ||
-    endInd <= 0
-  ) {
-    notFound();
-  }
-
   return (
     <>
       <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
@@ -51,8 +43,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       <Suspense fallback={<Skeleton className="h-8 w-[10ch]" />}>
         <TotalBlogViews />
       </Suspense>
-      {/* Removing grid for the tags */}
-      {/* <TagsButtonGrid/> */}
     </>
   )
 }

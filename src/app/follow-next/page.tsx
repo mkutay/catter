@@ -8,6 +8,8 @@ import { siteConfig } from '@/config/site';
 import { components, options } from '@/lib/mdxRemoteSettings';
 import { followNextImages } from '@/config/images';
 
+export const dynamic = 'force-static';
+
 export default function Page() {
   return (
     <>

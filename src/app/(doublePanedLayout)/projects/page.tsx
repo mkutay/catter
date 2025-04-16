@@ -2,6 +2,8 @@ import ProjectCard from '@/components/projectCard';
 import { getPosts } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
+export const dynamic = 'force-static';
+
 export const metadata = {
   title: 'Different Coding Projects I Did',
   description: 'A list for the different projects I did/do in my free time accumulated here.',

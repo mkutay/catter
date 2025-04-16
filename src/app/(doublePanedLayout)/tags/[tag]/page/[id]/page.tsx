@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 import { TotalBlogViews } from '@/app/posts/page/[id]/page';
@@ -8,6 +7,8 @@ import ListPosts from '@/components/listPosts';
 import { turnTagString } from '@/components/tagsButtonGrid';
 import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
+
+export const dynamicParams = false;
 
 export async function generateMetadata(props: { params: Promise<{ tag: string, id: string }> }) {
   const params = await props.params;
@@ -33,15 +34,6 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;
   const postsLength = getPostsLength({ tags: [tag] });
-
-  if (
-    /^-?\d+$/.test(params.id) === false || 
-    startInd >= postsLength ||
-    endInd <= 0 ||
-    getListOfAllTags().includes(tag) === false
-  ) {
-    notFound();
-  }
 
   return (
     <>

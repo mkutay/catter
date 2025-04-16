@@ -22,10 +22,10 @@ import coverSquareStartpage from '@/public/images/purple-startpage/square.jpeg';
 import coverSquareLeaks from '@/public/images/ib-leaks/cover-square.jpg';
 import coverSquareSlang from '@/public/images/turkish-slang-dictionary/square.png';
 import coverSquareLonely from '@/public/images/why-mathematics-is-lonely/cover-square.jpg';
-import followNextMelikechan from '@/public/follow-next-images/melikechan.png';
 import followNextComeau from '@/public/follow-next-images/comeau.png';
 import followNextBendersky from '@/public/follow-next-images/bendersky.png';
 import followNextSophie from '@/public/follow-next-images/localghost.png';
+import followNextMelikechan from '@/public/follow-next-images/melikechan.png';
 import _images_javascript_and_asynchronous_functions_no_output_png from '@/public/images/javascript-and-asynchronous-functions/no-output.png';
 import _images_skip_list_n_squared_insertion_png from '@/public/images/skip-list/n-squared-insertion.png';
 import _images_skip_list_example_situation_png from '@/public/images/skip-list/example-situation.png';
@@ -75,10 +75,10 @@ export const squareImages: { [key: string]: StaticImageData } = {
 };
 
 export const followNextImages: { [key: string]: StaticImageData } = {
-  'melikechan': followNextMelikechan,
   'comeau': followNextComeau,
   'bendersky': followNextBendersky,
   'sophie': followNextSophie,
+  'melikechan': followNextMelikechan,
 };
 
 export const postImages: { [key: string]: StaticImageData } = {

@@ -21,11 +21,9 @@ export async function PostViewCounter({ slug }: { slug: string }) {
     return;
   }
 
-  const viewCount = viewCountResult.value;
-
   return (
     <span>
-      {viewCount} views
+      {viewCountResult.value} views
     </span>
   );
 }

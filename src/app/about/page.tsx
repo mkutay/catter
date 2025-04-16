@@ -7,6 +7,8 @@ import { components, options } from '@/lib/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import me from '@/public/images/me.jpg';
 
+export const dynamic = 'force-static';
+
 export function generateMetadata() {
   const props = getProps('content/pages', 'about');
 

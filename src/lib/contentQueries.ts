@@ -89,8 +89,7 @@ export function getPosts({
     new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime()
   ));
 
-  const result = posts.slice(startInd, endInd);
-  return result;
+  return posts.slice(startInd, endInd);
 }
 
 /**

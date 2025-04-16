@@ -3,6 +3,8 @@ import Rss from 'rss';
 import { getPosts } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
+export const dynamic = 'force-static';
+
 export async function GET() {
   const feed = new Rss({
     title: siteConfig.name,

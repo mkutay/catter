@@ -6,5 +6,4 @@ const nextConfig = {
     loaderFile: './next-images-loader.js',
   },
 };
-
 export default nextConfig;

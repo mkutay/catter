@@ -4,12 +4,14 @@ import { format } from 'date-fns';
 import { getPosts } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
 
-export async function generateMetadata(functionProps: { params: Promise<{ shortened: string }> }) {
-  const params = await functionProps.params;
-  const { shortened } = params;
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+
+export async function generateMetadata({ params }: { params: Promise<{ shortened: string }> }) {
+  const { shortened } = await params;
   const posts = getPosts({ });
 
-  const props = posts.find((post) => post.meta.shortened == shortened);
+  const props = posts.find((post) => post.meta.shortened === shortened);
   if (!props) notFound();
 
   const formattedDate = format(props.meta.date, 'PP');
@@ -31,9 +33,8 @@ export async function generateMetadata(functionProps: { params: Promise<{ shorte
   };
 }
 
-export default async function Page(props: { params: Promise<{ shortened: string }> }) {
-  const params = await props.params;
-  const { shortened } = params;
+export default async function Page({ params }: { params: Promise<{ shortened: string }> }) {
+  const { shortened } = await params;
   const posts = getPosts({ });
 
   posts.forEach((post) => {
@@ -41,8 +42,6 @@ export default async function Page(props: { params: Promise<{ shortened: string 
       redirect(`/posts/${post.slug}`);
     }
   });
-
-  notFound();
 }
 
 export function generateStaticParams() {

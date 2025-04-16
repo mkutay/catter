@@ -1,7 +1,8 @@
 import { errAsync, okAsync, ResultAsync } from 'neverthrow';
+import { unstable_noStore } from 'next/cache';
 
-import { sql } from '@/lib/postgres';
 import { doesPostWithSlugExist } from '@/lib/contentQueries';
+import { sql } from '@/lib/postgres';
 import { ViewCount } from '@/config/types';
 
 interface GetBlogViewsError {
@@ -20,6 +21,7 @@ interface GetViewCountError {
 };
 
 export const getBlogViews = () => {
+  unstable_noStore();
   const promise = sql<{ count: number }[]>`
     SELECT count
     FROM views;
@@ -38,6 +40,7 @@ export const getBlogViews = () => {
 }
 
 export const getViewsCount = ({ postNum }: { postNum: number }) => {
+  unstable_noStore();
   if (postNum < 1 || postNum > 100) {
     return errAsync({
       message: 'Limit out of allowed range.',
@@ -59,6 +62,7 @@ export const getViewsCount = ({ postNum }: { postNum: number }) => {
 }
 
 export const getViewCount = ({ slug }: { slug: string }) => {
+  unstable_noStore();
   if (!doesPostWithSlugExist(slug)) {
     return errAsync({
       message: 'Post not found with slug: ' + slug,

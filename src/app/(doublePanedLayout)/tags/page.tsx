@@ -1,6 +1,8 @@
 import TagsButtonGrid from '@/components/tagsButtonGrid';
 import { siteConfig } from '@/config/site';
 
+export const dynamic = 'force-static';
+
 export function generateMetadata() {
   return {
     title: `List of Tags on the Posts`,
