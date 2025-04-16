@@ -14,6 +14,7 @@ import { turnTagString } from '@/components/tagsButtonGrid';
 import Link from 'next/link';
 import { images } from '@/config/images';
 
+export const dynamic = 'force-static'; // static generation
 export const dynamicParams = false; // results in not-found when params that was not generated from generateStaticParams is found
 export const revalidate = 60; // seconds
 
