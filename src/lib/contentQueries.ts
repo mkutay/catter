@@ -17,12 +17,33 @@ export function doesPostWithSlugExist(slug: string): boolean {
   return getPostFiles().includes(slug + '.mdx');
 }
 
-export function getPageProps(slug: string): PostData {
-  return getProps('content/pages', slug);
-}
-
 export function getPostProps(slug: string): PostData {
   return getProps('content/posts', slug);
+}
+
+export function getAboutProps() {
+  let markdownFile;
+  try {
+    markdownFile = fs.readFileSync(path.join(process.cwd(), path.join('content/pages/about.mdx')), 'utf-8');
+  } catch (error) {
+    console.log(error);
+    notFound();
+  }
+
+  const { data: frontMatter, content } = matter(markdownFile);
+
+  const formattedContent = convertParenthesesToComponent(content);
+  
+  const postData = {
+    meta: frontMatter as {
+      title: string,
+      description: string,
+      date: string,
+    },
+    content: formattedContent,
+  };
+  
+  return postData;
 }
 
 /**

@@ -1,5 +1,5 @@
 import { siteConfig } from '@/config/site';
-import { getPosts, getProps } from '@/lib/contentQueries';
+import { getAboutProps, getPosts } from '@/lib/contentQueries';
 
 export default async function sitemap() {
   const siteMap: {
@@ -19,7 +19,7 @@ export default async function sitemap() {
 
   siteMap.push({
     url: `${siteConfig.url}/about`,
-    lastModified: new Date(getProps('content/pages', 'about').meta.date).toISOString().split('T')[0],
+    lastModified: new Date(getAboutProps().meta.date).toISOString().split('T')[0],
   });
 
   const posts = getPosts({ });

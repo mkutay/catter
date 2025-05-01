@@ -2,7 +2,7 @@ import { MDXRemote } from "next-mdx-remote-client/rsc";
 import Image from 'next/image';
 
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { getProps } from '@/lib/contentQueries';
+import { getAboutProps } from '@/lib/contentQueries';
 import DoublePane from '@/components/doublePane';
 import { siteConfig } from '@/config/site';
 import me from '@/public/images/me.jpg';
@@ -10,7 +10,7 @@ import me from '@/public/images/me.jpg';
 export const dynamic = 'force-static';
 
 export function generateMetadata() {
-  const props = getProps('content/pages', 'about');
+  const props = getAboutProps();
 
   return {
     title: props.meta.title,
@@ -18,13 +18,13 @@ export function generateMetadata() {
     openGraph: {
       title: props.meta.title,
       description: props.meta.description,
-      url: siteConfig.url + '/' + props.slug,
+      url: siteConfig.url + '/about',
     },
   };
 }
 
 export default async function Page() {
-  const props = getProps('content/pages', 'about');
+  const props = getAboutProps();
 
   return (
     <div>
