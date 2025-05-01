@@ -1,22 +1,21 @@
 import { MDXRemote } from 'next-mdx-remote-client/rsc';
 import { format } from 'date-fns';
+import Image from 'next/image';
+import Link from 'next/link';
 
 import { getPostFiles, getPostProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { incrementViews } from '@/lib/database-actions/views';
 import { siteConfig } from '@/config/site';
-import Comments from '@/components/comments/comments';
 import CopyToClipboard from '@/components/copyToClipboard';
 import { PostViewCounter } from '@/components/postViewCounter';
-import Image from 'next/image';
 import DoublePane from '@/components/doublePane';
 import { turnTagString } from '@/components/tagsButtonGrid';
-import Link from 'next/link';
 import { images } from '@/config/images';
+import Comments from '@/components/comments/comments';
 
-export const dynamic = 'force-static'; // static generation
-export const dynamicParams = false; // results in not-found when params that was not generated from generateStaticParams is found
-export const revalidate = 60; // seconds
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+export const revalidate = 60; // revalidate every minute to pick up new comments in ISR
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -44,16 +43,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const { slug } = await params;
   const props = getPostProps(slug);
   const formattedDate = format(props.meta.date, 'PP');
-
-  const incremented = await incrementViews(slug);
-
-  if (incremented.isErr()) {
-    if (incremented.error.code === 'DATABASE_ERROR') {
-      console.error('Database error in incrementing view:', incremented.error.message);
-    } else {
-      console.log('Not incrementing views:', incremented.error.message);
-    }
-  }
 
   return (
     <>
@@ -97,7 +86,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <main>
           <MDXRemote components={components} options={options} source={props.content} />
         </main>
-        <Comments slug={props.slug}/>
+        <Comments slug={props.slug} />
       </DoublePane>
     </>
   );

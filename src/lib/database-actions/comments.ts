@@ -9,6 +9,8 @@ import { sql } from '@/lib/postgres';
 import { CommentData } from '@/config/types';
 import { siteConfig } from '@/config/site';
 import { commentsFormSchema } from '@/config/schema';
+import { doesPostWithSlugExist } from '../contentQueries';
+import { resultAsyncToActionResult } from '../action-result';
 
 interface SaveCommentResult {
   message: string;
@@ -180,3 +182,30 @@ const insertIntoComments = (random: number, slug: string, email: string, message
       return okAsync();
     });
 }
+
+interface GetCommentsError {
+  message: string;
+  code: 'POST_NOT_FOUND' | 'DATABASE_ERROR';
+};
+
+export const getComments = async ({ slug }: { slug: string }) => resultAsyncToActionResult(
+  !doesPostWithSlugExist(slug)
+    ? errAsync({
+        message: 'Post not found.',
+        code: 'POST_NOT_FOUND',
+      } as GetCommentsError)
+    : ResultAsync.fromPromise(
+        sql<CommentData[]>`
+          SELECT id, body, created_by, created_at, updated_at, email
+          FROM comments
+          WHERE slug = (${slug})
+          ORDER BY created_at DESC
+          LIMIT 15;
+        `,
+        () => ({
+          message: 'Failed to fetch comments. Database error.',
+          code: 'DATABASE_ERROR'
+        } as GetCommentsError)
+      )
+      .map((comments) => comments as CommentData[])
+);

@@ -1,46 +1,54 @@
 'use server';
 
-import { errAsync, okAsync, Result, ResultAsync } from 'neverthrow';
-import { unstable_noStore } from 'next/cache';
+import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
-import { auth } from '@/lib/auth';
+import { actionErr, actionOk, ActionResult } from '@/lib/action-result';
 import { sql } from '@/lib/postgres';
-import { siteConfig } from '@/config/site';
+import { auth } from '@/lib/auth';
 import { ViewCount } from '@/config/types';
+import { siteConfig } from '@/config/site';
+import { getViewCount } from '../database-queries/views';
 
 interface IncrementViewsError {
   message: string;
   code: 'DATABASE_ERROR' | 'AUTHORISED' | 'IN_DEVELOPMENT';
 };
 
-export const incrementViews = async (slug: string): Promise<Result<void, IncrementViewsError>> => {
-  unstable_noStore();
+export const incrementViews = async (slug: string): Promise<ActionResult<number, IncrementViewsError>> => {
   if (process.env.NODE_ENV === 'development') {
-    return errAsync({
-      message: 'Increment views is disabled in development.',
-      code: 'IN_DEVELOPMENT',
-    } as IncrementViewsError);
+    const view = await getViewCount({ slug });
+    if (view.isErr()) {
+      return actionErr({
+        message: 'Failed to get view count.',
+        code: 'DATABASE_ERROR',
+      } as IncrementViewsError);
+    }
+    return actionOk(view.value);
   }
   
   const session = await auth();
 
   if (session && session.user && siteConfig.admins.includes(session.user.email as string)) {
-    return errAsync({
-      message: 'Authorised as admin.',
-      code: 'AUTHORISED',
-    } as IncrementViewsError);
+    const view = await getViewCount({ slug });
+    if (view.isErr()) {
+      return actionErr({
+        message: 'Failed to get view count.',
+        code: 'DATABASE_ERROR',
+      } as IncrementViewsError);
+    }
+    return actionOk(view.value);
   }
   
   const inserted = await insertIntoViews(slug);
 
   if (inserted.isErr()) {
-    return errAsync({
+    return actionErr({
       message: 'Failed to increment views.',
       code: 'DATABASE_ERROR',
     } as IncrementViewsError);
   }
 
-  return okAsync();
+  return actionOk(inserted.value.count);
 }
 
 const insertIntoViews = (slug: string) => {
@@ -71,6 +79,6 @@ const insertIntoViews = (slug: string) => {
       });
     }
 
-    return okAsync();
+    return okAsync(result[0]);
   });
 }

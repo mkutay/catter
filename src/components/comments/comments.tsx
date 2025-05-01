@@ -1,42 +1,56 @@
+"use client";
+
 import { format } from 'date-fns';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
-import { auth } from '@/lib/auth';
-import { getComments } from '@/lib/database-queries/comments';
+import { getComments } from '@/lib/database-actions/comments';
 import { siteConfig } from '@/config/site';
 import { CommentData } from '@/config/types';
+import { User } from 'next-auth';
+import { getUser } from '@/lib/database-actions/auth';
 
-export default async function Comments({ slug }: { slug: string }) {
-  const session = await auth();
-  const commentsResult = await getComments({ slug });
+export default function Comments({ slug }: { slug: string }) {
+  const [comments, setComments] = useState<CommentData[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (commentsResult.isErr()) {
-    console.error("Error in displaying the comments in post " + slug + ":", commentsResult.error.message);
-    return (
-      <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
-        Sorry. Could not fetch the comments.
-      </p>
-    );
-  }
+  useEffect(() => {
+    const fetchComments = async () => {
+      const comments = await getComments({ slug });
+      if (!comments.ok) {
+        console.error(`Error fetching comments for ${slug}:`, comments.error.message);
+        setComments([]);
+      } else {
+        setComments(comments.value);
+      }
+    };
 
-  const comments = commentsResult.value;
+    const fetchSession = async () => {
+      const user = await getUser();
+      setUser(user);
+    }
+
+    fetchSession();
+    fetchComments();
+    setIsLoading(false);
+  }, [slug]);
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
-      {session?.user ? (
+      {user ? (
         <CommentForm slug={slug}/>
       ) : (
         <CommentAuth slug={slug}/>
       )}
-      <div className="flex flex-col gap-6">
+      {isLoading ? <CommentsFallback /> : <div className="flex flex-col gap-6">
         {comments.map((comment) => (
-          <Comment comment={comment} key={comment.id}/>
+          <Comment comment={comment} key={comment.id} owns={(user && siteConfig.admins.includes(user.email as string)) || (user && user.email == comment.email)} />
         ))}
-      </div>
+      </div>}
     </div>
   );
 }
@@ -50,23 +64,20 @@ export function CommentAuth({ slug }: { slug: string }) {
   );
 }
 
-export async function Comment({
+export function Comment({
   comment,
+  owns,
 }: {
   comment: CommentData;
+  owns: boolean | undefined | null;
 }) {
-  const session = await auth();
-  
-  const admin = session && session.user && siteConfig.admins.includes(session.user?.email as string);
-  const isUsers = session && session.user && session.user.email == comment.email;
-
   return (
     <div id={comment.id} className="flex flex-col gap-2 w-full">
       <Label htmlFor="user">{`${comment.created_by} on ${format(comment.created_at, 'PP')}`}</Label>
       <div className="border border-border shadow-sm rounded-md px-3 py-2">
         {comment.body}
       </div>
-      {(admin || isUsers) && (
+      {owns && (
         <div className="flex flex-row justify-end">
           <DeleteComment comment={comment}/>
         </div>

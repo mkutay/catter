@@ -1,18 +1,41 @@
-import { getViewCount } from "@/lib/database-queries/views";
+'use client';
+
+import { incrementViews } from "@/lib/database-actions/views";
+import { useEffect, useState } from "react";
+import { Skeleton } from "./ui/skeleton";
 
 export const dynamic = 'force-dynamic';
 
-export async function PostViewCounter({ slug }: { slug: string }) {
-  const viewCountResult = await getViewCount({ slug });
+export function PostViewCounter({ slug }: { slug: string }) {
+  const [viewCount, setViewCount] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (viewCountResult.isErr()) {
-    console.error("Error in displaying view count for post " + slug + ":", viewCountResult.error.message);
-    return;
+  useEffect(() => {
+    const fetchViewCount = async () => {
+      const views = await incrementViews(slug);
+      if (!views.ok) {
+        console.error(`Error incrementing views for ${slug}:`, views.error.message);
+        setViewCount(null);
+      } else {
+        setViewCount(views.value);
+      }
+      setIsLoading(false);
+    };
+
+    fetchViewCount();
+  }, [slug]);
+
+  if (isLoading) {
+    return <Skeleton className="h-6 w-20" />;
+  }
+
+  if (viewCount === null) {
+    return null;
   }
 
   return (
     <span>
-      {viewCountResult.value} views
+      {viewCount} views
     </span>
   );
 }
