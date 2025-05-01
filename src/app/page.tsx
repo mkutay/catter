@@ -4,12 +4,14 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 
 import { components, options } from '@/lib/mdxRemoteSettings';
-import { getViewCount } from '@/lib/database-queries/views';
 import { getPosts } from '@/lib/contentQueries';
 import { cn } from '@/lib/utils';
 import { images } from '@/config/images';
 import { PostMeta } from '@/config/types';
 import { siteConfig } from '@/config/site';
+import { ViewDisplay } from '@/components/viewDisplay';
+
+export const dynamic = 'force-static';
 
 export default function Home() {
   const posts = getPosts({ });
@@ -84,8 +86,8 @@ function PostDisplay({
           placeholder="blur"
         />
         {isMiddle ? (
-          <h2 className="lg:text-5xl/tight md:text-4xl/tight text-3xl/tight font-normal tracking-tighter text-stroke-thick text-stroke-background fix-text-stroke">
-            <span className="lg:bg-[0%_92%] md:bg-[0%_89%] bg-[0%_90%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+          <h2 className="lg:text-5xl/tight md:text-4xl/tight text-3xl/tight font-normal tracking-tighter lg:text-stroke-thick text-stroke-medium text-stroke-background fix-text-stroke">
+            <span className="lg:bg-[0%_95%] md:bg-[0%_94%] bg-[0%_92%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
               {post.meta.title}
             </span>
           </h2>
@@ -98,7 +100,7 @@ function PostDisplay({
         )}
       </Link>
       {isMiddle && <div className="leading-normal">
-        <MDXRemote source={post.meta.shortExcerpt || post.meta.excerpt} options={options} components={components}/>
+        <MDXRemote source={post.meta.shortExcerpt || post.meta.excerpt} options={options} components={components} />
       </div>}
       <div className="text-sm text-foreground tracking-tight font-light flex flex-row justify-between">
         <p>
@@ -107,23 +109,5 @@ function PostDisplay({
         <ViewDisplay slug={post.slug} />
       </div>
     </div>
-  );
-}
-
-async function ViewDisplay({ slug }: { slug: string }) {
-  const viewsResult = await getViewCount({ slug });
-
-  if (viewsResult.isErr()) {
-    console.error("Error in displaying view count:", viewsResult.error.message);
-    // It's better to display nothing than an error message
-    return;
-  }
-
-  const views = viewsResult.value;
-
-  return (
-    <p>
-      {views} views
-    </p>
   );
 }

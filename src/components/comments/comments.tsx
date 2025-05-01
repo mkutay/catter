@@ -1,17 +1,16 @@
 "use client";
 
-import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
+import { format } from 'date-fns';
+import { User } from 'next-auth';
 
 import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
 import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
 import { getComments } from '@/lib/database-actions/comments';
+import { getUser } from '@/lib/database-actions/auth';
 import { siteConfig } from '@/config/site';
 import { CommentData } from '@/config/types';
-import { User } from 'next-auth';
-import { getUser } from '@/lib/database-actions/auth';
 
 export default function Comments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<CommentData[]>([]);
@@ -21,23 +20,21 @@ export default function Comments({ slug }: { slug: string }) {
   useEffect(() => {
     const fetchComments = async () => {
       const comments = await getComments({ slug });
-      if (!comments.ok) {
-        console.error(`Error fetching comments for ${slug}:`, comments.error.message);
-        setComments([]);
-      } else {
-        setComments(comments.value);
-      }
+      setComments(comments.ok ? comments.value : []);
+      setIsLoading(false);
     };
 
     const fetchSession = async () => {
       const user = await getUser();
       setUser(user);
+      setIsLoading(false);
     }
 
     fetchSession();
     fetchComments();
-    setIsLoading(false);
   }, [slug]);
+
+  if (isLoading) return null;
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
@@ -46,11 +43,11 @@ export default function Comments({ slug }: { slug: string }) {
       ) : (
         <CommentAuth slug={slug}/>
       )}
-      {isLoading ? <CommentsFallback /> : <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6">
         {comments.map((comment) => (
           <Comment comment={comment} key={comment.id} owns={(user && siteConfig.admins.includes(user.email as string)) || (user && user.email == comment.email)} />
         ))}
-      </div>}
+      </div>
     </div>
   );
 }
@@ -82,25 +79,6 @@ export function Comment({
           <DeleteComment comment={comment}/>
         </div>
       )}
-    </div>
-  );
-}
-
-export function CommentsFallback() {
-  const comments: React.ReactNode[] = [];
-
-  for (let i = 0; i < 3; i++) {
-    comments.push(
-      <div key={i} className="flex flex-col gap-2">
-        <Skeleton className="h-8 w-2/5"/>
-        <Skeleton className="h-20 w-full"/>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col gap-6">
-      {comments}
     </div>
   );
 }

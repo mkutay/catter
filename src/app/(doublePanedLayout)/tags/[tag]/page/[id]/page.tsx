@@ -1,13 +1,11 @@
-import { Suspense } from 'react';
-
-import { TotalBlogViews } from '@/app/posts/page/[id]/page';
-import { Skeleton } from '@/components/ui/skeleton';
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
 import { turnTagString } from '@/components/tagsButtonGrid';
 import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/contentQueries';
 import { siteConfig } from '@/config/site';
+import { TotalBlogViews } from '@/components/totalBlogViews';
 
+export const dynamic = 'force-static';
 export const dynamicParams = false;
 
 export async function generateMetadata(props: { params: Promise<{ tag: string, id: string }> }) {
@@ -44,9 +42,7 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
       <div className="mt-4 mb-8">
         <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
       </div>
-      <Suspense fallback={<Skeleton className="h-8 w-[10ch]" />}>
-        <TotalBlogViews />
-      </Suspense>
+      <TotalBlogViews />
       {/* Removing the grid for the tags */}
       {/* <TagsButtonGrid/> */}
     </>
