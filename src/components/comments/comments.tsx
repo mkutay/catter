@@ -2,19 +2,18 @@
 
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import { User } from 'next-auth';
 
 import { Label } from '@/components/ui/label';
 import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
 import { getComments } from '@/lib/database-actions/comments';
-import { getUser } from '@/lib/database-actions/auth';
+import { getUserEmail } from '@/lib/database-actions/auth';
 import { siteConfig } from '@/config/site';
 import { CommentData } from '@/config/types';
 
 export default function Comments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<CommentData[]>([]);
-  const [user, setUser] = useState<User | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,8 +24,8 @@ export default function Comments({ slug }: { slug: string }) {
     };
 
     const fetchSession = async () => {
-      const user = await getUser();
-      setUser(user);
+      const email = await getUserEmail();
+      setEmail(email);
       setIsLoading(false);
     }
 
@@ -38,14 +37,14 @@ export default function Comments({ slug }: { slug: string }) {
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
-      {user ? (
+      {email ? (
         <CommentForm slug={slug}/>
       ) : (
         <CommentAuth slug={slug}/>
       )}
       <div className="flex flex-col gap-6">
         {comments.map((comment) => (
-          <Comment comment={comment} key={comment.id} owns={(user && siteConfig.admins.includes(user.email as string)) || (user && user.email == comment.email)} />
+          <Comment comment={comment} key={comment.id} owns={(siteConfig.admins.includes(email as string)) || (email == comment.email)} />
         ))}
       </div>
     </div>
