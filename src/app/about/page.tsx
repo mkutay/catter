@@ -1,9 +1,9 @@
 import { MDXRemote } from "next-mdx-remote-client/rsc";
 import Image from 'next/image';
 
-import DoublePane from '@/components/doublePane';
-import { getProps } from '@/lib/contentQueries';
 import { components, options } from '@/lib/mdxRemoteSettings';
+import { getProps } from '@/lib/contentQueries';
+import DoublePane from '@/components/doublePane';
 import { siteConfig } from '@/config/site';
 import me from '@/public/images/me.jpg';
 
@@ -43,9 +43,6 @@ export default async function Page() {
           <Image
             alt={`${siteConfig.author} portrait image`}
             src={me}
-            sizes="100vw"
-            style={{ width: "100%", height: "auto" }}
-            priority
             placeholder="blur"
             className="rounded-full shadow-md max-w-64 lg:float-right mx-auto"
           />
