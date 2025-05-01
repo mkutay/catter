@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import { notFound } from 'next/navigation';
 
 import { PostData, PostMeta } from '@/config/types';
+import { convertParenthesesToComponent } from './parentheses';
 
 /**
  * Get all post files from the posts directory.
@@ -37,11 +38,18 @@ export function getProps(pathTo: string, slug: string): PostData {
   }
 
   const { data: frontMatter, content } = matter(markdownFile);
+  const fm = frontMatter as PostMeta;
+
+  const formattedContent = convertParenthesesToComponent(content);
   
   const postData = {
     slug: slug,
-    meta: frontMatter as PostMeta,
-    content: content,
+    meta: {
+      ...fm,
+      excerpt: convertParenthesesToComponent(fm.excerpt),
+      shortExcerpt: fm.shortExcerpt && convertParenthesesToComponent(fm.shortExcerpt),
+    } as PostMeta,
+    content: formattedContent,
   };
   
   return postData;

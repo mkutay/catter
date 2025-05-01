@@ -16,6 +16,7 @@ import { TypographyH1, TypographyH2, TypographyH3, TypographyH4 } from '@/compon
 import { TypographyBlockquote } from '@/components/typography/blockquote';
 import { TypographyList } from '@/components/typography/list';
 import { MyCode, MyInlineCode } from '@/components/typography/code-block';
+import { ToggleParentheses } from '@/components/toggleParentheses';
 
 // CodeHike configuration for code blocks
 const chConfig: CodeHikeConfig = {
@@ -119,4 +120,9 @@ export const components: MDXComponents = {
   hr: (props: DetailedHTMLProps<HTMLAttributes<HTMLHRElement>, HTMLHRElement>) => (
     <hr {...props} className={cn("my-6 border-t-2 border-muted", props.className)} />
   ),
+  ToggleParentheses: (props: { children: React.ReactNode }) => (
+    <ToggleParentheses>
+      {props.children}
+    </ToggleParentheses>
+  )
 };
