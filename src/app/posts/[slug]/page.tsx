@@ -15,7 +15,6 @@ import Comments from '@/components/comments/comments';
 
 export const dynamic = 'force-static';
 export const dynamicParams = false;
-export const revalidate = 60; // revalidate every minute to pick up new comments in ISR
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

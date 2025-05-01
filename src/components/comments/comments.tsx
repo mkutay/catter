@@ -69,7 +69,7 @@ export function Comment({
   owns,
 }: {
   comment: CommentData;
-  owns: boolean | undefined | null;
+  owns?: boolean | null;
 }) {
   return (
     <div id={comment.id} className="flex flex-col gap-2 w-full">
