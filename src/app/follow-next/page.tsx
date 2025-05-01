@@ -42,9 +42,8 @@ function FollowCard({ website, index }: {
         <Image
           alt={`An image about ${website.title}`}
           src={image}
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
           className="rounded-xl shadow-md"
+          quality={50}
           placeholder="blur"
         />
       </div>

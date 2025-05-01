@@ -80,8 +80,7 @@ function PostDisplay({
         <Image
           src={image}
           alt={`${post.meta.title} post cover image`}
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
+          quality={60}
           className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
           placeholder="blur"
         />

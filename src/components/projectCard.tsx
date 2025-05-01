@@ -32,9 +32,8 @@ export default function ProjectCard({
         <Image
           alt={`Project ${props.meta.title}'s cover square image`}
           src={image}
-          sizes="100vw"
-          style={{ width: "100%", height: "auto" }}
           className="rounded-xl shadow-md"
+          quality={50}
           placeholder="blur"
         />
       </div>

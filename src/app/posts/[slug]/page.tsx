@@ -72,9 +72,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           {props.meta.cover && (<div className="my-6"><Image
             alt={`${props.meta.title} post cover image`}
             src={images[props.slug]}
-            sizes="100vw"
-            style={{ width: "100%", height: "auto" }}
-            className="max-w-4xl mx-auto lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
+            className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
             placeholder="blur"
           /></div>)}
           <div className="my-4 flex flex-row items-center gap-4 justify-end text-foreground text-lg">
