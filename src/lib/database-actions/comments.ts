@@ -1,6 +1,5 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
 import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
 import { getCommentsByEmail } from '@/lib/database-queries/comments';
@@ -77,8 +76,6 @@ export const saveComment = async ({ slug, message }: { slug: string, message: st
     } as SaveCommentResult;
   }
 
-  revalidatePath(`/posts/${slug}`);
-
   return {
     message: 'Comment saved successfully.',
     code: 'SUCCESS',
@@ -111,9 +108,6 @@ export const deleteComment = async ({ comment }: { comment: CommentData }) => {
       code: deleted.error.code,
     } as DeleteCommentResult;
   }
-
-  // revalidatePath(`/posts/${comment.slug}`);
-  revalidateTag('nextjs-blog-comments');
 
   return {
     message: 'Comment deleted successfully.',

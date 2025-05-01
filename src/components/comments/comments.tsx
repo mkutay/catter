@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 
 import { Label } from '@/components/ui/label';
+import { TypographyLarge } from '@/components/typography/paragraph';
 import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
 import { getComments } from '@/lib/database-actions/comments';
@@ -33,7 +34,7 @@ export default function Comments({ slug }: { slug: string }) {
     fetchComments();
   }, [slug]);
 
-  if (isLoading) return null;
+  if (isLoading) return <div id="comments" />;
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
@@ -53,8 +54,8 @@ export default function Comments({ slug }: { slug: string }) {
 
 export function CommentAuth({ slug }: { slug: string }) {
   return (
-    <div className="flex flex-col gap-2">
-      <Label>Sign in to Write a Comment:</Label>
+    <div className="flex flex-col gap-1 items-center">
+      <TypographyLarge className="text-primary">Sign in to write a comment!</TypographyLarge>
       <SignIn slug={slug}/>
     </div>
   );
