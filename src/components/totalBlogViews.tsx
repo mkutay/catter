@@ -1,8 +1,9 @@
 'use client';
 
-import { getBlogViews } from "@/lib/database-actions/views";
 import { useEffect, useState } from "react";
+
 import { Skeleton } from "./ui/skeleton";
+import Server from "@/lib/server";
 
 export function TotalBlogViews() {
   const [views, setViews] = useState<number | null>(null);
@@ -10,7 +11,7 @@ export function TotalBlogViews() {
 
   useEffect(() => {
     const fetchViews = async () => {
-      const views = await getBlogViews();
+      const views = await Server.Views.GetAll();
       setViews(views.ok ? views.value : null);
       setIsLoading(false);
     }

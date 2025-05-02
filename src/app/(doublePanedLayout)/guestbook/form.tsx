@@ -16,8 +16,8 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import { GuestbookDialog } from '@/app/(doublePanedLayout)/guestbook/dialog';
 import { GuestBookSignOut } from '@/app/(doublePanedLayout)/guestbook/buttons';
-import { saveGuestbookEntryData } from '@/lib/database-actions/guestbook';
 import { guestbookFormSchema } from '@/config/schema';
+import Server from '@/lib/server';
 
 export default function GuestbookForm() {
   const { toast } = useToast();
@@ -30,14 +30,14 @@ export default function GuestbookForm() {
   });
 
   const onSubmit = async (values: z.infer<typeof guestbookFormSchema>) => {
-    const saved = await saveGuestbookEntryData({
+    const saved = await Server.GuestBook.Save({
       message: values.message,
     });
-    if (saved.code !== 'SUCCESS') {
-      console.error(saved.message);
+    if (!saved.ok) {
+      console.error(saved.error.message);
       toast({
         title: 'Error saving guestbook entry. Please try again later.',
-        description: saved.message,
+        description: saved.error.message,
         variant: 'destructive',
       });
       return;

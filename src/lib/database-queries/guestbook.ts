@@ -1,7 +1,7 @@
 import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
-import { sql } from '@/lib/postgres';
 import { EntryData } from '@/config/types';
+import { sql } from '@/lib/postgres';
 
 interface GetGuestbookEntriesError {
   message: string;

@@ -38,10 +38,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { saveGuestbookEntryData } from '@/lib/database-actions/guestbook';
 import { cn } from '@/lib/utils';
 import { guestbookColors, GuestbookColorsType } from '@/config/types';
 import { guestbookDialogFormSchema } from '@/config/schema';
+import Server from '@/lib/server';
 
 export function GuestbookDialog() {
   const [open, setOpen] = useState(false);
@@ -56,7 +56,7 @@ export function GuestbookDialog() {
   });
   
   const onSubmit = async (values: z.infer<typeof guestbookDialogFormSchema>) => {
-    await saveGuestbookEntryData({
+    await Server.GuestBook.Save({
       message: values.message,
       username: values.username,
       color: values.color,

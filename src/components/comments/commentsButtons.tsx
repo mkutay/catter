@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { deleteComment } from '@/lib/database-actions/comments';
 import { CommentData } from '@/config/types';
+import Server from '@/lib/server';
 
 export function SignOut() {
   return (
@@ -56,9 +56,9 @@ export function DeleteComment({ comment }: { comment: CommentData }) {
   const { toast } = useToast();
 
   const handleDelete = async () => {
-    const result = await deleteComment({ comment });
-    if (result.code !== 'SUCCESS') {
-      console.error('Error deleting comment:', result.message);
+    const result = await Server.Comments.Delete({ comment });
+    if (!result.ok) {
+      console.error('Error deleting comment:', result.error.message);
       toast({
         title: 'Error',
         description: 'Error deleting comment. Please try again later.',

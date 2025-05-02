@@ -1,7 +1,8 @@
 'use client';
 
-import { getViewCount } from "@/lib/database-actions/views";
 import { useEffect, useState } from "react";
+
+import Server from "@/lib/server";
 
 export function ViewDisplay({ slug }: { slug: string }) {
   const [views, setViews] = useState<number | null>(null);
@@ -9,7 +10,7 @@ export function ViewDisplay({ slug }: { slug: string }) {
 
   useEffect(() => {
     const fetchViewCount = async () => {
-      const views = await getViewCount({ slug });
+      const views = await Server.Views.Get({ slug });
       setViews(views.ok ? views.value : null);
       setIsLoading(false);
     };

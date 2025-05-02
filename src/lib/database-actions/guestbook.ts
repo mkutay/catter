@@ -1,26 +1,24 @@
-'use server';
-
 import { revalidatePath } from 'next/cache';
 import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
 import { doesAllEntriesExist, getGuestbookEntriesByEmail } from '@/lib/database-queries/guestbook';
-import { auth } from '@/lib/auth';
-import { sql } from '@/lib/postgres';
-import { siteConfig } from '@/config/site';
 import { guestbookFormSchema, guestbookDialogFormSchema } from '@/config/schema';
+import { getAuth } from '@/lib/database-queries/auth';
+import { siteConfig } from '@/config/site';
 import { EntryData } from '@/config/types';
+import { sql } from '@/lib/postgres';
 
-interface SaveGuestbookEntryResult {
+interface SaveGuestbookEntryError {
   message: string;
-  code: 'DATABASE_ERROR' | 'VALIDATION_ERROR' | 'UNAUTHORISED' | 'RATE_LIMIT' | 'SUCCESS';
+  code: 'VALIDATION_ERROR' | 'UNAUTHORISED' | 'RATE_LIMIT';
 };
 
-interface DeleteGuestbookEntriesResult {
+interface DeleteGuestbookEntriesError {
   message: string;
-  code: 'DATABASE_ERROR' | 'UNAUTHORISED' | 'NOT_ALL_ENTRIES_EXIST' | 'SUCCESS';
+  code: 'UNAUTHORISED' | 'NOT_ALL_ENTRIES_EXIST';
 };
 
-export const saveGuestbookEntryData = async ({
+export const saveGuestbookEntryData = ({
   color,
   username,
   message
@@ -28,184 +26,119 @@ export const saveGuestbookEntryData = async ({
   color?: string,
   username?: string,
   message: string
-}) => {
-  const session = await auth();
+}) => getAuth()
+  .andThen((session) =>
+    session.user
+      ? okAsync({
+          email: session.user.email || '',
+          name: session.user.name || '',
+        })
+      : errAsync({
+          message: 'Session not found. Unauthorized.',
+          code: 'UNAUTHORISED',
+        } as SaveGuestbookEntryError)
+  )
+  .andThen(({ email, name }) => {
+    const validationPopOver = guestbookDialogFormSchema.safeParse({
+      color,
+      message,
+      username
+    });
 
-  if (!session || !session.user) {
-    return {
-      message: 'Unauthorized.',
-      code: 'UNAUTHORISED',
-    } as SaveGuestbookEntryResult;
-  }
+    const validationGuestbook = guestbookFormSchema.safeParse({
+      message
+    });
 
-  username = username || '';
-  color = color || 'text';
-
-  const random = Math.floor(Math.random() * 1000000);
-
-  const validationPopOver = guestbookDialogFormSchema.safeParse({
-    color,
-    message,
-    username
-  });
-
-  const validationGuestbook = guestbookFormSchema.safeParse({
-    message
-  });
-
-  if (!validationPopOver.success && !validationGuestbook.success) {
-    return {
-      message: 'Validation error: ' + validationPopOver.error.message + ', ' + validationGuestbook.error.message,
-      code: 'VALIDATION_ERROR',
-    } as SaveGuestbookEntryResult;
-  }
-
-  const created_by = validationPopOver.success ? username : session.user.name as string;
-  const email = session.user.email as string;
-
-  if (!validationPopOver.success) {
-    color = 'text';
-  }
-
-  const entriesOfEmailResult = await getGuestbookEntriesByEmail({ email });
-
-  if (entriesOfEmailResult.isErr()) {
-    return {
-      message: 'Failed to fetch guestbook entries of user. Database error.',
-      code: 'DATABASE_ERROR',
-    } as SaveGuestbookEntryResult;
-  }
-
-  const entriesOfEmail = entriesOfEmailResult.value;
-  if (entriesOfEmail.length !== 0) {
-    const newestDate = new Date(entriesOfEmail[0].created_at);
-
-    // Rate limit check
-    if (Date.now() - newestDate.getTime() < 1000 * 15) {
-      return {
-        message: 'Rate limit exceeded. Please wait before submitting again.',
-        code: 'RATE_LIMIT',
-      } as SaveGuestbookEntryResult;
+    if (!validationPopOver.success && !validationGuestbook.success) {
+      return errAsync({
+        message: 'Validation error: ' + validationPopOver.error.message + ', ' + validationGuestbook.error.message,
+        code: 'VALIDATION_ERROR',
+      } as SaveGuestbookEntryError);
     }
-  }
 
-  const inserted = await insertIntoGuestbook(random, email, message, created_by, color);
+    const createdBy = validationPopOver.success ? (username || '') : name;
 
-  if (inserted.isErr()) {
-    return {
+    if (!validationPopOver.success) {
+      color = 'text';
+    }
+
+    return okAsync({
+      email,
+      createdBy,
+    });
+  })
+  .andThen(({ email, createdBy }) =>
+    getGuestbookEntriesByEmail({ email })
+    .andThen((entries) =>
+      entries.length > 0 && Date.now() - new Date(entries[0].created_at).getTime() < 1000 * 15
+        ? errAsync({
+            message: 'Rate limit exceeded. Please wait before submitting again.',
+            code: 'RATE_LIMIT',
+          } as SaveGuestbookEntryError)
+        : okAsync()
+    )
+    .andThen(() => insertIntoGuestbook(Math.floor(Math.random() * 1000000), email, message, createdBy, color || 'text'))
+  )
+  .andThen(() => {
+    revalidatePath('/guestbook');
+    revalidatePath('/admin');
+    return okAsync();
+  });
+
+const insertIntoGuestbook = (random: number, email: string, message: string, created_by: string, color: string) => ResultAsync
+  .fromPromise(
+    sql<EntryData[]>`
+      INSERT INTO guestbook (id, email, body, created_by, created_at, color)
+      VALUES (${random}, ${email}, ${message}, ${created_by}, NOW(), ${color})
+      RETURNING *;
+    `,
+    () => ({
       message: 'Failed to insert guestbook entry. Database error.',
       code: 'DATABASE_ERROR',
-    } as SaveGuestbookEntryResult;
-  }
+    })
+  );
 
-  revalidatePath('/guestbook');
-  revalidatePath('/admin');
-
-  return {
-    message: 'Saved guestbook entry successfully.',
-    code: 'SUCCESS',
-  } as SaveGuestbookEntryResult;
-}
-
-const insertIntoGuestbook = async (random: number, email: string, message: string, created_by: string, color: string) => {
-  const promise = sql<EntryData[]>`
-    INSERT INTO guestbook (id, email, body, created_by, created_at, color)
-    VALUES (${random}, ${email}, ${message}, ${created_by}, NOW(), ${color})
-    RETURNING *;
-  `;
-
-  return ResultAsync.fromPromise(promise, () => ({
-    message: 'Failed to insert guestbook entry. Database error.',
-    code: 'DATABASE_ERROR' as const,
-  })).andThen((result) => {
-    if (!result || result.length === 0) {
-      return errAsync({
-        message: 'Not inserted into the guestbook table. Database error.',
-        code: 'DATABASE_ERROR' as const,
-      });
-    }
-
-    if (result[0].id !== random) {
-      return errAsync({
-        message: 'Inserted incorrectly into the guestbook. Database error.',
-        code: 'DATABASE_ERROR' as const,
-      });
-    }
-
+export const deleteGuestbookEntries = ({ entries }: { entries: number[] }) => getAuth()
+  .andThen((session) =>
+    session.user
+      ? okAsync(session.user.email || '')
+      : errAsync({
+          message: 'User not found. Unauthorized.',
+          code: 'UNAUTHORISED',
+        } as DeleteGuestbookEntriesError)
+  )
+  .andThen((email) => 
+    !siteConfig.admins.includes(email)
+      ? errAsync({
+          message: 'Not an admin. Unauthorized.',
+          code: 'UNAUTHORISED',
+        } as DeleteGuestbookEntriesError)
+      : okAsync()
+  )
+  .andThen(() => doesAllEntriesExist({ ids: entries }))
+  .andThen((exists) => exists
+    ? okAsync()
+    : errAsync({
+        message: 'Not all entries exist. Not performing.',
+        code: 'NOT_ALL_ENTRIES_EXIST',
+      } as DeleteGuestbookEntriesError)
+  )
+  .andThen(() => deleteFromGuestbook(`{${entries.join(',')}}`))
+  .andThen(() => {
+    revalidatePath('/admin');
+    revalidatePath('/guestbook');
     return okAsync();
   });
-}
 
-export const deleteGuestbookEntries = async (selectedEntries: number[]) => {
-  const session = await auth();
-  
-  if (!session || !session.user) {
-    return {
-      message: 'Session not found. Unauthorized.',
-      code: 'UNAUTHORISED',
-    } as DeleteGuestbookEntriesResult;
-  }
-
-  const email = session.user.email as string;
-
-  if (!siteConfig.admins.includes(email)) {
-    return {
-      message: 'Not an admin. Unauthorized.',
-      code: 'UNAUTHORISED',
-    } as DeleteGuestbookEntriesResult;
-  }
-
-  const exists = await doesAllEntriesExist({ ids: selectedEntries });
-
-  if (exists.isErr()) {
-    return {
-      message: 'Failed to check guestbook entries. Database error. ' + exists.error.message,
-      code: 'DATABASE_ERROR',
-    } as DeleteGuestbookEntriesResult;
-  }
-  if (!exists.value) {
-    return {
-      message: 'Not all entries exist. Not performing.',
-      code: 'NOT_ALL_ENTRIES_EXIST',
-    } as DeleteGuestbookEntriesResult;
-  }
-
-  const arrayLiteral = `{${selectedEntries.join(',')}}`;
-  const deleted = await deleteFromGuestbook(arrayLiteral);
-
-  if (deleted.isErr()) {
-    return {
+const deleteFromGuestbook = (arrayLiteral: string) => ResultAsync
+  .fromPromise(
+    sql<EntryData[]>`
+      DELETE FROM guestbook
+      WHERE id = ANY(${arrayLiteral}::int[])
+      RETURNING *;
+    `,
+    () => ({
       message: 'Failed to delete guestbook entry. Database error.',
-      code: 'DATABASE_ERROR',
-    } as DeleteGuestbookEntriesResult;
-  }
-
-  revalidatePath('/admin');
-  revalidatePath('/guestbook');
-
-  return {
-    message: 'Deleted guestbook entries successfully.',
-    code: 'SUCCESS',
-  } as DeleteGuestbookEntriesResult;
-}
-
-const deleteFromGuestbook = (arrayLiteral: string) => {
-  const promise = sql<EntryData[]>`
-    DELETE FROM guestbook
-    WHERE id = ANY(${arrayLiteral}::int[])
-    RETURNING *;
-  `;
-
-  return ResultAsync.fromPromise(promise, () => ({
-    message: 'Failed to delete guestbook entry. Database error.',
-    code: 'DATABASE_ERROR' as const,
-  })).andThen((result) => {
-    if (!result || result.length === 0) {
-      return errAsync({
-        message: 'Not deleted from the guestbook table. Database error.',
-        code: 'DATABASE_ERROR' as const,
-      });
-    }
-    return okAsync();
-  });
-}
+      code: 'DATABASE_ERROR' as const,
+    })
+  );

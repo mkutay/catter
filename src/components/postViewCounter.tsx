@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import { incrementViews } from "@/lib/database-actions/views";
 import { Skeleton } from "./ui/skeleton";
+import Server from "@/lib/server";
 
 export function PostViewCounter({ slug }: { slug: string }) {
   const [viewCount, setViewCount] = useState<number | null>(null);
@@ -11,7 +11,7 @@ export function PostViewCounter({ slug }: { slug: string }) {
 
   useEffect(() => {
     const fetchViewCount = async () => {
-      const views = await incrementViews(slug);
+      const views = await Server.Views.Increment({ slug });
       setViewCount(views.ok ? views.value : null);
       setIsLoading(false);
     };

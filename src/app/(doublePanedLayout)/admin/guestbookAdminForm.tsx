@@ -17,10 +17,10 @@ import {
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/components/ui/use-toast';
-import { deleteGuestbookEntries } from '@/lib/database-actions/guestbook';
 import { EntryData } from '@/config/types';
 import { deleteGuestbookEntryDataFormSchema } from '@/config/schema';
 import { cn } from '@/lib/utils';
+import Server from '@/lib/server';
 
 // Delete entries from the guestbook
 export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
@@ -34,12 +34,12 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
   });
   
   const onSubmit = async (values: z.infer<typeof deleteGuestbookEntryDataFormSchema>) => {
-    const deleted = await deleteGuestbookEntries(values.items);
-    if (deleted.code !== 'SUCCESS') {
-      console.error(deleted.message);
+    const deleted = await Server.GuestBook.Delete({ entries: values.items });
+    if (!deleted.ok) {
+      console.error(deleted.error.message);
       toast({
         title: 'Error deleting entries.',
-        description: deleted.message,
+        description: deleted.error.message,
         variant: 'destructive',
       });
       return;

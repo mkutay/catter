@@ -16,8 +16,8 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { SignOut } from '@/components/comments/commentsButtons';
-import { saveComment } from '@/lib/database-actions/comments';
 import { commentsFormSchema } from '@/config/schema';
+import Server from '@/lib/server';
 
 export function CommentForm({ slug }: { slug: string }) {
   const { toast } = useToast();
@@ -30,10 +30,10 @@ export function CommentForm({ slug }: { slug: string }) {
   });
  
   const onSubmit = async (values: z.infer<typeof commentsFormSchema>) => {
-    const saved = await saveComment({ slug, message: values.message });
+    const saved = await Server.Comments.Save({ slug, message: values.message });
 
-    if (saved.code !== 'SUCCESS') {
-      console.error(`Could not save comment on post ${slug}:`, saved.message);
+    if (!saved.ok) {
+      console.error(`Could not save comment on post ${slug}:`, saved.error.message);
       toast({
         title: "Error",
         description: "Could not save comment. Please try again later.",

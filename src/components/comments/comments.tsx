@@ -7,10 +7,9 @@ import { Label } from '@/components/ui/label';
 import { TypographyLarge } from '@/components/typography/paragraph';
 import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
 import { CommentForm } from '@/components/comments/commentsForm';
-import { getComments } from '@/lib/database-actions/comments';
-import { getUserEmail } from '@/lib/database-actions/auth';
 import { siteConfig } from '@/config/site';
 import { CommentData } from '@/config/types';
+import Server from '@/lib/server';
 
 export default function Comments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<CommentData[]>([]);
@@ -19,13 +18,13 @@ export default function Comments({ slug }: { slug: string }) {
 
   useEffect(() => {
     const fetchComments = async () => {
-      const comments = await getComments({ slug });
+      const comments = await Server.Comments.Get({ slug });
       setComments(comments.ok ? comments.value : []);
       setIsLoading(false);
     };
 
     const fetchSession = async () => {
-      const email = await getUserEmail();
+      const email = await Server.Auth.Email();
       setEmail(email);
       setIsLoading(false);
     }
