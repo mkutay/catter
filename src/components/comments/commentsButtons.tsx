@@ -18,9 +18,9 @@ import { useToast } from '@/components/ui/use-toast';
 import { CommentData } from '@/config/types';
 import Server from '@/lib/server';
 
-export function SignOut() {
+export function SignOut({ slug }: { slug: string }) {
   return (
-    <Button type="button" variant="ghost" size="default" onClick={() => signOut()}>
+    <Button type="button" variant="ghost" size="default" onClick={() => signOut({ callbackUrl: `/posts/${slug}#comments` })}>
       Sign Out
     </Button>
   );
@@ -51,22 +51,38 @@ export function SignIn({ slug }: { slug: string }) {
   );
 }
 
-export function DeleteComment({ comment }: { comment: CommentData }) {
+export function DeleteComment({ 
+  comment, 
+  editComment,
+}: { 
+  comment: CommentData;
+  editComment?: (props: {
+    action: "add";
+    newComment: CommentData;
+  } | {
+    action: "delete";
+    commentId: string;
+  }) => void;
+}) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
   const handleDelete = async () => {
+    setOpen(false);
+    
+    if (editComment) {
+      editComment({ action: 'delete', commentId: comment.id });
+    }
+    
     const result = await Server.Comments.Delete({ comment });
+    
     if (!result.ok) {
-      console.error('Error deleting comment:', result.error.message);
       toast({
         title: 'Error',
-        description: 'Error deleting comment. Please try again later.',
+        description: 'Error deleting comment.',
         variant: 'destructive',
       });
-      return;
     }
-    setOpen(false);
   };
 
   return (

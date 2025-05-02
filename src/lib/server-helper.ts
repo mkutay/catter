@@ -1,50 +1,60 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import { okAsync } from "neverthrow";
+
 import { deleteGuestbookEntries, saveGuestbookEntryData } from "./database-actions/guestbook";
 import { deleteComment, saveComment } from "./database-actions/comments";
+import { getBlogViews, getViewCount } from "./database-queries/views";
 import { resultAsyncToActionResult } from "./action-result";
 import { getComments } from "./database-queries/comments";
 import { incrementViews } from "./database-actions/views";
-import { getBlogViews, getViewCount } from "./database-queries/views";
 import { CommentData } from "@/config/types";
 import { auth } from "./auth";
 
-export async function getEmail() {
+export async function getUser() {
   const session = await auth();
-  if (!session || !session.user || !session.user.email) {
+  if (!session || !session.user || !session.user.email || !session.user.name) {
     return null;
   }
-  return session.user.email;
+  return {
+    email: session.user.email,
+    name: session.user.name,
+  };
 }
 
-export async function saveCommentAction(props: { slug: string, message: string }) {
-  return resultAsyncToActionResult(saveComment(props));
-}
+export const saveCommentAction = async (props: { slug: string, message: string }) =>
+  resultAsyncToActionResult(
+    saveComment(props)
+    .andThrough(() => {
+      revalidatePath(`/posts/[slug]`, 'page');
+      return okAsync();
+    })
+  );
 
-export async function deleteCommentAction(props: { comment: CommentData }) {
-  return resultAsyncToActionResult(deleteComment(props));
-}
+export const deleteCommentAction = async (props: { comment: CommentData }) => 
+  resultAsyncToActionResult(
+    deleteComment(props)
+    .andThrough(() => {
+      revalidatePath(`/posts/[slug]`, 'page');
+      return okAsync();
+    })
+  );
 
-export async function getCommentsAction(props: { slug: string }) {
-  return resultAsyncToActionResult(getComments(props));
-}
+export const getCommentsAction = async (props: { slug: string }) =>
+  resultAsyncToActionResult(getComments(props));
 
-export async function getViewCountAction(props: { slug: string }) {
-  return resultAsyncToActionResult(getViewCount(props));
-}
+export const getViewCountAction = async (props: { slug: string }) =>
+  resultAsyncToActionResult(getViewCount(props));
 
-export async function incrementViewsAction(props: { slug: string }) {
-  return resultAsyncToActionResult(incrementViews(props));
-}
+export const incrementViewsAction = async (props: { slug: string }) =>
+  resultAsyncToActionResult(incrementViews(props));
 
-export async function getBlogViewsAction() {
-  return resultAsyncToActionResult(getBlogViews());
-}
+export const getBlogViewsAction = async () =>
+  resultAsyncToActionResult(getBlogViews());
 
-export async function saveGuestbookEntryAction(props: { color?: string, username?: string, message: string }) {
-  return resultAsyncToActionResult(saveGuestbookEntryData(props));
-}
+export const saveGuestbookEntryAction = async (props: { color?: string, username?: string, message: string }) =>
+  resultAsyncToActionResult(saveGuestbookEntryData(props));
 
-export async function deleteGuestbookEntriesAction(props: { entries: number[] }) {
-  return resultAsyncToActionResult(deleteGuestbookEntries(props));
-}
+export const deleteGuestbookEntriesAction = async (props: { entries: number[] }) =>
+  resultAsyncToActionResult(deleteGuestbookEntries(props));

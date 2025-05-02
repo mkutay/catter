@@ -17,9 +17,24 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { SignOut } from '@/components/comments/commentsButtons';
 import { commentsFormSchema } from '@/config/schema';
+import { CommentData } from '@/config/types';
 import Server from '@/lib/server';
 
-export function CommentForm({ slug }: { slug: string }) {
+export function CommentForm({ 
+  slug,
+  editComment,
+  user,
+}: { 
+  slug: string; 
+  editComment: (props: {
+    action: "add";
+    newComment: CommentData;
+  } | {
+    action: "delete";
+    commentId: string;
+  }) => void;
+  user: { email: string; name: string };
+}) {
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof commentsFormSchema>>({
@@ -30,18 +45,34 @@ export function CommentForm({ slug }: { slug: string }) {
   });
  
   const onSubmit = async (values: z.infer<typeof commentsFormSchema>) => {
+    const now = new Date().toDateString();
+    const optimisticComment: CommentData = {
+      id: Math.random() * 1000000 + "",
+      body: values.message,
+      created_at: now,
+      updated_at: now,
+      email: user.email,
+      created_by: user.name,
+      slug: slug,
+    };
+    
+    editComment({ action: 'add', newComment: optimisticComment });
+    
+    form.reset();
+    
     const saved = await Server.Comments.Save({ slug, message: values.message });
 
+    editComment({ action: 'delete', commentId: optimisticComment.id });
+
     if (!saved.ok) {
-      console.error(`Could not save comment on post ${slug}:`, saved.error.message);
       toast({
         title: "Error",
         description: "Could not save comment. Please try again later.",
         variant: "destructive",
       });
-      return;
+    } else {
+      editComment({ action: 'add', newComment: saved.value[0] });
     }
-    form.reset();
   };
 
   return (
@@ -54,14 +85,14 @@ export function CommentForm({ slug }: { slug: string }) {
             <FormItem>
               <FormLabel>Write a Comment to this Post!</FormLabel>
               <FormControl>
-                <Textarea className="h-32" placeholder="Your comment..." {...field}/>
+                <Textarea className="h-32" placeholder="Your comment..." {...field} />
               </FormControl>
-              <FormMessage/>
+              <FormMessage />
             </FormItem>
           )}
         />
         <div className="flex flex-row gap-2 justify-end items-center">
-          <SignOut/>
+          <SignOut slug={slug} />
           <Button variant="default" size="default" type="submit">Post</Button>
         </div>
       </form>

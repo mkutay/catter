@@ -1,5 +1,4 @@
 import {
-  getEmail,
   saveCommentAction,
   deleteCommentAction,
   getCommentsAction,
@@ -7,12 +6,13 @@ import {
   incrementViewsAction,
   getBlogViewsAction,
   saveGuestbookEntryAction,
-  deleteGuestbookEntriesAction
+  deleteGuestbookEntriesAction,
+  getUser
 } from './server-helper';
 
 const Server = {
   Auth: {
-    Email: getEmail
+    User: getUser,
   },
   Comments: {
     Save: saveCommentAction,

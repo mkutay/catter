@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { format } from 'date-fns';
 
 import { Label } from '@/components/ui/label';
@@ -13,38 +13,65 @@ import Server from '@/lib/server';
 
 export default function Comments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<CommentData[]>([]);
-  const [email, setEmail] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<{ email: string, name: string } | null | undefined>(undefined);
 
   useEffect(() => {
-    const fetchComments = async () => {
-      const comments = await Server.Comments.Get({ slug });
+    let ignore = false;
+    setComments([]);
+
+    Server.Comments.Get({ slug }).then((comments) => {
+      if (ignore) return;
       setComments(comments.ok ? comments.value : []);
-      setIsLoading(false);
+    });
+
+    return () => {
+      ignore = true;
     };
-
-    const fetchSession = async () => {
-      const email = await Server.Auth.Email();
-      setEmail(email);
-      setIsLoading(false);
-    }
-
-    fetchSession();
-    fetchComments();
   }, [slug]);
 
-  if (isLoading) return <div id="comments" />;
+  useEffect(() => {
+    let ignore = false;
+    setUser(undefined);
+
+    Server.Auth.User().then((user) => {
+      if (ignore) return;
+      setUser(user);
+    });
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  const editComment = useCallback((props: {
+    action: 'add',
+    newComment: CommentData,
+  } | {
+    action: 'delete',
+    commentId: string,
+  }) => {
+    if (props.action === 'add') {
+      setComments(prevComments => [props.newComment, ...prevComments]);
+    } else if (props.action === 'delete') {
+      setComments(prevComments => prevComments.filter(comment => comment.id !== props.commentId));
+    }
+  }, [])
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
-      {email ? (
-        <CommentForm slug={slug}/>
-      ) : (
-        <CommentAuth slug={slug}/>
+      {user ? (
+        <CommentForm slug={slug} editComment={editComment} user={user} />
+      ) : user === null && (
+        <CommentAuth slug={slug} />
       )}
       <div className="flex flex-col gap-6">
         {comments.map((comment) => (
-          <Comment comment={comment} key={comment.id} owns={(siteConfig.admins.includes(email as string)) || (email == comment.email)} />
+          <Comment 
+            comment={comment} 
+            key={comment.id} 
+            owns={(siteConfig.admins.includes(user?.email || '')) || (user?.email === comment.email)}
+            editComment={editComment}
+          />
         ))}
       </div>
     </div>
@@ -55,7 +82,7 @@ export function CommentAuth({ slug }: { slug: string }) {
   return (
     <div className="flex flex-col gap-1 items-center">
       <TypographyLarge className="text-primary">Sign in to write a comment!</TypographyLarge>
-      <SignIn slug={slug}/>
+      <SignIn slug={slug} />
     </div>
   );
 }
@@ -63,9 +90,17 @@ export function CommentAuth({ slug }: { slug: string }) {
 export function Comment({
   comment,
   owns,
+  editComment,
 }: {
   comment: CommentData;
   owns?: boolean | null;
+  editComment?: (props: {
+    action: "add";
+    newComment: CommentData;
+  } | {
+    action: "delete";
+    commentId: string;
+  }) => void;
 }) {
   return (
     <div id={comment.id} className="flex flex-col gap-2 w-full">
@@ -75,7 +110,7 @@ export function Comment({
       </div>
       {owns && (
         <div className="flex flex-row justify-end">
-          <DeleteComment comment={comment}/>
+          <DeleteComment comment={comment} editComment={editComment} />
         </div>
       )}
     </div>
