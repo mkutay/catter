@@ -2,7 +2,6 @@ import Link from 'next/link';
 
 import { Comment } from '@/components/comments/comments';
 import { CommentData } from '@/config/types';
-import { getProps } from '@/lib/contentQueries';
 
 export function CommentsAdmin({ comments }: { comments: CommentData[] }) {
   const commentsWithSlug: {
@@ -36,14 +35,16 @@ export function CommentsAdmin({ comments }: { comments: CommentData[] }) {
         <div key={comments.slug}>
           <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-4 mb-2">
             <Link href={`/posts/${comments.slug}`} className="underline hover:text-foreground/80 transition-all">
-              {getProps('content/posts', comments.slug).meta.title}
+              {comments.slug}
             </Link>
           </h3>
-          {comments.comments.map((comment) => (
-            <div key={comment.id}>
-              <Comment comment={comment}/>
-            </div>
-          ))}
+          <div className="flex flex-col gap-4">
+            {comments.comments.map((comment) => (
+              <div key={comment.id}>
+                <Comment comment={comment}/>
+              </div>
+            ))}
+          </div>
         </div>
       ))}
     </div>

@@ -6,7 +6,6 @@ export const minioClient = new Minio.Client({
   secretKey: process.env.MINIO_SECRET_KEY!,
 });
 
-export const getImage = async (url: string) => {
-  const image = await minioClient.getObject(process.env.S3_BUCKET_NAME!, url);
-  return image;
+export const getImage = (url: string) => {
+  return minioClient.getObject(process.env.S3_BUCKET_NAME!, url);
 };

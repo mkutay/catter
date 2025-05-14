@@ -1,29 +1,28 @@
+import readingTime, { ReadTimeResults } from 'reading-time';
 import { evaluate } from 'next-mdx-remote-client/rsc';
 import { TocItem } from 'remark-flexible-toc';
-import readingTime, { ReadTimeResults } from 'reading-time';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { getPostFiles, getPostProps } from '@/lib/contentQueries';
 import { components, options } from '@/config/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import CopyToClipboard from '@/components/copyToClipboard';
 import { PostViewCounter } from '@/components/postViewCounter';
 import DoublePane from '@/components/doublePane';
 import { turnTagString } from '@/components/tagsButtonGrid';
-import { images } from '@/config/images';
 import Comments from '@/components/comments/comments';
 import { TypographyH1, TypographyH2 } from '@/components/typography/headings';
 import { PostMeta } from '@/config/types';
 import { cn } from '@/lib/utils';
+import { getPlaceholder, getPost, getPostSlugs } from '@/lib/dbContentQueries';
 
 export const dynamic = 'force-static';
 export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const props = getPostProps(slug);
+  const props = await getPost(slug);
   const formattedDate = format(props.meta.date, 'PP');
 
   return {
@@ -50,7 +49,7 @@ type Scope = {
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const props = getPostProps(slug);
+  const props = await getPost(slug);
   const formattedDate = format(props.meta.date, 'PP');
 
   const modifiedOptions = {
@@ -66,6 +65,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     options: modifiedOptions,
     components,
   });
+
+  const coverImage = props.meta.cover;
+  const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
 
   return (
     <>
@@ -94,11 +96,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       </div>
       <DoublePane side={<Side toc={scope.toc || []} />}>
         <div>
-          {props.meta.cover && (<div className="my-6"><Image
+          {coverImage && placeholder && (<div className="my-6"><Image
             alt={`${props.meta.title} post cover image`}
-            src={images[props.slug]}
+            src={`/api${coverImage}`}
             className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
-            placeholder="blur"
+            width={placeholder.metadata.width}
+            height={placeholder.metadata.height}
+            priority={true}
+            placeholder={placeholder.base64 as `data:image/${string}`}
           /></div>)}
           <div className="my-4 flex flex-row items-center gap-4 justify-end text-foreground text-lg">
             <PostViewCounter slug={props.slug} />
@@ -135,10 +140,10 @@ function Side({ toc }: { toc: TocItem[] }) {
   );
 }
 
-export function generateStaticParams() {
-  const postFiles = getPostFiles();
+export async function generateStaticParams() {
+  const posts = await getPostSlugs();
 
-  return postFiles.map(filename => ({
-    slug: filename.replace('.mdx', ''),
+  return posts.map(slug => ({
+    slug,
   }));
 }

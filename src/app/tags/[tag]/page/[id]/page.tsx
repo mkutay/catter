@@ -1,7 +1,7 @@
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
 import { turnTagString } from '@/components/tagsButtonGrid';
-import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/contentQueries';
+import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/dbContentQueries';
 import { siteConfig } from '@/config/site';
 import { TotalBlogViews } from '@/components/totalBlogViews';
 
@@ -11,7 +11,7 @@ export const dynamicParams = false;
 export async function generateMetadata(props: { params: Promise<{ tag: string, id: string }> }) {
   const params = await props.params;
   const { id, tag } = params;
-  const posts = getPosts({ tags: [tag] });
+  const posts = await getPosts({ tags: [tag] });
 
   return {
     title: `Posts With Tag: ${tag} | Page ${id}`,
@@ -31,7 +31,7 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
 
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;
-  const postsLength = getPostsLength({ tags: [tag] });
+  const postsLength = await getPostsLength({ tags: [tag] });
 
   return (
     <>
@@ -50,15 +50,15 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
 }
 
 export async function generateStaticParams() {
-  const tags = getListOfAllTags();
+  const tags = await getListOfAllTags();
   const ret: { tag: string, id: string }[] = [];
 
-  tags.forEach((tag) => {
-    const tagsMapLength = getPostsLength({ tags: [tag] });
+  for (const tag of tags) {
+    const tagsMapLength = await getPostsLength({ tags: [tag] });
     for (let i = 1; i <= Math.ceil(tagsMapLength / siteConfig.postNumPerPage); i++) {
       ret.push({ tag: tag, id: i.toString() });
     }
-  })
+  }
 
   return ret;
 }

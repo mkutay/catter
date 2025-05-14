@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 import { TypographyH1 } from "@/components/typography/headings";
 import { components, options } from '@/config/mdxRemoteSettings';
-import { getAboutProps } from '@/lib/contentQueries';
+import { getAboutProps } from '@/lib/fsContentQueries';
 import DoublePane from '@/components/doublePane';
 import { siteConfig } from '@/config/site';
 import me from '@/public/images/me.jpg';

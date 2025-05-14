@@ -1,11 +1,11 @@
-import { err, errAsync, ok, okAsync, ResultAsync } from 'neverthrow';
+import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
 import { getCommentsByEmail } from '@/lib/database-queries/comments';
 import { sql } from '@/lib/postgres';
 import { CommentData } from '@/config/types';
 import { siteConfig } from '@/config/site';
 import { commentsFormSchema } from '@/config/schema';
-import { doesPostWithSlugExist } from '@/lib/contentQueries';
+import { doesPostWithSlugExist } from '@/lib/dbContentQueries';
 import { getAuth } from '@/lib/database-queries/auth';
 import { parseSchema } from '@/lib/utils';
 
@@ -21,14 +21,19 @@ interface DeleteCommentError {
 
 export const saveComment = ({ slug, message }: { slug: string, message: string }) => 
   parseSchema(commentsFormSchema, { message })
-  .andThen(() => doesPostWithSlugExist(slug)
-    ? ok()
-    : err({
-        message: 'Post not found.',
-        code: 'INVALID_SLUG',
-      } as SaveCommentError)
+  .asyncAndThen(() => ResultAsync.fromPromise(
+    doesPostWithSlugExist(slug),
+    () => ({ message: 'Error checking post existence.', code: 'INVALID_SLUG' } as SaveCommentError)
+  ))
+  .andThen((exists) => 
+    exists
+      ? okAsync()
+      : errAsync({
+          message: 'Post not found.',
+          code: 'INVALID_SLUG',
+        } as SaveCommentError)
   )
-  .asyncAndThen(() => getAuth())
+  .andThen(() => getAuth())
   .andThen((session) =>
     !session || !session.user
       ? errAsync({

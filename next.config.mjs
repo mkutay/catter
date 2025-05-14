@@ -1,3 +1,5 @@
+import withPlaiceholder from '@plaiceholder/next';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
@@ -6,4 +8,4 @@ const nextConfig = {
     loaderFile: './next-images-loader.js',
   },
 };
-export default nextConfig;
+export default withPlaiceholder(nextConfig);

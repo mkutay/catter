@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { format } from 'date-fns';
 
-import { getPosts } from '@/lib/contentQueries';
+import { getPosts } from '@/lib/dbContentQueries';
 import { siteConfig } from '@/config/site';
 
 export const dynamic = 'force-static';
@@ -9,7 +9,7 @@ export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ shortened: string }> }) {
   const { shortened } = await params;
-  const posts = getPosts({ });
+  const posts = await getPosts({ });
 
   const props = posts.find((post) => post.meta.shortened === shortened);
   if (!props) notFound();
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ shortened
 
 export default async function Page({ params }: { params: Promise<{ shortened: string }> }) {
   const { shortened } = await params;
-  const posts = getPosts({ });
+  const posts = await getPosts({ });
 
   posts.forEach((post) => {
     if (post.meta.shortened === shortened) {
@@ -44,9 +44,9 @@ export default async function Page({ params }: { params: Promise<{ shortened: st
   });
 }
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   const ret: { shortened: string }[] = [];
-  const posts = getPosts({ });
+  const posts = await getPosts({ });
 
   posts.forEach((post) => {
     ret.push({ shortened: post.meta.shortened });

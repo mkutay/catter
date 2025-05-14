@@ -1,6 +1,6 @@
 import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
-import { doesPostWithSlugExist } from '@/lib/contentQueries';
+import { doesPostWithSlugExist } from '@/lib/dbContentQueries';
 import { sql } from '@/lib/postgres';
 import { CommentData } from '@/config/types';
 
@@ -21,7 +21,11 @@ interface GetCommentsByEmailError {
 
 /* Limiting to 15 to avoid loading too many comments at once. */
 export const getComments = ({ slug }: { slug: string }) =>
-  !doesPostWithSlugExist(slug)
+  ResultAsync.fromPromise(doesPostWithSlugExist(slug), () => ({
+    message: 'Error checking post existence.',
+    code: 'POST_NOT_FOUND',
+  } as GetCommentsError))
+  .andThen((exists) => !exists
     ? errAsync({
         message: 'Post not found.',
         code: 'POST_NOT_FOUND',
@@ -40,6 +44,7 @@ export const getComments = ({ slug }: { slug: string }) =>
         } as GetCommentsError)
       )
       .map((comments) => comments as CommentData[])
+  );
 
 export const getEveryComment = (props?: { limit: number }) => 
   okAsync(props ? props.limit : 15)

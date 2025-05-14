@@ -1,14 +1,46 @@
-import fs from 'fs';
-import path from 'path';
 import { exit } from 'process';
 
 import { sql } from '@/lib/postgres';
 
-function getPostFiles() {
-  return fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
-}
-
 try {
+  // Create posts table
+  await sql`
+    CREATE TABLE IF NOT EXISTS posts (
+      slug VARCHAR(255) PRIMARY KEY,
+      content TEXT NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      date TIMESTAMP NOT NULL,
+      excerpt TEXT NOT NULL,
+      locale TEXT NOT NULL,
+      cover TEXT,
+      coverSquare TEXT,
+      lastModified TIMESTAMP NOT NULL,
+      shortened VARCHAR(255) NOT NULL,
+      shortExcerpt TEXT
+    )
+  `;
+
+  // Create keywords table
+  await sql`
+    CREATE TABLE IF NOT EXISTS post_keywords (
+      slug VARCHAR(255),
+      keyword TEXT,
+      PRIMARY KEY (slug, keyword),
+      FOREIGN KEY (slug) REFERENCES posts(slug) ON DELETE CASCADE ON UPDATE CASCADE
+    )
+  `;
+
+  // Create tags table
+  await sql`
+    CREATE TABLE IF NOT EXISTS post_tags (
+      slug VARCHAR(255),
+      tag TEXT,
+      PRIMARY KEY (slug, tag),
+      FOREIGN KEY (slug) REFERENCES posts(slug) ON DELETE CASCADE ON UPDATE CASCADE
+    )
+  `;
+
   // Create guestbook table
   await sql`
     CREATE TABLE IF NOT EXISTS guestbook (
@@ -39,28 +71,24 @@ try {
   await sql`
     CREATE TABLE IF NOT EXISTS views (
       slug TEXT PRIMARY KEY,
-      count INT NOT NULL
+      count INT NOT NULL DEFAULT 0,
+      FOREIGN KEY (slug) REFERENCES posts(slug) ON DELETE CASCADE ON UPDATE CASCADE
     );
   `;
 
-  // Create slugs in the views table, if not already present
-  const slugs = getPostFiles().map(file => file.replace('.mdx', ''));
-
-  const existingSlugs = await sql`
+  const slugs = await sql<{ slug: string }[]>`
     SELECT slug
-    FROM views;
+    FROM posts;
   `;
-
-  const existingSlugsSet = new Set(existingSlugs.map((row) => row.slug));
-  const newSlugs = slugs.filter((slug) => !existingSlugsSet.has(slug));
-  if (newSlugs.length > 0) {
-    const values = newSlugs.map((slug) => ({ slug, count: 0 }));
-    await sql`
+  
+  await Promise.all(slugs.map((v) =>
+    sql`
       INSERT INTO views (slug, count)
-      VALUES ${sql(values)}
+      VALUES (${v.slug}, 0)
       ON CONFLICT (slug) DO NOTHING;
-    `;
-  }
+    `
+  ));
+
   console.log('Database tables successfully created and/or updated.');
 } catch (error) {
   // Log error but don't fail the build

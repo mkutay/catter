@@ -1,51 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import matter from 'gray-matter';
 
 import { siteConfig } from '@/config/site';
-import { PostMeta } from '@/config/types';
-
-function getPostFiles() {
-  const postFiles = fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
-  return postFiles;
-}
-
-function getProps(pathTo: string, slug: string) {
-  let markdownFile;
-
-  try {
-    markdownFile = fs.readFileSync(path.join(process.cwd(), path.join(pathTo, slug + '.mdx')), 'utf-8');
-  } catch (e) {
-    throw new Error(`File not found: ${path.join(process.cwd(), path.join(pathTo, slug + '.mdx'))}: ${e}`);
-  }
-
-  const { data: frontMatter, content } = matter(markdownFile);
-
-  return {
-    slug: slug,
-    meta: frontMatter as PostMeta,
-    content: content,
-  };
-}
-
-function getPosts() {
-  const postFiles = getPostFiles();
-
-  const posts: {
-    slug: string,
-    content: string,
-    meta: PostMeta,
-  }[] = [];
-  
-  postFiles.forEach((filename) => {
-    const slug = filename.replace('.mdx', '');
-    const props = getProps('content/posts', slug);
-
-    posts.push(props);
-  });
-
-  return posts;
-}
+import { getPosts } from '@/lib/fsContentQueries';
 
 function uppercaseFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -63,7 +20,7 @@ function getImagesFromPostContent(content: string) {
   return images;
 }
 
-const posts = getPosts();
+const posts = getPosts({});
 
 type imageType = {
   importPath: string,
