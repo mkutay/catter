@@ -2,7 +2,6 @@ import ProjectCard from '@/components/projectCard';
 import { getPosts } from '@/lib/dbContentQueries';
 import { siteConfig } from '@/config/site';
 import DoublePane from '@/components/doublePane';
-import { Suspense } from 'react';
 
 export const dynamic = 'force-static';
 
@@ -31,9 +30,7 @@ export default async function Page() {
       </h1>
       <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 my-6">
         {projects.map((project) => (
-          <Suspense key={project.slug}>
-            <ProjectCard props={project} />
-          </Suspense>
+          <ProjectCard props={project} key={project.slug} />
         ))}
       </div>
     </DoublePane>
