@@ -11,7 +11,7 @@ This is a minimal and responsive blog created with [Next.js](https://nextjs.org)
 - has a system for tags for posts,
 - uses [CodeHike](https://codehike.org/) for beautifully designed code blocks.
 
-See my [blog](https://v7.mkutay.dev) for a working example that is based on this repository.
+See my [blog](https://www.mkutay.dev) for a working example that is based on this repository.
 
 ## Getting Started
 
@@ -43,4 +43,4 @@ You can fork this repository and add it to Vercel manually, or you can use the f
 
 Any and all contributions are welcome as a pull request. You can also open an issue if you have any questions or problems.
 
-![Catter example blog main page](https://v7.mkutay.dev/images/catter-blog/cover.png)
+![Catter example blog main page](https://www.mkutay.dev/images/catter-blog/cover.png)

@@ -1,12 +1,14 @@
 import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 
-import { GuestbookAdminForm } from '@/app/(doublePanedLayout)/admin/guestbookAdminForm';
-import { CommentsAdmin } from '@/app/(doublePanedLayout)/admin/commentsAdmin';
 import { auth } from '@/lib/auth';
 import { getEveryComment } from '@/lib/database-queries/comments';
 import { getGuestbookEntries } from '@/lib/database-queries/guestbook';
 import { siteConfig } from '@/config/site';
+import { TypographyH1 } from '@/components/typography/headings';
+import DoublePane from '@/components/doublePane';
+import { GuestbookAdminForm } from './guestbookAdminForm';
+import { CommentsAdmin } from './commentsAdmin';
 
 export const metadata: Metadata = {
   title: 'Site Admin',
@@ -39,8 +41,8 @@ export default async function Page() {
   }
 
   return (
-    <>
-      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">Admin</h1>
+    <DoublePane>
+      <TypographyH1>Admin</TypographyH1>
       <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6 mb-2">Guestbook</h2>
       {(entries.isErr() ? <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
           Could not display guestbook entries. Please try again later.
@@ -51,6 +53,6 @@ export default async function Page() {
           Could not display comments. Please try again later.
         </p> : <CommentsAdmin comments={comments.value} />
       )}
-    </>
+    </DoublePane>
   );
 }

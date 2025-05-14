@@ -6,7 +6,7 @@ export default function myImageLoader({ src, width, quality }) {
 
   const imageOptimizationApi = 'https://images.mkutay.dev';
   // Your NextJS application URL
-  const baseUrl = 'https://v7.mkutay.dev';
+  const baseUrl = 'https://www.mkutay.dev';
 
   const fullSrc = `${baseUrl}${src}`;
 

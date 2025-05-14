@@ -1,5 +1,5 @@
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { ArrowRightIcon } from '@radix-ui/react-icons';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { getViewsCount } from '@/lib/database-queries/views';
@@ -35,15 +35,15 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
       {posts.slice(0, postNum).map((post) => (
         <li key={post.slug} className="group pl-0 hover:pl-2 transition-all animate-in flex flex-row items-start">
           <div className="pr-4 group-hover:pr-2 transition-all animate-in mt-1.5">
-            <ArrowRightIcon stroke="currentColor" strokeWidth="1.8px" width="18px" height="18px"/>
+            <ArrowRight stroke="currentColor" strokeWidth="2.4px" width="18px" height="18px" />
           </div>
-          <h3 className="scroll-m-20 text-xl font-medium tracking-tight">
+          <h3 className="scroll-m-20 text-xl font-normal tracking-tight">
             <Link
               href={'/posts/' + post.slug}
               passHref
               key={post.slug}
               prefetch={false}
-              className="text-foreground underline font-semibold"
+              className="text-foreground"
             >
               {post.meta.title}
             </Link>

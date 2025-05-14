@@ -35,7 +35,7 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
 
   return (
     <>
-      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
+      <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
         Posts With Tag: <span className="font-bold text-foreground">{turnTagString(tag)}</span>
       </h1>
       <ListPosts startInd={startInd} endInd={endInd} tags={[tag]}/>

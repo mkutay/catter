@@ -1,22 +1,24 @@
 import { ComponentProps, AnchorHTMLAttributes, BlockquoteHTMLAttributes, DetailedHTMLProps, HTMLAttributes, ImgHTMLAttributes } from 'react';
-import { MDXComponents, MDXRemoteOptions } from 'next-mdx-remote-client/rsc';
+import { EvaluateOptions, MDXComponents } from 'next-mdx-remote-client/rsc';
 import { remarkCodeHike, CodeHikeConfig } from 'codehike/mdx';
+import recmaMdxImportReact from 'recma-mdx-import-react';
+import remarkFlexibleToc from "remark-flexible-toc";
 import Image, { ImageProps } from 'next/image';
+import remarkHeadingId from 'remark-heading-id';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 import remarkLint from 'remark-lint';
 import remarkGfm from 'remark-gfm';
 import Link from 'next/link';
 
-import { siteConfig } from '@/config/site';
-import { cn } from '@/lib/utils';
-import { postImages } from '@/config/images';
-import { TypographyParagraph } from '@/components/typography/paragraph';
 import { TypographyH1, TypographyH2, TypographyH3, TypographyH4 } from '@/components/typography/headings';
 import { TypographyBlockquote } from '@/components/typography/blockquote';
-import { TypographyList } from '@/components/typography/list';
 import { MyCode, MyInlineCode } from '@/components/typography/code-block';
+import { TypographyParagraph } from '@/components/typography/paragraph';
 import { ToggleParentheses } from '@/components/toggleParentheses';
+import { TypographyOList, TypographyUList } from '@/components/typography/list';
+import { postImages } from '@/config/images';
+import { cn } from '@/lib/utils';
 
 // CodeHike configuration for code blocks
 const chConfig: CodeHikeConfig = {
@@ -24,30 +26,41 @@ const chConfig: CodeHikeConfig = {
     code: 'MyCode',
     inlineCode: 'MyInlineCode',
   },
-  syntaxHighlighting: {
-    theme: 'github-dark',
-  },
 };
 
 // Settings and plugins to use with MDXRemote to compile mdx files
-export const options: MDXRemoteOptions = {
+export const options: EvaluateOptions = {
   mdxOptions: {
-    baseUrl: siteConfig.url,
+    baseUrl: import.meta.url,
     remarkPlugins: [
       remarkGfm,
       remarkLint,
       remarkMath,
       [remarkCodeHike, chConfig],
+      [remarkHeadingId, { defaults: true, uniqueDefaults: true }],
+      remarkFlexibleToc,
     ],
     rehypePlugins: [rehypeKatex],
-  }
+    recmaPlugins: [
+      recmaMdxImportReact,
+    ]
+  },
 };
 
 export const components: MDXComponents = {
   Image: (props: ImageProps) => (
-    <div className="my-6 flex place-content-center">
-      <Image {...props} alt={props.alt} className="my-0 lg:rounded-md rounded-sm"/>
-    </div>
+    <Image
+      alt={props.alt || ''}
+      src={postImages[props.src as string]}
+      className={cn("my-6 lg:rounded-md rounded-sm", props.className)}
+      sizes="100vw"
+      style={props.style || {
+        width: '100%',
+        height: 'auto',
+      }}
+      placeholder="blur"
+      quality={45}
+    />
   ),
   img: (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => (
     <Image
@@ -60,6 +73,7 @@ export const components: MDXComponents = {
         height: 'auto',
       }}
       placeholder="blur"
+      quality={45}
     />
   ),
   Link: (props: ComponentProps<typeof Link>) => (
@@ -113,9 +127,9 @@ export const components: MDXComponents = {
     </TypographyBlockquote>
   ),
   ul: (props: DetailedHTMLProps<HTMLAttributes<HTMLUListElement>, HTMLUListElement>) => (
-    <TypographyList {...props}>
+    <TypographyUList {...props}>
       {props.children}
-    </TypographyList>
+    </TypographyUList>
   ),
   hr: (props: DetailedHTMLProps<HTMLAttributes<HTMLHRElement>, HTMLHRElement>) => (
     <hr {...props} className={cn("my-6 border-t-2 border-muted", props.className)} />
@@ -124,5 +138,10 @@ export const components: MDXComponents = {
     <ToggleParentheses>
       {props.children}
     </ToggleParentheses>
-  )
+  ),
+  ol: (props: DetailedHTMLProps<HTMLAttributes<HTMLOListElement>, HTMLOListElement>) => (
+    <TypographyOList {...props}>
+      {props.children}
+    </TypographyOList>
+  ),
 };

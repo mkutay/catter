@@ -19,7 +19,7 @@ export function generateMetadata() {
 export default function Page() {
   return (
     <>
-      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
+      <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
         List of Tags on the Blog
       </h1>
       <TagsButtonGrid />

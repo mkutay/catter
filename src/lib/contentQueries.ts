@@ -4,7 +4,7 @@ import matter from 'gray-matter';
 import { notFound } from 'next/navigation';
 
 import { PostData, PostMeta } from '@/config/types';
-import { convertParenthesesToComponent } from './parentheses';
+import { convertParenthesesToComponent } from './utils';
 
 /**
  * Get all post files from the posts directory.

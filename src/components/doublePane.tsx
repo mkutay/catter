@@ -1,38 +1,54 @@
-import { Suspense } from 'react';
 import Link from 'next/link';
-import { ArrowRightIcon, Mailbox } from 'lucide-react';
+import { ArrowRight, Mailbox } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { MostViewedPosts, MostViewedPostsFallback } from '@/components/mostViewedPosts';
 import { siteConfig } from '@/config/site';
+import { TypographyHr } from './typography/blockquote';
 
 export default function DoublePane({
   children,
   hideFollowLink,
-  loadingState,
+  side,
 }: Readonly<{
   children: React.ReactNode;
   hideFollowLink?: boolean;
-  loadingState?: boolean;
+  side?: React.ReactNode;
 }>) {
+  if (!side) {
+    return (
+      <section className="w-full mx-auto lg:max-w-6xl md:mb-12 mb-6">
+        <div className="w-full space-y-4 max-w-prose lg:mx-0 mx-auto px-4">
+          <div>
+            {children}
+          </div>
+          <TypographyHr className="my-4" />
+          {!hideFollowLink ? <div className="justify-between items-center gap-4 flex flex-row flex-wrap">
+            <EmailSubButton />
+            <FollowNext />
+          </div> : <div className="flex flex-row justify-end items-center">
+            <EmailSubButton />
+          </div>}
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="justify-center px-4 flex lg:flex-row flex-col lg:gap-16 gap-0 lg:max-w-6xl max-w-prose mx-auto md:mb-12 mb-6">
-      <div className="w-full lg:mx-0 mx-auto flex flex-col gap-6">
+    <section className="w-full mx-auto lg:max-w-6xl md:mb-12 mb-6 flex flex-row gap-12">
+      <div className="w-full space-y-4 max-w-prose lg:mx-0 mx-auto px-4">
         <div>
           {children}
         </div>
-        {!hideFollowLink && <FollowNext />}
+        <TypographyHr className="my-4" />
+        {!hideFollowLink ? <div className="justify-between items-center gap-4 flex flex-row flex-wrap">
+          <EmailSubButton />
+          <FollowNext />
+        </div> : <div className="flex flex-row justify-end items-center">
+          <EmailSubButton />
+        </div>}
       </div>
-      <div className="w-fit lg:mx-0 mx-auto sticky top-16 h-fit">
-        <h2 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase mb-6 lg:my-6 mt-12">
-          Popular Content
-        </h2>
-        {loadingState
-          ? <MostViewedPostsFallback postNum={siteConfig.postNumPerPage} />
-          : <Suspense fallback={<MostViewedPostsFallback postNum={siteConfig.postNumPerPage} />}>
-              <MostViewedPosts postNum={siteConfig.postNumPerPage}/>
-            </Suspense>}
-        <EmailSubButton/>
+      <div className="w-fit sticky top-16 h-fit lg:flex hidden">
+        {side}
       </div>
     </section>
   );
@@ -40,13 +56,13 @@ export default function DoublePane({
 
 function EmailSubButton() {
   return (
-    <div className="flex flex-col gap-4 mt-6">
-      <p className="text-lg col-auto leading-7 [&:not(:first-child)]:mt-6">
+    <div className="flex flex-col gap-4">
+      {/* <p className="text-lg leading-7 [&:not(:first-child)]:mt-6">
         Subscribe to my newsletter to get updates on new posts and email only specials.
-      </p>
+      </p> */}
       <Button variant="secondary" size="lg" className="flex mx-auto" asChild>
-        <Link href={siteConfig.newsletterSubscribe} className="flex flex-row gap-3 w-fit">
-          <Mailbox stroke="currentColor" strokeWidth="1.8px"/>
+        <Link href={siteConfig.newsletterSubscribe} className="flex flex-row gap-3 w-fit font-normal tracking-wide">
+          <Mailbox stroke="currentColor" strokeWidth="1.6px" />
           <div>Subscribe!</div>
         </Link>
       </Button>
@@ -56,12 +72,12 @@ function EmailSubButton() {
 
 function FollowNext() {
   return (
-    <div className="text-primary group pl-0 hover:pl-2 transition-all animate-in flex flex-row items-start justify-end">
-      <div className="pr-4 group-hover:pr-2 transition-all animate-in mt-[5px]">
-        <ArrowRightIcon stroke="currentColor" strokeWidth="3px" width="18px" height="18px" />
+    <div className="text-primary group pl-0 hover:pl-2 transition-all animate-in flex flex-row items-center flex-grow justify-end">
+      <div className="pr-4 group-hover:pr-2 transition-all animate-in">
+        <ArrowRight stroke="currentColor" strokeWidth="2px" width="18px" height="18px"/>
       </div>
-      <Link href="/follow-next" className="text-xl font-normal tracking-wider uppercase text-right">
-        find out who to follow next
+      <Link href="/follow-next" className="text-xl font-normal italic tracking-wider uppercase text-right w-fit whitespace-nowrap">
+        Follow Next!
       </Link>
     </div>
   )

@@ -31,7 +31,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   return (
     <>
-      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
+      <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
         List of All Posts and Tags
       </h1>
       <ListPosts startInd={startInd} endInd={endInd} disallowTags={['project']}/>

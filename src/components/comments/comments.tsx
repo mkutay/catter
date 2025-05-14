@@ -64,7 +64,7 @@ export default function Comments({ slug }: { slug: string }) {
       ) : user === null && (
         <CommentAuth slug={slug} />
       )}
-      <div className="flex flex-col gap-6">
+      {comments.length !== 0 && <div className="flex flex-col gap-6">
         {comments.map((comment) => (
           <Comment 
             comment={comment} 
@@ -73,7 +73,7 @@ export default function Comments({ slug }: { slug: string }) {
             editComment={editComment}
           />
         ))}
-      </div>
+      </div>}
     </div>
   );
 }
@@ -104,7 +104,7 @@ export function Comment({
 }) {
   return (
     <div id={comment.id} className="flex flex-col gap-2 w-full">
-      <Label htmlFor="user">{`${comment.created_by} on ${format(comment.created_at, 'PP')}`}</Label>
+      <Label>{`${comment.created_by} on ${format(comment.created_at, 'PP')}`}</Label>
       <div className="border border-border shadow-sm rounded-md px-3 py-2">
         {comment.body}
       </div>

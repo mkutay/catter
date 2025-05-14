@@ -6,19 +6,21 @@ import Server from "@/lib/server";
 
 export function ViewDisplay({ slug }: { slug: string }) {
   const [views, setViews] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchViewCount = async () => {
-      const views = await Server.Views.Get({ slug });
-      setViews(views.ok ? views.value : null);
-      setIsLoading(false);
-    };
+    let ignore = false;
+    Server.Views.Get({ slug }).then((views) => {
+      if (!ignore) {
+        setViews(views.ok ? views.value : null);
+      }
+    })
 
-    fetchViewCount();
+    return () => {
+      ignore = true;
+    }
   }, [slug]);
 
-  if (isLoading) return null;
+  if (!views) return null;
 
   return (
     <p>

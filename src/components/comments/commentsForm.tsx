@@ -67,7 +67,7 @@ export function CommentForm({
     if (!saved.ok) {
       toast({
         title: "Error",
-        description: "Could not save comment. Please try again later.",
+        description: "Could not save comment. Please try again later. " + saved.error.message,
         variant: "destructive",
       });
     } else {

@@ -79,7 +79,7 @@ export function DeleteComment({
     if (!result.ok) {
       toast({
         title: 'Error',
-        description: 'Error deleting comment.',
+        description: 'Error deleting comment. ' + result.error.message,
         variant: 'destructive',
       });
     }

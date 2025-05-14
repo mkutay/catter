@@ -45,13 +45,19 @@ The world was a beautiful place back then… without the AI generated bullshit w
 To train a model to your desire, it was possible to need hundreds or maybe thousands of examples (in my case, I only used a 1000). I had to refactor the scraped messages in such a way that the model would learn from them and then _be_ the person. If you simplify the problem and only have a single message from the assistant, we would have something like this:
 
 ```txt
-{"prompt": "User: [MESSAGE OF PERSON 1]\nUser: [MESSAGE OF PERSON 2]\nUser: [MESSAGE OF PERSON 3]\nUser: [MESSAGE OF PERSON 1]\nUser: [MESSAGE OF PERSON 3]\nAssistant:", "completion": " [MESSAGE OF THE PERSON WE ARE CREATING A MODEL OF]\n"}
+{
+  "prompt": "User: [MESSAGE OF PERSON 1]\nUser: [MESSAGE OF PERSON 2]\nUser: [MESSAGE OF PERSON 3]\nUser: [MESSAGE OF PERSON 1]\nUser: [MESSAGE OF PERSON 3]\nAssistant:",
+  "completion": " [MESSAGE OF THE PERSON WE ARE CREATING A MODEL OF]\n"
+}
 ```
 
 Here, we are not distinguishing people in the group; and, to the AI model, it just seems as a single “User”. We also have newlines between messages from **different** people, and we can use periods for separating different sequential messages from the same person: _`User: [MESSAGE 1]. [MESSAGE 2]. [MESSAGE 3]`_. To add back-and-forth messages between the assistant and the user, we could do something like this:
 
 ```txt
-{"prompt": "User: [MESSAGE OF USER]\nAssistant: [MESSAGE OF ASSISTANT]\nUser: [MESSAGE OF USER]\nAssistant: [MESSAGE OF ASSISTANT]\nUser: [MESSAGE OF USER]\nAssistant:", "completion": " [RESPONSE OF ASSISTANT]\n"}
+{
+  "prompt": "User: [MESSAGE OF USER]\nAssistant: [MESSAGE OF ASSISTANT]\nUser: [MESSAGE OF USER]\nAssistant: [MESSAGE OF ASSISTANT]\nUser: [MESSAGE OF USER]\nAssistant:",
+  "completion": " [RESPONSE OF ASSISTANT]\n"
+}
 ```
 
 After gathering all of the data, we can start the training—though the training happened to be pretty expensive as the technology was quite new. What’s more, we need a way to converse with the bot after training, so I decided to create a Discord bot that converts the messages received into prompts and gets the completion of the prompt. For this, I decided to have a _`log`_ variable (hard-limited at 20 entries) that holds the messages from both the “User” and the “Assistant”. When a new message is received, by using the _`log`_ variable, a prompt is created and sent to the model, and the response is sent as a message to the Discord channel.
@@ -67,13 +73,27 @@ Well… Now, we have ChatGPT, we have GPT-4 and even self-reasoning models, and 
 With the current API, we don’t need to have a _single_ pair of a prompt and a completion. Instead, we can now have back-and-forth conversations—just like how ChatGPT is implemented. We don’t need to add the assistant’s messages into the prompt over and over again, and instead we can do something like this:
 
 ```txt
-{"messages": [{"role": "user", "content": "[MESSAGE 1]"}, {"role": "user", "content": "MESSAGE 2"}, {"role": "assistant", "content": "MESSAGE 3"}, {"role": "user", "content": "[MESSAGE 4]"}, {"role": "assistant", "content": "[MESSAGE 5]"}]}
+{
+  "messages": [
+    {"role": "user", "content": "[MESSAGE 1]"},
+    {"role": "user", "content": "MESSAGE 2"},
+    {"role": "assistant", "content": "MESSAGE 3"},
+    {"role": "user", "content": "[MESSAGE 4]"},
+    {"role": "assistant", "content": "[MESSAGE 5]"}
+  ]
+}
 ```
 
 While the model only learns from the last assistant message (somewhat similar to the previous API specification), it is now much easier for the model to distinguish between assistant messages and user inputs. Furthermore, we can add tags (“name” and “weight”) to the messages and also a general “system” prompt at the start, so it would look like this:
 
 ```txt
-{"messages": [{"role": "system", "content": "[A GENERAL DESCRIPTION OF WHO THE ASSISTANT IS]"}, {"role": "user", "content": "[MESSAGE 1]", "name": "[NAME OF USER 1]"}, {"role": "assistant", "content": "MESSAGE 3", "name": "[NAME OF ASSISTANT]"}]}
+{
+  "messages": [
+    {"role": "system", "content": "[A GENERAL DESCRIPTION OF WHO THE ASSISTANT IS]"},
+    {"role": "user", "content": "[MESSAGE 1]", "name": "[NAME OF USER 1]"},
+    {"role": "assistant", "content": "MESSAGE 3", "name": "[NAME OF ASSISTANT]"}
+  ]
+}
 ```
 
 This allows the model to learn who the assistant is communicating with, as people tend to write the names of the people they are talking to in their messages directly; essentially, it gives the model a wider context. Secondly, we can define a general system prompt that captures the context of messages. It is not possible to write every single detail of the person we are trying create a model of, but by using a concise system prompt, we can increase the consistency of the model and actually make it _understand_ the person.

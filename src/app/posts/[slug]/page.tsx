@@ -1,10 +1,12 @@
-import { MDXRemote } from 'next-mdx-remote-client/rsc';
+import { evaluate } from 'next-mdx-remote-client/rsc';
+import { TocItem } from 'remark-flexible-toc';
+import readingTime, { ReadTimeResults } from 'reading-time';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { getPostFiles, getPostProps } from '@/lib/contentQueries';
-import { components, options } from '@/lib/mdxRemoteSettings';
+import { components, options } from '@/config/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
 import CopyToClipboard from '@/components/copyToClipboard';
 import { PostViewCounter } from '@/components/postViewCounter';
@@ -12,6 +14,9 @@ import DoublePane from '@/components/doublePane';
 import { turnTagString } from '@/components/tagsButtonGrid';
 import { images } from '@/config/images';
 import Comments from '@/components/comments/comments';
+import { TypographyH1, TypographyH2 } from '@/components/typography/headings';
+import { PostMeta } from '@/config/types';
+import { cn } from '@/lib/utils';
 
 export const dynamic = 'force-static';
 export const dynamicParams = false;
@@ -38,14 +43,33 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+type Scope = {
+  readingTime: ReadTimeResults;
+  toc?: TocItem[];
+};
+
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const props = getPostProps(slug);
   const formattedDate = format(props.meta.date, 'PP');
 
+  const modifiedOptions = {
+    ...options,
+    scope: {
+      readingTime: readingTime(props.content),
+    },
+    vfileDataIntoScope: "toc",
+  }
+
+  const { content, scope } = await evaluate<PostMeta, Scope>({
+    source: props.content,
+    options: modifiedOptions,
+    components,
+  });
+
   return (
     <>
-      <div className="bg-primary w-full h-fit py-6 lg:space-y-16 space-y-10">
+      <div className="bg-primary w-full h-fit py-6 lg:space-y-14 space-y-10">
         <div className="lg:max-w-6xl max-w-prose mx-auto px-4 space-y-2">
           <p className="text-lg font-semibold text-primary-foreground">
             {formattedDate}
@@ -58,16 +82,17 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             ))}
           </div>
         </div>
-        <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-primary-foreground lg:space-y-4 space-y-2">
-          <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-            {props.meta.title}
-          </h1>
-          <p className="leading-7 [&:not(:first-child)]:mt-6">
-            {props.meta.description}
-          </p>
+        <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-primary-foreground lg:space-y-2 space-y-1">
+          <p>{scope.readingTime.text}</p>
+          <div className="lg:space-y-4 space-y-2">
+            <TypographyH1>{props.meta.title}</TypographyH1>
+            <p className="leading-7 [&:not(:first-child)]:mt-6">
+              {props.meta.description}
+            </p>
+          </div>
         </div>
       </div>
-      <DoublePane>
+      <DoublePane side={<Side toc={scope.toc || []} />}>
         <div>
           {props.meta.cover && (<div className="my-6"><Image
             alt={`${props.meta.title} post cover image`}
@@ -81,11 +106,32 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </div>
         </div>
         <main>
-          <MDXRemote components={components} options={options} source={props.content} />
+          {content}
         </main>
         <Comments slug={props.slug} />
       </DoublePane>
     </>
+  );
+}
+
+function Side({ toc }: { toc: TocItem[] }) {
+  if (toc.length === 0) return null;
+  return (
+    <div className="flex flex-col gap-4 mt-4 max-w-[300px]">
+      <TypographyH2>Table of Contents</TypographyH2>
+      <ul className="flex flex-col gap-2">
+        {toc.map((item, index) => (
+          <li key={index}>
+            <span className="inline-block w-4" />
+            <Link href={`${item.href}`} className={cn("text-foreground hover:text-foreground/80 transition-all",
+              item.depth === 2 ? "text-lg/tight" : item.depth === 3 ? "text-md/tight" : item.depth === 4 ? "text-sm/tight" : "text-sm/tight"
+            )}>
+              {item.value}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

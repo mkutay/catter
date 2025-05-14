@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import PlausibleProvider from 'next-plausible'
 
@@ -9,9 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 import NavBar from '@/components/navBar';
 import Footer from '@/components/footer';
 import { siteConfig } from '@/config/site';
-
-/* Fonts */
-const inter = Inter({ subsets: ['latin'] });
+import { plex, zodiak } from '@/config/fonts';
 
 export const metadata: Metadata = {
   metadataBase: new URL(`${siteConfig.url}`),
@@ -62,7 +59,7 @@ export default function Layout({
       <head>
         <PlausibleProvider domain="mkutay.dev" customDomain="https://pl.mkutay.dev" selfHosted={true} />
       </head>
-      <body className={`${inter.className} text-foreground bg-background`}>
+      <body className={`${zodiak.variable} ${plex.variable} text-foreground bg-background font-body`}>
         <ThemeProvider attribute="class">
           <main className="flex flex-col min-h-screen">
             <NavBar />

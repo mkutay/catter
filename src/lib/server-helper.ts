@@ -1,8 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { okAsync } from "neverthrow";
-
 import { deleteGuestbookEntries, saveGuestbookEntryData } from "./database-actions/guestbook";
 import { deleteComment, saveComment } from "./database-actions/comments";
 import { getBlogViews, getViewCount } from "./database-queries/views";
@@ -26,19 +23,11 @@ export async function getUser() {
 export const saveCommentAction = async (props: { slug: string, message: string }) =>
   resultAsyncToActionResult(
     saveComment(props)
-    .andThrough(() => {
-      revalidatePath(`/posts/[slug]`, 'page');
-      return okAsync();
-    })
   );
 
 export const deleteCommentAction = async (props: { comment: CommentData }) => 
   resultAsyncToActionResult(
     deleteComment(props)
-    .andThrough(() => {
-      revalidatePath(`/posts/[slug]`, 'page');
-      return okAsync();
-    })
   );
 
 export const getCommentsAction = async (props: { slug: string }) =>

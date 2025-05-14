@@ -5,7 +5,7 @@ import { MDXRemote } from 'next-mdx-remote-client/rsc';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/config/site';
-import { components, options } from '@/lib/mdxRemoteSettings';
+import { components, options } from '@/config/mdxRemoteSettings';
 import { followNextImages } from '@/config/images';
 
 export const dynamic = 'force-static';
@@ -13,7 +13,7 @@ export const dynamic = 'force-static';
 export default function Page() {
   return (
     <>
-      <h1 className="scroll-m-20 text-2xl font-semibold tracking-wide text-primary uppercase my-6">
+      <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
         Follow all these awesome people
       </h1>
       <div className="flex flex-col sm:gap-2 gap-4">

@@ -30,7 +30,7 @@ const followNext = [
 ];
 
 export const siteConfig = {
-  url: 'https://v7.mkutay.dev',
+  url: 'https://www.mkutay.dev',
   name: 'The Deterministic',
   author: 'Mehmet Kutay Bozkurt',
   authorEmail: 'hello@mkutay.dev',

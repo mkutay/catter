@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   return NextResponse.json(
-    'Health check succeeded.',
+    'OK!',
     { status: 200 }
   );
 }
