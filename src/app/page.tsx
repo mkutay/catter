@@ -10,6 +10,7 @@ import { Post } from '@/config/types';
 import { siteConfig } from '@/config/site';
 import { ViewDisplay } from '@/components/viewDisplay';
 import { TypographyH1 } from '@/components/typography/headings';
+import { Suspense } from 'react';
 
 export const dynamic = 'force-static';
 
@@ -54,7 +55,9 @@ export default async function Home() {
         <div className="md:hidden flex flex-col gap-12 w-full">
           {allShownPosts.map((post) => (
             <div key={post.slug}>
-              <PostDisplay post={post} isMiddle />
+              <Suspense>
+                <PostDisplay post={post} isMiddle />
+              </Suspense>
             </div>
           ))}
         </div>
