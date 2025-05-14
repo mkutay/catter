@@ -3,8 +3,8 @@
   "version": "37",
   "private": true,
   "scripts": {
-    "dev": "bun generate && next dev --turbopack",
-    "build": "bun generate && next build",
+    "dev": "next dev --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "generate": "bun scripts/generate-images.ts && bun scripts/generate-tables.ts && bun scripts/posts-into-db.ts"
