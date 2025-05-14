@@ -1,6 +1,6 @@
 import Rss from 'rss';
 
-import { getPosts } from '@/lib/contentQueries';
+import { getPosts } from '@/lib/dbContentQueries';
 import { siteConfig } from '@/config/site';
 
 export const dynamic = 'force-static';
@@ -20,7 +20,7 @@ export async function GET() {
     ttl: 60,
   });
 
-  const posts = getPosts({ });
+  const posts = await getPosts({ });
 
   posts.forEach((post) => {
     feed.item({

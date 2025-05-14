@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "bun generate && next dev --turbopack",
-    "build": "bun generate && next build --turbopack",
+    "build": "bun generate && next build",
     "start": "next start",
     "lint": "next lint",
     "generate": "bun scripts/generate-images.ts && bun scripts/generate-tables.ts"

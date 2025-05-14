@@ -1,5 +1,5 @@
 import ProjectCard from '@/components/projectCard';
-import { getPosts } from '@/lib/contentQueries';
+import { getPosts } from '@/lib/dbContentQueries';
 import { siteConfig } from '@/config/site';
 import DoublePane from '@/components/doublePane';
 
@@ -20,8 +20,8 @@ export const metadata = {
   },
 };
 
-export default function Page() {
-  const projects = getPosts({ tags: ['project'] });
+export default async function Page() {
+  const projects = await getPosts({ tags: ['project'] });
 
   return (
     <DoublePane hideFollowLink>

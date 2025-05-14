@@ -1,6 +1,5 @@
 import { errAsync, okAsync, ResultAsync } from 'neverthrow';
 
-import { doesPostWithSlugExist } from '@/lib/contentQueries';
 import { ViewCount } from '@/config/types';
 import { sql } from '@/lib/postgres';
 
@@ -54,27 +53,22 @@ export const getViewsCount = ({ postNum }: { postNum: number }) =>
       );
 
 export const getViewCount = ({ slug }: { slug: string }) =>
-  !doesPostWithSlugExist(slug)
-    ? errAsync({
-        message: 'Post not found with slug: ' + slug,
-        code: 'POST_NOT_FOUND',
+  ResultAsync.fromPromise(
+    sql<ViewCount[]>`
+      SELECT slug, count
+      FROM views
+      WHERE slug=(${slug});
+    `,
+    () => ({
+        message: 'Failed to fetch view count. Database error.',
+        code: 'DATABASE_ERROR',
       } as GetViewCountError)
-    : ResultAsync.fromPromise(
-        sql<ViewCount[]>`
-          SELECT slug, count
-          FROM views
-          WHERE slug=(${slug});
-        `,
-        () => ({
-            message: 'Failed to fetch view count. Database error.',
-            code: 'DATABASE_ERROR',
-          } as GetViewCountError)
-      )
-      .andThen((views) => 
-        views.length === 0 || !views[0]
-          ? errAsync({
-              message: 'No views found for this post.',
-              code: 'NO_VIEWS_FOUND',
-            } as GetViewCountError)
-          : okAsync(views[0].count)
-      );
+  )
+  .andThen((views) => 
+    views.length === 0 || !views[0]
+      ? errAsync({
+          message: 'No views found for this post.',
+          code: 'NO_VIEWS_FOUND',
+        } as GetViewCountError)
+      : okAsync(views[0].count)
+  );

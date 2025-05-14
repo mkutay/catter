@@ -17,8 +17,8 @@ import { MyCode, MyInlineCode } from '@/components/typography/code-block';
 import { TypographyParagraph } from '@/components/typography/paragraph';
 import { ToggleParentheses } from '@/components/toggleParentheses';
 import { TypographyOList, TypographyUList } from '@/components/typography/list';
-import { postImages } from '@/config/images';
 import { cn } from '@/lib/utils';
+import { getPlaceholder } from '@/lib/dbContentQueries';
 
 // CodeHike configuration for code blocks
 const chConfig: CodeHikeConfig = {
@@ -48,34 +48,35 @@ export const options: EvaluateOptions = {
 };
 
 export const components: MDXComponents = {
-  Image: (props: ImageProps) => (
-    <Image
+  Image: async (props: ImageProps) => {
+    if (typeof props.src !== "string") return <Image {...props} alt={props.alt} />;
+    const placeholder = await getPlaceholder(props.src);
+
+    return <Image
+      {...props}
       alt={props.alt || ''}
-      src={postImages[props.src as string]}
+      src={`/api${props.src}`}
       className={cn("my-6 lg:rounded-md rounded-sm", props.className)}
-      sizes="100vw"
-      style={props.style || {
-        width: '100%',
-        height: 'auto',
-      }}
-      placeholder="blur"
+      width={placeholder.metadata.width}
+      height={placeholder.metadata.height}
+      placeholder={placeholder.base64 as `data:image/${string}`}
       quality={45}
-    />
-  ),
-  img: (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => (
-    <Image
+    />;
+  },
+  img: async (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
+    if (!props.src) return;
+    const placeholder = await getPlaceholder(props.src);
+
+    return <Image
       alt={props.alt || ''}
-      src={postImages[props.src || '']}
+      src={`/api${props.src}`}
       className="my-6 lg:rounded-md rounded-sm"
-      sizes="100vw"
-      style={{
-        width: '100%',
-        height: 'auto',
-      }}
-      placeholder="blur"
+      width={placeholder.metadata.width}
+      height={placeholder.metadata.height}
+      placeholder={placeholder.base64 as `data:image/${string}`}
       quality={45}
-    />
-  ),
+    />;
+  },
   Link: (props: ComponentProps<typeof Link>) => (
     <Link {...props} className={cn("text-primary underline hover:text-primary/80 transition-all", props.className)}>
       {props.children}

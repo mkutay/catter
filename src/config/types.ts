@@ -1,3 +1,29 @@
+export type DBPost = {
+  slug: string;
+  content: string;
+  title: string;
+  description: string;
+  date: string;
+  excerpt: string;
+  locale: string;
+  cover: string | null;
+  coverSquare: string | null;
+  lastModified: string;
+  shortened: string;
+  shortExcerpt: string | null;
+};
+
+export type GetPostMeta = DBPost & {
+  tags: string[],
+  keywords: string[],
+};
+
+export type Post = {
+  slug: string;
+  meta: GetPostMeta;
+  content: string;
+};
+
 export type PostData = {
   slug: string;
   content: string;
@@ -12,10 +38,10 @@ export type PostMeta = {
   excerpt: string,
   locale: string,
   tags: string[],
-  cover: string,
-  coverSquare: string,
+  cover?: string,
+  coverSquare? : string,
   lastModified: string,
-  keywords: string[],
+  keywords?: string[],
   shortened: string,
   shortExcerpt?: string,
 };

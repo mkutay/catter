@@ -1,5 +1,6 @@
+import { getPosts } from '@/lib/dbContentQueries';
 import { siteConfig } from '@/config/site';
-import { getAboutProps, getPosts } from '@/lib/contentQueries';
+import { getAboutProps } from '@/lib/fsContentQueries';
 
 export default async function sitemap() {
   const siteMap: {
@@ -22,7 +23,7 @@ export default async function sitemap() {
     lastModified: new Date(getAboutProps().meta.date).toISOString().split('T')[0],
   });
 
-  const posts = getPosts({ });
+  const posts = await getPosts({ });
 
   posts.forEach((post) => {
     siteMap.push({

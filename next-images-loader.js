@@ -13,7 +13,7 @@ export default function myImageLoader({ src, width, quality }) {
   if (width) query.set('width', width);
   if (quality) query.set('quality', quality);
 
-  if (isLocal && process.env.NODE_ENV === 'development') {
+  if (isLocal && (process.env.NODE_ENV === 'development' || process.env.SITE_URL === "http://localhost:3000")) {
     return src;
   }
   if (isLocal) {

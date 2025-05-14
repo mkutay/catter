@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { getViewsCount } from '@/lib/database-queries/views';
-import { getProps } from '@/lib/contentQueries';
+import { getPost } from '@/lib/dbContentQueries';
 
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
   const viewsResult = await getViewsCount({ postNum });
@@ -19,16 +19,13 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
 
   const views = viewsResult.value;
 
-  const posts = views.map(view => {
-    const props = getProps('content/posts', view.slug);
-    
-    return {
+  const posts = await Promise.all(views.map((view) => getPost(view.slug).then(props => ({
       slug: props.slug,
       meta: props.meta,
       content: props.content,
       views: view.count,
-    };
-  });
+    }))
+  ));
 
   return (
     <ul className="flex flex-col gap-2">

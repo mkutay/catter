@@ -12,19 +12,15 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { components, options } from '@/config/mdxRemoteSettings';
-import { PostMeta } from '@/config/types';
+import { Post } from '@/config/types';
 import { squareImages } from "@/config/images";
 
 export default function ProjectCard({
   props
 }: {
-  props: {
-    slug: string,
-    meta: PostMeta,
-    content: string,
-  }
+  props: Post
 }) {
-  const image = squareImages[props.slug] ? squareImages[props.slug] : props.meta.coverSquare;
+  const image = squareImages[props.slug] ? squareImages[props.slug] : props.meta.coverSquare || '/images/favicon.png';
 
   return (
     <Card>

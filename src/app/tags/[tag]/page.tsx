@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { getListOfAllTags } from '@/lib/contentQueries';
+import { getListOfAllTags } from '@/lib/dbContentQueries';
 
 export const dynamic = 'force-static';
 export const dynamicParams = false;
@@ -12,7 +12,7 @@ export default async function Page(props: { params: Promise<{ tag: string }> }) 
 }
 
 export async function generateStaticParams() {
-  const tags = getListOfAllTags();
+  const tags = await getListOfAllTags();
 
   return tags.map((tag) => (
     { tag: tag }

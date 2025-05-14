@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
-import { getListOfAllTags } from '@/lib/contentQueries';
+import { getListOfAllTags } from '@/lib/dbContentQueries';
 import { siteConfig } from '@/config/site';
 
-export default function TagsButtonGrid() {
-  const tags = getListOfAllTags();
+export default async function TagsButtonGrid() {
+  const tags = await getListOfAllTags();
 
   return (
     <div className="flex flex-col gap-6">

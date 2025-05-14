@@ -2,11 +2,10 @@ import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote-client/rsc';
 
 import { Button } from '@/components/ui/button';
-import { getPosts } from '@/lib/contentQueries';
+import { getPosts } from '@/lib/dbContentQueries';
 import { components, options } from '@/config/mdxRemoteSettings';
-import { PostMeta } from '@/config/types';
 
-export default function ListPosts({
+export default async function ListPosts({
   startInd,
   endInd,
   tags,
@@ -17,11 +16,7 @@ export default function ListPosts({
   tags?: string[],
   disallowTags?: string[]
 }) { // half-open interval
-  const posts: {
-    slug: string,
-    meta: PostMeta,
-    content: string,
-  }[] = getPosts({ startInd, endInd, tags, disallowTags });
+  const posts = await getPosts({ startInd, endInd, tags, disallowTags });
 
   return (
     <div className="flex flex-col gap-6">

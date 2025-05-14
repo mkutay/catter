@@ -1,21 +1,20 @@
 import { MDXRemote } from 'next-mdx-remote-client/rsc';
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
 
 import { components, options } from '@/config/mdxRemoteSettings';
-import { getPosts } from '@/lib/contentQueries';
+import { getPlaceholder, getPosts } from '@/lib/dbContentQueries';
 import { cn } from '@/lib/utils';
-import { images } from '@/config/images';
-import { PostMeta } from '@/config/types';
+import { Post } from '@/config/types';
 import { siteConfig } from '@/config/site';
 import { ViewDisplay } from '@/components/viewDisplay';
 import { TypographyH1 } from '@/components/typography/headings';
 
 export const dynamic = 'force-static';
 
-export default function Home() {
-  const posts = getPosts({ });
+export default async function Home() {
+  const posts = await getPosts({ });
   const leftSide = posts.filter((post) =>
     siteConfig.homePage.leftSideSlugs.includes(post.slug)
   );
@@ -41,21 +40,21 @@ export default function Home() {
       <div className="flex md:flex-row flex-col gap-6 md:max-w-6xl max-w-prose mx-auto px-4 lg:mt-6 mt-4 mb-12">
         <div className="w-1/4 md:flex flex-col gap-12 hidden">
           {leftSide.map((post) => (
-            <PostDisplay key={post.slug} image={images[post.slug]} post={post} />
+            <PostDisplay key={post.slug} post={post} />
           ))}
         </div>
         <div className="w-1/2 md:flex hidden">
-          <PostDisplay image={images[middle.slug]} post={middle} isMiddle />
+          <PostDisplay post={middle} isMiddle />
         </div>
         <div className="w-1/4 md:flex flex-col gap-12 hidden">
           {rightSide.map((post) => (
-            <PostDisplay key={post.slug} image={images[post.slug]} post={post} />
+            <PostDisplay key={post.slug} post={post} />
           ))}
         </div>
         <div className="md:hidden flex flex-col gap-12 w-full">
           {allShownPosts.map((post) => (
             <div key={post.slug}>
-              <PostDisplay image={images[post.slug]} post={post} isMiddle />
+              <PostDisplay post={post} isMiddle />
             </div>
           ))}
         </div>
@@ -64,29 +63,28 @@ export default function Home() {
   )
 }
 
-function PostDisplay({
+async function PostDisplay({
   post,
-  image,
   isMiddle,
 }: {
-  post: {
-    slug: string;
-    content: string;
-    meta: PostMeta;
-  },
-  image: StaticImageData,
+  post: Post,
   isMiddle?: boolean,
 }) {
+  const placeholder = post.meta.cover ? await getPlaceholder(post.meta.cover) : null;
+
   return (
     <div className={cn("flex flex-col", isMiddle ? "gap-4" : "gap-2")}>
       <Link href={`/posts/${post.slug}`} className={cn("flex flex-col group", isMiddle ? "gap-4" : "gap-2")} prefetch={false}>
-        <Image
-          src={image}
+        {placeholder && <Image
+          src={`/api${post.meta.cover}`}
           alt={`${post.meta.title} post cover image`}
           quality={60}
           className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
-          placeholder="blur"
-        />
+          width={placeholder.metadata.width}
+          height={placeholder.metadata.height}
+          priority={true}
+          placeholder={placeholder.base64 as `data:image/${string}`}
+        />}
         {isMiddle ? (
           <h2 className="lg:text-5xl/tight md:text-4xl text-4xl font-normal tracking-tighter lg:text-stroke-thick text-stroke-medium text-stroke-background fix-text-stroke">
             <span className="lg:bg-[0%_92%] md:bg-[0%_90%] bg-[0%_89%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">

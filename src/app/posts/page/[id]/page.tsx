@@ -1,6 +1,6 @@
 import PaginationArrows from '@/components/paginationArrows';
 import ListPosts from '@/components/listPosts';
-import { getPostsLength } from '@/lib/contentQueries';
+import { getPostsLength } from '@/lib/dbContentQueries';
 import { siteConfig } from '@/config/site';
 import { TotalBlogViews } from '@/components/totalBlogViews';
 
@@ -9,7 +9,7 @@ export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const postsLength = getPostsLength({ });
+  const postsLength = await getPostsLength({ });
 
   return {
     title: `Posts and Tags On the Blog | Page ${id}`,
@@ -27,7 +27,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const id = Number(params.id);
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;
-  const postsLength = getPostsLength({ disallowTags: ['project'] });
+  const postsLength = await getPostsLength({ disallowTags: ['project'] });
 
   return (
     <>
@@ -44,7 +44,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 }
 
 export async function generateStaticParams() {
-  const postsLength = getPostsLength({ disallowTags: ['project'] });
+  const postsLength = await getPostsLength({ disallowTags: ['project'] });
   const ret: { id: string }[] = [];
 
   for (let i = 1; i <= Math.ceil(postsLength / siteConfig.postNumPerPage); i++) {
