@@ -47,7 +47,9 @@ export async function getPost(slug: string) {
     meta: {
       ...post,
       excerpt: convertParenthesesToComponent(post.excerpt),
-      shortExcerpt: post.shortExcerpt && convertParenthesesToComponent(post.shortExcerpt),
+      shortExcerpt: post.shortexcerpt && convertParenthesesToComponent(post.shortexcerpt),
+      lastModified: post.lastmodified,
+      coverSquare: post.coversquare,
     } as GetPostMeta,
     content: formattedContent,
   } as Post;
@@ -82,7 +84,6 @@ export async function getPosts({
   tags?: string[],
   disallowTags?: string[]
 }) {
-  // Build a query that gets all posts with their tags in a single operation
   const postsWithTags = await sql`
     WITH filtered_posts AS (
       SELECT 
@@ -100,8 +101,8 @@ export async function getPosts({
         p.shortExcerpt,
         ARRAY_AGG(DISTINCT pt.tag) AS tags,
         ARRAY_AGG(DISTINCT pk.keyword) AS keywords,
-        COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${tags})) > 0 AS has_included_tag,
-        COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${disallowTags})) > 0 AS has_disallowed_tag
+        CASE WHEN ${tags.length} = 0 THEN true ELSE COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${tags})) > 0 END AS has_included_tag,
+        CASE WHEN ${disallowTags.length} = 0 THEN false ELSE COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${disallowTags})) > 0 END AS has_disallowed_tag
       FROM 
         posts p
       LEFT JOIN 
@@ -122,13 +123,14 @@ export async function getPosts({
     OFFSET ${startInd};
   `;
 
-  // Convert to GetPost format
   const posts: Post[] = postsWithTags.map(post => ({
     slug: post.slug,
     meta: {
       ...post,
       excerpt: convertParenthesesToComponent(post.excerpt),
-      shortExcerpt: post.shortExcerpt && convertParenthesesToComponent(post.shortExcerpt),
+      shortExcerpt: post.shortexcerpt && convertParenthesesToComponent(post.shortexcerpt),
+      lastModified: post.lastmodified,
+      coverSquare: post.coversquare,
     } as GetPostMeta,
     content: convertParenthesesToComponent(post.content),
   }));

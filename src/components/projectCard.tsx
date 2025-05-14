@@ -12,26 +12,25 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { components, options } from '@/config/mdxRemoteSettings';
+import { getPlaceholder } from "@/lib/dbContentQueries";
 import { Post } from '@/config/types';
-import { squareImages } from "@/config/images";
 
-export default function ProjectCard({
-  props
-}: {
-  props: Post
-}) {
-  const image = squareImages[props.slug] ? squareImages[props.slug] : props.meta.coverSquare || '/images/favicon.png';
+export default async function ProjectCard({ props }: { props: Post }) {
+  const placeholder = await getPlaceholder(props.meta.coverSquare || '/images/favicon.png');
 
   return (
     <Card>
       <div className="m-2">
-        <Image
+        {props.meta.coverSquare && <Image
           alt={`Project ${props.meta.title}'s cover square image`}
-          src={image}
+          src={`/api${props.meta.coverSquare}`}
           className="rounded-xl shadow-md"
           quality={50}
-          placeholder="blur"
-        />
+          width={placeholder.metadata.width}
+          height={placeholder.metadata.height}
+          priority={true}
+          placeholder={placeholder.base64 as `data:image/${string}`}
+        />}
       </div>
       <CardHeader>
         <CardTitle>{props.meta.title}</CardTitle>
