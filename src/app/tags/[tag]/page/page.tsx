@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { getListOfAllTags } from '@/lib/dbContentQueries';
 
 export const dynamic = 'force-static';
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 export default async function Page(props: { params: Promise<{ tag: string }> }) {
   const params = await props.params;

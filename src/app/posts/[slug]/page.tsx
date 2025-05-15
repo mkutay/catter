@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { getPlaceholder, getPost, getPostSlugs } from '@/lib/dbContentQueries';
 
 export const dynamic = 'force-static';
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

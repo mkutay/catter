@@ -6,7 +6,7 @@ import { siteConfig } from '@/config/site';
 import { TotalBlogViews } from '@/components/totalBlogViews';
 
 export const dynamic = 'force-static';
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 export async function generateMetadata(props: { params: Promise<{ tag: string, id: string }> }) {
   const params = await props.params;

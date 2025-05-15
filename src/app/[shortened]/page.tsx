@@ -5,7 +5,7 @@ import { getPosts } from '@/lib/dbContentQueries';
 import { siteConfig } from '@/config/site';
 
 export const dynamic = 'force-static';
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ shortened: string }> }) {
   const { shortened } = await params;
