@@ -1,22 +1,9 @@
 import { exit } from 'process';
 import * as path from 'path';
-import { minioClient } from '@/lib/minio';
+import { fUploadImage } from '@/lib/minio';
 
 import { sql } from '@/lib/postgres';
 import { getPosts } from '@/lib/fsContentQueries';
-
-const uploadImageToMinio = async (url: string, path: string) => {
-  const ext = path.split('.').pop();
-  const contentType = 'image/' + ext;
-
-  const metadata = {
-    'Content-Type': contentType,
-    'x-amz-acl': 'public-read',
-  }
-
-  await minioClient.fPutObject(process.env.S3_BUCKET_NAME!, url, path, metadata);
-  console.log(`Successfully uploaded ${url} to minio`);
-};
 
 const getImageUrlsFromMDX = (content: string): string[] => {
   const imgRegex = /!\[(.*?)\]\((.*?)\)/g;
@@ -57,7 +44,7 @@ try {
   });
 
   for (const image of images) {
-    await uploadImageToMinio(image.url, image.path);
+    await fUploadImage(image.url, image.path);
   }
 
   const postsDb = posts.map((post) => ({

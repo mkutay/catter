@@ -70,13 +70,15 @@ async function PostDisplay({
   post: Post,
   isMiddle?: boolean,
 }) {
-  const placeholder = post.meta.cover ? await getPlaceholder(post.meta.cover) : null;
+  const coverImage = post.meta.cover;
+  const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
+  const coverUrl = coverImage ? coverImage[0] === '/' ? coverImage : `/${coverImage}` : null;
 
   return (
     <div className={cn("flex flex-col", isMiddle ? "gap-4" : "gap-2")}>
       <Link href={`/posts/${post.slug}`} className={cn("flex flex-col group", isMiddle ? "gap-4" : "gap-2")} prefetch={false}>
-        {placeholder && <Image
-          src={`/api${post.meta.cover}`}
+        {placeholder && coverUrl && <Image
+          src={`/api${coverUrl}`}
           alt={`${post.meta.title} post cover image`}
           quality={60}
           className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"

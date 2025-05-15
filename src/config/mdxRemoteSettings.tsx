@@ -51,11 +51,12 @@ export const components: MDXComponents = {
   Image: async (props: ImageProps) => {
     if (typeof props.src !== "string") return <Image {...props} alt={props.alt} />;
     const placeholder = await getPlaceholder(props.src);
+    const src = props.src.startsWith('/') ? props.src : `/${props.src}`;
 
     return <Image
       {...props}
       alt={props.alt || ''}
-      src={`/api${props.src}`}
+      src={`/api${src}`}
       className={cn("my-6 lg:rounded-md rounded-sm", props.className)}
       width={placeholder.metadata.width}
       height={placeholder.metadata.height}
@@ -66,10 +67,11 @@ export const components: MDXComponents = {
   img: async (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
     if (!props.src) return;
     const placeholder = await getPlaceholder(props.src);
+    const src = props.src.startsWith('/') ? props.src : `/${props.src}`;
 
     return <Image
       alt={props.alt || ''}
-      src={`/api${props.src}`}
+      src={`/api${src}`}
       className="my-6 lg:rounded-md rounded-sm"
       width={placeholder.metadata.width}
       height={placeholder.metadata.height}

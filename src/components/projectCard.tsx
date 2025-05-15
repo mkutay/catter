@@ -16,14 +16,16 @@ import { getPlaceholder } from "@/lib/dbContentQueries";
 import { Post } from '@/config/types';
 
 export default async function ProjectCard({ props }: { props: Post }) {
-  const placeholder = await getPlaceholder(props.meta.coverSquare || '/images/favicon.png');
+  const coverImage = props.meta.coverSquare || '/images/favicon.png';
+  const coverUrl = coverImage[0] === '/' ? coverImage : `/${coverImage}`;
+  const placeholder = await getPlaceholder(coverImage);
 
   return (
     <Card>
       <div className="m-2">
-        {props.meta.coverSquare && <Image
+        {coverUrl && <Image
           alt={`Project ${props.meta.title}'s cover square image`}
-          src={`/api${props.meta.coverSquare}`}
+          src={`/api${coverUrl}`}
           className="rounded-xl shadow-md"
           quality={50}
           width={placeholder.metadata.width}

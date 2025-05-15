@@ -68,6 +68,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   const coverImage = props.meta.cover;
   const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
+  const coverUrl = coverImage ? coverImage[0] === '/' ? coverImage : `/${coverImage}` : null;
 
   return (
     <>
@@ -98,7 +99,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <div>
           {coverImage && placeholder && (<div className="my-6"><Image
             alt={`${props.meta.title} post cover image`}
-            src={`/api${coverImage}`}
+            src={`/api${coverUrl}`}
             className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
             width={placeholder.metadata.width}
             height={placeholder.metadata.height}
