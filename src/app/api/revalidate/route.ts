@@ -23,20 +23,14 @@ export async function POST(request: Request) {
     
     if (slug) {
       revalidatePath(`/posts/${slug}`);
+    }
+
+    if (shortened) {
       revalidatePath(`/${shortened}`);
     }
     
     if (tags) {
-      const tagsList = typeof tags === 'string' ? tags.split(',').map(tag => tag.trim()) : [];
-      
-      tagsList.forEach(tag => {
-        if (tag) {
-          revalidatePath(`/tags/${tag}`);
-          revalidatePath(`/tags/${tag}/page/[id]`, "page");
-        }
-      });
-      
-      revalidatePath("/tags");
+      revalidatePath("/tags", "layout");
     }
     
     revalidatePath("/posts/page/[id]", "page");

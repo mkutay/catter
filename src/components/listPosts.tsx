@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote-client/rsc';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { getPosts } from '@/lib/dbContentQueries';
@@ -17,6 +18,10 @@ export default async function ListPosts({
   disallowTags?: string[]
 }) { // half-open interval
   const posts = await getPosts({ startInd, endInd, tags, disallowTags });
+
+  if (posts.length === 0) {
+    notFound();
+  }
 
   return (
     <div className="flex flex-col gap-6">
