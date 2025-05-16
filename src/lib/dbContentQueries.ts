@@ -1,4 +1,5 @@
 import { getPlaiceholder } from 'plaiceholder';
+import { notFound } from 'next/navigation';
 
 import { convertParenthesesToComponent } from './utils';
 import { GetPostMeta, Post } from '@/config/types';
@@ -38,6 +39,10 @@ export async function getPost(slug: string) {
     GROUP BY
       p.slug
   `;
+
+  if (result.length === 0 || !result[0]) {
+    notFound();
+  }
   
   const post = result[0];
   const formattedContent = convertParenthesesToComponent(post.content);
