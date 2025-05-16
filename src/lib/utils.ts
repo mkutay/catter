@@ -28,7 +28,7 @@ export const parseSchema = <O extends object>(schema: z.ZodSchema<O>, values: O)
  */
 export function convertParenthesesToComponent(str: string): string {
   // Regex patterns for elements to preserve
-  const codeBlockRegex = /```[\s\S]*?```|`[^`]*`/g; // Code blocks and inline code
+  const codeBlockRegex = /```(?:\w+\n)?[\s\S]*?```|`[^`]*`/g; // Code blocks with optional language tag and inline code
   const jsxRegex = /<[^>]*>[^<]*<\/[^>]*>|<[^>]*\/>/g; // JSX components
   const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g; // Markdown links [text](url)
   const markdownImageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g; // Markdown images ![alt](url)

@@ -46,14 +46,14 @@ export async function getPost(slug: string) {
   }
   
   const post = result[0];
-  const formattedContent = convertParenthesesToComponent(post.content);
+  const formattedContent = post.tags.includes(siteConfig.noParentheses) ? post.content : convertParenthesesToComponent(post.content);
   
   return {
     slug: slug,
     meta: {
       ...post,
-      excerpt: convertParenthesesToComponent(post.excerpt),
-      shortExcerpt: post.shortexcerpt && convertParenthesesToComponent(post.shortexcerpt),
+      excerpt: post.tags.includes(siteConfig.noParentheses) ? post.excerpt : convertParenthesesToComponent(post.excerpt),
+      shortExcerpt: post.shortexcerpt && (post.tags.includes(siteConfig.noParentheses) ? post.shortexcerpt : convertParenthesesToComponent(post.shortexcerpt)),
       lastModified: post.lastmodified,
       coverSquare: post.coversquare,
     } as GetPostMeta,
@@ -137,12 +137,12 @@ export async function getPosts({
     slug: post.slug,
     meta: {
       ...post,
-      excerpt: convertParenthesesToComponent(post.excerpt),
-      shortExcerpt: post.shortexcerpt && convertParenthesesToComponent(post.shortexcerpt),
+      excerpt: post.tags.includes(siteConfig.noParentheses) ? post.excerpt : convertParenthesesToComponent(post.excerpt),
+      shortExcerpt: post.shortexcerpt && (post.tags.includes(siteConfig.noParentheses) ? post.shortexcerpt : convertParenthesesToComponent(post.shortexcerpt)),
       lastModified: post.lastmodified,
       coverSquare: post.coversquare,
     } as GetPostMeta,
-    content: convertParenthesesToComponent(post.content),
+    content: post.tags.includes(siteConfig.noParentheses) ? post.content : convertParenthesesToComponent(post.content),
   }));
 
   return posts;

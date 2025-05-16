@@ -76,4 +76,5 @@ export const siteConfig = {
   },
   followNext,
   invisible: 'invisible',
+  noParentheses: 'no-parentheses',
 };
