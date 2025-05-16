@@ -5,6 +5,7 @@ import { convertParenthesesToComponent } from './utils';
 import { GetPostMeta, Post } from '@/config/types';
 import { getImage } from './minio';
 import { sql } from './postgres';
+import { siteConfig } from '@/config/site';
 
 /**
  * Get all post files from the posts directory.
@@ -89,6 +90,10 @@ export async function getPosts({
   tags?: string[],
   disallowTags?: string[]
 }) {
+  if (!disallowTags.includes(siteConfig.invisible)) {
+    disallowTags.push(siteConfig.invisible);
+  }
+
   const postsWithTags = await sql`
     WITH filtered_posts AS (
       SELECT 
@@ -147,6 +152,10 @@ export async function getPosts({
  * Get the number of posts for given filters
  */
 export async function getPostsLength({ tags = [], disallowTags = [] }: { tags?: string[], disallowTags?: string[] }) {
+  if (!disallowTags.includes(siteConfig.invisible)) {
+    disallowTags.push(siteConfig.invisible);
+  }
+  
   const result = await sql`
     WITH filtered_posts AS (
       SELECT 

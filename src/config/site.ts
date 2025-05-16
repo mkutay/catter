@@ -75,4 +75,5 @@ export const siteConfig = {
     middleSlug: 'creating-a-clone-of-yourself',
   },
   followNext,
+  invisible: 'invisible',
 };
