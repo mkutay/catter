@@ -16,17 +16,27 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     
     // Get the image file from the form data
-    const file = formData.get("image");
+    const image = formData.get("image");
     const url = formData.get("url") as string | null;
     
-    if (!file || !(file instanceof File) || !url) {
-      console.error("Invalid form data:", { file, url });
+    if (!image || !url) {
+      console.error("Invalid form data:", { image, url });
       return new Response("No image file and/or url provided", { status: 400 });
     }
     
-    const buffer = Buffer.from(await file.arrayBuffer());
+    // Handle image data - check if it's a Blob-like object with arrayBuffer method
+    let buffer: Buffer;
+    let contentType: string;
+    
+    if (typeof image === 'object' && image !== null && 'arrayBuffer' in image && typeof image.arrayBuffer === 'function') {
+      buffer = Buffer.from(await image.arrayBuffer());
+      contentType = 'type' in image ? (image.type as string) : 'application/octet-stream';
+    } else {
+      console.error("Image is not in the expected format");
+      return new Response("Invalid image format", { status: 400 });
+    }
+    
     const size = buffer.length;
-    const contentType = file.type;
     
     await uploadImage(url, buffer, size, contentType);
     
