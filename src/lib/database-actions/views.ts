@@ -3,11 +3,11 @@ import { ResultAsync } from 'neverthrow';
 import { sql } from '@/lib/postgres';
 import { ViewCount } from '@/config/types';
 import { siteConfig } from '@/config/site';
-import { getAuth } from '@/lib/database-queries/auth';
+import { getSession } from '@/lib/database-queries/auth';
 import { getViewCount } from '@/lib/database-queries/views';
 
 export const incrementViews = ({ slug }: { slug: string }) => 
-  getAuth()
+  getSession()
     .andThen((session) =>
       process.env.NODE_ENV === 'development' || (session && session.user && siteConfig.admins.includes(session.user.email as string))
         ? getViewCount({ slug })

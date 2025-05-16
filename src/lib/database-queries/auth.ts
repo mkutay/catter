@@ -23,3 +23,12 @@ export const getAuth = () =>
           code: 'UNAUTHORISED',
         } as AuthError)
   );
+
+export const getSession = () => 
+  ResultAsync.fromPromise(
+    auth(),
+    () => ({
+      message: 'Failed to get auth session.',
+      code: 'AUTH_ERROR',
+    } as AuthError)
+  );
