@@ -20,6 +20,7 @@ export async function POST(request: Request) {
     const url = formData.get("url") as string | null;
     
     if (!file || !(file instanceof File) || !url) {
+      console.error("Invalid form data:", { file, url });
       return new Response("No image file and/or url provided", { status: 400 });
     }
     

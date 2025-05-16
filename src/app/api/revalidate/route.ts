@@ -22,18 +22,18 @@ export async function POST(request: Request) {
     revalidatePath("/projects");
     
     if (slug) {
-      revalidatePath(`/posts/${slug}`, "page");
-      revalidatePath(`/${shortened}`, "page");
+      revalidatePath(`/posts/${slug}`);
+      revalidatePath(`/${shortened}`);
     }
     
     if (tags) {
       const tagsList = typeof tags === 'string' ? tags.split(',').map(tag => tag.trim()) : [];
       
       tagsList.forEach(tag => {
-      if (tag) {
-        revalidatePath(`/tags/${tag}`, "page");
-        revalidatePath(`/tags/${tag}/page/[id]`, "page");
-      }
+        if (tag) {
+          revalidatePath(`/tags/${tag}`);
+          revalidatePath(`/tags/${tag}/page/[id]`, "page");
+        }
       });
       
       revalidatePath("/tags");
