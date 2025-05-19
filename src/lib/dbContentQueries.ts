@@ -1,85 +1,90 @@
-import { getPlaiceholder } from 'plaiceholder';
+import { errAsync, fromPromise, okAsync } from 'neverthrow';
 import { notFound } from 'next/navigation';
 
-import { convertParenthesesToComponent } from './utils';
-import { GetPostMeta, Post } from '@/config/types';
-import { getImage } from './minio';
+import { Post } from '@/config/types';
 import { sql } from './postgres';
 import { siteConfig } from '@/config/site';
+
+interface ContentError {
+  message: string;
+  code: "DATABASE_ERROR";
+};
 
 /**
  * Get all post files from the posts directory.
  */
-export async function getPostSlugs(): Promise<string[]> {
-  return sql<{ slug: string }[]>`
-    SELECT slug FROM posts;
-  `.then((values) => values.map((value) => value.slug));
-}
+export const getPostSlugs = () =>
+  fromPromise(
+    sql<{ slug: string }[]>`SELECT slug FROM posts;`,
+    () => ({
+      message: "Error fetching post slugs.",
+      code: "DATABASE_ERROR",
+    } as ContentError),
+  )
+  .map((values) => values.map((value) => value.slug));
 
-export async function doesPostWithSlugExist(slug: string) {
-  const result = await sql<{ slug: string }[]>`
-    SELECT slug FROM posts WHERE slug = ${slug};
-  `;
-  return result.length > 0;
-}
+export const doesPostWithSlugExist = (slug: string) => 
+  fromPromise(
+    sql<{ slug: string }[]>`SELECT slug FROM posts WHERE slug = ${slug};`,
+    () => ({
+      message: "Error checking if post exists.",
+      code: "DATABASE_ERROR",
+    } as ContentError),
+  )
+  .map((values) => values.length > 0);
 
-export async function getPost(slug: string) {
-  const result = await sql`
-    SELECT
-      p.*,
-      ARRAY_AGG(DISTINCT pt.tag) AS tags,
-      ARRAY_AGG(DISTINCT pk.keyword) AS keywords
-    FROM
-      posts p
-    LEFT JOIN
-      post_tags pt ON p.slug = pt.slug
-    LEFT JOIN
-      post_keywords pk ON p.slug = pk.slug
-    WHERE
-      p.slug = ${slug}
-    GROUP BY
-      p.slug
-  `;
-
-  if (result.length === 0 || !result[0]) {
-    notFound();
-  }
-  
-  const post = result[0];
-  const formattedContent = post.tags.includes(siteConfig.noParentheses) ? post.content : convertParenthesesToComponent(post.content);
-  
-  return {
-    slug: slug,
-    meta: {
-      ...post,
-      excerpt: post.tags.includes(siteConfig.noParentheses) ? post.excerpt : convertParenthesesToComponent(post.excerpt),
-      shortExcerpt: post.shortexcerpt && (post.tags.includes(siteConfig.noParentheses) ? post.shortexcerpt : convertParenthesesToComponent(post.shortexcerpt)),
-      lastModified: post.lastmodified,
-      coverSquare: post.coversquare,
-    } as GetPostMeta,
-    content: formattedContent,
-  } as Post;
-}
+// This function does not convert and parse content.
+export const getPost = (slug: string) =>
+  fromPromise(
+    sql`
+      SELECT
+        p.*,
+        ARRAY_AGG(DISTINCT pt.tag) AS tags,
+        ARRAY_AGG(DISTINCT pk.keyword) AS keywords
+      FROM
+        posts p
+      LEFT JOIN
+        post_tags pt ON p.slug = pt.slug
+      LEFT JOIN
+        post_keywords pk ON p.slug = pk.slug
+      WHERE
+        p.slug = ${slug}
+      GROUP BY
+        p.slug
+    `,
+    () => ({
+      message: "Error fetching post.",
+      code: "DATABASE_ERROR",
+    } as ContentError),
+  )
+  .andThrough((result) => {
+    if (result.length === 0 || !result[0]) notFound();
+    return okAsync(result);
+  })
+  .map((result) => result[0])
+  // .andTee((post) => console.log(post))
+  .andThen((post) => 
+    post.content && post.title && post.description && post.date && post.locale && post.lastmodified && post.shortened && post.excerpt !== null
+      ? okAsync(post)
+      : errAsync({
+          message: "Post is missing required fields.",
+          code: "DATABASE_ERROR",
+        } as ContentError)
+  )
+  .map((post) => ({
+    ...post,
+    shortExcerpt: post.shortexcerpt,
+    lastModified: post.lastmodified,
+    coverSquare: post.coversquare,
+    tags: post.tags || [],
+    keywords: post.keywords || [],
+  } as Post));
 
 /**
- * @param image The image url in minio: "/images/catter-blog/cover.png"
+ * Get posts based on filters.
+ * This function does not convert and parse content.
  */
-export async function getPlaceholder(image: string) {
-  const imageStream = await getImage(image);
-  const chunks: Uint8Array[] = [];
-
-  for await (const chunk of imageStream) {
-    chunks.push(chunk);
-  }
-  const buffer = Buffer.concat(chunks);
-  
-  return getPlaiceholder(buffer);
-}
-
-/**
- * Get posts based on filters
- */
-export async function getPosts({
+export const getPosts = ({
   startInd = 0,
   endInd = 100000,
   tags = [],
@@ -89,12 +94,12 @@ export async function getPosts({
   endInd?: number,
   tags?: string[],
   disallowTags?: string[]
-}) {
+}) => {
   if (!disallowTags.includes(siteConfig.invisible)) {
     disallowTags.push(siteConfig.invisible);
   }
 
-  const postsWithTags = await sql`
+  const promise = sql`
     WITH filtered_posts AS (
       SELECT 
         p.slug,
@@ -133,30 +138,30 @@ export async function getPosts({
     OFFSET ${startInd};
   `;
 
-  const posts: Post[] = postsWithTags.map(post => ({
-    slug: post.slug,
-    meta: {
-      ...post,
-      excerpt: post.tags.includes(siteConfig.noParentheses) ? post.excerpt : convertParenthesesToComponent(post.excerpt),
-      shortExcerpt: post.shortexcerpt && (post.tags.includes(siteConfig.noParentheses) ? post.shortexcerpt : convertParenthesesToComponent(post.shortexcerpt)),
-      lastModified: post.lastmodified,
-      coverSquare: post.coversquare,
-    } as GetPostMeta,
-    content: post.tags.includes(siteConfig.noParentheses) ? post.content : convertParenthesesToComponent(post.content),
-  }));
-
-  return posts;
+  return fromPromise(
+    promise,
+    () => ({
+      message: "Error fetching posts.",
+      code: "DATABASE_ERROR",
+    } as ContentError),
+  )
+  .map((postsWithTags) => postsWithTags.map((post) => ({
+    ...post,
+    shortExcerpt: post.shortexcerpt,
+    lastModified: post.lastmodified,
+    coverSquare: post.coversquare,
+  } as Post)));
 }
 
 /**
  * Get the number of posts for given filters
  */
-export async function getPostsLength({ tags = [], disallowTags = [] }: { tags?: string[], disallowTags?: string[] }) {
+export const getPostsLength = ({ tags = [], disallowTags = [] }: { tags?: string[], disallowTags?: string[] }) => {
   if (!disallowTags.includes(siteConfig.invisible)) {
     disallowTags.push(siteConfig.invisible);
   }
   
-  const result = await sql`
+  const promise = sql`
     WITH filtered_posts AS (
       SELECT 
         p.slug,
@@ -176,46 +181,30 @@ export async function getPostsLength({ tags = [], disallowTags = [] }: { tags?: 
       (${tags.length} = 0 OR has_included_tag) 
       AND NOT has_disallowed_tag;
   `;
-  
-  return Number(result[0].count);
-}
 
-/**
- * Get the number of projects
- */
-export async function getProjectsLength() {
-  const projectTags = ['project'];
-  
-  const result = await sql`
-    WITH filtered_posts AS (
-      SELECT 
-        p.slug,
-        COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${projectTags})) > 0 AS has_project_tag
-      FROM 
-        posts p
-      LEFT JOIN 
-        post_tags pt ON p.slug = pt.slug
-      GROUP BY 
-        p.slug
-    )
-    SELECT 
-      COUNT(*) as count
-    FROM filtered_posts
-    WHERE has_project_tag;
-  `;
-  
-  return Number(result[0].count);
+  return fromPromise(
+    promise,
+    () => ({
+      message: "Error fetching posts length.",
+      code: "DATABASE_ERROR",
+    } as ContentError),
+  )
+  .map((result) => Number(result[0].count));
 }
 
 /**
  * Get list of all tags used across posts using an optimized query.
  */
-export async function getListOfAllTags() {
-  const result = await sql`
-    SELECT DISTINCT tag
-    FROM post_tags
-    ORDER BY tag ASC;
-  `;
-  
-  return result.map(row => row.tag);
-}
+export const getListOfAllTags = () =>
+  fromPromise(
+    sql`
+      SELECT DISTINCT tag
+      FROM post_tags
+      ORDER BY tag ASC;
+    `,
+    () => ({
+      message: "Error fetching tags.",
+      code: "DATABASE_ERROR",
+    } as ContentError),
+  )
+  .map((result) => result.map((row) => row.tag as string));

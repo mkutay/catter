@@ -18,7 +18,7 @@ import { TypographyParagraph } from '@/components/typography/paragraph';
 import { ToggleParentheses } from '@/components/toggleParentheses';
 import { TypographyOList, TypographyUList } from '@/components/typography/list';
 import { cn } from '@/lib/utils';
-import { getPlaceholder } from '@/lib/dbContentQueries';
+import { getPlaceholder } from '@/lib/images';
 
 // CodeHike configuration for code blocks
 const chConfig: CodeHikeConfig = {

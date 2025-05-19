@@ -1,4 +1,4 @@
-import { uploadImage } from "@/lib/minio";
+import { uploadImage } from "@/lib/images";
 
 export async function POST(request: Request) {
   const authHeader = request.headers.get("Authorization");

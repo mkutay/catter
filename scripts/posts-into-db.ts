@@ -1,6 +1,6 @@
 import { exit } from 'process';
 import * as path from 'path';
-import { fUploadImage } from '@/lib/minio';
+import { fUploadImage } from '@/lib/images';
 
 import { sql } from '@/lib/postgres';
 import { getPosts } from '@/lib/fsContentQueries';

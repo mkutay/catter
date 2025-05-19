@@ -13,8 +13,9 @@ export default async function Page(props: { params: Promise<{ tag: string }> }) 
 
 export async function generateStaticParams() {
   const tags = await getListOfAllTags();
+  if (tags.isErr()) throw new Error(tags.error.message);
 
-  return tags.map((tag) => (
-    { tag: tag }
+  return tags.value.map((tag) => (
+    { tag }
   ));
 }

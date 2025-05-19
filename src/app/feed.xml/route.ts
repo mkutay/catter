@@ -21,15 +21,16 @@ export async function GET() {
   });
 
   const posts = await getPosts({ });
+  if (posts.isErr()) throw new Error(posts.error.message);
 
-  posts.forEach((post) => {
+  posts.value.forEach((post) => {
     feed.item({
-      title: post.meta.title,
-      description: post.meta.description,
+      title: post.title,
+      description: post.description,
       url: `${siteConfig.url}/posts/${post.slug}`,
-      date: new Date(post.meta.date).toISOString().split('T')[0],
+      date: new Date(post.date).toISOString().split('T')[0],
       author: `${siteConfig.authorEmail} (${siteConfig.author})`,
-      categories: post.meta.tags || [],
+      categories: post.tags || [],
     });
   });
 

@@ -1,5 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { format } from 'date-fns';
+import path from 'path';
 
 import { getPosts } from '@/lib/dbContentQueries';
 import { siteConfig } from '@/config/site';
@@ -10,24 +11,26 @@ export const dynamic = 'force-static';
 export async function generateMetadata({ params }: { params: Promise<{ shortened: string }> }) {
   const { shortened } = await params;
   const posts = await getPosts({ });
+  if (posts.isErr()) throw new Error(posts.error.message);
 
-  const props = posts.find((post) => post.meta.shortened === shortened);
+  const props = posts.value.find((post) => post.shortened === shortened);
   if (!props) notFound();
 
-  const formattedDate = format(props.meta.date, 'PP');
+  const formattedDate = format(props.date, 'PP');
+  const coverImage = props.cover ? path.join('/api', props.cover) : 'images/favicon.png';
 
   return {
-    title: props.meta.title,
-    description: props.meta.description,
-    keywords: props.meta.keywords ?? props.meta.tags,
+    title: props.title,
+    description: props.description,
+    keywords: props.keywords ?? props.tags,
     openGraph: {
-      title: props.meta.title,
-      description: props.meta.description,
+      title: props.title,
+      description: props.description,
       url: siteConfig.url + '/posts/' + props.slug,
-      locale: props.meta.locale,
+      locale: props.locale,
       type: 'article',
       publishedTime: formattedDate,
-      images: [props.meta.coverSquare || 'images/favicon.png'],
+      images: [coverImage],
       siteName: siteConfig.name,
     },
   };
@@ -36,9 +39,10 @@ export async function generateMetadata({ params }: { params: Promise<{ shortened
 export default async function Page({ params }: { params: Promise<{ shortened: string }> }) {
   const { shortened } = await params;
   const posts = await getPosts({ });
+  if (posts.isErr()) throw new Error(posts.error.message);
 
-  posts.forEach((post) => {
-    if (post.meta.shortened === shortened) {
+  posts.value.forEach((post) => {
+    if (post.shortened === shortened) {
       redirect(`/posts/${post.slug}`);
     }
   });
@@ -47,9 +51,10 @@ export default async function Page({ params }: { params: Promise<{ shortened: st
 export async function generateStaticParams() {
   const ret: { shortened: string }[] = [];
   const posts = await getPosts({ });
+  if (posts.isErr()) throw new Error(posts.error.message);
 
-  posts.forEach((post) => {
-    ret.push({ shortened: post.meta.shortened });
+  posts.value.forEach((post) => {
+    ret.push({ shortened: post.shortened });
   });
 
   return ret;

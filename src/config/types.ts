@@ -13,15 +13,9 @@ export type DBPost = {
   shortExcerpt: string | null;
 };
 
-export type GetPostMeta = DBPost & {
+export type Post = DBPost & {
   tags: string[],
   keywords: string[],
-};
-
-export type Post = {
-  slug: string;
-  meta: GetPostMeta;
-  content: string;
 };
 
 export type PostData = {

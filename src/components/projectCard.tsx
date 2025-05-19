@@ -12,11 +12,11 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { components, options } from '@/config/mdxRemoteSettings';
-import { getPlaceholder } from "@/lib/dbContentQueries";
+import { getPlaceholder } from "@/lib/images";
 import { Post } from '@/config/types';
 
 export default async function ProjectCard({ props }: { props: Post }) {
-  const coverImage = props.meta.coverSquare || '/images/favicon.png';
+  const coverImage = props.coverSquare || '/images/favicon.png';
   const coverUrl = coverImage[0] === '/' ? coverImage : `/${coverImage}`;
   const placeholder = await getPlaceholder(coverImage);
 
@@ -24,7 +24,7 @@ export default async function ProjectCard({ props }: { props: Post }) {
     <Card>
       <div className="m-2">
         {coverUrl && <Image
-          alt={`Project ${props.meta.title}'s cover square image`}
+          alt={`Project ${props.title}'s cover square image`}
           src={`/api${coverUrl}`}
           className="rounded-xl shadow-md"
           quality={50}
@@ -35,16 +35,16 @@ export default async function ProjectCard({ props }: { props: Post }) {
         />}
       </div>
       <CardHeader>
-        <CardTitle>{props.meta.title}</CardTitle>
-        <CardDescription>{props.meta.description}</CardDescription>
+        <CardTitle>{props.title}</CardTitle>
+        <CardDescription>{props.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <MDXRemote source={props.meta.excerpt} options={options} components={components}/>
+        <MDXRemote source={props.excerpt} options={options} components={components}/>
       </CardContent>
       <CardFooter>
         <Button asChild variant="outline">
           <Link href={`/posts/${props.slug}`} className="text-foreground">
-            {`Read More: ${props.meta.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
+            {`Read More: ${props.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
           </Link>
         </Button>
       </CardFooter>

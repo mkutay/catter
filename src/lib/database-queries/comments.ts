@@ -21,8 +21,9 @@ interface GetCommentsByEmailError {
 
 /* Limiting to 15 to avoid loading too many comments at once. */
 export const getComments = ({ slug }: { slug: string }) =>
-  ResultAsync.fromPromise(doesPostWithSlugExist(slug), () => ({
-    message: 'Error checking post existence.',
+  doesPostWithSlugExist(slug)
+  .mapErr((err) => ({
+    message: err.message,
     code: 'POST_NOT_FOUND',
   } as GetCommentsError))
   .andThen((exists) => !exists

@@ -4,6 +4,7 @@ import { TocItem } from 'remark-flexible-toc';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
+import path from 'path';
 
 import { components, options } from '@/config/mdxRemoteSettings';
 import { siteConfig } from '@/config/site';
@@ -15,28 +16,33 @@ import Comments from '@/components/comments/comments';
 import { TypographyH1, TypographyH2 } from '@/components/typography/headings';
 import { PostMeta } from '@/config/types';
 import { cn } from '@/lib/utils';
-import { getPlaceholder, getPost, getPostSlugs } from '@/lib/dbContentQueries';
+import { getPost, getPostSlugs } from '@/lib/dbContentQueries';
+import { getPlaceholder } from '@/lib/images';
 
 export const dynamic = 'force-static';
 // export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const props = await getPost(slug);
-  const formattedDate = format(props.meta.date, 'PP');
+  const result = await getPost(slug);
+  if (result.isErr()) throw new Error(result.error.message);
+  const props = result.value;
+
+  const formattedDate = format(props.date, 'PP');
+  const coverImage = props.cover ? path.join('/api', props.cover) : 'images/favicon.png';
 
   return {
-    title: props.meta.title,
-    description: props.meta.description,
-    keywords: props.meta.keywords ?? props.meta.tags,
+    title: props.title,
+    description: props.description,
+    keywords: props.keywords ?? props.tags,
     openGraph: {
-      title: props.meta.title,
-      description: props.meta.description,
+      title: props.title,
+      description: props.description,
       url: siteConfig.url + '/posts/' + props.slug,
-      locale: props.meta.locale,
+      locale: props.locale,
       type: 'article',
       publishedTime: formattedDate,
-      images: [props.meta.coverSquare || 'images/favicon.png'],
+      images: [coverImage],
       siteName: siteConfig.name,
     },
   };
@@ -49,8 +55,11 @@ type Scope = {
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const props = await getPost(slug);
-  const formattedDate = format(props.meta.date, 'PP');
+  const result = await getPost(slug);
+  if (result.isErr()) throw new Error(result.error.message);
+  const props = result.value;
+
+  const formattedDate = format(props.date, 'PP');
 
   const modifiedOptions = {
     ...options,
@@ -66,7 +75,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     components,
   });
 
-  const coverImage = props.meta.cover;
+  const coverImage = props.cover;
   const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
   const coverUrl = coverImage ? coverImage[0] === '/' ? coverImage : `/${coverImage}` : null;
 
@@ -78,7 +87,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             {formattedDate}
           </p>
           <div className="flex flex-row gap-4">
-            {props.meta.tags.map((tag: string) => (
+            {props.tags.map((tag: string) => (
               <p key={tag} className="text-primary-foreground uppercase text-sm underline hover:text-primary-foreground/80 transition-all">
                 <Link href={`/tags/${tag}/page/1`}>{turnTagString(tag)}</Link>
               </p>
@@ -88,9 +97,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-primary-foreground lg:space-y-2 space-y-1">
           <p>{scope.readingTime.text}</p>
           <div className="lg:space-y-4 space-y-2">
-            <TypographyH1>{props.meta.title}</TypographyH1>
+            <TypographyH1>{props.title}</TypographyH1>
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              {props.meta.description}
+              {props.description}
             </p>
           </div>
         </div>
@@ -98,7 +107,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <DoublePane side={<Side toc={scope.toc || []} />}>
         <div>
           {coverImage && placeholder && (<div className="my-6"><Image
-            alt={`${props.meta.title} post cover image`}
+            alt={`${props.title} post cover image`}
             src={`/api${coverUrl}`}
             className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
             width={placeholder.metadata.width}
@@ -108,7 +117,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           /></div>)}
           <div className="my-4 flex flex-row items-center gap-4 justify-end text-foreground text-lg">
             <PostViewCounter slug={props.slug} />
-            <CopyToClipboard text={props.meta.shortened} />
+            <CopyToClipboard text={props.shortened} />
           </div>
         </div>
         <main>
@@ -143,8 +152,9 @@ function Side({ toc }: { toc: TocItem[] }) {
 
 export async function generateStaticParams() {
   const posts = await getPostSlugs();
+  if (posts.isErr()) return [];
 
-  return posts.map(slug => ({
+  return posts.value.map(slug => ({
     slug,
   }));
 }

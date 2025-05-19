@@ -24,11 +24,12 @@ export default async function sitemap() {
   });
 
   const posts = await getPosts({ });
+  if (posts.isErr()) throw new Error(posts.error.message);
 
-  posts.forEach((post) => {
+  posts.value.forEach((post) => {
     siteMap.push({
       url: `${siteConfig.url}/posts/${post.slug}`,
-      lastModified: new Date(String(post.meta.lastModified ?? post.meta.date)).toISOString().split('T')[0],
+      lastModified: new Date(String(post.lastModified ?? post.date)).toISOString().split('T')[0],
     });
   });
 

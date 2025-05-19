@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 import { getViewsCount } from '@/lib/database-queries/views';
 import { getPost } from '@/lib/dbContentQueries';
+import { ResultAsync } from 'neverthrow';
 
 export async function MostViewedPosts({ postNum }: { postNum: number }) {
   const viewsResult = await getViewsCount({ postNum });
@@ -19,17 +20,28 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
 
   const views = viewsResult.value;
 
-  const posts = await Promise.all(views.map((view) => getPost(view.slug).then(props => ({
-      slug: props.slug,
-      meta: props.meta,
-      content: props.content,
-      views: view.count,
-    }))
-  ));
+  const posts = await ResultAsync.combine(
+    views.map((view) =>
+      getPost(view.slug)
+      .map(props => ({
+        ...props,
+        views: view.count,
+      }))
+    )
+  );
+
+  if (posts.isErr()) {
+    console.error("Error in getting the posts in MostViewedPosts:", posts.error.message);
+    return (
+      <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+        Sorry. Could not fetch the most viewed posts.
+      </p>
+    );
+  }
 
   return (
     <ul className="flex flex-col gap-2">
-      {posts.slice(0, postNum).map((post) => (
+      {posts.value.slice(0, postNum).map((post) => (
         <li key={post.slug} className="group pl-0 hover:pl-2 transition-all animate-in flex flex-row items-start">
           <div className="pr-4 group-hover:pr-2 transition-all animate-in mt-1.5">
             <ArrowRight stroke="currentColor" strokeWidth="2.4px" width="18px" height="18px" />
@@ -42,7 +54,7 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
               prefetch={false}
               className="text-foreground"
             >
-              {post.meta.title}
+              {post.title}
             </Link>
           </h3>
         </li>

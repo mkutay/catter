@@ -17,7 +17,9 @@ export default async function ListPosts({
   tags?: string[],
   disallowTags?: string[]
 }) { // half-open interval
-  const posts = await getPosts({ startInd, endInd, tags, disallowTags });
+  const result = await getPosts({ startInd, endInd, tags, disallowTags });
+  if (result.isErr()) throw new Error(result.error.message);
+  const posts = result.value;
 
   if (posts.length === 0) {
     notFound();
@@ -29,19 +31,19 @@ export default async function ListPosts({
         <div key={post.slug} className="flex flex-col gap-4">
           <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight first:mt-0 mt-6">
             <Link href={`/posts/${post.slug}`} className="hover:text-foreground/80 transition-all">
-              {post.meta.title}
+              {post.title}
             </Link>
           </h2>
           <h3 className="text-muted-foreground italic font-medium">
-            {post.meta.description}
+            {post.description}
           </h3>
           <div>
-            <MDXRemote source={post.meta.excerpt} options={options} components={components}/>
+            <MDXRemote source={post.excerpt} options={options} components={components}/>
           </div>
           <div className="flex flex-row justify-end">
             <Button asChild variant="outline" size="default" className="w-fit">
               <Link href={`/posts/${post.slug}`}>
-                {`Read More: ${post.meta.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
+                {`Read More: ${post.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
               </Link>
             </Button>
           </div>

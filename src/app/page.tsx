@@ -4,18 +4,22 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 
 import { components, options } from '@/config/mdxRemoteSettings';
-import { getPlaceholder, getPosts } from '@/lib/dbContentQueries';
+import { getPosts } from '@/lib/dbContentQueries';
 import { cn } from '@/lib/utils';
 import { Post } from '@/config/types';
 import { siteConfig } from '@/config/site';
 import { ViewDisplay } from '@/components/viewDisplay';
 import { TypographyH1 } from '@/components/typography/headings';
 import { TypographyLarge, TypographyParagraph } from '@/components/typography/paragraph';
+import { getPlaceholder } from '@/lib/images';
 
 export const dynamic = 'force-static';
 
 export default async function Home() {
-  const posts = await getPosts({ });
+  const result = await getPosts({ });
+  if (result.isErr()) throw new Error(result.error.message);
+  const posts = result.value;
+
   const leftSide = posts.filter((post) =>
     siteConfig.homePage.leftSideSlugs.includes(post.slug)
   );
@@ -76,7 +80,7 @@ export default async function Home() {
 }
 
 async function FirstPost({ post }: { post: Post }) {
-  const coverImage = post.meta.cover;
+  const coverImage = post.cover;
   const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
   const coverUrl = coverImage ? coverImage[0] === '/' ? coverImage : `/${coverImage}` : null;
 
@@ -84,7 +88,7 @@ async function FirstPost({ post }: { post: Post }) {
     <div className="md:max-w-6xl max-w-prose mx-auto px-4 flex md:flex-row flex-col justify-between gap-6">
       {placeholder && coverUrl && <Image
         src={`/api${coverUrl}`}
-        alt={`${post.meta.title} post cover image`}
+        alt={`${post.title} post cover image`}
         quality={60}
         className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm md:max-w-lg w-full"
         width={placeholder.metadata.width}
@@ -97,19 +101,19 @@ async function FirstPost({ post }: { post: Post }) {
           <Link className="group flex flex-col gap-2" href={`/posts/${post.slug}`}>
             <h1 className="lg:text-6xl/tight md:text-5xl text-4xl font-normal tracking-tighter text-stroke-medium text-stroke-background fix-text-stroke">
               <span className="lg:bg-[0%_93%] md:bg-[0%_90%] bg-[0%_89%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                {post.meta.title}
+                {post.title}
               </span>
             </h1>
             <TypographyLarge>
-              {post.meta.description}
+              {post.description}
             </TypographyLarge>
           </Link>
-          <MDXRemote source={post.meta.shortExcerpt || post.meta.excerpt} options={options} components={components} />
+          <MDXRemote source={post.shortExcerpt || post.excerpt} options={options} components={components} />
         </div>
         <div className="flex justify-between flex-row items-center flex-wrap text-md text-foreground tracking-tight font-light">
           <ViewDisplay slug={post.slug} />
           <p>
-            {format(post.meta.date, 'PP')}
+            {format(post.date, 'PP')}
           </p>
         </div>
       </div>
@@ -124,7 +128,7 @@ async function PostDisplay({
   post: Post,
   isMiddle?: boolean,
 }) {
-  const coverImage = post.meta.cover;
+  const coverImage = post.cover;
   const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
   const coverUrl = coverImage ? coverImage[0] === '/' ? coverImage : `/${coverImage}` : null;
 
@@ -133,7 +137,7 @@ async function PostDisplay({
       <Link href={`/posts/${post.slug}`} className={cn("flex flex-col group", isMiddle ? "gap-4" : "gap-2")} prefetch={false}>
         {placeholder && coverUrl && <Image
           src={`/api${coverUrl}`}
-          alt={`${post.meta.title} post cover image`}
+          alt={`${post.title} post cover image`}
           quality={60}
           className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
           width={placeholder.metadata.width}
@@ -144,23 +148,23 @@ async function PostDisplay({
         {isMiddle ? (
           <h2 className="lg:text-5xl/tight md:text-4xl text-4xl font-normal tracking-tighter text-stroke-medium text-stroke-background fix-text-stroke">
             <span className="lg:bg-[0%_93%] md:bg-[0%_90%] bg-[0%_89%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-              {post.meta.title}
+              {post.title}
             </span>
           </h2>
         ) : (
           <h2 className="scroll-m-20 text-2xl font-medium tracking-tight text-foreground text-stroke-medium text-stroke-background fix-text-stroke">
             <span className="bg-[0%_93%] bg-gradient-to-r from-foreground to-foreground bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-              {post.meta.title}
+              {post.title}
             </span>
           </h2>
         )}
       </Link>
       {isMiddle && <div className="leading-normal">
-        <MDXRemote source={post.meta.shortExcerpt || post.meta.excerpt} options={options} components={components} />
+        <MDXRemote source={post.shortExcerpt || post.excerpt} options={options} components={components} />
       </div>}
       <div className="text-sm text-foreground tracking-tight font-light flex flex-row justify-between">
         <p>
-          {format(post.meta.date, 'PP')}
+          {format(post.date, 'PP')}
         </p>
         <ViewDisplay slug={post.slug} />
       </div>

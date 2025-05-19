@@ -22,6 +22,7 @@ export const metadata = {
 
 export default async function Page() {
   const projects = await getPosts({ tags: ['project'] });
+  if (projects.isErr()) throw new Error(projects.error.message);
 
   return (
     <DoublePane hideFollowLink>
@@ -29,7 +30,7 @@ export default async function Page() {
         Different Coding Projects I Did
       </h1>
       <div className="grid sm:grid-cols-2 grid-cols-1 gap-4 my-6">
-        {projects.map((project) => (
+        {projects.value.map((project) => (
           <ProjectCard props={project} key={project.slug} />
         ))}
       </div>

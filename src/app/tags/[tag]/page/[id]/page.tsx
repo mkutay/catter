@@ -11,7 +11,9 @@ export const dynamic = 'force-static';
 export async function generateMetadata(props: { params: Promise<{ tag: string, id: string }> }) {
   const params = await props.params;
   const { id, tag } = params;
-  const posts = await getPosts({ tags: [tag] });
+  const result = await getPosts({ tags: [tag] });
+  if (result.isErr()) throw new Error(result.error.message);
+  const posts = result.value;
 
   return {
     title: `Posts With Tag: ${tag} | Page ${id}`,
@@ -31,7 +33,10 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
 
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;
-  const postsLength = await getPostsLength({ tags: [tag] });
+
+  const result = await getPostsLength({ tags: [tag] });
+  if (result.isErr()) throw new Error(result.error.message);
+  const postsLength = result.value;
 
   return (
     <>
@@ -50,11 +55,16 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
 }
 
 export async function generateStaticParams() {
-  const tags = await getListOfAllTags();
+  const result = await getListOfAllTags();
+  if (result.isErr()) throw new Error(result.error.message);
+  const tags = result.value;
+
   const ret: { tag: string, id: string }[] = [];
 
   for (const tag of tags) {
-    const tagsMapLength = await getPostsLength({ tags: [tag] });
+    const result = await getPostsLength({ tags: [tag] });
+    if (result.isErr()) throw new Error(result.error.message);
+    const tagsMapLength = result.value;
     for (let i = 1; i <= Math.ceil(tagsMapLength / siteConfig.postNumPerPage); i++) {
       ret.push({ tag: tag, id: i.toString() });
     }

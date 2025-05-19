@@ -9,7 +9,9 @@ export const dynamic = 'force-static';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const postsLength = await getPostsLength({ });
+  const result = await getPostsLength({ });
+  if (result.isErr()) throw new Error(result.error.message);
+  const postsLength = result.value;
 
   return {
     title: `Posts and Tags On the Blog | Page ${id}`,
@@ -27,7 +29,10 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const id = Number(params.id);
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;
-  const postsLength = await getPostsLength({ disallowTags: ['project'] });
+
+  const result = await getPostsLength({ disallowTags: ['project'] });
+  if (result.isErr()) throw new Error(result.error.message);
+  const postsLength = result.value;
 
   return (
     <>
@@ -44,7 +49,10 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 }
 
 export async function generateStaticParams() {
-  const postsLength = await getPostsLength({ disallowTags: ['project'] });
+  const result = await getPostsLength({ disallowTags: ['project'] });
+  if (result.isErr()) throw new Error(result.error.message);
+  const postsLength = result.value;
+  
   const ret: { id: string }[] = [];
 
   for (let i = 1; i <= Math.ceil(postsLength / siteConfig.postNumPerPage); i++) {
