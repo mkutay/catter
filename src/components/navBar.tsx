@@ -49,7 +49,7 @@ export default function NavBar() {
 
   return (
     <nav className="bg-background/80 backdrop-blur-sm lg:sticky top-0 h-fit z-50">
-      <div className="my-4 max-w-prose lg:max-w-6xl mx-auto flex flex-row items-center justify-between px-4">
+      <div className="my-4 max-w-prose md:max-w-6xl mx-auto flex flex-row items-center justify-between px-4">
         <div className="place-items-center text-primary hover:text-primary/80 transition-all font-semibold tracking-wide text-lg gap-2 flex flex-row items-center">
           <Link href="/" className="flex flex-row items-center gap-2">
             <Logo className="flex-none" />

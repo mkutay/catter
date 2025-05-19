@@ -86,7 +86,7 @@ async function FirstPost({ post }: { post: Post }) {
         src={`/api${coverUrl}`}
         alt={`${post.meta.title} post cover image`}
         quality={60}
-        className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm max-w-lg"
+        className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm md:max-w-lg w-full"
         width={placeholder.metadata.width}
         height={placeholder.metadata.height}
         priority={true}

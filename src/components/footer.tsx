@@ -62,7 +62,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="items-center px-4 md:my-12 my-6 md:hidden flex flex-col w-full gap-8 max-w-lg mx-auto">
+      <div className="items-center px-4 md:my-12 my-6 md:hidden flex flex-col w-full gap-8 max-w-prose mx-auto">
         <div className="w-full flex flex-col justify-between gap-4">
           <div className="flex flex-row items-center justify-between gap-4 flex-wrap">
             <p className="text-lg">
