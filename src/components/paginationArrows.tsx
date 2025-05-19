@@ -45,6 +45,10 @@ export default function PaginationArrows({ totalPages, currentId, href }: { tota
       );
     }
   }
+
+  if (items.length <= 1) {
+    return null;
+  }
   
   if (totalPages > 1) {
     items.push(

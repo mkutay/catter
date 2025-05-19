@@ -39,7 +39,7 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
         Posts With Tag: <span className="font-bold text-foreground">{turnTagString(tag)}</span>
       </h1>
       <ListPosts startInd={startInd} endInd={endInd} tags={[tag]}/>
-      <div className="mt-4 mb-8">
+      <div className="my-4">
         <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
       </div>
       <TotalBlogViews />

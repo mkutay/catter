@@ -35,7 +35,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
         List of All Posts and Tags
       </h1>
       <ListPosts startInd={startInd} endInd={endInd} disallowTags={['project']}/>
-      <div className="mt-4 mb-8">
+      <div className="my-4">
         <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
       </div>
       <TotalBlogViews />
