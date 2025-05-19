@@ -66,13 +66,13 @@ export const siteConfig = {
   homePage: {
     leftSideSlugs: [
       'why-do-people-just-hate-mathematics',
-      'some-reflection-on-writing',
+      'skip-list',
     ],
     rightSideSlugs: [
       'why-mathematics-is-lonely',
       'how-to-practice-mathematics-as-an-art',
     ],
-    middleSlug: 'skip-list',
+    middleSlug: 'some-reflection-on-writing',
     firstSlug: 'creating-a-clone-of-yourself',
   },
   followNext,
