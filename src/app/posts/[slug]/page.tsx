@@ -1,6 +1,6 @@
-import readingTime, { ReadTimeResults } from 'reading-time';
-import { evaluate } from 'next-mdx-remote-client/rsc';
+import { evaluate, EvaluateOptions } from 'next-mdx-remote-client/rsc';
 import { TocItem } from 'remark-flexible-toc';
+import readingTime from 'reading-time';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,6 +18,7 @@ import { PostMeta } from '@/config/types';
 import { cn } from '@/lib/utils';
 import { getPost, getPostSlugs } from '@/lib/dbContentQueries';
 import { getPlaceholder } from '@/lib/images';
+import { ToggleParentheses } from '@/components/toggleParentheses';
 
 export const dynamic = 'force-static';
 // export const dynamicParams = false;
@@ -49,9 +50,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 type Scope = {
-  readingTime: ReadTimeResults;
   toc?: TocItem[];
 };
+
+function EmptyToggleParentheses({ children }: { children: React.ReactNode }) {
+  return <>({children})</>;
+}
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -61,18 +65,22 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   const formattedDate = format(props.date, 'PP');
 
-  const modifiedOptions = {
+  const modifiedOptions: EvaluateOptions<Scope> = {
     ...options,
-    scope: {
-      readingTime: readingTime(props.content),
-    },
     vfileDataIntoScope: "toc",
   }
+
+  const modifiedComponents = {
+    ...components,
+    ToggleParentheses: props.tags.includes(siteConfig.noParentheses) ? EmptyToggleParentheses : ToggleParentheses,
+  }
+
+  const time = readingTime(props.content);
 
   const { content, scope } = await evaluate<PostMeta, Scope>({
     source: props.content,
     options: modifiedOptions,
-    components,
+    components: modifiedComponents
   });
 
   const coverImage = props.cover;
@@ -95,7 +103,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </div>
         </div>
         <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-primary-foreground lg:space-y-2 space-y-1">
-          <p>{scope.readingTime.text}</p>
+          <p>{time.text}</p>
           <div className="lg:space-y-4 space-y-2">
             <TypographyH1>{props.title}</TypographyH1>
             <p className="leading-7 [&:not(:first-child)]:mt-6">

@@ -27,6 +27,8 @@
     "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-toast": "^1.2.11",
     "@tailwindcss/typography": "^0.5.16",
+    "@types/mdast": "^4.0.4",
+    "@types/nlcst": "^2.0.3",
     "@types/remark-heading-id": "^1.0.0",
     "@types/rss": "^0.0.32",
     "@typescript-eslint/typescript-estree": "^8.31.1",
@@ -42,6 +44,7 @@
     "gray-matter": "^4.0.3",
     "katex": "^0.16.22",
     "lucide-react": "^0.414.0",
+    "mdast-util-find-and-replace": "^3.0.2",
     "minio": "^8.0.5",
     "neverthrow": "^8.2.0",
     "next": "^15.3.1",
@@ -69,6 +72,7 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "tsx": "^4.19.4",
+    "unist-util-visit": "^5.0.0",
     "zod": "^3.24.3"
   },
   "devDependencies": {

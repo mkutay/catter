@@ -3,8 +3,8 @@ import { EvaluateOptions, MDXComponents } from 'next-mdx-remote-client/rsc';
 import { remarkCodeHike, CodeHikeConfig } from 'codehike/mdx';
 import recmaMdxImportReact from 'recma-mdx-import-react';
 import remarkFlexibleToc from "remark-flexible-toc";
-import Image, { ImageProps } from 'next/image';
 import remarkHeadingId from 'remark-heading-id';
+import Image, { ImageProps } from 'next/image';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
 import remarkLint from 'remark-lint';
@@ -19,6 +19,7 @@ import { ToggleParentheses } from '@/components/toggleParentheses';
 import { TypographyOList, TypographyUList } from '@/components/typography/list';
 import { cn } from '@/lib/utils';
 import { getPlaceholder } from '@/lib/images';
+import remarkParentheses from '@/lib/remarkParentheses';
 
 // CodeHike configuration for code blocks
 const chConfig: CodeHikeConfig = {
@@ -39,6 +40,7 @@ export const options: EvaluateOptions = {
       [remarkCodeHike, chConfig],
       [remarkHeadingId, { defaults: true, uniqueDefaults: true }],
       remarkFlexibleToc,
+      remarkParentheses,
     ],
     rehypePlugins: [rehypeKatex],
     recmaPlugins: [
@@ -137,11 +139,7 @@ export const components: MDXComponents = {
   hr: (props: DetailedHTMLProps<HTMLAttributes<HTMLHRElement>, HTMLHRElement>) => (
     <hr {...props} className={cn("my-6 border-t-2 border-muted", props.className)} />
   ),
-  ToggleParentheses: (props: { children: React.ReactNode }) => (
-    <ToggleParentheses>
-      {props.children}
-    </ToggleParentheses>
-  ),
+  ToggleParentheses,
   ol: (props: DetailedHTMLProps<HTMLAttributes<HTMLOListElement>, HTMLOListElement>) => (
     <TypographyOList {...props}>
       {props.children}

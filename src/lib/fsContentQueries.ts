@@ -4,7 +4,6 @@ import matter from 'gray-matter';
 import { notFound } from 'next/navigation';
 
 import { PostData, PostMeta } from '@/config/types';
-import { convertParenthesesToComponent } from './utils';
 
 /**
  * Get all post files from the posts directory.
@@ -31,8 +30,6 @@ export function getAboutProps() {
   }
 
   const { data: frontMatter, content } = matter(markdownFile);
-
-  const formattedContent = convertParenthesesToComponent(content);
   
   const postData = {
     meta: frontMatter as {
@@ -40,7 +37,7 @@ export function getAboutProps() {
       description: string,
       date: string,
     },
-    content: formattedContent,
+    content: content,
   };
   
   return postData;
@@ -60,17 +57,15 @@ export function getProps(pathTo: string, slug: string): PostData {
 
   const { data: frontMatter, content } = matter(markdownFile);
   const fm = frontMatter as PostMeta;
-
-  const formattedContent = convertParenthesesToComponent(content);
   
   const postData = {
     slug: slug,
     meta: {
       ...fm,
-      excerpt: convertParenthesesToComponent(fm.excerpt),
-      shortExcerpt: fm.shortExcerpt && convertParenthesesToComponent(fm.shortExcerpt),
+      excerpt: fm.excerpt,
+      shortExcerpt: fm.shortExcerpt,
     } as PostMeta,
-    content: formattedContent,
+    content: content,
   };
   
   return postData;
