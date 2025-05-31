@@ -1,9 +1,9 @@
-import matter from "gray-matter";
+import { revalidatePath } from "next/cache";
 
 import { Post } from "@/config/types";
 import { uploadImage } from "@/lib/images";
 import { sql } from "@/lib/postgres";
-import { revalidatePath } from "next/cache";
+import { createPost } from "@/lib/dbContentQueries";
 
 export async function POST(request: Request) {
   const authHeader = request.headers.get("Authorization");
@@ -53,48 +53,6 @@ export async function POST(request: Request) {
       }
     });
   }
-}
-
-function createPost(content: string, slug: string): Post {
-  const { data: frontmatter, content: contentWithoutFrontmatter } = matter(content);
-
-  // Helper function to safely get string value
-  const getStringValue = (value: unknown, defaultValue: string): string => {
-    return typeof value === 'string' ? value : defaultValue;
-  };
-
-  const getDateValue = (value: unknown, defaultValue: string) => {
-    if (value instanceof Date) return value.toISOString();
-    if (value) return new Date(value as string).toISOString();
-    return defaultValue;
-  };
-  
-  slug = getStringValue(frontmatter.slug, slug);
-  
-  // Helper function to safely get string array
-  const getStringArray = (value: unknown): string[] => {
-    return Array.isArray(value) ? value.filter(item => typeof item === 'string') as string[] : [];
-  };
-  
-  // Create the post object
-  const post: Post = {
-    slug,
-    title: getStringValue(frontmatter.title, slug),
-    content: contentWithoutFrontmatter,
-    description: getStringValue(frontmatter.description, ""),
-    date: getDateValue(frontmatter.date, new Date().toISOString()),
-    excerpt: getStringValue(frontmatter.excerpt, ''),
-    locale: getStringValue(frontmatter.locale, "en_UK"),
-    cover: typeof frontmatter.cover === 'string' ? frontmatter.cover : null,
-    coverSquare: typeof frontmatter.coverSquare === 'string' ? frontmatter.coverSquare : null,
-    lastModified: getDateValue(frontmatter.lastModified, new Date().toISOString()),
-    shortened: getStringValue(frontmatter.shortened, slug),
-    shortExcerpt: getStringValue(frontmatter.shortExcerpt, ''),
-    tags: getStringArray(frontmatter.tags),
-    keywords: getStringArray(frontmatter.keywords)
-  };
-  
-  return post;
 }
 
 const insertIntoDB = async ({ post }: { post: Post }) => {  

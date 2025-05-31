@@ -1,5 +1,6 @@
 import { errAsync, fromPromise, okAsync } from 'neverthrow';
 import { notFound } from 'next/navigation';
+import matter from 'gray-matter';
 
 import { Post } from '@/config/types';
 import { sql } from './postgres';
@@ -208,3 +209,42 @@ export const getListOfAllTags = () =>
     } as ContentError),
   )
   .map((result) => result.map((row) => row.tag as string));
+
+export function createPost(content: string, slug: string): Post {
+  const { data: frontmatter, content: contentWithoutFrontmatter } = matter(content);
+
+  const getStringValue = (value: unknown, defaultValue: string): string => {
+    return typeof value === 'string' ? value : defaultValue;
+  };
+
+  const getDateValue = (value: unknown, defaultValue: string) => {
+    if (value instanceof Date) return value.toISOString();
+    if (value) return new Date(value as string).toISOString();
+    return defaultValue;
+  };
+  
+  const getStringArray = (value: unknown): string[] => {
+    return Array.isArray(value) ? value.filter(item => typeof item === 'string') as string[] : [];
+  };
+  
+  slug = getStringValue(frontmatter.slug, slug);
+
+  const post: Post = {
+    slug,
+    title: getStringValue(frontmatter.title, slug),
+    content: contentWithoutFrontmatter,
+    description: getStringValue(frontmatter.description, ""),
+    date: getDateValue(frontmatter.date, new Date().toISOString()),
+    excerpt: getStringValue(frontmatter.excerpt, ''),
+    locale: getStringValue(frontmatter.locale, "en_UK"),
+    cover: typeof frontmatter.cover === 'string' ? frontmatter.cover : null,
+    coverSquare: typeof frontmatter.coverSquare === 'string' ? frontmatter.coverSquare : null,
+    lastModified: getDateValue(frontmatter.lastModified, new Date().toISOString()),
+    shortened: getStringValue(frontmatter.shortened, slug),
+    shortExcerpt: getStringValue(frontmatter.shortExcerpt, ''),
+    tags: getStringArray(frontmatter.tags),
+    keywords: getStringArray(frontmatter.keywords)
+  };
+  
+  return post;
+}
