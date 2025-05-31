@@ -85,12 +85,12 @@ async function FirstPost({ post }: { post: Post }) {
   const coverUrl = coverImage ? coverImage[0] === '/' ? coverImage : `/${coverImage}` : null;
 
   return (
-    <div className="md:max-w-6xl max-w-prose mx-auto px-4 flex md:flex-row flex-col justify-between gap-6">
+    <div className="md:max-w-6xl max-w-prose mx-auto px-4 flex md:flex-row flex-col justify-between gap-6 items-center">
       {placeholder && coverUrl && <Image
         src={`/api${coverUrl}`}
         alt={`${post.title} post cover image`}
         quality={60}
-        className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm md:max-w-lg lg:w-full md:w-1/2 w-full"
+        className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm lg:max-w-lg md:max-w-sm w-full object-contain"
         width={placeholder.metadata.width}
         height={placeholder.metadata.height}
         priority={true}
