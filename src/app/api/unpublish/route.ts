@@ -29,6 +29,7 @@ export async function POST(request: Request) {
     revalidatePath(`/${post.shortened}`);
     revalidatePath("/tags", "layout");
     revalidatePath("/posts/page/[id]", "page");
+    revalidatePath("/", "page");
     
     return new Response(JSON.stringify({ success: true }), {
       headers: {
