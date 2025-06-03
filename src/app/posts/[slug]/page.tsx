@@ -149,8 +149,6 @@ function Side({ toc }: { toc: TocItem[] }) {
     'text-sm/tight',
   ];
 
-  console.log(toc)
-
   return (
     <div className="flex flex-col gap-4 mt-4 max-w-[300px]">
       <TypographyH2>Table of Contents</TypographyH2>
