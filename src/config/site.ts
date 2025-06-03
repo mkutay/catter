@@ -65,12 +65,12 @@ export const siteConfig = {
   date: new Date().toISOString().split('T')[0],
   homePage: {
     leftSideSlugs: [
-      'why-do-people-just-hate-mathematics',
       'skip-list',
+      'java-and-education'
     ],
     rightSideSlugs: [
       'why-mathematics-is-lonely',
-      'how-to-practice-mathematics-as-an-art',
+      'why-do-people-just-hate-mathematics',
     ],
     middleSlug: 'some-reflection-on-writing',
     firstSlug: 'creating-a-clone-of-yourself',
