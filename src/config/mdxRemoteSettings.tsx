@@ -39,7 +39,7 @@ export const options: EvaluateOptions = {
       remarkMath,
       [remarkCodeHike, chConfig],
       [remarkHeadingId, { defaults: true, uniqueDefaults: true }],
-      remarkFlexibleToc,
+      [remarkFlexibleToc, { skipLevels: [] }],
       remarkParentheses,
     ],
     rehypePlugins: [rehypeKatex],

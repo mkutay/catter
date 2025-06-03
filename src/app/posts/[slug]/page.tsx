@@ -1,4 +1,4 @@
-import { evaluate, EvaluateOptions } from 'next-mdx-remote-client/rsc';
+import { evaluate, EvaluateOptions, MDXRemote } from 'next-mdx-remote-client/rsc';
 import { TocItem } from 'remark-flexible-toc';
 import readingTime from 'reading-time';
 import { format } from 'date-fns';
@@ -102,13 +102,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             ))}
           </div>
         </div>
-        <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-primary-foreground lg:space-y-2 space-y-1">
+        <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-primary-foreground lg:space-y-6 space-y-4">
           <p>{time.text}</p>
-          <div className="lg:space-y-4 space-y-2">
-            <TypographyH1>{props.title}</TypographyH1>
-            <p className="leading-7 [&:not(:first-child)]:mt-6">
-              {props.description}
-            </p>
+          <div className="lg:space-y-5 space-y-3">
+            <TypographyH1>
+              <MDXRemote source={props.title} components={modifiedComponents} options={modifiedOptions} />
+            </TypographyH1>
+            <MDXRemote source={props.description} components={modifiedComponents} options={modifiedOptions} />
           </div>
         </div>
       </div>
@@ -139,17 +139,33 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
 function Side({ toc }: { toc: TocItem[] }) {
   if (toc.length === 0) return null;
+
+  const depths = [
+    'text-lg/normal',
+    'text-lg/tight',
+    'text-md/tight',
+    'text-sm/tight',
+    'text-sm/tight',
+    'text-sm/tight',
+  ];
+
+  console.log(toc)
+
   return (
     <div className="flex flex-col gap-4 mt-4 max-w-[300px]">
       <TypographyH2>Table of Contents</TypographyH2>
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-1.5">
         {toc.map((item, index) => (
           <li key={index}>
-            <span className="inline-block w-4" />
-            <Link href={`${item.href}`} className={cn("text-foreground hover:text-foreground/80 transition-all",
-              item.depth === 2 ? "text-lg/tight" : item.depth === 3 ? "text-md/tight" : item.depth === 4 ? "text-sm/tight" : "text-sm/tight"
-            )}>
-              {item.value}
+            <Link href={`${item.href}`} className="group flex flex-row items-baseline">
+              <span className="font-mono mr-2 text-primary group-hover:text-primary/80 transition-all inline-block">
+                {"#".repeat(item.depth)}
+              </span>
+              <span className={cn("text-foreground group-hover:text-foreground/80 transition-all",
+                depths[item.depth - 1],
+              )}>
+                {item.value}
+              </span>
             </Link>
           </li>
         ))}
