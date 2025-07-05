@@ -1,8 +1,9 @@
-import { ComponentProps, AnchorHTMLAttributes, BlockquoteHTMLAttributes, DetailedHTMLProps, HTMLAttributes, ImgHTMLAttributes } from 'react';
+import { ComponentProps, AnchorHTMLAttributes, BlockquoteHTMLAttributes, DetailedHTMLProps, HTMLAttributes, ImgHTMLAttributes, Children, isValidElement, ReactElement } from 'react';
 import { EvaluateOptions, MDXComponents } from 'next-mdx-remote-client/rsc';
 import { remarkCodeHike, CodeHikeConfig } from 'codehike/mdx';
 import recmaMdxImportReact from 'recma-mdx-import-react';
 import remarkFlexibleToc from "remark-flexible-toc";
+import remarkSmartypants from 'remark-smartypants';
 import remarkHeadingId from 'remark-heading-id';
 import Image, { ImageProps } from 'next/image';
 import rehypeKatex from 'rehype-katex';
@@ -12,7 +13,7 @@ import remarkGfm from 'remark-gfm';
 import Link from 'next/link';
 
 import { TypographyH1, TypographyH2, TypographyH3, TypographyH4 } from '@/components/typography/headings';
-import { TypographyBlockquote } from '@/components/typography/blockquote';
+import { TypographyBlockquote, TypographyHr } from '@/components/typography/blockquote';
 import { MyCode, MyInlineCode } from '@/components/typography/code-block';
 import { TypographyParagraph } from '@/components/typography/paragraph';
 import { ToggleParentheses } from '@/components/toggleParentheses';
@@ -41,29 +42,31 @@ export const options: EvaluateOptions = {
       [remarkHeadingId, { defaults: true, uniqueDefaults: true }],
       [remarkFlexibleToc, { skipLevels: [] }],
       remarkParentheses,
+      remarkSmartypants,
     ],
     rehypePlugins: [rehypeKatex],
-    recmaPlugins: [
-      recmaMdxImportReact,
-    ]
+    recmaPlugins: [recmaMdxImportReact],
   },
 };
 
 export const components: MDXComponents = {
   Image: async (props: ImageProps) => {
     if (typeof props.src !== "string") return <Image {...props} alt={props.alt} />;
-    const placeholder = await getPlaceholder(props.src);
+    
+    type Placeholder = Awaited<ReturnType<typeof getPlaceholder>>;
+    const placeholder: Placeholder = await getPlaceholder(props.src);
+
     const src = props.src.startsWith('/') ? props.src : `/${props.src}`;
 
     return <Image
       {...props}
       alt={props.alt || ''}
       src={`/api${src}`}
-      className={cn("my-6 lg:rounded-md rounded-sm", props.className)}
+      className={cn("my-8 lg:rounded-md rounded-sm", props.className)}
       width={placeholder.metadata.width}
       height={placeholder.metadata.height}
       placeholder={placeholder.base64 as `data:image/${string}`}
-      quality={45}
+      quality={50}
     />;
   },
   img: async (props: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>) => {
@@ -74,11 +77,11 @@ export const components: MDXComponents = {
     return <Image
       alt={props.alt || ''}
       src={`/api${src}`}
-      className="my-6 lg:rounded-md rounded-sm"
+      className="my-8 lg:rounded-md rounded-sm"
       width={placeholder.metadata.width}
       height={placeholder.metadata.height}
       placeholder={placeholder.base64 as `data:image/${string}`}
-      quality={45}
+      quality={50}
     />;
   },
   Link: (props: ComponentProps<typeof Link>) => (
@@ -101,11 +104,34 @@ export const components: MDXComponents = {
   },
   MyCode,
   MyInlineCode,
-  p: (props: DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>) => (
-    <TypographyParagraph {...props}>
-      {props.children}
-    </TypographyParagraph>
-  ),
+  p: (
+    props: DetailedHTMLProps<
+      HTMLAttributes<HTMLParagraphElement>,
+      HTMLParagraphElement
+    >
+  ) => {
+    const childrenArray = Children.toArray(props.children);
+
+    // this is SO DUBIOUS but it works
+    // and i give up on trying to find a better way
+    const isOnlyKatex =
+      childrenArray.length === 1 &&
+      isValidElement(childrenArray[0]) &&
+      childrenArray[0].type === "span" &&
+      typeof (childrenArray[0] as ReactElement<HTMLSpanElement>).props.className === "string" &&
+      ((childrenArray[0] as ReactElement<HTMLSpanElement>).props.className as string)
+        .split(" ")
+        .includes("katex");
+
+    return (
+      <TypographyParagraph
+        {...props}
+        className={cn(isOnlyKatex && "mx-auto w-fit", props.className)}
+      >
+        {props.children}
+      </TypographyParagraph>
+    );
+  },
   h1: (props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) => (
     <TypographyH1 {...props}>
       {props.children}
@@ -137,7 +163,7 @@ export const components: MDXComponents = {
     </TypographyUList>
   ),
   hr: (props: DetailedHTMLProps<HTMLAttributes<HTMLHRElement>, HTMLHRElement>) => (
-    <hr {...props} className={cn("my-6 border-t-2 border-muted", props.className)} />
+    <TypographyHr className={cn("my-12", props.className)} />
   ),
   ToggleParentheses,
   ol: (props: DetailedHTMLProps<HTMLAttributes<HTMLOListElement>, HTMLOListElement>) => (

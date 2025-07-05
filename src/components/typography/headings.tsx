@@ -20,7 +20,7 @@ export function TypographyH2(props: DetailedHTMLProps<HTMLAttributes<HTMLHeading
 
 export function TypographyH3(props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) {
   return (
-    <h3 {...props} className={cn("mt-8 scroll-m-20 text-2xl font-semibold tracking-tight", props.className)}>
+    <h3 {...props} className={cn("mt-8 scroll-m-20 lg:text-2xl text-xl font-semibold tracking-tight", props.className)}>
       {props.children}
     </h3>
   );
@@ -28,7 +28,7 @@ export function TypographyH3(props: DetailedHTMLProps<HTMLAttributes<HTMLHeading
 
 export function TypographyH4(props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) {
   return (
-    <h4 {...props} className={cn("scroll-m-20 text-xl font-semibold tracking-tight", props.className)}>
+    <h4 {...props} className={cn("mt-6 scroll-m-20 lg:text-xl text-lg font-semibold tracking-tight", props.className)}>
       {props.children}
     </h4>
   );
@@ -36,7 +36,7 @@ export function TypographyH4(props: DetailedHTMLProps<HTMLAttributes<HTMLHeading
 
 export function TypographyH5(props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) {
   return (
-    <h5 {...props} className={cn("scroll-m-20 text-lg font-medium tracking-tight", props.className)}>
+    <h5 {...props} className={cn("scroll-m-20 lg:text-xl text-lg font-medium tracking-tight", props.className)}>
       {props.children}
     </h5>
   );

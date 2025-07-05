@@ -1,9 +1,10 @@
-import { cn } from "@/lib/utils";
 import { DetailedHTMLProps, HTMLAttributes } from "react";
+
+import { cn } from "@/lib/utils";
 
 export function TypographyParagraph(props: DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>) {
   return (
-    <p className={cn("leading-7 [&:not(:first-child)]:mt-6 font-normal", props.className)} {...props}>
+    <p {...props} className={cn("leading-7 [&:not(:first-child)]:mt-6 font-normal", props.className)}>
       {props.children}
     </p>
   );

@@ -13,12 +13,12 @@ import { PostViewCounter } from '@/components/postViewCounter';
 import DoublePane from '@/components/doublePane';
 import { turnTagString } from '@/components/tagsButtonGrid';
 import Comments from '@/components/comments/comments';
-import { TypographyH1, TypographyH2 } from '@/components/typography/headings';
+import { TypographyH1 } from '@/components/typography/headings';
 import { PostMeta } from '@/config/types';
-import { cn } from '@/lib/utils';
 import { getPost, getPostSlugs } from '@/lib/dbContentQueries';
 import { getPlaceholder } from '@/lib/images';
 import { ToggleParentheses } from '@/components/toggleParentheses';
+import { SideTOC } from '@/components/side-toc';
 
 export const dynamic = 'force-static';
 // export const dynamicParams = false;
@@ -112,7 +112,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </div>
         </div>
       </div>
-      <DoublePane side={<Side toc={scope.toc || []} />}>
+      <DoublePane side={<SideTOC toc={scope.toc || []} />}>
         <div>
           {coverImage && placeholder && (<div className="my-6"><Image
             alt={`${props.title} post cover image`}
@@ -134,41 +134,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <Comments slug={props.slug} />
       </DoublePane>
     </>
-  );
-}
-
-function Side({ toc }: { toc: TocItem[] }) {
-  if (toc.length === 0) return null;
-
-  const depths = [
-    'text-lg/normal',
-    'text-lg/tight',
-    'text-md/tight',
-    'text-sm/tight',
-    'text-sm/tight',
-    'text-sm/tight',
-  ];
-
-  return (
-    <div className="flex flex-col gap-4 mt-4 max-w-[300px]">
-      <TypographyH2>Table of Contents</TypographyH2>
-      <ul className="flex flex-col gap-1.5">
-        {toc.map((item, index) => (
-          <li key={index}>
-            <Link href={`${item.href}`} className="group flex flex-row items-baseline">
-              <span className="font-mono mr-2 text-primary group-hover:text-primary/80 transition-all inline-block">
-                {"#".repeat(item.depth)}
-              </span>
-              <span className={cn("text-foreground group-hover:text-foreground/80 transition-all",
-                depths[item.depth - 1],
-              )}>
-                {item.value}
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
 

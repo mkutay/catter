@@ -47,9 +47,7 @@ export default function DoublePane({
           <EmailSubButton />
         </div>}
       </div>
-      <div className="w-fit sticky top-16 h-fit lg:flex hidden">
-        {side}
-      </div>
+      {side}
     </section>
   );
 }
