@@ -105,8 +105,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-primary-foreground lg:space-y-6 space-y-4">
           <p>{time.text}</p>
           <div className="lg:space-y-5 space-y-3">
-            <TypographyH1>
-              <MDXRemote source={props.title} components={modifiedComponents} options={modifiedOptions} />
+            <TypographyH1 className="leading-tight">
+              <MDXRemote source={props.title} />
             </TypographyH1>
             <MDXRemote source={props.description} components={modifiedComponents} options={modifiedOptions} />
           </div>
