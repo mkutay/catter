@@ -16,6 +16,7 @@ export type DBPost = {
 export type Post = DBPost & {
   tags: string[],
   keywords: string[],
+  views?: number,
 };
 
 export type PostData = {

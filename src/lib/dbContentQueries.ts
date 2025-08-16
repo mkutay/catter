@@ -117,6 +117,7 @@ export const getPosts = ({
         p.shortExcerpt,
         ARRAY_AGG(DISTINCT pt.tag) AS tags,
         ARRAY_AGG(DISTINCT pk.keyword) AS keywords,
+        ARRAY_AGG(DISTINCT v.count) AS views,
         CASE WHEN ${tags.length} = 0 THEN true ELSE COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${tags})) > 0 END AS has_included_tag,
         CASE WHEN ${disallowTags.length} = 0 THEN false ELSE COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${disallowTags})) > 0 END AS has_disallowed_tag
       FROM 
@@ -125,6 +126,8 @@ export const getPosts = ({
         post_tags pt ON p.slug = pt.slug
       LEFT JOIN 
         post_keywords pk ON p.slug = pk.slug
+      LEFT JOIN
+        views v ON p.slug = v.slug
       GROUP BY 
         p.slug
     )
@@ -141,8 +144,8 @@ export const getPosts = ({
 
   return fromPromise(
     promise,
-    () => ({
-      message: "Error fetching posts.",
+    (error) => ({
+      message: "Error fetching posts. " + (error as Error).message,
       code: "DATABASE_ERROR",
     } as ContentError),
   )

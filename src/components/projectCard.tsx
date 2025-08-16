@@ -15,13 +15,13 @@ import { components, options } from '@/config/mdxRemoteSettings';
 import { getPlaceholder } from "@/lib/images";
 import { Post } from '@/config/types';
 
-export default async function ProjectCard({ props }: { props: Post }) {
+export default async function ProjectCard({ props, className }: { props: Post, className?: string }) {
   const coverImage = props.coverSquare || '/images/favicon.png';
   const coverUrl = coverImage[0] === '/' ? coverImage : `/${coverImage}`;
   const placeholder = await getPlaceholder(coverImage);
 
   return (
-    <Card>
+    <Card className={className}>
       <div className="m-2">
         {coverUrl && <Image
           alt={`Project ${props.title}'s cover square image`}
