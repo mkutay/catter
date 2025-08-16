@@ -33,7 +33,6 @@ export const siteConfig = {
   url: 'https://www.mkutay.dev',
   name: 'The Deterministic',
   author: 'Mehmet Kutay Bozkurt',
-  authorEmail: 'hello@mkutay.dev',
   description: 'A blog that talks about various things from mathematics to computer science and from philosophy to life updates.',
   navItems: [
     { label: 'About', href: '/about' },

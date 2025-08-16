@@ -12,8 +12,8 @@ export async function GET() {
     generator: 'RSS for Node and Next.js',
     feed_url: `${siteConfig.url}/feed.xml`,
     site_url: siteConfig.url,
-    managingEditor: `${siteConfig.authorEmail} (${siteConfig.author})`,
-    webMaster: `${siteConfig.authorEmail} (${siteConfig.author})`,
+    managingEditor: `${siteConfig.author}`,
+    webMaster: `${siteConfig.author}`,
     copyright: `Copyright ${new Date().getFullYear().toString()}, ${siteConfig.author}`,
     language: 'en-UK',
     pubDate: new Date().toISOString().split('T')[0],
@@ -29,7 +29,7 @@ export async function GET() {
       description: post.description,
       url: `${siteConfig.url}/posts/${post.slug}`,
       date: new Date(post.date).toISOString().split('T')[0],
-      author: `${siteConfig.authorEmail} (${siteConfig.author})`,
+      author: `${siteConfig.author}`,
       categories: post.tags || [],
     });
   });
