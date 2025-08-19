@@ -15,6 +15,7 @@ import { TypographyLarge, TypographyParagraph } from '@/components/typography/pa
 import { getPlaceholder } from '@/lib/images';
 import { TypographyHr } from '@/components/typography/blockquote';
 import ProjectCard from '@/components/projectCard';
+import { Button } from '@/components/ui/button';
 
 export const dynamic = 'force-static';
 
@@ -80,6 +81,42 @@ export default async function Home() {
       </div>
       <TypographyHr className="md:my-6 my-3" />
       <Projects projects={posts.filter((post) => post.tags.includes("project"))} />
+      <TypographyHr className="md:my-6 my-3" />
+      <div className="md:max-w-6xl max-w-prose mx-auto w-full px-4">
+        <h1 className="scroll-m-20 text-4xl font-normal italic tracking-tight lg:text-5xl text-right">Recently Published</h1>
+        <div className="max-w-prose">
+          <div className="flex flex-col gap-6 md:mt-12 mt-6">
+            {posts
+              .filter((post) => !allShownPosts.includes(post) && siteConfig.homePage.firstSlug !== post.slug && !post.tags.includes("project"))
+              .sort((a, b) => {
+                return new Date(b.date).getTime() - new Date(a.date).getTime();
+              })
+              .splice(0, 5)
+              .map((post) => (
+              <div key={post.slug} className="flex flex-col gap-4">
+                <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight first:mt-0 mt-6">
+                  <Link href={`/posts/${post.slug}`} className="hover:text-foreground/80 transition-all">
+                    {post.title}
+                  </Link>
+                </h2>
+                <h3 className="text-muted-foreground italic font-medium">
+                  {post.description}
+                </h3>
+                <div>
+                  <MDXRemote source={post.excerpt} options={options} components={components}/>
+                </div>
+                <div className="flex flex-row justify-end">
+                  <Button asChild variant="outline" size="default" className="w-fit">
+                    <Link href={`/posts/${post.slug}`}>
+                      {`Read More: ${post.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -182,11 +219,11 @@ async function PostDisplay({
 function Projects({ projects }: { projects: Post[] }) {
   return (
     <div className="md:max-w-6xl max-w-prose mx-auto w-full px-4">
-      <TypographyH1 className="mb-8">
+      <h1 className="md:mb-12 mb-6 scroll-m-20 text-4xl font-normal italic tracking-tight lg:text-5xl text-right">
         Projects
-      </TypographyH1>
+      </h1>
       <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
-        {projects.map((project) => (
+        {projects.splice(0, 12).map((project) => (
           <ProjectCard key={project.slug} props={project} />
         ))}
       </div>
