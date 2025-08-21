@@ -22,7 +22,7 @@ export default async function ProjectCard({ props, className }: { props: Post, c
   const placeholder = await getPlaceholder(coverImage);
 
   const formattedTitle = props.shortened
-    ?.toLowerCase()
+    .toLowerCase()
     .split(' ')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ') || 'Learn More';
@@ -30,34 +30,35 @@ export default async function ProjectCard({ props, className }: { props: Post, c
   return (
     <Card className={className}>
       <div className="m-2">
-        {coverUrl && <Image
-          alt={`Project ${props.title}'s cover square image`}
-          src={`/api${coverUrl}`}
-          className="rounded-xl shadow-md"
-          quality={50}
-          width={placeholder.metadata.width}
-          height={placeholder.metadata.height}
-          priority={true}
-          placeholder={placeholder.base64 as `data:image/${string}`}
-        />}
+        {coverUrl && <Link href={`/posts/${props.slug}`}>
+          <Image
+            alt={`Project ${props.title}'s cover square image`}
+            src={`/api${coverUrl}`}
+            className="rounded-xl shadow-md"
+            quality={50}
+            width={placeholder.metadata.width}
+            height={placeholder.metadata.height}
+            priority={true}
+            placeholder={placeholder.base64 as `data:image/${string}`}
+          />
+        </Link>}
       </div>
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
-        <CardDescription>{props.description}</CardDescription>
+        <CardDescription className="line-clamp-2">{props.description}</CardDescription>
       </CardHeader>
       <CardContent className="[&_p]:line-clamp-4">
         <MDXRemote source={props.excerpt} options={options} components={components} />
       </CardContent>
       <CardFooter>
-        <Button 
-          asChild 
-          variant="ghost" 
-          size="sm" 
+        <Button
+          asChild
+          variant="outline"
           className="w-full justify-between group/btn hover:bg-primary/5"
         >
           <Link href={`/posts/${props.slug}`} className="relative z-10">
             <span className="font-medium">{formattedTitle}</span>
-            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-200" />
+            <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-200" />
           </Link>
         </Button>
       </CardFooter>
