@@ -14,11 +14,18 @@ import { Button } from '@/components/ui/button';
 import { components, options } from '@/config/mdxRemoteSettings';
 import { getPlaceholder } from "@/lib/images";
 import { Post } from '@/config/types';
+import { ArrowRight } from "lucide-react";
 
 export default async function ProjectCard({ props, className }: { props: Post, className?: string }) {
   const coverImage = props.coverSquare || '/images/favicon.png';
   const coverUrl = coverImage[0] === '/' ? coverImage : `/${coverImage}`;
   const placeholder = await getPlaceholder(coverImage);
+
+  const formattedTitle = props.shortened
+    ?.toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ') || 'Learn More';
 
   return (
     <Card className={className}>
@@ -38,13 +45,19 @@ export default async function ProjectCard({ props, className }: { props: Post, c
         <CardTitle>{props.title}</CardTitle>
         <CardDescription>{props.description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <MDXRemote source={props.excerpt} options={options} components={components}/>
+      <CardContent className="[&_p]:line-clamp-4">
+        <MDXRemote source={props.excerpt} options={options} components={components} />
       </CardContent>
       <CardFooter>
-        <Button asChild variant="outline">
-          <Link href={`/posts/${props.slug}`} className="text-foreground">
-            {`Read More: ${props.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
+        <Button 
+          asChild 
+          variant="ghost" 
+          size="sm" 
+          className="w-full justify-between group/btn hover:bg-primary/5"
+        >
+          <Link href={`/posts/${props.slug}`} className="relative z-10">
+            <span className="font-medium">{formattedTitle}</span>
+            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-200" />
           </Link>
         </Button>
       </CardFooter>

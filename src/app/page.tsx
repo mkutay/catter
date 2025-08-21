@@ -13,7 +13,6 @@ import { ViewDisplay } from '@/components/viewDisplay';
 import { TypographyH1 } from '@/components/typography/headings';
 import { TypographyLarge, TypographyParagraph } from '@/components/typography/paragraph';
 import { getPlaceholder } from '@/lib/images';
-import { TypographyHr } from '@/components/typography/blockquote';
 import ProjectCard from '@/components/projectCard';
 import { Button } from '@/components/ui/button';
 
@@ -43,80 +42,95 @@ export default async function Home() {
   const allShownPosts = [middle, ...leftSide, ...rightSide];
 
   return (
-    <div className="flex flex-col gap-6 md:mt-6 mt-0 mb-12">
-      <FirstPost post={firstPost} />
-      <div className="bg-primary text-primary-foreground w-full h-fit md:py-20 py-8">
-        <div className="md:max-w-6xl max-w-prose mx-auto px-4 w-full flex md:flex-row flex-col gap-6 items-center">
-          <TypographyH1 className="md:w-2/3 w-full not-italic">
-            Hey, I&apos;m <span className="italic">Kutay</span>!
-          </TypographyH1>
-          <div>
-            <TypographyParagraph className="md:text-xl text-lg">
-              Welcome to The Deterministic. I share some interesting stuff about mathematics, computer science, and life in general.
-            </TypographyParagraph>
-          </div>
-        </div>
-      </div>
-      <div className="flex md:flex-row flex-col gap-6 md:max-w-6xl max-w-prose mx-auto px-4">
-        <div className="w-1/4 md:flex flex-col gap-12 hidden">
-          {leftSide.map((post) => (
-            <PostDisplay key={post.slug} post={post} />
-          ))}
-        </div>
-        <div className="md:w-1/2 w-full">
-          <PostDisplay post={middle} isMiddle />
-        </div>
-        <div className="w-1/4 md:flex flex-col gap-12 hidden">
-          {rightSide.map((post) => (
-            <PostDisplay key={post.slug} post={post} />
-          ))}
-        </div>
-        <div className="md:hidden grid sm:grid-cols-2 grid-cols-1 sm:gap-6 gap-12 w-full">
-          {allShownPosts.slice(1).map((post) => (
-            <div key={post.slug}>
-              <PostDisplay post={post} />
-            </div>
-          ))}
-        </div>
-      </div>
-      <TypographyHr className="md:my-6 my-3" />
-      <Projects projects={posts.filter((post) => post.tags.includes("project"))} />
-      <TypographyHr className="md:my-6 my-3" />
-      <div className="md:max-w-6xl max-w-prose mx-auto w-full px-4">
-        <h1 className="scroll-m-20 text-4xl font-normal italic tracking-tight lg:text-5xl text-right">Recently Published</h1>
-        <div className="max-w-prose">
-          <div className="flex flex-col gap-6 md:mt-12 mt-6">
-            {posts
-              .filter((post) => !allShownPosts.includes(post) && siteConfig.homePage.firstSlug !== post.slug && !post.tags.includes("project"))
-              .sort((a, b) => {
-                return new Date(b.date).getTime() - new Date(a.date).getTime();
-              })
-              .splice(0, 5)
-              .map((post) => (
-              <div key={post.slug} className="flex flex-col gap-4">
-                <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight first:mt-0 mt-6">
-                  <Link href={`/posts/${post.slug}`} className="hover:text-foreground/80 transition-all">
-                    {post.title}
-                  </Link>
-                </h2>
-                <h3 className="text-muted-foreground italic font-medium">
-                  {post.description}
-                </h3>
-                <div>
-                  <MDXRemote source={post.excerpt} options={options} components={components}/>
-                </div>
-                <div className="flex flex-row justify-end">
-                  <Button asChild variant="outline" size="default" className="w-fit">
-                    <Link href={`/posts/${post.slug}`}>
-                      {`Read More: ${post.shortened.toLowerCase().split(' ').map(function(word) { return word[0].toUpperCase() + word.slice(1); }).join(' ')}`}
-                    </Link>
-                  </Button>
-                </div>
+    <div className="min-h-screen">
+      <section className="py-12 md:py-20">
+        <FirstPost post={firstPost} />
+      </section>
+
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/2 to-transparent" />
+        <div className="relative bg-primary/95 backdrop-blur-sm text-primary-foreground">
+          <div className="md:max-w-6xl max-w-prose mx-auto px-4 py-16 md:py-24">
+            <div className="flex md:flex-row flex-col items-center">
+              <div className="md:w-3/5 w-full">
+                <TypographyH1 className="not-italic text-5xl md:text-6xl lg:text-7xl font-light tracking-tight">
+                  Hey, I&apos;m{' '}
+                  <span className="italic font-normal bg-gradient-to-r from-primary-foreground to-primary-foreground/80 bg-clip-text">
+                    Kutay
+                  </span>
+                  !
+                </TypographyH1>
               </div>
-            ))}
+              <div className="md:w-2/5 w-full">
+                <TypographyParagraph className="text-lg md:text-xl leading-relaxed text-primary-foreground/90">
+                  Welcome to The Deterministic. I share thoughts on mathematics, 
+                  computer science, and the patterns that connect them.
+                </TypographyParagraph>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
+
+      <section className="py-16 md:py-24">
+        <div className="md:max-w-6xl max-w-prose mx-auto px-4">
+          <div className="flex md:flex-row flex-col gap-8">
+            {/* Left Sidebar */}
+            <aside className="w-full md:w-1/4 hidden md:block space-y-12">
+              {leftSide.map((post) => (
+                <PostDisplay key={post.slug} post={post} />
+              ))}
+            </aside>
+
+            {/* Main Content */}
+            <main className="md:w-1/2 w-full">
+              <PostDisplay post={middle} isMiddle />
+            </main>
+
+            {/* Right Sidebar */}
+            <aside className="w-full md:w-1/4 hidden md:block space-y-12">
+              {rightSide.map((post) => (
+                <PostDisplay key={post.slug} post={post} />
+              ))}
+            </aside>
+
+            {/* Mobile Grid */}
+            <div className="md:hidden grid sm:grid-cols-2 grid-cols-1 gap-6 w-full">
+              {allShownPosts.slice(1).map((post) => (
+                <PostDisplay key={post.slug} post={post} isMiddle />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="md:max-w-6xl max-w-prose mx-auto px-4">
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       </div>
+
+      {/* Projects Section */}
+      <section className="py-16 md:py-24">
+        <Projects projects={posts.filter((post) => post.tags.includes("project"))} />
+      </section>
+
+      <div className="md:max-w-6xl max-w-prose mx-auto px-4">
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      </div>
+
+      {/* Recent Posts Section */}
+      <section className="py-16 md:py-24">
+        <RecentPosts 
+          posts={posts
+            .filter((post) => 
+              !allShownPosts.includes(post) && 
+              siteConfig.homePage.firstSlug !== post.slug && 
+              !post.tags.includes("project")
+            )
+            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+            .slice(0, 5)
+          }
+        />
+      </section>
     </div>
   )
 }
@@ -127,36 +141,50 @@ async function FirstPost({ post }: { post: Post }) {
   const coverUrl = coverImage ? coverImage[0] === '/' ? coverImage : `/${coverImage}` : null;
 
   return (
-    <div className="md:max-w-6xl max-w-prose mx-auto px-4 flex md:flex-row flex-col justify-between gap-6 items-center">
-      {placeholder && coverUrl && <Image
-        src={`/api${coverUrl}`}
-        alt={`${post.title} post cover image`}
-        quality={60}
-        className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm lg:max-w-lg md:max-w-sm w-full object-contain"
-        width={placeholder.metadata.width}
-        height={placeholder.metadata.height}
-        priority={true}
-        placeholder={placeholder.base64 as `data:image/${string}`}
-      />}
-      <div className="flex flex-col gap-4 w-full justify-between">
-        <div className="flex flex-col md:gap-4 gap-2 w-full">
-          <Link className="group flex flex-col gap-2" href={`/posts/${post.slug}`}>
-            <h1 className="lg:text-6xl/tight md:text-5xl text-4xl font-normal tracking-tighter text-stroke-medium text-stroke-background fix-text-stroke">
-              <span className="lg:bg-[0%_93%] md:bg-[0%_90%] bg-[0%_89%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+    <div className="md:max-w-6xl max-w-prose mx-auto px-4">
+      <div className="flex md:flex-row flex-col gap-8 md:gap-12 items-start">
+
+        {placeholder && coverUrl && (
+          <div className="md:w-1/2 w-full">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-primary/10 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-300" />
+              <Image
+                src={`/api${coverUrl}`}
+                alt={`${post.title} post cover image`}
+                quality={75}
+                className="relative rounded-lg shadow-lg object-cover w-full aspect-[4/3]"
+                width={placeholder.metadata.width}
+                height={placeholder.metadata.height}
+                priority={true}
+                placeholder={placeholder.base64 as `data:image/${string}`}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="md:w-1/2 w-full space-y-6">
+          <Link className="group block" href={`/posts/${post.slug}`}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight">
+              <span className="bg-gradient-to-r from-foreground to-foreground bg-[length:0%_2px] bg-[position:0%_100%] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-700 ease-out">
                 {post.title}
               </span>
             </h1>
-            <TypographyLarge>
+            <TypographyLarge className="mt-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300">
               {post.description}
             </TypographyLarge>
           </Link>
-          <MDXRemote source={post.shortExcerpt || post.excerpt} options={options} components={components} />
-        </div>
-        <div className="flex justify-between flex-row items-center flex-wrap text-md text-foreground tracking-tight font-light">
-          <ViewDisplay slug={post.slug} />
-          <p>
-            {format(post.date, 'PP')}
-          </p>
+
+          <div className="prose prose-sm max-w-none text-muted-foreground">
+            <MDXRemote source={post.shortExcerpt || post.excerpt} options={options} components={components} />
+          </div>
+
+          <div className="flex justify-between items-center pt-4 text-sm text-muted-foreground border-t border-border/50">
+            <ViewDisplay slug={post.slug} />
+            <time dateTime={post.date}>
+              {format(new Date(post.date), 'PPP')}
+            </time>
+          </div>
         </div>
       </div>
     </div>
@@ -218,13 +246,66 @@ async function PostDisplay({
 
 function Projects({ projects }: { projects: Post[] }) {
   return (
-    <div className="md:max-w-6xl max-w-prose mx-auto w-full px-4">
-      <h1 className="md:mb-12 mb-6 scroll-m-20 text-4xl font-normal italic tracking-tight lg:text-5xl text-right">
-        Projects
-      </h1>
-      <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
-        {projects.splice(0, 12).map((project) => (
-          <ProjectCard key={project.slug} props={project} />
+    <div className="md:max-w-6xl max-w-prose mx-auto px-4">
+      <div className="text-center mb-12 md:mb-16">
+        <h2 className="text-4xl md:text-5xl font-light italic tracking-tight text-foreground/90">
+          Projects
+        </h2>
+        <div className="w-24 h-px bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
+      </div>
+      <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
+        {projects.slice(0, 12).map((project) => (
+          <div key={project.slug} className="group">
+            <ProjectCard props={project} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RecentPosts({ posts }: { posts: Post[] }) {
+  return (
+    <div className="md:max-w-6xl max-w-prose mx-auto px-4">
+      <div className="text-center mb-12 md:mb-16">
+        <h2 className="text-4xl md:text-5xl font-light italic tracking-tight text-foreground/90">
+          Recently Published
+        </h2>
+        <div className="w-24 h-px bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
+      </div>
+      
+      <div className="max-w-prose space-y-12">
+        {posts.map((post) => (
+          <article key={post.slug} className="group border-b border-border/30 pb-12 last:border-b-0">
+            <header className="mb-6">
+              <h3 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mb-3">
+                <Link href={`/posts/${post.slug}`} className="hover:text-foreground/80 transition-all">
+                  {post.title}
+                </Link>
+              </h3>
+              <p className="text-lg text-muted-foreground italic leading-relaxed">
+                {post.description}
+              </p>
+            </header>
+
+            <div className="prose prose-sm max-w-none text-muted-foreground mb-6">
+              <MDXRemote source={post.excerpt} options={options} components={components}/>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <time className="text-sm text-muted-foreground" dateTime={post.date}>
+                {format(new Date(post.date), 'PPP')}
+              </time>
+              <Button asChild variant="ghost" size="sm" className="group/btn">
+                <Link href={`/posts/${post.slug}`}>
+                  <span>Read More</span>
+                  <svg className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </Button>
+            </div>
+          </article>
         ))}
       </div>
     </div>
