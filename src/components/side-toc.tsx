@@ -203,7 +203,7 @@ export function SideTOC({ toc }: { toc: TocItem[] }) {
       </div>
 
       {!isCollapsed && (
-        <div className="border rounded-lg bg-card border-border backdrop-blur-sm">
+        <div className="border rounded-lg bg-card border-border backdrop-blur-xs">
           {shouldUseScrollArea ? (
             <ScrollArea className="h-[70vh]">
               {tocContent}

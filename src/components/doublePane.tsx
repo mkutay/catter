@@ -55,7 +55,7 @@ export default function DoublePane({
 function EmailSubButton() {
   return (
     <div className="flex flex-col gap-4">
-      {/* <p className="text-lg leading-7 [&:not(:first-child)]:mt-6">
+      {/* <p className="text-lg leading-7 not-first:mt-6">
         Subscribe to my newsletter to get updates on new posts and email only specials.
       </p> */}
       <Button variant="secondary" size="lg" className="flex mx-auto" asChild>
@@ -70,7 +70,7 @@ function EmailSubButton() {
 
 function FollowNext() {
   return (
-    <div className="text-primary group pl-0 hover:pl-2 transition-all animate-in flex flex-row items-center flex-grow justify-end">
+    <div className="text-primary group pl-0 hover:pl-2 transition-all animate-in flex flex-row items-center grow justify-end">
       <div className="pr-4 group-hover:pr-2 transition-all animate-in">
         <ArrowRight stroke="currentColor" strokeWidth="2px" width="18px" height="18px"/>
       </div>

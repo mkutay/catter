@@ -117,7 +117,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           {coverImage && placeholder && (<div className="my-6"><Image
             alt={`${props.title} post cover image`}
             src={`/api${coverUrl}`}
-            className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
+            className="lg:rounded-md rounded-sm lg:shadow-md shadow-xs"
             width={placeholder.metadata.width}
             height={placeholder.metadata.height}
             priority={true}

@@ -65,7 +65,7 @@ async function GuestbookEntries() {
     console.error("Error in displaying guestbook entries in /guestbook:", entriesResult.error.message);
     return (
       <div>
-        <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+        <p className="font-normal leading-7 not-first:mt-6 text-destructive">
           There was an error loading the guestbook entries. Please try again later.
         </p>
       </div>
@@ -77,7 +77,7 @@ async function GuestbookEntries() {
   return (
     <div>
       {entries.map((entry: EntryData) => (
-        <p key={entry.id} className="w-full break-words lg:text-lg text-md leading-7 [&:not(:first-child)]:mt-2">
+        <p key={entry.id} className="w-full break-words lg:text-lg text-md leading-7 not-first:mt-2">
           <span className={cn(
             "mr-1 font-bold tracking-tight",
             (entry.color === '' || entry.color === null) ? 'text-foreground' : `text-${entry.color}`
@@ -98,7 +98,7 @@ function GuestbookEntriesFallback() {
 
   for (let i = 0; i < 8; i++) {
     entries.push(
-      <Skeleton key={i} className="h-6 w-full leading-7 [&:not(:first-child)]:mt-4"/>
+      <Skeleton key={i} className="h-6 w-full leading-7 not-first:mt-4"/>
     );
   }
 

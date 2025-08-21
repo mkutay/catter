@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export function TypographyParagraph(props: DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>) {
   return (
-    <p {...props} className={cn("leading-7 [&:not(:first-child)]:mt-6 font-normal", props.className)}>
+    <p {...props} className={cn("leading-7 not-first:mt-6 font-normal", props.className)}>
       {props.children}
     </p>
   );

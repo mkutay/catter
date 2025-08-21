@@ -1,37 +1,129 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-/* fixes stroke around text in the home page */
-.fix-text-stroke {
-  paint-order: stroke fill;
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-rosewater: hsl(var(--rosewater));
+  --color-flamingo: hsl(var(--flamingo));
+  --color-pink: hsl(var(--pink));
+  --color-mauve: hsl(var(--mauve));
+  --color-red: hsl(var(--red));
+  --color-maroon: hsl(var(--maroon));
+  --color-peach: hsl(var(--peach));
+  --color-yellow: hsl(var(--yellow));
+  --color-green: hsl(var(--green));
+  --color-teal: hsl(var(--teal));
+  --color-sky: hsl(var(--sky));
+  --color-sapphire: hsl(var(--sapphire));
+  --color-blue: hsl(var(--blue));
+  --color-lavender: hsl(var(--lavender));
+  --color-text: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
 }
 
-/* Style the footnotes section. */
-[data-footnotes] {
-  @apply mt-6;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-[data-footnote-backref] {
-  @apply no-underline;
-}
+@layer utilities {
+  /* fixes stroke around text in the home page */
+  .fix-text-stroke {
+    paint-order: stroke fill;
+  }
 
-[data-footnote-ref] {
-  @apply no-underline;
-}
+  /* Style the footnotes section. */
+  [data-footnotes] {
+    @apply mt-6;
+  }
 
-/* Place `[` and `]` around footnote references. */
-[data-footnote-ref]::before {
-  content: '[';
-}
+  [data-footnote-backref] {
+    @apply no-underline;
+  }
 
-[data-footnote-ref]::after {
-  content: ']';
-}
+  [data-footnote-ref] {
+    @apply no-underline;
+  }
 
-/* fixes the colour for latex text in posts */
-.katex-display {
-  @apply text-foreground;
+  /* Place `[` and `]` around footnote references. */
+  [data-footnote-ref]::before {
+    content: '[';
+  }
+
+  [data-footnote-ref]::after {
+    content: ']';
+  }
+
+  /* fixes the colour for latex text in posts */
+  .katex-display {
+    @apply text-foreground;
+  }
 }
 
 @layer base {

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 export function TypographyH1(props: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>) {
   return (
-    <h1 {...props} className={cn("scroll-m-20 text-4xl font-normal italic tracking-tight lg:text-5xl [&:not(:first-child)]:mt-12", props.className)}>
+    <h1 {...props} className={cn("scroll-m-20 text-4xl font-normal italic tracking-tight lg:text-5xl not-first:mt-12", props.className)}>
       {props.children}
     </h1>
   );

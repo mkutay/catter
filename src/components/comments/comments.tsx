@@ -105,7 +105,7 @@ export function Comment({
   return (
     <div id={comment.id} className="flex flex-col gap-2 w-full">
       <Label>{`${comment.created_by} on ${format(comment.created_at, 'PP')}`}</Label>
-      <div className="border border-border shadow-sm rounded-md px-3 py-2">
+      <div className="border border-border shadow-xs rounded-md px-3 py-2">
         {comment.body}
       </div>
       {owns && (

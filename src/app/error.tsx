@@ -12,7 +12,7 @@ export default function Error({
       <TypographyH1>
         Error
       </TypographyH1>
-      <p className="leading-7 [&:not(:first-child)]:mt-6 text-lg">
+      <p className="leading-7 not-first:mt-6 text-lg">
         Oh no, something went wrong... Maybe refresh?
       </p>
       <p className="leading-7 mt-12 text-sm text-muted-foreground/80">

@@ -44,12 +44,12 @@ export default async function Page() {
     <DoublePane>
       <TypographyH1>Admin</TypographyH1>
       <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6 mb-2">Guestbook</h2>
-      {(entries.isErr() ? <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+      {(entries.isErr() ? <p className="font-normal leading-7 not-first:mt-6 text-destructive">
           Could not display guestbook entries. Please try again later.
         </p> : <GuestbookAdminForm entries={entries.value} />
       )}
       <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6">Comments</h2>
-      {(comments.isErr() ? <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+      {(comments.isErr() ? <p className="font-normal leading-7 not-first:mt-6 text-destructive">
           Could not display comments. Please try again later.
         </p> : <CommentsAdmin comments={comments.value} />
       )}

@@ -12,7 +12,7 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
   if (viewsResult.isErr()) {
     console.error("Error in getting the view count in MostViewedPosts:", viewsResult.error.message);
     return (
-      <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+      <p className="font-normal leading-7 not-first:mt-6 text-destructive">
         Sorry. Could not fetch the most viewed posts.
       </p>
     );
@@ -33,7 +33,7 @@ export async function MostViewedPosts({ postNum }: { postNum: number }) {
   if (posts.isErr()) {
     console.error("Error in getting the posts in MostViewedPosts:", posts.error.message);
     return (
-      <p className="font-normal leading-7 [&:not(:first-child)]:mt-6 text-destructive">
+      <p className="font-normal leading-7 not-first:mt-6 text-destructive">
         Sorry. Could not fetch the most viewed posts.
       </p>
     );

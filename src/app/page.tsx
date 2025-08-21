@@ -48,14 +48,14 @@ export default async function Home() {
       </section>
 
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-primary/2 to-transparent" />
-        <div className="relative bg-primary/95 backdrop-blur-sm text-primary-foreground">
+        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-primary/2 to-transparent" />
+        <div className="relative bg-primary/95 backdrop-blur-xs text-primary-foreground">
           <div className="md:max-w-6xl max-w-prose mx-auto px-4 py-16 md:py-24">
             <div className="flex md:flex-row flex-col items-center">
               <div className="md:w-3/5 w-full">
                 <TypographyH1 className="not-italic text-5xl md:text-6xl lg:text-7xl font-light tracking-tight">
                   Hey, I&apos;m{' '}
-                  <span className="italic font-normal bg-gradient-to-r from-primary-foreground to-primary-foreground/80 bg-clip-text">
+                  <span className="italic font-normal bg-linear-to-r from-primary-foreground to-primary-foreground/80 bg-clip-text">
                     Kutay
                   </span>
                   !
@@ -105,7 +105,7 @@ export default async function Home() {
       </section>
 
       <div className="md:max-w-6xl max-w-prose mx-auto px-4">
-        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="h-px bg-linear-to-r from-transparent via-border to-transparent" />
       </div>
 
       {/* Projects Section */}
@@ -114,7 +114,7 @@ export default async function Home() {
       </section>
 
       <div className="md:max-w-6xl max-w-prose mx-auto px-4">
-        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="h-px bg-linear-to-r from-transparent via-border to-transparent" />
       </div>
 
       {/* Recent Posts Section */}
@@ -147,12 +147,12 @@ async function FirstPost({ post }: { post: Post }) {
         {placeholder && coverUrl && (
           <div className="md:w-1/2 w-full">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-primary/10 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-300" />
+              <div className="absolute -inset-1 bg-linear-to-r from-primary/20 to-primary/10 rounded-xl blur-sm opacity-25 group-hover:opacity-40 transition duration-300" />
               <Image
                 src={`/api${coverUrl}`}
                 alt={`${post.title} post cover image`}
                 quality={75}
-                className="relative rounded-lg shadow-lg object-cover w-full aspect-[4/3]"
+                className="relative rounded-lg shadow-lg object-cover w-full aspect-4/3"
                 width={placeholder.metadata.width}
                 height={placeholder.metadata.height}
                 priority={true}
@@ -166,7 +166,7 @@ async function FirstPost({ post }: { post: Post }) {
         <div className="md:w-1/2 w-full space-y-6">
           <Link className="group block" href={`/posts/${post.slug}`}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight leading-tight">
-              <span className="bg-gradient-to-r from-foreground to-foreground bg-[length:0%_2px] bg-[position:0%_100%] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-700 ease-out">
+              <span className="bg-linear-to-r from-foreground to-foreground bg-size-[0%_2px] bg-position-[0%_100%] bg-no-repeat group-hover:bg-size-[100%_2px] transition-all duration-700 ease-out">
                 {post.title}
               </span>
             </h1>
@@ -209,7 +209,7 @@ async function PostDisplay({
           src={`/api${coverUrl}`}
           alt={`${post.title} post cover image`}
           quality={60}
-          className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm"
+          className="lg:rounded-md rounded-sm lg:shadow-md shadow-xs"
           width={placeholder.metadata.width}
           height={placeholder.metadata.height}
           priority={true}
@@ -217,13 +217,13 @@ async function PostDisplay({
         />}
         {isMiddle ? (
           <h2 className="lg:text-5xl/tight md:text-4xl text-4xl font-normal tracking-tighter text-stroke-medium text-stroke-background fix-text-stroke">
-            <span className="lg:bg-[0%_93%] md:bg-[0%_90%] bg-[0%_89%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+            <span className="lg:bg-position-[0%_93%] md:bg-position-[0%_90%] bg-position-[0%_89%] bg-linear-to-r text-foreground from-foreground to-foreground lg:bg-size-[0%_3px] bg-size-[0%_2px] bg-no-repeat lg:group-hover:bg-size-[100%_3px] group-hover:bg-size-[100%_2px] transition-all duration-500 ease-out">
               {post.title}
             </span>
           </h2>
         ) : (
           <h2 className="scroll-m-20 text-2xl font-medium tracking-tight text-foreground text-stroke-medium text-stroke-background fix-text-stroke">
-            <span className="bg-[0%_93%] bg-gradient-to-r from-foreground to-foreground bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+            <span className="bg-position-[0%_93%] bg-linear-to-r from-foreground to-foreground bg-size-[0%_2px] bg-no-repeat group-hover:bg-size-[100%_2px] transition-all duration-500 ease-out">
               {post.title}
             </span>
           </h2>
@@ -251,7 +251,7 @@ function Projects({ projects }: { projects: Post[] }) {
         <h2 className="text-4xl md:text-5xl font-light italic tracking-tight text-foreground/90">
           Projects
         </h2>
-        <div className="w-24 h-px bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
+        <div className="w-24 h-px bg-linear-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
       </div>
       <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
         {projects.slice(0, 12).map((project) => (
@@ -271,7 +271,7 @@ function RecentPosts({ posts }: { posts: Post[] }) {
         <h2 className="text-4xl md:text-5xl font-light italic tracking-tight text-foreground/90">
           Recently Published
         </h2>
-        <div className="w-24 h-px bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
+        <div className="w-24 h-px bg-linear-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
       </div>
       
       <div className="max-w-prose space-y-12">
