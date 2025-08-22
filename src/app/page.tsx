@@ -173,7 +173,7 @@ async function FirstPost({ post }: { post: Post }) {
               </TypographyLarge>
             </Link>
 
-            <div className="prose prose-sm max-w-none text-muted-foreground">
+            <div className="max-w-none text-muted-foreground">
               <MDXRemote source={post.shortExcerpt || post.excerpt} options={options} components={components} />
             </div>
           </div>
@@ -287,7 +287,7 @@ function RecentPosts({ posts }: { posts: Post[] }) {
               </p>
             </header>
 
-            <div className="prose prose-sm max-w-none text-muted-foreground mb-6">
+            <div className="max-w-none text-muted-foreground mb-6">
               <MDXRemote source={post.excerpt} options={options} components={components}/>
             </div>
 
