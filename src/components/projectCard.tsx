@@ -6,7 +6,6 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from '@/components/ui/card';
@@ -39,7 +38,9 @@ export default async function ProjectCard({ props, className }: { props: Post, c
       </div>
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
-        <CardDescription className="line-clamp-2">{props.description}</CardDescription>
+        <div className="[&_p]:line-clamp-2 text-sm text-muted-foreground">
+          <MDXRemote source={props.description} options={options} />
+        </div>
       </CardHeader>
       <CardContent className="[&_p]:line-clamp-4">
         <MDXRemote source={props.excerpt} options={options} components={components} />
