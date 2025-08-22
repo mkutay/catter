@@ -74,7 +74,7 @@ export function GuestbookDialog() {
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Customize Your Guestbook EntryData</DialogTitle>
+          <DialogTitle>Customize Your Guestbook Entry Data</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="lg:space-y-4 space-y-2">

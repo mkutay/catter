@@ -94,7 +94,7 @@ export function DeleteComment({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely you want to delete the comment?</DialogTitle>
+          <DialogTitle>Are you absolutely sure you want to delete this comment?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. This will permanently delete the comment.
           </DialogDescription>
