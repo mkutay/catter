@@ -21,12 +21,6 @@ export default async function ProjectCard({ props, className }: { props: Post, c
   const coverUrl = coverImage[0] === '/' ? coverImage : `/${coverImage}`;
   const placeholder = await getPlaceholder(coverImage);
 
-  const formattedTitle = props.shortened
-    .toLowerCase()
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ') || 'Learn More';
-
   return (
     <Card className={className}>
       <div className="m-2">
@@ -57,7 +51,7 @@ export default async function ProjectCard({ props, className }: { props: Post, c
           className="w-full justify-between group/btn hover:bg-primary/5"
         >
           <Link href={`/posts/${props.slug}`} className="relative z-10">
-            <span className="font-medium">{formattedTitle}</span>
+            <span className="font-medium font-mono">{props.shortened}</span>
             <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-200" />
           </Link>
         </Button>

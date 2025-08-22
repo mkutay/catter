@@ -51,7 +51,7 @@ export default async function Home() {
         <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-primary/2 to-transparent" />
         <div className="relative bg-primary/95 backdrop-blur-xs text-primary-foreground">
           <div className="md:max-w-6xl max-w-prose mx-auto px-4 py-16 md:py-24">
-            <div className="flex md:flex-row flex-col items-center">
+            <div className="flex md:flex-row flex-col md:gap-0 gap-8 items-center">
               <div className="md:w-3/5 w-full">
                 <TypographyH1 className="not-italic text-5xl md:text-6xl lg:text-7xl font-light tracking-tight">
                   Hey, I&apos;m{' '}
