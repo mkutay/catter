@@ -2,8 +2,9 @@ import { getImage } from "@/lib/images";
 
 export async function GET(request: Request, { params }: { params: Promise<{ image: string[] }> }) {
   const { image } = await params;
-  const ext = image[image.length - 1].split('.').pop();
-  const fullUrl = '/' + image.join('/');
+  const decodedImage = image.map(decodeURIComponent);
+  const ext = decodedImage[decodedImage.length - 1].split('.').pop();
+  const fullUrl = '/' + decodedImage.join('/');
   const contentType = 'image/' + ext;
   
   const imageStream = await getImage(fullUrl);
