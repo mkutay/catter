@@ -24,9 +24,26 @@ export async function POST(request: Request) {
     const slug = formData.get("slug") as string;
     const images = formData.getAll("images") as File[];
 
-    for (const image of images) {
-      const buffer = Buffer.from(await image.arrayBuffer());
-      await uploadImage(image.name, buffer, image.size, image.type);
+    // Upload images with better error handling and concurrency control
+    if (images.length > 0) {
+      const uploadPromises = images.map(async (image, index) => {
+        try {
+          const maxSize = 15 * 1024 * 1024; // 15MB
+          if (image.size > maxSize) {
+            throw new Error(`Image ${image.name} is too large. Maximum size is ${maxSize}MB.`);
+          }
+
+          const buffer = Buffer.from(await image.arrayBuffer());
+          await uploadImage(image.name, buffer, image.size, image.type);
+          console.log(`Successfully uploaded image ${index + 1}/${images.length}: ${image.name}`);
+        } catch (error) {
+          console.error(`Failed to upload image ${image.name}:`, error);
+          throw new Error(`Failed to upload image ${image.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+      });
+
+      // Wait for all uploads to complete
+      await Promise.all(uploadPromises);
     }
 
     const post = createPost(content, slug);
@@ -46,9 +63,16 @@ export async function POST(request: Request) {
       }
     });
   } catch (error) {
-    console.error("Error uploading image:", error);
-    return new Response(JSON.stringify({ error: "Failed to upload image" }), {
-      status: 500,
+    console.error("Error in upload API:", error);
+    
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+    const isImageUploadError = errorMessage.includes("Failed to upload image") || errorMessage.includes("too large");
+    
+    return new Response(JSON.stringify({ 
+      error: isImageUploadError ? errorMessage : "Failed to process upload",
+      details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+    }), {
+      status: isImageUploadError ? 400 : 500,
       headers: {
         "Content-Type": "application/json"
       }
