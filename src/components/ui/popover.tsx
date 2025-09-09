@@ -23,9 +23,30 @@ const PopoverContent = React.forwardRef<
         className
       )}
       {...props}
-    />
+    >
+      {props.children}
+    </PopoverPrimitive.Content>
   </PopoverPrimitive.Portal>
 ))
 PopoverContent.displayName = PopoverPrimitive.Content.displayName
 
-export { Popover, PopoverTrigger, PopoverContent }
+const PopoverArrow = React.forwardRef<
+  React.ElementRef<typeof PopoverPrimitive.Arrow>,
+  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Arrow>
+>(({ className, ...props }, ref) => (
+  <PopoverPrimitive.Arrow
+    ref={ref}
+    asChild
+    {...props}
+  >
+    <div
+      className={cn(
+        "bg-background z-100 size-2.5 -translate-y-[5.4px] animate-none rotate-45 rounded-br-sm border-border border-b border-r",
+        className
+      )}
+    />
+  </PopoverPrimitive.Arrow>
+));
+PopoverArrow.displayName = PopoverPrimitive.Arrow.displayName;
+
+export { Popover, PopoverTrigger, PopoverContent, PopoverArrow }
