@@ -10,8 +10,11 @@ export const minioClient = new Minio.Client({
   partSize: 5 * 1024 * 1024, // 5MB part size for multipart uploads
 });
 
+// S3 object keys must not start with a leading slash or signatures will break.
+const normalizeKey = (key: string) => key.replace(/^\/+/, '');
+
 export const getImage = (url: string) => {
-  return minioClient.getObject(process.env.S3_BUCKET_NAME!, url);
+  return minioClient.getObject(process.env.S3_BUCKET_NAME!, normalizeKey(url));
 };
 
 export const fUploadImage = (url: string, path: string) => {
@@ -23,7 +26,7 @@ export const fUploadImage = (url: string, path: string) => {
     'x-amz-acl': 'public-read',
   }
 
-  return minioClient.fPutObject(process.env.S3_BUCKET_NAME!, url, path, metadata);
+  return minioClient.fPutObject(process.env.S3_BUCKET_NAME!, normalizeKey(url), path, metadata);
 };
 
 // Utility function to add timeout to promises
@@ -46,7 +49,7 @@ export const uploadImage = async (url: string, buffer: Buffer, size: number, con
     try {
       // Add 30-second timeout to the upload operation
       await withTimeout(
-        minioClient.putObject(process.env.S3_BUCKET_NAME!, url, buffer, size, metadata),
+        minioClient.putObject(process.env.S3_BUCKET_NAME!, normalizeKey(url), buffer, size, metadata),
         30000 // 30 seconds timeout
       );
       return; // Success, exit the function
