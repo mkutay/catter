@@ -1,8 +1,8 @@
-import fs from 'fs';
-import path from 'path';
+import path from "node:path";
+import fs from "fs";
 
-import { siteConfig } from '@/config/site';
-import { getPosts } from '@/lib/fsContentQueries';
+import { siteConfig } from "@/config/site";
+import { getPosts } from "@/lib/fsContentQueries";
 
 function uppercaseFirstLetter(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -23,9 +23,9 @@ function getImagesFromPostContent(content: string) {
 const posts = getPosts({});
 
 type imageType = {
-  importPath: string,
-  importName: string,
-  slug: string,
+  importPath: string;
+  importName: string;
+  slug: string;
 };
 
 const coverImages: imageType[] = [];
@@ -35,27 +35,27 @@ const postImages: imageType[] = [];
 
 posts.forEach((post) => {
   if (post.meta.coverSquare) {
-    const imagePath = path.join(process.cwd(), 'public', post.meta.coverSquare);
+    const imagePath = path.join(process.cwd(), "public", post.meta.coverSquare);
     if (!fs.existsSync(imagePath)) {
       throw new Error(`Image not found: ${imagePath}`);
     }
 
     coverSquareImages.push({
       importPath: imagePath,
-      importName: "coverSquare" + uppercaseFirstLetter(post.meta.shortened),
+      importName: `coverSquare${uppercaseFirstLetter(post.meta.shortened)}`,
       slug: post.slug,
     });
   }
 
   if (post.meta.cover) {
-    const imagePath = path.join(process.cwd(), 'public', post.meta.cover);
+    const imagePath = path.join(process.cwd(), "public", post.meta.cover);
     if (!fs.existsSync(imagePath)) {
       throw new Error(`Image not found: ${imagePath}`);
     }
 
     coverImages.push({
       importPath: imagePath,
-      importName: "cover" + uppercaseFirstLetter(post.meta.shortened),
+      importName: `cover${uppercaseFirstLetter(post.meta.shortened)}`,
       slug: post.slug,
     });
   }
@@ -63,21 +63,24 @@ posts.forEach((post) => {
   getImagesFromPostContent(post.content).forEach((image) => {
     postImages.push({
       slug: image,
-      importPath: path.join(process.cwd(), 'public', image),
-      importName: image.replace(/\//g, '_').replace(/-/g, '_').replace(/\./g, '_'),
+      importPath: path.join(process.cwd(), "public", image),
+      importName: image
+        .replace(/\//g, "_")
+        .replace(/-/g, "_")
+        .replace(/\./g, "_"),
     });
   });
 });
 
 siteConfig.followNext.forEach((website) => {
-  const imagePath = path.join(process.cwd(), 'public', website.imagePath);
+  const imagePath = path.join(process.cwd(), "public", website.imagePath);
   if (!fs.existsSync(imagePath)) {
     throw new Error(`Image not found: ${imagePath}`);
   }
 
   followNextImages.push({
     importPath: imagePath,
-    importName: "followNext" + uppercaseFirstLetter(website.shortened),
+    importName: `followNext${uppercaseFirstLetter(website.shortened)}`,
     slug: website.shortened,
   });
 });
@@ -91,60 +94,76 @@ function generateImagesCode(): string {
   const postImagesObject = [];
 
   imports.push(`import { StaticImageData } from 'next/image';`);
-  imports.push('');
+  imports.push("");
 
   // Generate imports for cover images
   coverImages.forEach((image) => {
-    const relativePath = image.importPath.split('public')[1].replace(/\\/g, '/');
+    const relativePath = image.importPath
+      .split("public")[1]
+      .replace(/\\/g, "/");
     imports.push(`import ${image.importName} from '@/public${relativePath}';`);
   });
-  
+
   // Generate imports for cover square images
   coverSquareImages.forEach((image) => {
-    const relativePath = image.importPath.split('public')[1].replace(/\\/g, '/');
+    const relativePath = image.importPath
+      .split("public")[1]
+      .replace(/\\/g, "/");
     imports.push(`import ${image.importName} from '@/public${relativePath}';`);
   });
 
   // Generate imports for follow next images
   followNextImages.forEach((image) => {
-    const relativePath = image.importPath.split('public')[1].replace(/\\/g, '/');
+    const relativePath = image.importPath
+      .split("public")[1]
+      .replace(/\\/g, "/");
     imports.push(`import ${image.importName} from '@/public${relativePath}';`);
   });
 
   // Generate imports for post images
   postImages.forEach((image) => {
-    const relativePath = image.importPath.split('public')[1].replace(/\\/g, '/');
+    const relativePath = image.importPath
+      .split("public")[1]
+      .replace(/\\/g, "/");
     imports.push(`import ${image.importName} from '@/public${relativePath}';`);
   });
 
-  imports.push('');
+  imports.push("");
 
   // Generate the images object
-  imagesObject.push(`export const images: { [key: string]: StaticImageData } = {`);
+  imagesObject.push(
+    `export const images: { [key: string]: StaticImageData } = {`,
+  );
   coverImages.forEach((image) => {
     imagesObject.push(`  '${image.slug}': ${image.importName},`);
   });
   imagesObject.push(`};`);
-  imagesObject.push('');
+  imagesObject.push("");
 
   // Generate the squareImages object
-  squareImagesObject.push(`export const squareImages: { [key: string]: StaticImageData } = {`);
+  squareImagesObject.push(
+    `export const squareImages: { [key: string]: StaticImageData } = {`,
+  );
   coverSquareImages.forEach((image) => {
     squareImagesObject.push(`  '${image.slug}': ${image.importName},`);
   });
   squareImagesObject.push(`};`);
-  squareImagesObject.push('');
+  squareImagesObject.push("");
 
   // Generate the followNextImages object
-  followNextImagesObject.push(`export const followNextImages: { [key: string]: StaticImageData } = {`);
+  followNextImagesObject.push(
+    `export const followNextImages: { [key: string]: StaticImageData } = {`,
+  );
   followNextImages.forEach((image) => {
     followNextImagesObject.push(`  '${image.slug}': ${image.importName},`);
   });
   followNextImagesObject.push(`};`);
-  followNextImagesObject.push('');
+  followNextImagesObject.push("");
 
   // Generate the postImages object
-  postImagesObject.push(`export const postImages: { [key: string]: StaticImageData } = {`);
+  postImagesObject.push(
+    `export const postImages: { [key: string]: StaticImageData } = {`,
+  );
   postImages.forEach((image) => {
     postImagesObject.push(`  '${image.slug}': ${image.importName},`);
   });
@@ -156,11 +175,11 @@ function generateImagesCode(): string {
     ...squareImagesObject,
     ...followNextImagesObject,
     ...postImagesObject,
-  ].join('\n');
+  ].join("\n");
 }
 
 // Write to file
-const imagesFilePath = path.join(process.cwd(), 'src', 'config', 'images.tsx');
+const imagesFilePath = path.join(process.cwd(), "src", "config", "images.tsx");
 fs.writeFileSync(imagesFilePath, generateImagesCode());
 
 console.log(`Generated images.tsx at ${imagesFilePath}`);

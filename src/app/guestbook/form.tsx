@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { useToast } from '@/components/ui/use-toast';
-import { GuestbookDialog } from './dialog';
-import { GuestBookSignOut } from './buttons';
-import { guestbookFormSchema } from '@/config/schema';
-import Server from '@/lib/server';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { guestbookFormSchema } from "@/config/schema";
+import Server from "@/lib/server";
+import { GuestBookSignOut } from "./buttons";
+import { GuestbookDialog } from "./dialog";
 
 export default function GuestbookForm() {
   const { toast } = useToast();
@@ -36,9 +36,9 @@ export default function GuestbookForm() {
     if (!saved.ok) {
       console.error(saved.error.message);
       toast({
-        title: 'Error saving guestbook entry. Please try again later.',
+        title: "Error saving guestbook entry. Please try again later.",
         description: saved.error.message,
-        variant: 'destructive',
+        variant: "destructive",
       });
       return;
     }
@@ -47,7 +47,10 @@ export default function GuestbookForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-row gap-2">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-row gap-2"
+      >
         <FormField
           control={form.control}
           name="message"
@@ -64,17 +67,13 @@ export default function GuestbookForm() {
             </FormItem>
           )}
         />
-        <Button
-          variant="default"
-          size="md"
-          type="submit"
-        >
+        <Button variant="default" size="md" type="submit">
           Sign!
         </Button>
       </form>
       <div className="w-fit flex flex-row gap-2 items-center">
-        <GuestbookDialog/>
-        <GuestBookSignOut/>
+        <GuestbookDialog />
+        <GuestBookSignOut />
       </div>
     </Form>
   );

@@ -1,14 +1,13 @@
+import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
-import Image from 'next/image';
-
+import DoublePane from "@/components/doublePane";
 import { TypographyH1 } from "@/components/typography/headings";
-import { components, options } from '@/config/mdxRemoteSettings';
-import { getAboutProps } from '@/lib/fsContentQueries';
-import DoublePane from '@/components/doublePane';
-import { siteConfig } from '@/config/site';
-import me from '@/public/images/me.jpg';
+import { components, options } from "@/config/mdxRemoteSettings";
+import { siteConfig } from "@/config/site";
+import { getAboutProps } from "@/lib/fsContentQueries";
+import me from "@/public/images/me.jpg";
 
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
 export function generateMetadata() {
   const props = getAboutProps();
@@ -19,7 +18,7 @@ export function generateMetadata() {
     openGraph: {
       title: props.meta.title,
       description: props.meta.description,
-      url: siteConfig.url + '/about',
+      url: `${siteConfig.url}/about`,
     },
   };
 }
@@ -32,9 +31,7 @@ export default async function Page() {
       <div className="bg-primary w-screen h-fit py-6 lg:space-y-16 lg:pt-24 pt-16 pb-6">
         <div className="lg:max-w-6xl max-w-prose px-4 mx-auto text-primary-foreground lg:space-y-4 space-y-2">
           <TypographyH1>{props.meta.title}</TypographyH1>
-          <p className="leading-7 not-first:mt-6">
-            {props.meta.description}
-          </p>
+          <p className="leading-7 not-first:mt-6">{props.meta.description}</p>
         </div>
       </div>
       <DoublePane>
@@ -47,7 +44,11 @@ export default async function Page() {
           />
         </div>
         <main>
-          <MDXRemote source={props.content} options={options} components={components}/>
+          <MDXRemote
+            source={props.content}
+            options={options}
+            components={components}
+          />
         </main>
       </DoublePane>
     </div>

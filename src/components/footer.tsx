@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 import {
   Accordion,
@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { siteConfig } from '@/config/site';
+import { siteConfig } from "@/config/site";
 
 export default function Footer() {
   return (
@@ -17,9 +17,7 @@ export default function Footer() {
             <p className="text-lg">
               Made with <b className="text-primary">&lt;3</b>
             </p>
-            <p>
-              Thanks for reading.
-            </p>
+            <p>Thanks for reading.</p>
           </div>
           <p className="text-sm text-muted-foreground">
             © 2023-present {siteConfig.author}. All Rights Reserved.
@@ -27,9 +25,7 @@ export default function Footer() {
         </div>
         <div className="flex flex-row gap-16 h-fit">
           <div className="flex flex-col gap-6">
-            <p className="text-muted-foreground text-sm">
-              Connections
-            </p>
+            <p className="text-muted-foreground text-sm">Connections</p>
             <div className="flex flex-col gap-3">
               {siteConfig.footerItems.connections.map((item) => (
                 <Link
@@ -44,9 +40,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="flex flex-col gap-6">
-            <p className="text-muted-foreground text-sm">
-              Blog
-            </p>
+            <p className="text-muted-foreground text-sm">Blog</p>
             <div className="flex flex-col gap-3">
               {siteConfig.footerItems.blog.map((item) => (
                 <Link
@@ -68,13 +62,14 @@ export default function Footer() {
             <p className="text-lg">
               Made with <b className="text-primary">&lt;3</b>
             </p>
-            <p>
-              Thanks for reading.
-            </p>
+            <p>Thanks for reading.</p>
           </div>
         </div>
         <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1" className="border-b border-muted-foreground/20">
+          <AccordionItem
+            value="item-1"
+            className="border-b border-muted-foreground/20"
+          >
             <AccordionTrigger className="text-muted-foreground text-md font-normal tracking-wide">
               Connections
             </AccordionTrigger>

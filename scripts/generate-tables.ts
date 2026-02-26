@@ -1,6 +1,6 @@
-import { exit } from 'process';
+import { exit } from "node:process";
 
-import { sql } from '@/lib/postgres';
+import { sql } from "@/lib/postgres";
 
 try {
   // Create posts table
@@ -80,19 +80,22 @@ try {
     SELECT slug
     FROM posts;
   `;
-  
-  await Promise.all(slugs.map((v) =>
-    sql`
+
+  await Promise.all(
+    slugs.map(
+      (v) =>
+        sql`
       INSERT INTO views (slug, count)
       VALUES (${v.slug}, 0)
       ON CONFLICT (slug) DO NOTHING;
-    `
-  ));
+    `,
+    ),
+  );
 
-  console.log('Database tables successfully created and/or updated.');
+  console.log("Database tables successfully created and/or updated.");
 } catch (error) {
   // Log error but don't fail the build
-  console.log('Database connection failed, skipping table operations:', error);
+  console.log("Database connection failed, skipping table operations:", error);
 }
 
 exit(0);

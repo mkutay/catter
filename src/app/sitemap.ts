@@ -1,11 +1,11 @@
-import { getPosts } from '@/lib/dbContentQueries';
-import { siteConfig } from '@/config/site';
-import { getAboutProps } from '@/lib/fsContentQueries';
+import { siteConfig } from "@/config/site";
+import { getPosts } from "@/lib/dbContentQueries";
+import { getAboutProps } from "@/lib/fsContentQueries";
 
 export default async function sitemap() {
   const siteMap: {
-    url: string,
-    lastModified: string,
+    url: string;
+    lastModified: string;
   }[] = [];
 
   siteMap.push({
@@ -20,16 +20,20 @@ export default async function sitemap() {
 
   siteMap.push({
     url: `${siteConfig.url}/about`,
-    lastModified: new Date(getAboutProps().meta.date).toISOString().split('T')[0],
+    lastModified: new Date(getAboutProps().meta.date)
+      .toISOString()
+      .split("T")[0],
   });
 
-  const posts = await getPosts({ });
+  const posts = await getPosts({});
   if (posts.isErr()) throw new Error(posts.error.message);
 
   posts.value.forEach((post) => {
     siteMap.push({
       url: `${siteConfig.url}/posts/${post.slug}`,
-      lastModified: new Date(String(post.lastModified ?? post.date)).toISOString().split('T')[0],
+      lastModified: new Date(String(post.lastModified ?? post.date))
+        .toISOString()
+        .split("T")[0],
     });
   });
 

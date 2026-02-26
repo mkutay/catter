@@ -1,14 +1,14 @@
 "use client";
 
-import { BsThreeDots } from "react-icons/bs";
 import { useState } from "react";
+import { BsThreeDots } from "react-icons/bs";
 
 import {
   Popover,
   PopoverArrow,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 export function ToggleParentheses({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,13 +23,20 @@ export function ToggleParentheses({ children }: { children: React.ReactNode }) {
       ({children})
     </span>
   ) : (
-    <button onClick={handleToggle} className="hover:text-primary/80 transition-colors text-primary cursor-pointer font-semibold flex-row items-center inline-flex gap-0.5">
+    <button
+      onClick={handleToggle}
+      className="hover:text-primary/80 transition-colors text-primary cursor-pointer font-semibold flex-row items-center inline-flex gap-0.5"
+    >
       ( <BsThreeDots /> )
     </button>
   );
 }
 
-export function ToggleParenthesesPopover({ children }: { children: React.ReactNode }) {
+export function ToggleParenthesesPopover({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <Popover>
       <PopoverTrigger className="text-primary hover:text-primary/80 transition-colors cursor-pointer font-semibold inline-flex items-center gap-0.5">

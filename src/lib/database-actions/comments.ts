@@ -1,106 +1,134 @@
-import { errAsync, okAsync, ResultAsync } from 'neverthrow';
-
-import { getCommentsByEmail } from '@/lib/database-queries/comments';
-import { sql } from '@/lib/postgres';
-import { CommentData } from '@/config/types';
-import { siteConfig } from '@/config/site';
-import { commentsFormSchema } from '@/config/schema';
-import { doesPostWithSlugExist } from '@/lib/dbContentQueries';
-import { getAuth } from '@/lib/database-queries/auth';
-import { parseSchema } from '@/lib/utils';
+import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { commentsFormSchema } from "@/config/schema";
+import { siteConfig } from "@/config/site";
+import type { CommentData } from "@/config/types";
+import { getAuth } from "@/lib/database-queries/auth";
+import { getCommentsByEmail } from "@/lib/database-queries/comments";
+import { doesPostWithSlugExist } from "@/lib/dbContentQueries";
+import { sql } from "@/lib/postgres";
+import { parseSchema } from "@/lib/utils";
 
 interface SaveCommentError {
   message: string;
-  code: 'UNAUTHORISED' | 'INVALID_SLUG' | 'RATE_LIMIT';
-};
+  code: "UNAUTHORISED" | "INVALID_SLUG" | "RATE_LIMIT";
+}
 
 interface DeleteCommentError {
   message: string;
-  code: 'UNAUTHORISED' | 'DATABASE_ERROR';
-};
+  code: "UNAUTHORISED" | "DATABASE_ERROR";
+}
 
-export const saveComment = ({ slug, message }: { slug: string, message: string }) => 
+export const saveComment = ({
+  slug,
+  message,
+}: {
+  slug: string;
+  message: string;
+}) =>
   parseSchema(commentsFormSchema, { message })
-  .asyncAndThen(() => ResultAsync.fromPromise(
-    doesPostWithSlugExist(slug),
-    () => ({ message: 'Error checking post existence.', code: 'INVALID_SLUG' } as SaveCommentError)
-  ))
-  .andThen((exists) => 
-    exists
-      ? okAsync()
-      : errAsync({
-          message: 'Post not found.',
-          code: 'INVALID_SLUG',
-        } as SaveCommentError)
-  )
-  .andThen(() => getAuth())
-  .andThen((session) =>
-    !session || !session.user
-      ? errAsync({
-          message: 'Session not found.',
-          code: 'UNAUTHORISED',
-        } as SaveCommentError)
-      : okAsync({
-        email: session.user.email || '',
-        name: session.user.name || '',
-      })
-  )
-  .andThen(({ email, name }) =>
-    getCommentsByEmail({ email })
-    .andThen((comments) => 
-      // 5 minutes rate limit
-      comments.length > 0 && Date.now() - new Date(comments[0].created_at).getTime() < 1000 * 60 * 5
-        ? errAsync({
-            message: 'Rate limit exceeded. Please wait before submitting again.',
-            code: 'RATE_LIMIT',
-          } as SaveCommentError)
-        : okAsync()
+    .asyncAndThen(() =>
+      ResultAsync.fromPromise(
+        doesPostWithSlugExist(slug),
+        () =>
+          ({
+            message: "Error checking post existence.",
+            code: "INVALID_SLUG",
+          }) as SaveCommentError,
+      ),
     )
-    .andThen(() => insertIntoComments(Math.floor(Math.random() * 10000000), slug, email, message, name))
-  );
+    .andThen((exists) =>
+      exists
+        ? okAsync()
+        : errAsync({
+            message: "Post not found.",
+            code: "INVALID_SLUG",
+          } as SaveCommentError),
+    )
+    .andThen(() => getAuth())
+    .andThen((session) =>
+      !session || !session.user
+        ? errAsync({
+            message: "Session not found.",
+            code: "UNAUTHORISED",
+          } as SaveCommentError)
+        : okAsync({
+            email: session.user.email || "",
+            name: session.user.name || "",
+          }),
+    )
+    .andThen(({ email, name }) =>
+      getCommentsByEmail({ email })
+        .andThen((comments) =>
+          // 5 minutes rate limit
+          comments.length > 0 &&
+          Date.now() - new Date(comments[0].created_at).getTime() <
+            1000 * 60 * 5
+            ? errAsync({
+                message:
+                  "Rate limit exceeded. Please wait before submitting again.",
+                code: "RATE_LIMIT",
+              } as SaveCommentError)
+            : okAsync(),
+        )
+        .andThen(() =>
+          insertIntoComments(
+            Math.floor(Math.random() * 10000000),
+            slug,
+            email,
+            message,
+            name,
+          ),
+        ),
+    );
 
 export const deleteComment = ({ comment }: { comment: CommentData }) =>
   getAuth()
     .andThen((session) =>
       !session.user
         ? errAsync({
-            message: 'Session not found.',
-            code: 'UNAUTHORISED',
+            message: "Session not found.",
+            code: "UNAUTHORISED",
           } as DeleteCommentError)
-        : okAsync(session.user.email || '')
+        : okAsync(session.user.email || ""),
     )
     .andThen((email) =>
       !siteConfig.admins.includes(email) && comment.email !== email
         ? errAsync({
-            message: 'You are not authorized to delete this comment.',
-            code: 'UNAUTHORISED',
+            message: "You are not authorized to delete this comment.",
+            code: "UNAUTHORISED",
           } as DeleteCommentError)
-        : okAsync()
+        : okAsync(),
     )
     .andThen(() => deleteFromComments(comment.id));
 
-const deleteFromComments = (id: string) => ResultAsync
-  .fromPromise(
+const deleteFromComments = (id: string) =>
+  ResultAsync.fromPromise(
     sql<CommentData[]>`
       DELETE FROM comments
       WHERE id = (${id})
       RETURNING *;
     `,
     () => ({
-      message: 'Failed to delete comment. Database error.',
-      code: 'DATABASE_ERROR' as const,
-    })
+      message: "Failed to delete comment. Database error.",
+      code: "DATABASE_ERROR" as const,
+    }),
   );
 
-const insertIntoComments = (random: number, slug: string, email: string, message: string, created_by: string) => ResultAsync
-  .fromPromise(
+const insertIntoComments = (
+  random: number,
+  slug: string,
+  email: string,
+  message: string,
+  created_by: string,
+) =>
+  ResultAsync.fromPromise(
     sql<CommentData[]>`
       INSERT INTO comments (id, slug, email, body, created_by, created_at)
       VALUES (${random}, ${slug}, ${email}, ${message}, ${created_by}, NOW())
       RETURNING *;
     `,
     () => ({
-      message: 'Failed to save comment. Database error.',
-      code: 'DATABASE_ERROR' as const
-    })
+      message: "Failed to save comment. Database error.",
+      code: "DATABASE_ERROR" as const,
+    }),
   );

@@ -1,36 +1,45 @@
-import { evaluate, EvaluateOptions, MDXRemote } from 'next-mdx-remote-client/rsc';
-import { TocItem } from 'remark-flexible-toc';
-import readingTime from 'reading-time';
-import { format } from 'date-fns';
-import Image from 'next/image';
-import Link from 'next/link';
-import path from 'path';
+import path from "node:path";
+import { format } from "date-fns";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  type EvaluateOptions,
+  evaluate,
+  MDXRemote,
+} from "next-mdx-remote-client/rsc";
+import readingTime from "reading-time";
+import type { TocItem } from "remark-flexible-toc";
+import Comments from "@/components/comments/comments";
+import CopyToClipboard from "@/components/copyToClipboard";
+import DoublePane from "@/components/doublePane";
+import { PostViewCounter } from "@/components/postViewCounter";
+import { SideTOC } from "@/components/side-toc";
+import { turnTagString } from "@/components/tagsButtonGrid";
+import { ToggleParentheses } from "@/components/toggleParentheses";
+import { TypographyH1 } from "@/components/typography/headings";
+import { components, options } from "@/config/mdxRemoteSettings";
+import { siteConfig } from "@/config/site";
+import type { PostMeta } from "@/config/types";
+import { getPost, getPostSlugs } from "@/lib/dbContentQueries";
+import { getPlaceholder } from "@/lib/images";
 
-import { components, options } from '@/config/mdxRemoteSettings';
-import { siteConfig } from '@/config/site';
-import CopyToClipboard from '@/components/copyToClipboard';
-import { PostViewCounter } from '@/components/postViewCounter';
-import DoublePane from '@/components/doublePane';
-import { turnTagString } from '@/components/tagsButtonGrid';
-import Comments from '@/components/comments/comments';
-import { TypographyH1 } from '@/components/typography/headings';
-import { PostMeta } from '@/config/types';
-import { getPost, getPostSlugs } from '@/lib/dbContentQueries';
-import { getPlaceholder } from '@/lib/images';
-import { ToggleParentheses } from '@/components/toggleParentheses';
-import { SideTOC } from '@/components/side-toc';
-
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 // export const dynamicParams = false;
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const result = await getPost(slug);
   if (result.isErr()) throw new Error(result.error.message);
   const props = result.value;
 
-  const formattedDate = format(props.date, 'PP');
-  const coverImage = props.cover ? path.join('/api', props.cover) : 'images/favicon.png';
+  const formattedDate = format(props.date, "PP");
+  const coverImage = props.cover
+    ? path.join("/api", props.cover)
+    : "images/favicon.png";
 
   return {
     title: props.title,
@@ -39,9 +48,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: props.title,
       description: props.description,
-      url: siteConfig.url + '/posts/' + props.slug,
+      url: `${siteConfig.url}/posts/${props.slug}`,
       locale: props.locale,
-      type: 'article',
+      type: "article",
       publishedTime: formattedDate,
       images: [coverImage],
       siteName: siteConfig.name,
@@ -57,35 +66,45 @@ function EmptyToggleParentheses({ children }: { children: React.ReactNode }) {
   return <>({children})</>;
 }
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const result = await getPost(slug);
   if (result.isErr()) throw new Error(result.error.message);
   const props = result.value;
 
-  const formattedDate = format(props.date, 'PP');
+  const formattedDate = format(props.date, "PP");
 
   const modifiedOptions: EvaluateOptions<Scope> = {
     ...options,
     vfileDataIntoScope: "toc",
-  }
+  };
 
   const modifiedComponents = {
     ...components,
-    ToggleParentheses: props.tags.includes(siteConfig.noParentheses) ? EmptyToggleParentheses : ToggleParentheses,
-  }
+    ToggleParentheses: props.tags.includes(siteConfig.noParentheses)
+      ? EmptyToggleParentheses
+      : ToggleParentheses,
+  };
 
   const time = readingTime(props.content);
 
   const { content, scope } = await evaluate<PostMeta, Scope>({
     source: props.content,
     options: modifiedOptions,
-    components: modifiedComponents
+    components: modifiedComponents,
   });
 
   const coverImage = props.cover;
   const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
-  const coverUrl = coverImage ? coverImage[0] === '/' ? coverImage : `/${coverImage}` : null;
+  const coverUrl = coverImage
+    ? coverImage[0] === "/"
+      ? coverImage
+      : `/${coverImage}`
+    : null;
 
   return (
     <>
@@ -96,7 +115,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </p>
           <div className="flex flex-row gap-4">
             {props.tags.map((tag: string) => (
-              <p key={tag} className="text-primary-foreground uppercase text-sm underline hover:text-primary-foreground/80 transition-all">
+              <p
+                key={tag}
+                className="text-primary-foreground uppercase text-sm underline hover:text-primary-foreground/80 transition-all"
+              >
                 <Link href={`/tags/${tag}/page/1`}>{turnTagString(tag)}</Link>
               </p>
             ))}
@@ -108,29 +130,35 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <TypographyH1 className="leading-tight">
               <MDXRemote source={props.title} />
             </TypographyH1>
-            <MDXRemote source={props.description} components={modifiedComponents} options={modifiedOptions} />
+            <MDXRemote
+              source={props.description}
+              components={modifiedComponents}
+              options={modifiedOptions}
+            />
           </div>
         </div>
       </div>
       <DoublePane side={<SideTOC toc={scope.toc || []} />}>
         <div>
-          {coverImage && placeholder && (<div className="my-6"><Image
-            alt={`${props.title} post cover image`}
-            src={`/api${coverUrl}`}
-            className="lg:rounded-md rounded-sm lg:shadow-md shadow-xs"
-            width={placeholder.metadata.width}
-            height={placeholder.metadata.height}
-            priority={true}
-            placeholder={placeholder.base64 as `data:image/${string}`}
-          /></div>)}
+          {coverImage && placeholder && (
+            <div className="my-6">
+              <Image
+                alt={`${props.title} post cover image`}
+                src={`/api${coverUrl}`}
+                className="lg:rounded-md rounded-sm lg:shadow-md shadow-xs"
+                width={placeholder.metadata.width}
+                height={placeholder.metadata.height}
+                priority={true}
+                placeholder={placeholder.base64 as `data:image/${string}`}
+              />
+            </div>
+          )}
           <div className="my-4 flex flex-row items-center gap-4 justify-end text-foreground text-lg">
             <PostViewCounter slug={props.slug} />
             <CopyToClipboard text={props.shortened} />
           </div>
         </div>
-        <main>
-          {content}
-        </main>
+        <main>{content}</main>
         <Comments slug={props.slug} />
       </DoublePane>
     </>
@@ -141,7 +169,7 @@ export async function generateStaticParams() {
   const posts = await getPostSlugs();
   if (posts.isErr()) return [];
 
-  return posts.value.map(slug => ({
+  return posts.value.map((slug) => ({
     slug,
   }));
 }

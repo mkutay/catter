@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useTheme } from 'next-themes';
-import { useState, useEffect } from 'react';
-import { MoonIcon, SunIcon } from 'lucide-react';
+import { MoonIcon, SunIcon } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 export default function ThemeChanger() {
   const [mounted, setMounted] = useState(false);
@@ -22,14 +22,10 @@ export default function ThemeChanger() {
     <Button
       size="icon"
       variant="ghost"
-      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
       <span className="sr-only">Toggle mode</span>
-      {theme === 'dark' ? (
-        <SunIcon/>
-      ) : (
-        <MoonIcon/>
-      )}
+      {theme === "dark" ? <SunIcon /> : <MoonIcon />}
     </Button>
   );
 }

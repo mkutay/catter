@@ -1,17 +1,16 @@
-import { redirect } from 'next/navigation';
-import { Metadata } from 'next';
-
-import { auth } from '@/lib/auth';
-import { getEveryComment } from '@/lib/database-queries/comments';
-import { getGuestbookEntries } from '@/lib/database-queries/guestbook';
-import { siteConfig } from '@/config/site';
-import { TypographyH1 } from '@/components/typography/headings';
-import DoublePane from '@/components/doublePane';
-import { GuestbookAdminForm } from './guestbookAdminForm';
-import { CommentsAdmin } from './commentsAdmin';
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import DoublePane from "@/components/doublePane";
+import { TypographyH1 } from "@/components/typography/headings";
+import { siteConfig } from "@/config/site";
+import { auth } from "@/lib/auth";
+import { getEveryComment } from "@/lib/database-queries/comments";
+import { getGuestbookEntries } from "@/lib/database-queries/guestbook";
+import { CommentsAdmin } from "./commentsAdmin";
+import { GuestbookAdminForm } from "./guestbookAdminForm";
 
 export const metadata: Metadata = {
-  title: 'Site Admin',
+  title: "Site Admin",
   robots: {
     index: false,
     follow: false,
@@ -24,11 +23,11 @@ export const metadata: Metadata = {
  */
 export default async function Page() {
   const session = await auth();
-  
-  if (!siteConfig.admins.includes(session?.user?.email || '')) {
-    redirect('/');
+
+  if (!siteConfig.admins.includes(session?.user?.email || "")) {
+    redirect("/");
   }
-  
+
   const entries = await getGuestbookEntries();
   const comments = await getEveryComment();
 
@@ -37,21 +36,34 @@ export default async function Page() {
   }
 
   if (entries.isErr()) {
-    console.error("Error in displaying guestbook entries:", entries.error.message);
+    console.error(
+      "Error in displaying guestbook entries:",
+      entries.error.message,
+    );
   }
 
   return (
     <DoublePane>
       <TypographyH1>Admin</TypographyH1>
-      <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6 mb-2">Guestbook</h2>
-      {(entries.isErr() ? <p className="font-normal leading-7 not-first:mt-6 text-destructive">
+      <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6 mb-2">
+        Guestbook
+      </h2>
+      {entries.isErr() ? (
+        <p className="font-normal leading-7 not-first:mt-6 text-destructive">
           Could not display guestbook entries. Please try again later.
-        </p> : <GuestbookAdminForm entries={entries.value} />
+        </p>
+      ) : (
+        <GuestbookAdminForm entries={entries.value} />
       )}
-      <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6">Comments</h2>
-      {(comments.isErr() ? <p className="font-normal leading-7 not-first:mt-6 text-destructive">
+      <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6">
+        Comments
+      </h2>
+      {comments.isErr() ? (
+        <p className="font-normal leading-7 not-first:mt-6 text-destructive">
           Could not display comments. Please try again later.
-        </p> : <CommentsAdmin comments={comments.value} />
+        </p>
+      ) : (
+        <CommentsAdmin comments={comments.value} />
       )}
     </DoublePane>
   );

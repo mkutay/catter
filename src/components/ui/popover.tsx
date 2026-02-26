@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as PopoverPrimitive from "@radix-ui/react-popover"
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-const Popover = PopoverPrimitive.Root
+const Popover = PopoverPrimitive.Root;
 
-const PopoverTrigger = PopoverPrimitive.Trigger
+const PopoverTrigger = PopoverPrimitive.Trigger;
 
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
@@ -20,33 +20,29 @@ const PopoverContent = React.forwardRef<
       sideOffset={sideOffset}
       className={cn(
         "mx-4 z-50 w-72 rounded-md border border-border bg-background p-4 text-foreground shadow-md outline-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-        className
+        className,
       )}
       {...props}
     >
       {props.children}
     </PopoverPrimitive.Content>
   </PopoverPrimitive.Portal>
-))
-PopoverContent.displayName = PopoverPrimitive.Content.displayName
+));
+PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
 const PopoverArrow = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Arrow>,
   React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Arrow>
 >(({ className, ...props }, ref) => (
-  <PopoverPrimitive.Arrow
-    ref={ref}
-    asChild
-    {...props}
-  >
+  <PopoverPrimitive.Arrow ref={ref} asChild {...props}>
     <div
       className={cn(
         "bg-background z-100 size-2.5 -translate-y-[5.4px] animate-none rotate-45 rounded-br-sm border-border border-b border-r",
-        className
+        className,
       )}
     />
   </PopoverPrimitive.Arrow>
 ));
 PopoverArrow.displayName = PopoverPrimitive.Arrow.displayName;
 
-export { Popover, PopoverTrigger, PopoverContent, PopoverArrow }
+export { Popover, PopoverTrigger, PopoverContent, PopoverArrow };

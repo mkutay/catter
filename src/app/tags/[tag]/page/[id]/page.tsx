@@ -1,14 +1,20 @@
-import PaginationArrows from '@/components/paginationArrows';
-import ListPosts from '@/components/listPosts';
-import { turnTagString } from '@/components/tagsButtonGrid';
-import { getPosts, getPostsLength, getListOfAllTags } from '@/lib/dbContentQueries';
-import { siteConfig } from '@/config/site';
-import { TotalBlogViews } from '@/components/totalBlogViews';
+import ListPosts from "@/components/listPosts";
+import PaginationArrows from "@/components/paginationArrows";
+import { turnTagString } from "@/components/tagsButtonGrid";
+import { TotalBlogViews } from "@/components/totalBlogViews";
+import { siteConfig } from "@/config/site";
+import {
+  getListOfAllTags,
+  getPosts,
+  getPostsLength,
+} from "@/lib/dbContentQueries";
 
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 // export const dynamicParams = false;
 
-export async function generateMetadata(props: { params: Promise<{ tag: string, id: string }> }) {
+export async function generateMetadata(props: {
+  params: Promise<{ tag: string; id: string }>;
+}) {
   const params = await props.params;
   const { id, tag } = params;
   const result = await getPosts({ tags: [tag] });
@@ -26,7 +32,9 @@ export async function generateMetadata(props: { params: Promise<{ tag: string, i
   };
 }
 
-export default async function Page(props: { params: Promise<{ tag: string, id: string }> }) {
+export default async function Page(props: {
+  params: Promise<{ tag: string; id: string }>;
+}) {
   const params = await props.params;
   const id = Number(params.id);
   const tag = params.tag;
@@ -41,17 +49,22 @@ export default async function Page(props: { params: Promise<{ tag: string, id: s
   return (
     <>
       <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
-        Posts With Tag: <span className="font-bold text-foreground">{turnTagString(tag)}</span>
+        Posts With Tag:{" "}
+        <span className="font-bold text-foreground">{turnTagString(tag)}</span>
       </h1>
-      <ListPosts startInd={startInd} endInd={endInd} tags={[tag]}/>
+      <ListPosts startInd={startInd} endInd={endInd} tags={[tag]} />
       <div className="my-4">
-        <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href={`/tags/${tag}/page`}/>
+        <PaginationArrows
+          totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)}
+          currentId={id}
+          href={`/tags/${tag}/page`}
+        />
       </div>
       <TotalBlogViews />
       {/* Removing the grid for the tags */}
       {/* <TagsButtonGrid/> */}
     </>
-  )
+  );
 }
 
 export async function generateStaticParams() {
@@ -59,13 +72,17 @@ export async function generateStaticParams() {
   if (result.isErr()) throw new Error(result.error.message);
   const tags = result.value;
 
-  const ret: { tag: string, id: string }[] = [];
+  const ret: { tag: string; id: string }[] = [];
 
   for (const tag of tags) {
     const result = await getPostsLength({ tags: [tag] });
     if (result.isErr()) throw new Error(result.error.message);
     const tagsMapLength = result.value;
-    for (let i = 1; i <= Math.ceil(tagsMapLength / siteConfig.postNumPerPage); i++) {
+    for (
+      let i = 1;
+      i <= Math.ceil(tagsMapLength / siteConfig.postNumPerPage);
+      i++
+    ) {
       ret.push({ tag: tag, id: i.toString() });
     }
   }

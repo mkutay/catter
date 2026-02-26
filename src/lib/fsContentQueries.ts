@@ -1,45 +1,48 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { notFound } from 'next/navigation';
+import path from "node:path";
+import fs from "fs";
+import matter from "gray-matter";
+import { notFound } from "next/navigation";
 
-import { PostData, PostMeta } from '@/config/types';
+import type { PostData, PostMeta } from "@/config/types";
 
 /**
  * Get all post files from the posts directory.
  */
 export function getPostFiles(): string[] {
-  return fs.readdirSync(path.join(process.cwd(), 'content/posts'), 'utf-8');
+  return fs.readdirSync(path.join(process.cwd(), "content/posts"), "utf-8");
 }
 
 export function doesPostWithSlugExist(slug: string): boolean {
-  return getPostFiles().includes(slug + '.mdx');
+  return getPostFiles().includes(`${slug}.mdx`);
 }
 
 export function getPostProps(slug: string): PostData {
-  return getProps('content/posts', slug);
+  return getProps("content/posts", slug);
 }
 
 export function getAboutProps() {
   let markdownFile;
   try {
-    markdownFile = fs.readFileSync(path.join(process.cwd(), path.join('content/pages/about.mdx')), 'utf-8');
+    markdownFile = fs.readFileSync(
+      path.join(process.cwd(), path.join("content/pages/about.mdx")),
+      "utf-8",
+    );
   } catch (error) {
     console.log(error);
     notFound();
   }
 
   const { data: frontMatter, content } = matter(markdownFile);
-  
+
   const postData = {
     meta: frontMatter as {
-      title: string,
-      description: string,
-      date: string,
+      title: string;
+      description: string;
+      date: string;
     },
     content: content,
   };
-  
+
   return postData;
 }
 
@@ -49,7 +52,10 @@ export function getAboutProps() {
 export function getProps(pathTo: string, slug: string): PostData {
   let markdownFile;
   try {
-    markdownFile = fs.readFileSync(path.join(process.cwd(), path.join(pathTo, slug + '.mdx')), 'utf-8');
+    markdownFile = fs.readFileSync(
+      path.join(process.cwd(), path.join(pathTo, `${slug}.mdx`)),
+      "utf-8",
+    );
   } catch (error) {
     console.log(error);
     notFound();
@@ -57,7 +63,7 @@ export function getProps(pathTo: string, slug: string): PostData {
 
   const { data: frontMatter, content } = matter(markdownFile);
   const fm = frontMatter as PostMeta;
-  
+
   const postData = {
     slug: slug,
     meta: {
@@ -67,7 +73,7 @@ export function getProps(pathTo: string, slug: string): PostData {
     } as PostMeta,
     content: content,
   };
-  
+
   return postData;
 }
 
@@ -80,17 +86,17 @@ export function getPosts({
   tags = [],
   disallowTags = [],
 }: {
-  startInd?: number,
-  endInd?: number,
-  tags?: string[],
-  disallowTags?: string[]
+  startInd?: number;
+  endInd?: number;
+  tags?: string[];
+  disallowTags?: string[];
 }): PostData[] {
   const postFiles = getPostFiles();
   const posts: PostData[] = [];
-  
+
   postFiles.forEach((filename) => {
-    const slug = filename.replace('.mdx', '');
-    const props = getProps('content/posts', slug);
+    const slug = filename.replace(".mdx", "");
+    const props = getProps("content/posts", slug);
     let disallowFlag: boolean = false;
     let allowFlag: boolean = false;
 
@@ -104,14 +110,14 @@ export function getPosts({
     });
 
     if (disallowFlag) return;
-    if (tags.length == 0 || allowFlag) {
+    if (tags.length === 0 || allowFlag) {
       posts.push(props);
     }
   });
 
-  posts.sort((a, b) => (
-    new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime()
-  ));
+  posts.sort(
+    (a, b) => new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime(),
+  );
 
   return posts.slice(startInd, endInd);
 }
@@ -119,7 +125,13 @@ export function getPosts({
 /**
  * Get the number of posts for given filters (possible none).
  */
-export function getPostsLength({ tags, disallowTags }: { tags?: string[], disallowTags?: string[] }): number {
+export function getPostsLength({
+  tags,
+  disallowTags,
+}: {
+  tags?: string[];
+  disallowTags?: string[];
+}): number {
   return getPosts({ tags, disallowTags }).length;
 }
 
@@ -127,7 +139,7 @@ export function getPostsLength({ tags, disallowTags }: { tags?: string[], disall
  * Get the number of projects.
  */
 export function getProjectsLength(): number {
-  return getPosts({ tags: ['project'] }).length;
+  return getPosts({ tags: ["project"] }).length;
 }
 
 /**

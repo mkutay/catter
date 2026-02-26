@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import Link from 'next/link';
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import type z from "zod";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -14,13 +15,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/components/ui/use-toast';
-import { EntryData } from '@/config/types';
-import { deleteGuestbookEntryDataFormSchema } from '@/config/schema';
-import { cn } from '@/lib/utils';
-import Server from '@/lib/server';
+} from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
+import { deleteGuestbookEntryDataFormSchema } from "@/config/schema";
+import type { EntryData } from "@/config/types";
+import Server from "@/lib/server";
+import { cn } from "@/lib/utils";
 
 // Delete entries from the guestbook
 export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
@@ -32,15 +32,17 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
       items: [],
     },
   });
-  
-  const onSubmit = async (values: z.infer<typeof deleteGuestbookEntryDataFormSchema>) => {
+
+  const onSubmit = async (
+    values: z.infer<typeof deleteGuestbookEntryDataFormSchema>,
+  ) => {
     const deleted = await Server.GuestBook.Delete({ entries: values.items });
     if (!deleted.ok) {
       console.error(deleted.error.message);
       toast({
-        title: 'Error deleting entries.',
+        title: "Error deleting entries.",
         description: deleted.error.message,
-        variant: 'destructive',
+        variant: "destructive",
       });
       return;
     }
@@ -81,15 +83,22 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
                                 ? field.onChange([...field.value, entry.id])
                                 : field.onChange(
                                     field.value?.filter(
-                                      (value) => value !== entry.id
-                                    )
-                                  )
+                                      (value) => value !== entry.id,
+                                    ),
+                                  );
                             }}
                           />
                         </FormControl>
                         <FormLabel className="text-md font-normal">
                           <div className="break-words">
-                            <span className={cn("mr-1 font-bold tracking-tight", (entry.color === '' || entry.color === null) ? 'text-foreground' : `text-${entry.color}`)}>
+                            <span
+                              className={cn(
+                                "mr-1 font-bold tracking-tight",
+                                entry.color === "" || entry.color === null
+                                  ? "text-foreground"
+                                  : `text-${entry.color}`,
+                              )}
+                            >
                               {entry.created_by}:
                             </span>
                             <span className="text-foreground">
@@ -98,7 +107,7 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
                           </div>
                         </FormLabel>
                       </FormItem>
-                    )
+                    );
                   }}
                 />
               ))}
@@ -107,11 +116,11 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
           )}
         />
         <div className="flex flex-row items-center gap-2">
-          <Button type="submit" size="default" variant="destructive">Delete Entries</Button>
+          <Button type="submit" size="default" variant="destructive">
+            Delete Entries
+          </Button>
           <Button asChild variant="ghost" size="default">
-            <Link href="/guestbook">
-              Return to Guest Book
-            </Link>
+            <Link href="/guestbook">Return to Guest Book</Link>
           </Button>
         </div>
       </form>

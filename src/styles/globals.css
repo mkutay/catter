@@ -1,6 +1,6 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
-@plugin '@designbycode/tailwindcss-text-stroke';
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@designbycode/tailwindcss-text-stroke";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -115,11 +115,11 @@
 
   /* Place `[` and `]` around footnote references. */
   [data-footnote-ref]::before {
-    content: '[';
+    content: "[";
   }
 
   [data-footnote-ref]::after {
-    content: ']';
+    content: "]";
   }
 
   /* fixes the colour for latex text in posts */
@@ -198,7 +198,7 @@
     --sapphire: 199 76 69;
     --blue: 217 92 76;
     --lavender: 232 97 85;
-    
+
     --background: 240 21.052631735801697% 13.901961386203766%; /* base */
     --foreground: 226 63.93442749977112% 88.03921341896057%; /* text */
 

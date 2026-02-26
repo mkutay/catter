@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { FaDiscord, FaGithub, FaSpotify } from 'react-icons/fa';
-import { signIn, signOut } from 'next-auth/react';
-import { useState } from 'react';
-
+import { signIn, signOut } from "next-auth/react";
+import { useState } from "react";
+import { FaDiscord, FaGithub, FaSpotify } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,15 +12,19 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
-import { CommentData } from '@/config/types';
-import Server from '@/lib/server';
+} from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
+import type { CommentData } from "@/config/types";
+import Server from "@/lib/server";
 
 export function SignOut({ slug }: { slug: string }) {
   return (
-    <Button type="button" variant="ghost" size="default" onClick={() => signOut({ callbackUrl: `/posts/${slug}#comments` })}>
+    <Button
+      type="button"
+      variant="ghost"
+      size="default"
+      onClick={() => signOut({ callbackUrl: `/posts/${slug}#comments` })}
+    >
       Sign Out
     </Button>
   );
@@ -29,58 +33,77 @@ export function SignOut({ slug }: { slug: string }) {
 export function SignIn({ slug }: { slug: string }) {
   return (
     <div className="flex flex-row gap-2 items-center mx-auto w-fit">
-      <Button variant="secondary" size="default" className="flex flex-row gap-2 items-center" onClick={() => signIn('github', { callbackUrl: `/posts/${slug}#comments` })}>
-        <FaGithub/>
-        <span>
-          GitHub
-        </span>
+      <Button
+        variant="secondary"
+        size="default"
+        className="flex flex-row gap-2 items-center"
+        onClick={() =>
+          signIn("github", { callbackUrl: `/posts/${slug}#comments` })
+        }
+      >
+        <FaGithub />
+        <span>GitHub</span>
       </Button>
-      <Button variant="secondary" size="default" className="flex flex-row gap-2 items-center" onClick={() => signIn('discord', { callbackUrl: `/posts/${slug}#comments` })}>
-        <FaDiscord/>
-        <span>
-          Discord
-        </span>
+      <Button
+        variant="secondary"
+        size="default"
+        className="flex flex-row gap-2 items-center"
+        onClick={() =>
+          signIn("discord", { callbackUrl: `/posts/${slug}#comments` })
+        }
+      >
+        <FaDiscord />
+        <span>Discord</span>
       </Button>
-      <Button variant="secondary" size="default" className="flex flex-row gap-2 items-center" onClick={() => signIn('spotify', { callbackUrl: `/posts/${slug}#comments` })}>
-        <FaSpotify/>
-        <span>
-          Spotify
-        </span>
+      <Button
+        variant="secondary"
+        size="default"
+        className="flex flex-row gap-2 items-center"
+        onClick={() =>
+          signIn("spotify", { callbackUrl: `/posts/${slug}#comments` })
+        }
+      >
+        <FaSpotify />
+        <span>Spotify</span>
       </Button>
     </div>
   );
 }
 
-export function DeleteComment({ 
-  comment, 
+export function DeleteComment({
+  comment,
   editComment,
-}: { 
+}: {
   comment: CommentData;
-  editComment?: (props: {
-    action: "add";
-    newComment: CommentData;
-  } | {
-    action: "delete";
-    commentId: string;
-  }) => void;
+  editComment?: (
+    props:
+      | {
+          action: "add";
+          newComment: CommentData;
+        }
+      | {
+          action: "delete";
+          commentId: string;
+        },
+  ) => void;
 }) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
   const handleDelete = async () => {
     setOpen(false);
-    
+
     if (editComment) {
-      editComment({ action: 'delete', commentId: comment.id });
+      editComment({ action: "delete", commentId: comment.id });
     }
-    
+
     const result = await Server.Comments.Delete({ comment });
-    
+
     if (!result.ok) {
       toast({
-        title: 'Error',
-        description: 'Error deleting comment. ' + result.error.message,
-        variant: 'destructive',
+        title: "Error",
+        description: `Error deleting comment. ${result.error.message}`,
+        variant: "destructive",
       });
     }
   };
@@ -94,16 +117,24 @@ export function DeleteComment({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure you want to delete this comment?</DialogTitle>
+          <DialogTitle>
+            Are you absolutely sure you want to delete this comment?
+          </DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete the comment.
+            This action cannot be undone. This will permanently delete the
+            comment.
           </DialogDescription>
         </DialogHeader>
         <div className="border border-border shadow-xs rounded-md px-3 py-2">
           {comment.body}
         </div>
         <DialogFooter>
-          <Button type="submit" variant="destructive" size="sm" onClick={handleDelete}>
+          <Button
+            type="submit"
+            variant="destructive"
+            size="sm"
+            onClick={handleDelete}
+          >
             Delete Comment
           </Button>
         </DialogFooter>

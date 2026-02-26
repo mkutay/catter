@@ -1,26 +1,28 @@
-import ProjectCard from '@/components/projectCard';
-import { getPosts } from '@/lib/dbContentQueries';
-import { siteConfig } from '@/config/site';
+import ProjectCard from "@/components/projectCard";
+import { siteConfig } from "@/config/site";
+import { getPosts } from "@/lib/dbContentQueries";
 
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
 export const metadata = {
-  title: 'Different Coding Projects I Did',
-  description: 'A list for the different projects I did/do in my free time accumulated here.',
-  keywords: ['projects', 'coding', 'web development'],
+  title: "Different Coding Projects I Did",
+  description:
+    "A list for the different projects I did/do in my free time accumulated here.",
+  keywords: ["projects", "coding", "web development"],
   openGraph: {
-    title: 'Different Coding Projects I Did',
-    description: 'A list for the different projects I did/do in my free time accumulated here.',
-    url: siteConfig.url + '/projects',
-    locale: 'en_UK',
-    type: 'website',
-    images: ['images/favicon.png'],
+    title: "Different Coding Projects I Did",
+    description:
+      "A list for the different projects I did/do in my free time accumulated here.",
+    url: `${siteConfig.url}/projects`,
+    locale: "en_UK",
+    type: "website",
+    images: ["images/favicon.png"],
     siteName: siteConfig.name,
   },
 };
 
 export default async function Page() {
-  const projects = await getPosts({ tags: ['project'] });
+  const projects = await getPosts({ tags: ["project"] });
   if (projects.isErr()) throw new Error(projects.error.message);
 
   return (

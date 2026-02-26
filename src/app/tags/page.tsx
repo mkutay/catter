@@ -1,7 +1,7 @@
-import TagsButtonGrid from '@/components/tagsButtonGrid';
-import { siteConfig } from '@/config/site';
+import TagsButtonGrid from "@/components/tagsButtonGrid";
+import { siteConfig } from "@/config/site";
 
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
 export function generateMetadata() {
   return {
@@ -11,7 +11,7 @@ export function generateMetadata() {
       title: `List of Tags on the Posts`,
       description: `List and buttons of all the tags that posts have on ${siteConfig.name}.`,
       url: `${siteConfig.url}/tags`,
-      images: ['images/favicon.png'],
+      images: ["images/favicon.png"],
     },
   };
 }
@@ -24,5 +24,5 @@ export default function Page() {
       </h1>
       <TagsButtonGrid />
     </>
-  )
+  );
 }

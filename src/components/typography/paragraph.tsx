@@ -1,37 +1,69 @@
-import { DetailedHTMLProps, HTMLAttributes } from "react";
+import type { DetailedHTMLProps, HTMLAttributes } from "react";
 
 import { cn } from "@/lib/utils";
 
-export function TypographyParagraph(props: DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>) {
+export function TypographyParagraph(
+  props: DetailedHTMLProps<
+    HTMLAttributes<HTMLParagraphElement>,
+    HTMLParagraphElement
+  >,
+) {
   return (
-    <p {...props} className={cn("leading-7 not-first:mt-6 font-normal", props.className)}>
+    <p
+      {...props}
+      className={cn("leading-7 not-first:mt-6 font-normal", props.className)}
+    >
       {props.children}
     </p>
   );
 }
 
-export function TypographyLead({ children, className }: { children: React.ReactNode, className?: string }) {
+export function TypographyLead({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <p className={cn("text-xl text-muted-foreground", className)}>
+    <p className={cn("text-xl text-muted-foreground", className)}>{children}</p>
+  );
+}
+
+export function TypographyLarge({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("text-lg font-semibold", className)}>{children}</div>
+  );
+}
+
+export function TypographySmall({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <small className={cn("text-sm font-medium leading-none", className)}>
       {children}
-    </p>
-  )
+    </small>
+  );
 }
 
-export function TypographyLarge({ children, className }: { children: React.ReactNode, className?: string }) {
-  return <div className={cn("text-lg font-semibold", className)}>
-    {children}
-  </div>
-}
-
-export function TypographySmall({ children, className }: { children: React.ReactNode, className?: string }) {
-  return (
-    <small className={cn("text-sm font-medium leading-none", className)}>{children}</small>
-  )
-}
-
-export function TypographyMuted({ children, className }: { children: React.ReactNode, className?: string }) {
+export function TypographyMuted({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <p className={cn("text-sm text-muted-foreground", className)}>{children}</p>
-  )
+  );
 }

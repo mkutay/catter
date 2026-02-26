@@ -7,28 +7,29 @@ interface AuthError {
   code: "AUTH_ERROR" | "UNAUTHORISED";
 }
 
-export const getAuth = () => 
+export const getAuth = () =>
   ResultAsync.fromPromise(
     auth(),
-    () => ({
-      message: 'Failed to get auth session.',
-      code: 'AUTH_ERROR',
-    } as AuthError)
-  )
-  .andThen((session) =>
+    () =>
+      ({
+        message: "Failed to get auth session.",
+        code: "AUTH_ERROR",
+      }) as AuthError,
+  ).andThen((session) =>
     session
       ? okAsync(session)
       : errAsync({
-          message: 'Session not found.',
-          code: 'UNAUTHORISED',
-        } as AuthError)
+          message: "Session not found.",
+          code: "UNAUTHORISED",
+        } as AuthError),
   );
 
-export const getSession = () => 
+export const getSession = () =>
   ResultAsync.fromPromise(
     auth(),
-    () => ({
-      message: 'Failed to get auth session.',
-      code: 'AUTH_ERROR',
-    } as AuthError)
+    () =>
+      ({
+        message: "Failed to get auth session.",
+        code: "AUTH_ERROR",
+      }) as AuthError,
   );

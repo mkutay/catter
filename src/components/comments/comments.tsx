@@ -1,19 +1,20 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { format } from 'date-fns';
-
-import { Label } from '@/components/ui/label';
-import { TypographyLarge } from '@/components/typography/paragraph';
-import { DeleteComment, SignIn } from '@/components/comments/commentsButtons';
-import { CommentForm } from '@/components/comments/commentsForm';
-import { siteConfig } from '@/config/site';
-import { CommentData } from '@/config/types';
-import Server from '@/lib/server';
+import { format } from "date-fns";
+import { useCallback, useEffect, useState } from "react";
+import { DeleteComment, SignIn } from "@/components/comments/commentsButtons";
+import { CommentForm } from "@/components/comments/commentsForm";
+import { TypographyLarge } from "@/components/typography/paragraph";
+import { Label } from "@/components/ui/label";
+import { siteConfig } from "@/config/site";
+import type { CommentData } from "@/config/types";
+import Server from "@/lib/server";
 
 export default function Comments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<CommentData[]>([]);
-  const [user, setUser] = useState<{ email: string, name: string } | null | undefined>(undefined);
+  const [user, setUser] = useState<
+    { email: string; name: string } | null | undefined
+  >(undefined);
 
   useEffect(() => {
     let ignore = false;
@@ -43,37 +44,51 @@ export default function Comments({ slug }: { slug: string }) {
     };
   }, []);
 
-  const editComment = useCallback((props: {
-    action: 'add',
-    newComment: CommentData,
-  } | {
-    action: 'delete',
-    commentId: string,
-  }) => {
-    if (props.action === 'add') {
-      setComments(prevComments => [props.newComment, ...prevComments]);
-    } else if (props.action === 'delete') {
-      setComments(prevComments => prevComments.filter(comment => comment.id !== props.commentId));
-    }
-  }, [])
+  const editComment = useCallback(
+    (
+      props:
+        | {
+            action: "add";
+            newComment: CommentData;
+          }
+        | {
+            action: "delete";
+            commentId: string;
+          },
+    ) => {
+      if (props.action === "add") {
+        setComments((prevComments) => [props.newComment, ...prevComments]);
+      } else if (props.action === "delete") {
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment.id !== props.commentId),
+        );
+      }
+    },
+    [],
+  );
 
   return (
     <div id="comments" className="w-full flex flex-col gap-8 mt-6">
       {user ? (
         <CommentForm slug={slug} editComment={editComment} user={user} />
-      ) : user === null && (
-        <CommentAuth slug={slug} />
+      ) : (
+        user === null && <CommentAuth slug={slug} />
       )}
-      {comments.length !== 0 && <div className="flex flex-col gap-6">
-        {comments.map((comment) => (
-          <Comment 
-            comment={comment} 
-            key={comment.id} 
-            owns={(siteConfig.admins.includes(user?.email || '')) || (user?.email === comment.email)}
-            editComment={editComment}
-          />
-        ))}
-      </div>}
+      {comments.length !== 0 && (
+        <div className="flex flex-col gap-6">
+          {comments.map((comment) => (
+            <Comment
+              comment={comment}
+              key={comment.id}
+              owns={
+                siteConfig.admins.includes(user?.email || "") ||
+                user?.email === comment.email
+              }
+              editComment={editComment}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -81,7 +96,9 @@ export default function Comments({ slug }: { slug: string }) {
 export function CommentAuth({ slug }: { slug: string }) {
   return (
     <div className="flex flex-col gap-1 items-center">
-      <TypographyLarge className="text-primary">Sign in to write a comment!</TypographyLarge>
+      <TypographyLarge className="text-primary">
+        Sign in to write a comment!
+      </TypographyLarge>
       <SignIn slug={slug} />
     </div>
   );
@@ -94,17 +111,21 @@ export function Comment({
 }: {
   comment: CommentData;
   owns?: boolean | null;
-  editComment?: (props: {
-    action: "add";
-    newComment: CommentData;
-  } | {
-    action: "delete";
-    commentId: string;
-  }) => void;
+  editComment?: (
+    props:
+      | {
+          action: "add";
+          newComment: CommentData;
+        }
+      | {
+          action: "delete";
+          commentId: string;
+        },
+  ) => void;
 }) {
   return (
     <div id={comment.id} className="flex flex-col gap-2 w-full">
-      <Label>{`${comment.created_by} on ${format(comment.created_at, 'PP')}`}</Label>
+      <Label>{`${comment.created_by} on ${format(comment.created_at, "PP")}`}</Label>
       <div className="border border-border shadow-xs rounded-md px-3 py-2">
         {comment.body}
       </div>

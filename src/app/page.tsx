@@ -1,40 +1,42 @@
-import { MDXRemote } from 'next-mdx-remote-client/rsc';
-import { format } from 'date-fns';
-import { Suspense } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { format } from "date-fns";
+import Image from "next/image";
+import Link from "next/link";
+import { MDXRemote } from "next-mdx-remote-client/rsc";
+import { Suspense } from "react";
+import ProjectCard from "@/components/projectCard";
+import { TypographyH1 } from "@/components/typography/headings";
+import {
+  TypographyLarge,
+  TypographyParagraph,
+} from "@/components/typography/paragraph";
+import { Button } from "@/components/ui/button";
+import { ViewDisplay } from "@/components/viewDisplay";
+import { components, options } from "@/config/mdxRemoteSettings";
+import { siteConfig } from "@/config/site";
+import type { Post } from "@/config/types";
+import { getPosts } from "@/lib/dbContentQueries";
+import { getPlaceholder } from "@/lib/images";
+import { cn } from "@/lib/utils";
 
-import { components, options } from '@/config/mdxRemoteSettings';
-import { getPosts } from '@/lib/dbContentQueries';
-import { cn } from '@/lib/utils';
-import { Post } from '@/config/types';
-import { siteConfig } from '@/config/site';
-import { ViewDisplay } from '@/components/viewDisplay';
-import { TypographyH1 } from '@/components/typography/headings';
-import { TypographyLarge, TypographyParagraph } from '@/components/typography/paragraph';
-import { getPlaceholder } from '@/lib/images';
-import ProjectCard from '@/components/projectCard';
-import { Button } from '@/components/ui/button';
-
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 
 export default async function Home() {
-  const result = await getPosts({ });
+  const result = await getPosts({});
   if (result.isErr()) throw new Error(result.error.message);
   const posts = result.value;
 
   const leftSide = posts.filter((post) =>
-    siteConfig.homePage.leftSideSlugs.includes(post.slug)
+    siteConfig.homePage.leftSideSlugs.includes(post.slug),
   );
   const rightSide = posts.filter((post) =>
-    siteConfig.homePage.rightSideSlugs.includes(post.slug)
+    siteConfig.homePage.rightSideSlugs.includes(post.slug),
   );
-  const middle = posts.find((post) =>
-    post.slug === siteConfig.homePage.middleSlug
+  const middle = posts.find(
+    (post) => post.slug === siteConfig.homePage.middleSlug,
   );
 
-  const firstPost = posts.find((post) =>
-    post.slug === siteConfig.homePage.firstSlug
+  const firstPost = posts.find(
+    (post) => post.slug === siteConfig.homePage.firstSlug,
   );
 
   if (middle === undefined || firstPost === undefined) return;
@@ -54,7 +56,7 @@ export default async function Home() {
             <div className="flex md:flex-row flex-col md:gap-0 gap-8 items-center">
               <div className="md:w-3/5 w-full">
                 <TypographyH1 className="not-italic text-5xl md:text-6xl lg:text-7xl font-light tracking-tight">
-                  Hey, I&apos;m{' '}
+                  Hey, I&apos;m{" "}
                   <span className="italic font-normal bg-linear-to-r from-primary-foreground to-primary-foreground/80 bg-clip-text">
                     Kutay
                   </span>
@@ -63,7 +65,7 @@ export default async function Home() {
               </div>
               <div className="md:w-2/5 w-full">
                 <TypographyParagraph className="text-lg md:text-xl leading-relaxed text-primary-foreground/90">
-                  Welcome to The Deterministic. I share thoughts on mathematics, 
+                  Welcome to The Deterministic. I share thoughts on mathematics,
                   computer science, and the patterns that connect them.
                 </TypographyParagraph>
               </div>
@@ -110,7 +112,9 @@ export default async function Home() {
 
       {/* Projects Section */}
       <section className="py-16 md:py-24">
-        <Projects projects={posts.filter((post) => post.tags.includes("project"))} />
+        <Projects
+          projects={posts.filter((post) => post.tags.includes("project"))}
+        />
       </section>
 
       <div className="md:max-w-6xl max-w-prose mx-auto px-4">
@@ -119,26 +123,32 @@ export default async function Home() {
 
       {/* Recent Posts Section */}
       <section className="py-16 md:py-24">
-        <RecentPosts 
+        <RecentPosts
           posts={posts
-            .filter((post) => 
-              !allShownPosts.includes(post) && 
-              siteConfig.homePage.firstSlug !== post.slug && 
-              !post.tags.includes("project")
+            .filter(
+              (post) =>
+                !allShownPosts.includes(post) &&
+                siteConfig.homePage.firstSlug !== post.slug &&
+                !post.tags.includes("project"),
             )
-            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-            .slice(0, 5)
-          }
+            .sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+            )
+            .slice(0, 5)}
         />
       </section>
     </div>
-  )
+  );
 }
 
 async function FirstPost({ post }: { post: Post }) {
   const coverImage = post.cover;
   const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
-  const coverUrl = coverImage ? coverImage[0] === '/' ? coverImage : `/${coverImage}` : null;
+  const coverUrl = coverImage
+    ? coverImage[0] === "/"
+      ? coverImage
+      : `/${coverImage}`
+    : null;
 
   return (
     <div className="md:max-w-6xl max-w-prose mx-auto px-4">
@@ -174,13 +184,17 @@ async function FirstPost({ post }: { post: Post }) {
             </Link>
 
             <div className="max-w-none text-muted-foreground">
-              <MDXRemote source={post.shortExcerpt || post.excerpt} options={options} components={components} />
+              <MDXRemote
+                source={post.shortExcerpt || post.excerpt}
+                options={options}
+                components={components}
+              />
             </div>
           </div>
 
           <div className="flex justify-between items-center pt-6 text-sm text-muted-foreground border-t border-border/50 mt-auto">
             <time dateTime={post.date}>
-              {format(new Date(post.date), 'PPP')}
+              {format(new Date(post.date), "PPP")}
             </time>
             <ViewDisplay slug={post.slug} />
           </div>
@@ -194,26 +208,36 @@ async function PostDisplay({
   post,
   isMiddle,
 }: {
-  post: Post,
-  isMiddle?: boolean,
+  post: Post;
+  isMiddle?: boolean;
 }) {
   const coverImage = post.cover;
   const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
-  const coverUrl = coverImage ? coverImage[0] === '/' ? coverImage : `/${coverImage}` : null;
+  const coverUrl = coverImage
+    ? coverImage[0] === "/"
+      ? coverImage
+      : `/${coverImage}`
+    : null;
 
   return (
     <div className={cn("flex flex-col", isMiddle ? "gap-4" : "gap-2")}>
-      <Link href={`/posts/${post.slug}`} className={cn("flex flex-col group", isMiddle ? "gap-4" : "gap-2")} prefetch={false}>
-        {placeholder && coverUrl && <Image
-          src={`/api${coverUrl}`}
-          alt={`${post.title} post cover image`}
-          quality={60}
-          className="lg:rounded-md rounded-sm lg:shadow-md shadow-xs"
-          width={placeholder.metadata.width}
-          height={placeholder.metadata.height}
-          priority={true}
-          placeholder={placeholder.base64 as `data:image/${string}`}
-        />}
+      <Link
+        href={`/posts/${post.slug}`}
+        className={cn("flex flex-col group", isMiddle ? "gap-4" : "gap-2")}
+        prefetch={false}
+      >
+        {placeholder && coverUrl && (
+          <Image
+            src={`/api${coverUrl}`}
+            alt={`${post.title} post cover image`}
+            quality={60}
+            className="lg:rounded-md rounded-sm lg:shadow-md shadow-xs"
+            width={placeholder.metadata.width}
+            height={placeholder.metadata.height}
+            priority={true}
+            placeholder={placeholder.base64 as `data:image/${string}`}
+          />
+        )}
         {isMiddle ? (
           <h2 className="lg:text-5xl/tight md:text-4xl text-4xl font-normal tracking-tighter text-stroke-medium text-stroke-background fix-text-stroke">
             <span className="lg:bg-position-[0%_93%] md:bg-position-[0%_90%] bg-position-[0%_89%] bg-linear-to-r text-foreground from-foreground to-foreground lg:bg-size-[0%_3px] bg-size-[0%_2px] bg-no-repeat lg:group-hover:bg-size-[100%_3px] group-hover:bg-size-[100%_2px] transition-all duration-500 ease-out">
@@ -228,13 +252,17 @@ async function PostDisplay({
           </h2>
         )}
       </Link>
-      {isMiddle && <div className="leading-normal">
-        <MDXRemote source={post.shortExcerpt || post.excerpt} options={options} components={components} />
-      </div>}
+      {isMiddle && (
+        <div className="leading-normal">
+          <MDXRemote
+            source={post.shortExcerpt || post.excerpt}
+            options={options}
+            components={components}
+          />
+        </div>
+      )}
       <div className="text-sm text-foreground tracking-tight font-light flex flex-row justify-between">
-        <p>
-          {format(post.date, 'PP')}
-        </p>
+        <p>{format(post.date, "PP")}</p>
         <Suspense>
           <ViewDisplay slug={post.slug} />
         </Suspense>
@@ -272,13 +300,19 @@ function RecentPosts({ posts }: { posts: Post[] }) {
         </h2>
         <div className="w-24 h-px bg-linear-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
       </div>
-      
+
       <div className="max-w-prose space-y-12">
         {posts.map((post) => (
-          <article key={post.slug} className="group border-b border-border/30 pb-12 last:border-b-0">
+          <article
+            key={post.slug}
+            className="group border-b border-border/30 pb-12 last:border-b-0"
+          >
             <header className="mb-6">
               <h3 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mb-3">
-                <Link href={`/posts/${post.slug}`} className="hover:text-foreground/80 transition-all">
+                <Link
+                  href={`/posts/${post.slug}`}
+                  className="hover:text-foreground/80 transition-all"
+                >
                   {post.title}
                 </Link>
               </h3>
@@ -288,18 +322,35 @@ function RecentPosts({ posts }: { posts: Post[] }) {
             </header>
 
             <div className="max-w-none text-muted-foreground mb-6">
-              <MDXRemote source={post.excerpt} options={options} components={components}/>
+              <MDXRemote
+                source={post.excerpt}
+                options={options}
+                components={components}
+              />
             </div>
 
             <div className="flex justify-between items-center">
-              <time className="text-sm text-muted-foreground" dateTime={post.date}>
-                {format(new Date(post.date), 'PPP')}
+              <time
+                className="text-sm text-muted-foreground"
+                dateTime={post.date}
+              >
+                {format(new Date(post.date), "PPP")}
               </time>
               <Button asChild variant="ghost" size="sm" className="group/btn">
                 <Link href={`/posts/${post.slug}`}>
                   <span>Read More</span>
-                  <svg className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-200"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </Link>
               </Button>

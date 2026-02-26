@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 
@@ -20,9 +20,5 @@ export function PostViewCounter({ slug }: { slug: string }) {
     return null;
   }
 
-  return (
-    <span>
-      {viewCount} views
-    </span>
-  );
+  return <span>{viewCount} views</span>;
 }

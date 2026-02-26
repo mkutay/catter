@@ -1,17 +1,11 @@
-'use client';
+"use client";
 
-import { TypographyH1 } from '@/components/typography/headings';
+import { TypographyH1 } from "@/components/typography/headings";
 
-export default function Error({
-  error,
-}: {
-  error: Error;
-}) {
+export default function Error({ error }: { error: Error }) {
   return (
     <section className="mx-auto max-w-prose lg:max-w-6xl px-4 py-8">
-      <TypographyH1>
-        Error
-      </TypographyH1>
+      <TypographyH1>Error</TypographyH1>
       <p className="leading-7 not-first:mt-6 text-lg">
         Oh no, something went wrong... Maybe refresh?
       </p>

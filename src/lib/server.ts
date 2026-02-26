@@ -1,14 +1,14 @@
 import {
-  saveCommentAction,
   deleteCommentAction,
+  deleteGuestbookEntriesAction,
+  getBlogViewsAction,
   getCommentsAction,
+  getUser,
   getViewCountAction,
   incrementViewsAction,
-  getBlogViewsAction,
+  saveCommentAction,
   saveGuestbookEntryAction,
-  deleteGuestbookEntriesAction,
-  getUser
-} from './server-helper';
+} from "./server-helper";
 
 const Server = {
   Auth: {
@@ -17,17 +17,17 @@ const Server = {
   Comments: {
     Save: saveCommentAction,
     Delete: deleteCommentAction,
-    Get: getCommentsAction
+    Get: getCommentsAction,
   },
   Views: {
     Get: getViewCountAction,
     Increment: incrementViewsAction,
-    GetAll: getBlogViewsAction
+    GetAll: getBlogViewsAction,
   },
   GuestBook: {
     Save: saveGuestbookEntryAction,
-    Delete: deleteGuestbookEntriesAction
-  }
+    Delete: deleteGuestbookEntriesAction,
+  },
 };
 
 export default Server;

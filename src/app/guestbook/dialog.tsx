@@ -1,30 +1,12 @@
-'use client';
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from "@/components/ui/textarea"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from '@/components/ui/form';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -32,20 +14,38 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
+} from "@/components/ui/command";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import { guestbookColors, GuestbookColorsType } from '@/config/types';
-import { guestbookDialogFormSchema } from '@/config/schema';
-import Server from '@/lib/server';
+} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
+import { guestbookDialogFormSchema } from "@/config/schema";
+import { type GuestbookColorsType, guestbookColors } from "@/config/types";
+import Server from "@/lib/server";
+import { cn } from "@/lib/utils";
 
 export function GuestbookDialog() {
   const [open, setOpen] = useState(false);
-  
+
   const form = useForm<z.infer<typeof guestbookDialogFormSchema>>({
     resolver: zodResolver(guestbookDialogFormSchema),
     defaultValues: {
@@ -54,8 +54,10 @@ export function GuestbookDialog() {
       message: "",
     },
   });
-  
-  const onSubmit = async (values: z.infer<typeof guestbookDialogFormSchema>) => {
+
+  const onSubmit = async (
+    values: z.infer<typeof guestbookDialogFormSchema>,
+  ) => {
     await Server.GuestBook.Save({
       message: values.message,
       username: values.username,
@@ -77,7 +79,10 @@ export function GuestbookDialog() {
           <DialogTitle>Customize Your Guestbook Entry Data</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="lg:space-y-4 space-y-2">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="lg:space-y-4 space-y-2"
+          >
             <FormField
               control={form.control}
               name="color"
@@ -92,11 +97,12 @@ export function GuestbookDialog() {
                           role="combobox"
                           className={cn(
                             "w-[200px] justify-between",
-                            !field.value && "text-muted-foreground"
+                            !field.value && "text-muted-foreground",
                           )}
                         >
                           {field.value
-                            ? field.value.charAt(0).toUpperCase() + field.value.slice(1)
+                            ? field.value.charAt(0).toUpperCase() +
+                              field.value.slice(1)
                             : "Select colour"}
                           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-70" />
                         </Button>
@@ -113,10 +119,15 @@ export function GuestbookDialog() {
                           <CommandGroup className="py-1">
                             {guestbookColors.map((color) => (
                               <CommandItem
-                                value={color.charAt(0).toUpperCase() + color.slice(1)}
+                                value={
+                                  color.charAt(0).toUpperCase() + color.slice(1)
+                                }
                                 key={color}
                                 onSelect={() => {
-                                  form.setValue("color", color as GuestbookColorsType);
+                                  form.setValue(
+                                    "color",
+                                    color as GuestbookColorsType,
+                                  );
                                 }}
                                 className={`text-${color}`}
                               >
@@ -126,7 +137,7 @@ export function GuestbookDialog() {
                                     "ml-auto h-4 w-4",
                                     color === field.value
                                       ? "opacity-100"
-                                      : "opacity-0"
+                                      : "opacity-0",
                                   )}
                                 />
                               </CommandItem>
@@ -137,7 +148,11 @@ export function GuestbookDialog() {
                     </PopoverContent>
                   </Popover>
                   <FormDescription>
-                    This is the <span className={`text-${field.value} font-bold`}>colour</span> that your name will be rendered as.
+                    This is the{" "}
+                    <span className={`text-${field.value} font-bold`}>
+                      colour
+                    </span>{" "}
+                    that your name will be rendered as.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

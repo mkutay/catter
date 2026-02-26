@@ -1,40 +1,47 @@
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
-import Link from 'next/link';
-import Image from 'next/image';
-
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardFooter,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { components, options } from '@/config/mdxRemoteSettings';
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { components, options } from "@/config/mdxRemoteSettings";
+import type { Post } from "@/config/types";
 import { getPlaceholder } from "@/lib/images";
-import { Post } from '@/config/types';
-import { ArrowRight } from "lucide-react";
 
-export default async function ProjectCard({ props, className }: { props: Post, className?: string }) {
-  const coverImage = props.coverSquare || '/images/favicon.png';
-  const coverUrl = coverImage[0] === '/' ? coverImage : `/${coverImage}`;
+export default async function ProjectCard({
+  props,
+  className,
+}: {
+  props: Post;
+  className?: string;
+}) {
+  const coverImage = props.coverSquare || "/images/favicon.png";
+  const coverUrl = coverImage[0] === "/" ? coverImage : `/${coverImage}`;
   const placeholder = await getPlaceholder(coverImage);
 
   return (
     <Card className={className}>
       <div className="m-2">
-        {coverUrl && <Link href={`/posts/${props.slug}`}>
-          <Image
-            alt={`Project ${props.title}'s cover square image`}
-            src={`/api${coverUrl}`}
-            className="rounded-xl shadow-md"
-            quality={50}
-            width={placeholder.metadata.width}
-            height={placeholder.metadata.height}
-            priority={true}
-            placeholder={placeholder.base64 as `data:image/${string}`}
-          />
-        </Link>}
+        {coverUrl && (
+          <Link href={`/posts/${props.slug}`}>
+            <Image
+              alt={`Project ${props.title}'s cover square image`}
+              src={`/api${coverUrl}`}
+              className="rounded-xl shadow-md"
+              quality={50}
+              width={placeholder.metadata.width}
+              height={placeholder.metadata.height}
+              priority={true}
+              placeholder={placeholder.base64 as `data:image/${string}`}
+            />
+          </Link>
+        )}
       </div>
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
@@ -43,7 +50,11 @@ export default async function ProjectCard({ props, className }: { props: Post, c
         </div>
       </CardHeader>
       <CardContent className="[&_p]:line-clamp-4">
-        <MDXRemote source={props.excerpt} options={options} components={components} />
+        <MDXRemote
+          source={props.excerpt}
+          options={options}
+          components={components}
+        />
       </CardContent>
       <CardFooter>
         <Button

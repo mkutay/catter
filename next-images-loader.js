@@ -1,19 +1,23 @@
-'use client';
+"use client";
 
 export default function myImageLoader({ src, width, quality }) {
-  const isLocal = !src.startsWith('http');
+  const isLocal = !src.startsWith("http");
   const query = new URLSearchParams();
 
-  const imageOptimizationApi = 'https://images.mkutay.dev';
+  const imageOptimizationApi = "https://images.mkutay.dev";
   // Your NextJS application URL
-  const baseUrl = 'https://www.mkutay.dev';
+  const baseUrl = "https://www.mkutay.dev";
 
   const fullSrc = `${baseUrl}${src}`;
 
-  if (width) query.set('width', width);
-  if (quality) query.set('quality', quality);
+  if (width) query.set("width", width);
+  if (quality) query.set("quality", quality);
 
-  if (isLocal && (process.env.NODE_ENV === 'development' || process.env.SITE_URL === "http://localhost:3000")) {
+  if (
+    isLocal &&
+    (process.env.NODE_ENV === "development" ||
+      process.env.SITE_URL === "http://localhost:3000")
+  ) {
     return src;
   }
   if (isLocal) {

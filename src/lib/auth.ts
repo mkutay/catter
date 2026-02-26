@@ -1,7 +1,7 @@
-import NextAuth from 'next-auth';
-import GitHubProvider from 'next-auth/providers/github';
-import DiscordProvider from 'next-auth/providers/discord';
-import SpotifyProvider from 'next-auth/providers/spotify';
+import NextAuth from "next-auth";
+import DiscordProvider from "next-auth/providers/discord";
+import GitHubProvider from "next-auth/providers/github";
+import SpotifyProvider from "next-auth/providers/spotify";
 
 export const {
   handlers: { GET, POST },

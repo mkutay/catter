@@ -1,43 +1,43 @@
-import { errAsync, okAsync, ResultAsync } from 'neverthrow';
+import { errAsync, okAsync, ResultAsync } from "neverthrow";
 
-import { ViewCount } from '@/config/types';
-import { sql } from '@/lib/postgres';
+import type { ViewCount } from "@/config/types";
+import { sql } from "@/lib/postgres";
 
 interface GetViewsCountError {
   message: string;
-  code: 'LIMIT_OUT_OF_RANGE' | 'DATABASE_ERROR'; 
-};
+  code: "LIMIT_OUT_OF_RANGE" | "DATABASE_ERROR";
+}
 
 interface GetBlogViewsError {
   message: string;
-  code: 'DATABASE_ERROR';
-};
+  code: "DATABASE_ERROR";
+}
 
 interface GetViewCountError {
   message: string;
-  code: 'POST_NOT_FOUND' | 'DATABASE_ERROR' | 'NO_VIEWS_FOUND';
-};
+  code: "POST_NOT_FOUND" | "DATABASE_ERROR" | "NO_VIEWS_FOUND";
+}
 
-export const getBlogViews = () => ResultAsync
-  .fromPromise(
+export const getBlogViews = () =>
+  ResultAsync.fromPromise(
     sql<{ count: number }[]>`
       SELECT count
       FROM views;
     `,
-    () => ({
-      message: 'Failed to fetch blog views. Database error.',
-      code: 'DATABASE_ERROR',
-    } as GetBlogViewsError)
-  )
-  .map((views) => {
+    () =>
+      ({
+        message: "Failed to fetch blog views. Database error.",
+        code: "DATABASE_ERROR",
+      }) as GetBlogViewsError,
+  ).map((views) => {
     return views.reduce((acc, curr) => acc + Number(curr.count), 0);
   });
 
 export const getViewsCount = ({ postNum }: { postNum: number }) =>
   postNum < 1 || postNum > 100
     ? errAsync({
-        message: 'Limit out of allowed range.',
-        code: 'LIMIT_OUT_OF_RANGE',
+        message: "Limit out of allowed range.",
+        code: "LIMIT_OUT_OF_RANGE",
       } as GetViewsCountError)
     : ResultAsync.fromPromise(
         sql<ViewCount[]>`
@@ -46,10 +46,11 @@ export const getViewsCount = ({ postNum }: { postNum: number }) =>
           ORDER BY count DESC
           LIMIT ${postNum};
         `,
-        () => ({
-            message: 'Failed to fetch views count. Database error.',
-            code: 'DATABASE_ERROR',
-          } as GetViewsCountError)
+        () =>
+          ({
+            message: "Failed to fetch views count. Database error.",
+            code: "DATABASE_ERROR",
+          }) as GetViewsCountError,
       );
 
 export const getViewCount = ({ slug }: { slug: string }) =>
@@ -59,16 +60,16 @@ export const getViewCount = ({ slug }: { slug: string }) =>
       FROM views
       WHERE slug=(${slug});
     `,
-    () => ({
-        message: 'Failed to fetch view count. Database error.',
-        code: 'DATABASE_ERROR',
-      } as GetViewCountError)
-  )
-  .andThen((views) => 
+    () =>
+      ({
+        message: "Failed to fetch view count. Database error.",
+        code: "DATABASE_ERROR",
+      }) as GetViewCountError,
+  ).andThen((views) =>
     views.length === 0 || !views[0]
       ? errAsync({
-          message: 'No views found for this post.',
-          code: 'NO_VIEWS_FOUND',
+          message: "No views found for this post.",
+          code: "NO_VIEWS_FOUND",
         } as GetViewCountError)
-      : okAsync(views[0].count)
+      : okAsync(views[0].count),
   );

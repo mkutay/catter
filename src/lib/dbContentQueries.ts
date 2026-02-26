@@ -1,15 +1,14 @@
-import { errAsync, fromPromise, okAsync } from 'neverthrow';
-import { notFound } from 'next/navigation';
-import matter from 'gray-matter';
-
-import { Post } from '@/config/types';
-import { sql } from './postgres';
-import { siteConfig } from '@/config/site';
+import matter from "gray-matter";
+import { errAsync, fromPromise, okAsync } from "neverthrow";
+import { notFound } from "next/navigation";
+import { siteConfig } from "@/config/site";
+import type { Post } from "@/config/types";
+import { sql } from "./postgres";
 
 interface ContentError {
   message: string;
   code: "DATABASE_ERROR";
-};
+}
 
 /**
  * Get all post files from the posts directory.
@@ -17,22 +16,22 @@ interface ContentError {
 export const getPostSlugs = () =>
   fromPromise(
     sql<{ slug: string }[]>`SELECT slug FROM posts;`,
-    () => ({
-      message: "Error fetching post slugs.",
-      code: "DATABASE_ERROR",
-    } as ContentError),
-  )
-  .map((values) => values.map((value) => value.slug));
+    () =>
+      ({
+        message: "Error fetching post slugs.",
+        code: "DATABASE_ERROR",
+      }) as ContentError,
+  ).map((values) => values.map((value) => value.slug));
 
-export const doesPostWithSlugExist = (slug: string) => 
+export const doesPostWithSlugExist = (slug: string) =>
   fromPromise(
     sql<{ slug: string }[]>`SELECT slug FROM posts WHERE slug = ${slug};`,
-    () => ({
-      message: "Error checking if post exists.",
-      code: "DATABASE_ERROR",
-    } as ContentError),
-  )
-  .map((values) => values.length > 0);
+    () =>
+      ({
+        message: "Error checking if post exists.",
+        code: "DATABASE_ERROR",
+      }) as ContentError,
+  ).map((values) => values.length > 0);
 
 // This function does not convert and parse content.
 export const getPost = (slug: string) =>
@@ -53,33 +52,44 @@ export const getPost = (slug: string) =>
       GROUP BY
         p.slug
     `,
-    () => ({
-      message: "Error fetching post.",
-      code: "DATABASE_ERROR",
-    } as ContentError),
+    () =>
+      ({
+        message: "Error fetching post.",
+        code: "DATABASE_ERROR",
+      }) as ContentError,
   )
-  .andThrough((result) => {
-    if (result.length === 0 || !result[0]) notFound();
-    return okAsync(result);
-  })
-  .map((result) => result[0])
-  // .andTee((post) => console.log(post))
-  .andThen((post) => 
-    post.content && post.title && post.description && post.date && post.locale && post.lastmodified && post.shortened && post.excerpt !== null
-      ? okAsync(post)
-      : errAsync({
-          message: "Post is missing required fields.",
-          code: "DATABASE_ERROR",
-        } as ContentError)
-  )
-  .map((post) => ({
-    ...post,
-    shortExcerpt: post.shortexcerpt,
-    lastModified: post.lastmodified,
-    coverSquare: post.coversquare,
-    tags: post.tags || [],
-    keywords: post.keywords || [],
-  } as Post));
+    .andThrough((result) => {
+      if (result.length === 0 || !result[0]) notFound();
+      return okAsync(result);
+    })
+    .map((result) => result[0])
+    // .andTee((post) => console.log(post))
+    .andThen((post) =>
+      post.content &&
+      post.title &&
+      post.description &&
+      post.date &&
+      post.locale &&
+      post.lastmodified &&
+      post.shortened &&
+      post.excerpt !== null
+        ? okAsync(post)
+        : errAsync({
+            message: "Post is missing required fields.",
+            code: "DATABASE_ERROR",
+          } as ContentError),
+    )
+    .map(
+      (post) =>
+        ({
+          ...post,
+          shortExcerpt: post.shortexcerpt,
+          lastModified: post.lastmodified,
+          coverSquare: post.coversquare,
+          tags: post.tags || [],
+          keywords: post.keywords || [],
+        }) as Post,
+    );
 
 /**
  * Get posts based on filters.
@@ -91,10 +101,10 @@ export const getPosts = ({
   tags = [],
   disallowTags = [],
 }: {
-  startInd?: number,
-  endInd?: number,
-  tags?: string[],
-  disallowTags?: string[]
+  startInd?: number;
+  endInd?: number;
+  tags?: string[];
+  disallowTags?: string[];
 }) => {
   if (!disallowTags.includes(siteConfig.invisible)) {
     disallowTags.push(siteConfig.invisible);
@@ -144,27 +154,38 @@ export const getPosts = ({
 
   return fromPromise(
     promise,
-    (error) => ({
-      message: "Error fetching posts. " + (error as Error).message,
-      code: "DATABASE_ERROR",
-    } as ContentError),
-  )
-  .map((postsWithTags) => postsWithTags.map((post) => ({
-    ...post,
-    shortExcerpt: post.shortexcerpt,
-    lastModified: post.lastmodified,
-    coverSquare: post.coversquare,
-  } as Post)));
-}
+    (error) =>
+      ({
+        message: `Error fetching posts. ${(error as Error).message}`,
+        code: "DATABASE_ERROR",
+      }) as ContentError,
+  ).map((postsWithTags) =>
+    postsWithTags.map(
+      (post) =>
+        ({
+          ...post,
+          shortExcerpt: post.shortexcerpt,
+          lastModified: post.lastmodified,
+          coverSquare: post.coversquare,
+        }) as Post,
+    ),
+  );
+};
 
 /**
  * Get the number of posts for given filters
  */
-export const getPostsLength = ({ tags = [], disallowTags = [] }: { tags?: string[], disallowTags?: string[] }) => {
+export const getPostsLength = ({
+  tags = [],
+  disallowTags = [],
+}: {
+  tags?: string[];
+  disallowTags?: string[];
+}) => {
   if (!disallowTags.includes(siteConfig.invisible)) {
     disallowTags.push(siteConfig.invisible);
   }
-  
+
   const promise = sql`
     WITH filtered_posts AS (
       SELECT 
@@ -188,13 +209,13 @@ export const getPostsLength = ({ tags = [], disallowTags = [] }: { tags?: string
 
   return fromPromise(
     promise,
-    () => ({
-      message: "Error fetching posts length.",
-      code: "DATABASE_ERROR",
-    } as ContentError),
-  )
-  .map((result) => Number(result[0].count));
-}
+    () =>
+      ({
+        message: "Error fetching posts length.",
+        code: "DATABASE_ERROR",
+      }) as ContentError,
+  ).map((result) => Number(result[0].count));
+};
 
 /**
  * Get list of all tags used across posts using an optimized query.
@@ -206,18 +227,19 @@ export const getListOfAllTags = () =>
       FROM post_tags
       ORDER BY tag ASC;
     `,
-    () => ({
-      message: "Error fetching tags.",
-      code: "DATABASE_ERROR",
-    } as ContentError),
-  )
-  .map((result) => result.map((row) => row.tag as string));
+    () =>
+      ({
+        message: "Error fetching tags.",
+        code: "DATABASE_ERROR",
+      }) as ContentError,
+  ).map((result) => result.map((row) => row.tag as string));
 
 export function createPost(content: string, slug: string): Post {
-  const { data: frontmatter, content: contentWithoutFrontmatter } = matter(content);
+  const { data: frontmatter, content: contentWithoutFrontmatter } =
+    matter(content);
 
   const getStringValue = (value: unknown, defaultValue: string): string => {
-    return typeof value === 'string' ? value : defaultValue;
+    return typeof value === "string" ? value : defaultValue;
   };
 
   const getDateValue = (value: unknown, defaultValue: string) => {
@@ -225,11 +247,13 @@ export function createPost(content: string, slug: string): Post {
     if (value) return new Date(value as string).toISOString();
     return defaultValue;
   };
-  
+
   const getStringArray = (value: unknown): string[] => {
-    return Array.isArray(value) ? value.filter(item => typeof item === 'string') as string[] : [];
+    return Array.isArray(value)
+      ? (value.filter((item) => typeof item === "string") as string[])
+      : [];
   };
-  
+
   slug = getStringValue(frontmatter.slug, slug);
 
   const post: Post = {
@@ -238,16 +262,22 @@ export function createPost(content: string, slug: string): Post {
     content: contentWithoutFrontmatter,
     description: getStringValue(frontmatter.description, ""),
     date: getDateValue(frontmatter.date, new Date().toISOString()),
-    excerpt: getStringValue(frontmatter.excerpt, ''),
+    excerpt: getStringValue(frontmatter.excerpt, ""),
     locale: getStringValue(frontmatter.locale, "en_UK"),
-    cover: typeof frontmatter.cover === 'string' ? frontmatter.cover : null,
-    coverSquare: typeof frontmatter.coverSquare === 'string' ? frontmatter.coverSquare : null,
-    lastModified: getDateValue(frontmatter.lastModified, new Date().toISOString()),
+    cover: typeof frontmatter.cover === "string" ? frontmatter.cover : null,
+    coverSquare:
+      typeof frontmatter.coverSquare === "string"
+        ? frontmatter.coverSquare
+        : null,
+    lastModified: getDateValue(
+      frontmatter.lastModified,
+      new Date().toISOString(),
+    ),
     shortened: getStringValue(frontmatter.shortened, slug),
-    shortExcerpt: getStringValue(frontmatter.shortExcerpt, ''),
+    shortExcerpt: getStringValue(frontmatter.shortExcerpt, ""),
     tags: getStringArray(frontmatter.tags),
-    keywords: getStringArray(frontmatter.keywords)
+    keywords: getStringArray(frontmatter.keywords),
   };
-  
+
   return post;
 }

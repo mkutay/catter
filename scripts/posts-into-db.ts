@@ -1,9 +1,8 @@
-import { exit } from 'process';
-import * as path from 'path';
-import { fUploadImage } from '@/lib/images';
-
-import { sql } from '@/lib/postgres';
-import { getPosts } from '@/lib/fsContentQueries';
+import * as path from "node:path";
+import { exit } from "node:process";
+import { getPosts } from "@/lib/fsContentQueries";
+import { fUploadImage } from "@/lib/images";
+import { sql } from "@/lib/postgres";
 
 const getImageUrlsFromMDX = (content: string): string[] => {
   const imgRegex = /!\[(.*?)\]\((.*?)\)/g;
@@ -19,27 +18,33 @@ const getImageUrlsFromMDX = (content: string): string[] => {
 };
 
 try {
-  const posts = getPosts({ });
+  const posts = getPosts({});
 
-  const images: { url: string, path: string }[] = [];
+  const images: { url: string; path: string }[] = [];
   posts.forEach((post) => {
     getImageUrlsFromMDX(post.content).forEach((url) => {
       images.push({
         url,
-        path: path.join(path.dirname(__filename), "../public" + url),
+        path: path.join(path.dirname(__filename), `../public${url}`),
       });
-    })
+    });
     if (post.meta.cover) {
       images.push({
         url: post.meta.cover,
-        path: path.join(path.dirname(__filename), "../public" + post.meta.cover),
+        path: path.join(
+          path.dirname(__filename),
+          `../public${post.meta.cover}`,
+        ),
       });
     }
     if (post.meta.coverSquare) {
       images.push({
         url: post.meta.coverSquare,
-        path: path.join(path.dirname(__filename), "../public" + post.meta.coverSquare),
-      })
+        path: path.join(
+          path.dirname(__filename),
+          `../public${post.meta.coverSquare}`,
+        ),
+      });
     }
   });
 
@@ -61,8 +66,8 @@ try {
     shortened: post.meta.shortened,
     shortExcerpt: post.meta.shortExcerpt || null,
   }));
-  const tagsDb: { tag: string, slug: string }[] = [];
-  const keywordsDb: { keyword: string, slug: string }[] = [];
+  const tagsDb: { tag: string; slug: string }[] = [];
+  const keywordsDb: { keyword: string; slug: string }[] = [];
   posts.forEach((post) => {
     const tags = post.meta.tags.map((tag) => ({
       slug: post.slug,
@@ -80,37 +85,46 @@ try {
       const keywordTags = tags.map((tag) => ({
         slug: tag.slug,
         keyword: tag.tag,
-      }))
+      }));
       keywordsDb.push(...keywordTags);
     }
   });
 
-  await Promise.all(postsDb.map((p) =>
-    sql`
+  await Promise.all(
+    postsDb.map(
+      (p) =>
+        sql`
       INSERT INTO posts (slug, content, title, description, date, excerpt, locale, cover, coverSquare, lastModified, shortened, shortExcerpt)
       VALUES (${p.slug}, ${p.content}, ${p.title}, ${p.description}, ${p.date}, ${p.excerpt}, ${p.locale}, ${p.cover}, ${p.coverSquare}, ${p.lastModified}, ${p.shortened}, ${p.shortExcerpt})
       ON CONFLICT (slug) DO NOTHING;
-    `
-  ));
+    `,
+    ),
+  );
 
-  await Promise.all(keywordsDb.map((k) =>
-    sql`
+  await Promise.all(
+    keywordsDb.map(
+      (k) =>
+        sql`
       INSERT INTO post_keywords (slug, keyword)
       VALUES (${k.slug}, ${k.keyword})
       ON CONFLICT (slug, keyword) DO NOTHING;
-    `
-  ));
+    `,
+    ),
+  );
 
-  await Promise.all(tagsDb.map((k) =>
-    sql`
+  await Promise.all(
+    tagsDb.map(
+      (k) =>
+        sql`
       INSERT INTO post_tags (slug, tag)
       VALUES (${k.slug}, ${k.tag})
       ON CONFLICT (slug, tag) DO NOTHING;
-    `
-  ));
+    `,
+    ),
+  );
 } catch (error) {
   // Log error but don't fail the build
-  console.log('Database connection failed, skipping table operations:', error);
+  console.log("Database connection failed, skipping table operations:", error);
 }
 
 exit(0);

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
 
@@ -13,18 +13,14 @@ export function ViewDisplay({ slug }: { slug: string }) {
       if (!ignore) {
         setViews(views.ok ? views.value : null);
       }
-    })
+    });
 
     return () => {
       ignore = true;
-    }
+    };
   }, [slug]);
 
   if (!views) return null;
 
-  return (
-    <p>
-      {views} views
-    </p>
-  );
+  return <p>{views} views</p>;
 }

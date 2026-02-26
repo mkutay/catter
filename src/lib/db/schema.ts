@@ -1,12 +1,12 @@
 import {
+  foreignKey,
+  integer,
   pgTable,
+  primaryKey,
   serial,
-  varchar,
   text,
   timestamp,
-  integer,
-  foreignKey,
-  primaryKey,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 export const comments = pgTable("comments", {

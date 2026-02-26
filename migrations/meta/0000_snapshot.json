@@ -248,12 +248,8 @@
           "tableFrom": "post_keywords",
           "tableTo": "posts",
           "schemaTo": "public",
-          "columnsFrom": [
-            "slug"
-          ],
-          "columnsTo": [
-            "slug"
-          ],
+          "columnsFrom": ["slug"],
+          "columnsTo": ["slug"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -261,10 +257,7 @@
       "compositePrimaryKeys": {
         "post_keywords_pkey": {
           "name": "post_keywords_pkey",
-          "columns": [
-            "slug",
-            "keyword"
-          ]
+          "columns": ["slug", "keyword"]
         }
       },
       "uniqueConstraints": {},
@@ -296,12 +289,8 @@
           "tableFrom": "post_tags",
           "tableTo": "posts",
           "schemaTo": "public",
-          "columnsFrom": [
-            "slug"
-          ],
-          "columnsTo": [
-            "slug"
-          ],
+          "columnsFrom": ["slug"],
+          "columnsTo": ["slug"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -309,10 +298,7 @@
       "compositePrimaryKeys": {
         "post_tags_pkey": {
           "name": "post_tags_pkey",
-          "columns": [
-            "tag",
-            "slug"
-          ]
+          "columns": ["tag", "slug"]
         }
       },
       "uniqueConstraints": {},

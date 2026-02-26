@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-import { err, ok, Result, ResultAsync } from "neverthrow";
+import { err, ok, type Result, type ResultAsync } from "neverthrow";
 
 // These are needed for the `createAction()` method to work.
 // neverthrow results can not be sent over the wire in server actions.
 
 export type ActionResult<T, E> = ActionOk<T, E> | ActionErr<T, E>;
 
-export type ActionOk<T, E> = {
+export type ActionOk<T, _E> = {
   ok: true;
   value: T;
 };
@@ -15,7 +15,7 @@ export const actionOk = <T>(value: T): ActionOk<T, never> => ({
   value,
 });
 
-export type ActionErr<T, E> = {
+export type ActionErr<_T, E> = {
   ok: false;
   error: E;
 };

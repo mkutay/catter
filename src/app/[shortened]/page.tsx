@@ -1,23 +1,28 @@
-import { notFound, redirect } from 'next/navigation';
-import { format } from 'date-fns';
-import path from 'path';
+import path from "node:path";
+import { format } from "date-fns";
+import { notFound, redirect } from "next/navigation";
+import { siteConfig } from "@/config/site";
+import { getPosts } from "@/lib/dbContentQueries";
 
-import { getPosts } from '@/lib/dbContentQueries';
-import { siteConfig } from '@/config/site';
-
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 // export const dynamicParams = false;
 
-export async function generateMetadata({ params }: { params: Promise<{ shortened: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ shortened: string }>;
+}) {
   const { shortened } = await params;
-  const posts = await getPosts({ });
+  const posts = await getPosts({});
   if (posts.isErr()) throw new Error(posts.error.message);
 
   const props = posts.value.find((post) => post.shortened === shortened);
   if (!props) notFound();
 
-  const formattedDate = format(props.date, 'PP');
-  const coverImage = props.cover ? path.join('/api', props.cover) : 'images/favicon.png';
+  const formattedDate = format(props.date, "PP");
+  const coverImage = props.cover
+    ? path.join("/api", props.cover)
+    : "images/favicon.png";
 
   return {
     title: props.title,
@@ -26,9 +31,9 @@ export async function generateMetadata({ params }: { params: Promise<{ shortened
     openGraph: {
       title: props.title,
       description: props.description,
-      url: siteConfig.url + '/posts/' + props.slug,
+      url: `${siteConfig.url}/posts/${props.slug}`,
       locale: props.locale,
-      type: 'article',
+      type: "article",
       publishedTime: formattedDate,
       images: [coverImage],
       siteName: siteConfig.name,
@@ -36,9 +41,13 @@ export async function generateMetadata({ params }: { params: Promise<{ shortened
   };
 }
 
-export default async function Page({ params }: { params: Promise<{ shortened: string }> }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ shortened: string }>;
+}) {
   const { shortened } = await params;
-  const posts = await getPosts({ });
+  const posts = await getPosts({});
   if (posts.isErr()) throw new Error(posts.error.message);
 
   posts.value.forEach((post) => {
@@ -50,7 +59,7 @@ export default async function Page({ params }: { params: Promise<{ shortened: st
 
 export async function generateStaticParams() {
   const ret: { shortened: string }[] = [];
-  const posts = await getPosts({ });
+  const posts = await getPosts({});
   if (posts.isErr()) throw new Error(posts.error.message);
 
   posts.value.forEach((post) => {

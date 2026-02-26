@@ -1,15 +1,19 @@
-import PaginationArrows from '@/components/paginationArrows';
-import ListPosts from '@/components/listPosts';
-import { getPostsLength } from '@/lib/dbContentQueries';
-import { siteConfig } from '@/config/site';
-import { TotalBlogViews } from '@/components/totalBlogViews';
+import ListPosts from "@/components/listPosts";
+import PaginationArrows from "@/components/paginationArrows";
+import { TotalBlogViews } from "@/components/totalBlogViews";
+import { siteConfig } from "@/config/site";
+import { getPostsLength } from "@/lib/dbContentQueries";
 
-export const dynamic = 'force-static';
+export const dynamic = "force-static";
 // export const dynamicParams = false;
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
-  const result = await getPostsLength({ });
+  const result = await getPostsLength({});
   if (result.isErr()) throw new Error(result.error.message);
   const postsLength = result.value;
 
@@ -30,7 +34,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const startInd = siteConfig.postNumPerPage * (id - 1);
   const endInd = siteConfig.postNumPerPage * id;
 
-  const result = await getPostsLength({ disallowTags: ['project'] });
+  const result = await getPostsLength({ disallowTags: ["project"] });
   if (result.isErr()) throw new Error(result.error.message);
   const postsLength = result.value;
 
@@ -39,23 +43,35 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
       <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
         List of All Posts and Tags
       </h1>
-      <ListPosts startInd={startInd} endInd={endInd} disallowTags={['project']}/>
+      <ListPosts
+        startInd={startInd}
+        endInd={endInd}
+        disallowTags={["project"]}
+      />
       <div className="my-4">
-        <PaginationArrows totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)} currentId={id} href="/posts/page"/>
+        <PaginationArrows
+          totalPages={Math.ceil(postsLength / siteConfig.postNumPerPage)}
+          currentId={id}
+          href="/posts/page"
+        />
       </div>
       <TotalBlogViews />
     </>
-  )
+  );
 }
 
 export async function generateStaticParams() {
-  const result = await getPostsLength({ disallowTags: ['project'] });
+  const result = await getPostsLength({ disallowTags: ["project"] });
   if (result.isErr()) throw new Error(result.error.message);
   const postsLength = result.value;
-  
+
   const ret: { id: string }[] = [];
 
-  for (let i = 1; i <= Math.ceil(postsLength / siteConfig.postNumPerPage); i++) {
+  for (
+    let i = 1;
+    i <= Math.ceil(postsLength / siteConfig.postNumPerPage);
+    i++
+  ) {
     ret.push({ id: i.toString() });
   }
 
