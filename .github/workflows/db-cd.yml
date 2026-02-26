@@ -2,7 +2,9 @@ name: DB CD - apply migrations
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    paths:
+      - "migrations/**"
 
 concurrency:
   group: db-cd
@@ -20,7 +22,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 'latest'
+          bun-version: "latest"
 
       - name: Install dependencies (bun)
         run: bun install --frozen-lockfile
