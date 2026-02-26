@@ -25,12 +25,13 @@ export const Logo: React.FC<IconSvgProps> = ({
   ...props
 }) => (
   <svg
+    {...props}
     fill="none"
     height={size || height}
     viewBox="286 300 1400 1400"
     width={size || width}
-    {...props}
   >
+    <title>logo</title>
     <g clipPath="url(#ArtboardFrame)">
       <path
         d="M1949.61 48.7391L1949.61 1950.77L1293.66 1950.77L1293.66 48.7391L1949.61 48.7391Z"

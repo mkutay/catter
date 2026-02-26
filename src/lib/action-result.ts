@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/** biome-ignore-all lint/suspicious/noExplicitAny: needed */
 import { err, ok, type Result, type ResultAsync } from "neverthrow";
 
 // These are needed for the `createAction()` method to work.

@@ -7,8 +7,9 @@ import { sql } from "@/lib/postgres";
 const getImageUrlsFromMDX = (content: string): string[] => {
   const imgRegex = /!\[(.*?)\]\((.*?)\)/g;
   const imageUrls: string[] = [];
-  let match;
+  let match: RegExpExecArray | null;
 
+  // biome-ignore lint/suspicious/noAssignInExpressions: needed for regex exec loop
   while ((match = imgRegex.exec(content)) !== null) {
     const imageUrl = match[2];
     imageUrls.push(imageUrl);

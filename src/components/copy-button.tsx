@@ -25,6 +25,7 @@ export function CopyCodeButton({
         setTimeout(() => setCopied(false), 1200);
       }}
       aria-label="Copy to clipboard"
+      type="button"
     >
       {copied ? <Check size={16} /> : <Copy size={16} />}
     </button>

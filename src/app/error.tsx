@@ -2,7 +2,7 @@
 
 import { TypographyH1 } from "@/components/typography/headings";
 
-export default function Error({ error }: { error: Error }) {
+export default function ErrorPage({ error }: { error: Error }) {
   return (
     <section className="mx-auto max-w-prose lg:max-w-6xl px-4 py-8">
       <TypographyH1>Error</TypographyH1>

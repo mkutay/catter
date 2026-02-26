@@ -18,12 +18,15 @@ export function ToggleParentheses({ children }: { children: React.ReactNode }) {
   };
 
   return isOpen ? (
+    // biome-ignore lint/a11y/noStaticElementInteractions: needed
+    // biome-ignore lint/a11y/useKeyWithClickEvents: needed
     <span onClick={handleToggle}>
       {/* <span className="text-primary font-semibold mr-[1px]">(</span>{children}<span className="text-primary font-semibold ml-[1px]">)</span> */}
       ({children})
     </span>
   ) : (
     <button
+      type="button"
       onClick={handleToggle}
       className="hover:text-primary/80 transition-colors text-primary cursor-pointer font-semibold flex-row items-center inline-flex gap-0.5"
     >

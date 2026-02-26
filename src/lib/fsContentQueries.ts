@@ -21,7 +21,7 @@ export function getPostProps(slug: string): PostData {
 }
 
 export function getAboutProps() {
-  let markdownFile;
+  let markdownFile: string;
   try {
     markdownFile = fs.readFileSync(
       path.join(process.cwd(), path.join("content/pages/about.mdx")),
@@ -50,7 +50,7 @@ export function getAboutProps() {
  * Get properties for a specific slug in a path (post or page).
  */
 export function getProps(pathTo: string, slug: string): PostData {
-  let markdownFile;
+  let markdownFile: string;
   try {
     markdownFile = fs.readFileSync(
       path.join(process.cwd(), path.join(pathTo, `${slug}.mdx`)),

@@ -11,8 +11,9 @@ function uppercaseFirstLetter(string: string) {
 function getImagesFromPostContent(content: string) {
   const regex = /!\[.*?\]\((.*?)\)/g;
   const images: string[] = [];
-  let match;
+  let match: RegExpExecArray | null;
 
+  // biome-ignore lint/suspicious/noAssignInExpressions: needed for regex exec loop
   while ((match = regex.exec(content)) !== null) {
     images.push(match[1]);
   }

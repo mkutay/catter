@@ -41,5 +41,13 @@
     "parser": {
       "interpolation": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.min.css"],
+      "linter": {
+        "enabled": false
+      }
+    }
+  ]
 }

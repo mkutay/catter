@@ -345,6 +345,7 @@ function RecentPosts({ posts }: { posts: Post[] }) {
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
+                    <title>arrow right</title>
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
