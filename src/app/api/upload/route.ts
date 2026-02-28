@@ -1,9 +1,10 @@
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-
 import type { Post } from "@/config/types";
+import { db } from "@/lib/db/drizzle";
+import { postKeywords, posts, postTags, views } from "@/lib/db/schema";
 import { createPost } from "@/lib/dbContentQueries";
 import { uploadImage } from "@/lib/images";
-import { sql } from "@/lib/postgres";
 
 export async function POST(request: Request) {
   const authHeader = request.headers.get("Authorization");
@@ -94,46 +95,59 @@ export async function POST(request: Request) {
 }
 
 const insertIntoDB = async ({ post }: { post: Post }) => {
-  await sql`
-    INSERT INTO posts (slug, content, title, description, date, excerpt, locale, cover, coverSquare, lastModified, shortened, shortExcerpt)
-    VALUES (${post.slug}, ${post.content}, ${post.title}, ${post.description}, ${post.date}, ${post.excerpt}, ${post.locale}, ${post.cover}, ${post.coverSquare}, ${post.lastModified}, ${post.shortened}, ${post.shortExcerpt})
-    ON CONFLICT (slug) DO UPDATE SET
-      content = ${post.content},
-      title = ${post.title},
-      description = ${post.description},
-      date = ${post.date},
-      excerpt = ${post.excerpt},
-      locale = ${post.locale},
-      cover = ${post.cover},
-      coverSquare = ${post.coverSquare},
-      lastModified = ${post.lastModified},
-      shortened = ${post.shortened},
-      shortExcerpt = ${post.shortExcerpt}
-  `;
+  await db
+    .insert(posts)
+    .values({
+      slug: post.slug,
+      content: post.content,
+      title: post.title,
+      description: post.description,
+      date: post.date,
+      excerpt: post.excerpt,
+      locale: post.locale,
+      cover: post.cover,
+      coversquare: post.coverSquare,
+      lastmodified: post.lastModified,
+      shortened: post.shortened,
+      shortexcerpt: post.shortExcerpt,
+    })
+    .onConflictDoUpdate({
+      target: posts.slug,
+      set: {
+        content: post.content,
+        title: post.title,
+        description: post.description,
+        date: post.date,
+        excerpt: post.excerpt,
+        locale: post.locale,
+        cover: post.cover,
+        coversquare: post.coverSquare,
+        lastmodified: post.lastModified,
+        shortened: post.shortened,
+        shortexcerpt: post.shortExcerpt,
+      },
+    });
 
   // Delete existing tags and keywords for this post and re-insert them
-  await sql`DELETE FROM post_tags WHERE slug = ${post.slug}`;
-  await sql`DELETE FROM post_keywords WHERE slug = ${post.slug}`;
+  await db.delete(postTags).where(eq(postTags.slug, post.slug));
+  await db.delete(postKeywords).where(eq(postKeywords.slug, post.slug));
 
-  for (const tag of post.tags) {
-    await sql`
-      INSERT INTO post_tags (slug, tag)
-      VALUES (${post.slug}, ${tag})
-      ON CONFLICT (slug, tag) DO NOTHING;
-    `;
+  if (post.tags.length > 0) {
+    await db
+      .insert(postTags)
+      .values(post.tags.map((tag) => ({ slug: post.slug, tag })))
+      .onConflictDoNothing();
   }
 
-  for (const keyword of post.keywords) {
-    await sql`
-      INSERT INTO post_keywords (slug, keyword)
-      VALUES (${post.slug}, ${keyword})
-      ON CONFLICT (slug, keyword) DO NOTHING;
-    `;
+  if (post.keywords.length > 0) {
+    await db
+      .insert(postKeywords)
+      .values(post.keywords.map((keyword) => ({ slug: post.slug, keyword })))
+      .onConflictDoNothing();
   }
 
-  await sql`
-    INSERT INTO views (slug, count)
-    VALUES (${post.slug}, 0)
-    ON CONFLICT (slug) DO NOTHING;
-  `;
+  await db
+    .insert(views)
+    .values({ slug: post.slug, count: 0 })
+    .onConflictDoNothing();
 };

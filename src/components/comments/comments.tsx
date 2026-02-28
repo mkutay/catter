@@ -53,7 +53,7 @@ export default function Comments({ slug }: { slug: string }) {
           }
         | {
             action: "delete";
-            commentId: string;
+            commentId: number;
           },
     ) => {
       if (props.action === "add") {
@@ -119,12 +119,12 @@ export function Comment({
         }
       | {
           action: "delete";
-          commentId: string;
+          commentId: number;
         },
   ) => void;
 }) {
   return (
-    <div id={comment.id} className="flex flex-col gap-2 w-full">
+    <div id={comment.id.toString()} className="flex flex-col gap-2 w-full">
       <Label>{`${comment.created_by} on ${format(comment.created_at, "PP")}`}</Label>
       <div className="border border-border shadow-xs rounded-md px-3 py-2">
         {comment.body}

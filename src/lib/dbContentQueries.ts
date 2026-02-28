@@ -1,9 +1,11 @@
+import { and, asc, desc, eq, getTableColumns, not, sql } from "drizzle-orm";
 import matter from "gray-matter";
 import { errAsync, fromPromise, okAsync } from "neverthrow";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import type { Post } from "@/config/types";
-import { sql } from "./postgres";
+import { db } from "./db/drizzle";
+import { postKeywords, posts, postTags, views } from "./db/schema";
 
 interface ContentError {
   message: string;
@@ -15,7 +17,7 @@ interface ContentError {
  */
 export const getPostSlugs = () =>
   fromPromise(
-    sql<{ slug: string }[]>`SELECT slug FROM posts;`,
+    db.select({ slug: posts.slug }).from(posts),
     () =>
       ({
         message: "Error fetching post slugs.",
@@ -25,7 +27,7 @@ export const getPostSlugs = () =>
 
 export const doesPostWithSlugExist = (slug: string) =>
   fromPromise(
-    sql<{ slug: string }[]>`SELECT slug FROM posts WHERE slug = ${slug};`,
+    db.select({ slug: posts.slug }).from(posts).where(eq(posts.slug, slug)),
     () =>
       ({
         message: "Error checking if post exists.",
@@ -36,22 +38,21 @@ export const doesPostWithSlugExist = (slug: string) =>
 // This function does not convert and parse content.
 export const getPost = (slug: string) =>
   fromPromise(
-    sql`
-      SELECT
-        p.*,
-        ARRAY_AGG(DISTINCT pt.tag) AS tags,
-        ARRAY_AGG(DISTINCT pk.keyword) AS keywords
-      FROM
-        posts p
-      LEFT JOIN
-        post_tags pt ON p.slug = pt.slug
-      LEFT JOIN
-        post_keywords pk ON p.slug = pk.slug
-      WHERE
-        p.slug = ${slug}
-      GROUP BY
-        p.slug
-    `,
+    db
+      .select({
+        ...getTableColumns(posts),
+        tags: sql<
+          string[]
+        >`ARRAY_REMOVE(ARRAY_AGG(DISTINCT ${postTags.tag}), NULL)`,
+        keywords: sql<
+          string[]
+        >`ARRAY_REMOVE(ARRAY_AGG(DISTINCT ${postKeywords.keyword}), NULL)`,
+      })
+      .from(posts)
+      .leftJoin(postTags, eq(posts.slug, postTags.slug))
+      .leftJoin(postKeywords, eq(posts.slug, postKeywords.slug))
+      .where(eq(posts.slug, slug))
+      .groupBy(posts.slug),
     () =>
       ({
         message: "Error fetching post.",
@@ -110,56 +111,70 @@ export const getPosts = ({
     disallowTags.push(siteConfig.invisible);
   }
 
-  const promise = sql`
-    WITH filtered_posts AS (
-      SELECT 
-        p.slug,
-        p.content,
-        p.title,
-        p.description,
-        p.date,
-        p.excerpt,
-        p.locale,
-        p.cover,
-        p.coverSquare,
-        p.lastModified,
-        p.shortened,
-        p.shortExcerpt,
-        ARRAY_AGG(DISTINCT pt.tag) AS tags,
-        ARRAY_AGG(DISTINCT pk.keyword) AS keywords,
-        ARRAY_AGG(DISTINCT v.count) AS views,
-        CASE WHEN ${tags.length} = 0 THEN true ELSE COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${tags})) > 0 END AS has_included_tag,
-        CASE WHEN ${disallowTags.length} = 0 THEN false ELSE COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${disallowTags})) > 0 END AS has_disallowed_tag
-      FROM 
-        posts p
-      LEFT JOIN 
-        post_tags pt ON p.slug = pt.slug
-      LEFT JOIN 
-        post_keywords pk ON p.slug = pk.slug
-      LEFT JOIN
-        views v ON p.slug = v.slug
-      GROUP BY 
-        p.slug
-    )
-    SELECT *
-    FROM filtered_posts
-    WHERE 
-      (${tags.length} = 0 OR has_included_tag) 
-      AND NOT has_disallowed_tag
-    ORDER BY 
-      date DESC
-    LIMIT ${endInd - startInd} 
-    OFFSET ${startInd};
-  `;
+  const hasIncludedTagSql =
+    tags.length === 0
+      ? sql<boolean>`true`
+      : sql<boolean>`COUNT(DISTINCT ${postTags.tag}) FILTER (WHERE ${postTags.tag} = ANY(ARRAY[${sql.join(
+          tags.map((t) => sql`${t}`),
+          sql`, `,
+        )}]::text[])) > 0`;
 
-  return fromPromise(
-    promise,
-    (error) =>
-      ({
-        message: `Error fetching posts. ${(error as Error).message}`,
-        code: "DATABASE_ERROR",
-      }) as ContentError,
-  ).map((postsWithTags) =>
+  const hasDisallowedTagSql =
+    disallowTags.length === 0
+      ? sql<boolean>`false`
+      : sql<boolean>`COUNT(DISTINCT ${postTags.tag}) FILTER (WHERE ${postTags.tag} = ANY(ARRAY[${sql.join(
+          disallowTags.map((t) => sql`${t}`),
+          sql`, `,
+        )}]::text[])) > 0`;
+
+  const filteredPostsQuery = db
+    .select({
+      ...getTableColumns(posts),
+      tags: sql<
+        string[]
+      >`ARRAY_REMOVE(ARRAY_AGG(DISTINCT ${postTags.tag}), NULL)`.as("tags"),
+      keywords: sql<
+        string[]
+      >`ARRAY_REMOVE(ARRAY_AGG(DISTINCT ${postKeywords.keyword}), NULL)`.as(
+        "keywords",
+      ),
+      views: sql<
+        number[]
+      >`ARRAY_REMOVE(ARRAY_AGG(DISTINCT ${views.count}), NULL)`.as("views"),
+      has_included_tag: sql<boolean>`${hasIncludedTagSql}`.as(
+        "has_included_tag",
+      ),
+      has_disallowed_tag: sql<boolean>`${hasDisallowedTagSql}`.as(
+        "has_disallowed_tag",
+      ),
+    })
+    .from(posts)
+    .leftJoin(postTags, eq(posts.slug, postTags.slug))
+    .leftJoin(postKeywords, eq(posts.slug, postKeywords.slug))
+    .leftJoin(views, eq(posts.slug, views.slug))
+    .groupBy(posts.slug)
+    .as("filtered_posts");
+
+  const promise = db
+    .select()
+    .from(filteredPostsQuery)
+    .where(
+      and(
+        tags.length === 0 ? sql`true` : filteredPostsQuery.has_included_tag,
+        not(filteredPostsQuery.has_disallowed_tag),
+      ),
+    )
+    .orderBy(desc(filteredPostsQuery.date))
+    .limit(endInd - startInd)
+    .offset(startInd);
+
+  return fromPromise(promise, (error) => {
+    console.error("Posts fetching error details:", error);
+    return {
+      message: `Error fetching posts. ${(error as Error).message}`,
+      code: "DATABASE_ERROR",
+    } as ContentError;
+  }).map((postsWithTags) =>
     postsWithTags.map(
       (post) =>
         ({
@@ -167,6 +182,7 @@ export const getPosts = ({
           shortExcerpt: post.shortexcerpt,
           lastModified: post.lastmodified,
           coverSquare: post.coversquare,
+          views: post.views && post.views.length > 0 ? post.views[0] : 0,
         }) as Post,
     ),
   );
@@ -186,26 +202,46 @@ export const getPostsLength = ({
     disallowTags.push(siteConfig.invisible);
   }
 
-  const promise = sql`
-    WITH filtered_posts AS (
-      SELECT 
-        p.slug,
-        COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${tags})) > 0 AS has_included_tag,
-        COUNT(DISTINCT pt.tag) FILTER (WHERE pt.tag = ANY(${disallowTags})) > 0 AS has_disallowed_tag
-      FROM 
-        posts p
-      LEFT JOIN 
-        post_tags pt ON p.slug = pt.slug
-      GROUP BY 
-        p.slug
-    )
-    SELECT 
-      COUNT(*) as count
-    FROM filtered_posts
-    WHERE 
-      (${tags.length} = 0 OR has_included_tag) 
-      AND NOT has_disallowed_tag;
-  `;
+  const hasIncludedTagSql =
+    tags.length === 0
+      ? sql<boolean>`true`
+      : sql<boolean>`COUNT(DISTINCT ${postTags.tag}) FILTER (WHERE ${postTags.tag} = ANY(ARRAY[${sql.join(
+          tags.map((t) => sql`${t}`),
+          sql`, `,
+        )}]::text[])) > 0`;
+
+  const hasDisallowedTagSql =
+    disallowTags.length === 0
+      ? sql<boolean>`false`
+      : sql<boolean>`COUNT(DISTINCT ${postTags.tag}) FILTER (WHERE ${postTags.tag} = ANY(ARRAY[${sql.join(
+          disallowTags.map((t) => sql`${t}`),
+          sql`, `,
+        )}]::text[])) > 0`;
+
+  const filteredPostsQuery = db
+    .select({
+      slug: posts.slug,
+      has_included_tag: sql<boolean>`${hasIncludedTagSql}`.as(
+        "has_included_tag",
+      ),
+      has_disallowed_tag: sql<boolean>`${hasDisallowedTagSql}`.as(
+        "has_disallowed_tag",
+      ),
+    })
+    .from(posts)
+    .leftJoin(postTags, eq(posts.slug, postTags.slug))
+    .groupBy(posts.slug)
+    .as("filtered_posts");
+
+  const promise = db
+    .select({ count: sql<number>`count(*)` })
+    .from(filteredPostsQuery)
+    .where(
+      and(
+        tags.length === 0 ? sql`true` : filteredPostsQuery.has_included_tag,
+        not(filteredPostsQuery.has_disallowed_tag),
+      ),
+    );
 
   return fromPromise(
     promise,
@@ -222,17 +258,18 @@ export const getPostsLength = ({
  */
 export const getListOfAllTags = () =>
   fromPromise(
-    sql`
-      SELECT DISTINCT tag
-      FROM post_tags
-      ORDER BY tag ASC;
-    `,
-    () =>
-      ({
+    db
+      .selectDistinct({ tag: postTags.tag })
+      .from(postTags)
+      .orderBy(asc(postTags.tag)),
+    (error) => {
+      console.error("Tags fetching error:", error);
+      return {
         message: "Error fetching tags.",
         code: "DATABASE_ERROR",
-      }) as ContentError,
-  ).map((result) => result.map((row) => row.tag as string));
+      } as ContentError;
+    },
+  ).map((result) => result.map((row) => row.tag));
 
 export function createPost(content: string, slug: string): Post {
   const { data: frontmatter, content: contentWithoutFrontmatter } =

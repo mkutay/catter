@@ -52,12 +52,12 @@ export type EntryData = {
 };
 
 export type CommentData = {
-  id: string;
+  id: number;
   slug: string;
   body: string;
   created_by: string;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
   email: string;
 };
 
