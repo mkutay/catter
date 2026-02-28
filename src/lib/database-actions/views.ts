@@ -1,7 +1,6 @@
 import { sql } from "drizzle-orm";
 import { ResultAsync } from "neverthrow";
 import { siteConfig } from "@/config/site";
-import type { ViewCount } from "@/config/types";
 import { getSession } from "@/lib/database-queries/auth";
 import { getViewCount } from "@/lib/database-queries/views";
 import { db } from "@/lib/db/drizzle";
@@ -22,7 +21,7 @@ const insertIntoViews = (slug: string) =>
       .values({ slug, count: 1 })
       .onConflictDoUpdate({
         target: views.slug,
-        set: { count: sql`${views.count} + 1` },
+        set: { count: sql`coalesce(${views.count}, 0) + 1` },
       })
       .returning(),
     () => ({

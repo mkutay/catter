@@ -133,7 +133,10 @@ const insertIntoComments = (
       .returning()
       .then((res) =>
         res.map((r) => ({
-          ...r,
+          id: r.id,
+          slug: r.slug,
+          email: r.email,
+          body: r.body,
           created_by: r.createdBy,
           created_at: r.createdAt,
           updated_at: r.updatedAt,

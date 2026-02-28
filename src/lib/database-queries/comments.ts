@@ -56,7 +56,7 @@ export const getComments = ({ slug }: { slug: string }) =>
                 message: "Failed to fetch comments. Database error.",
                 code: "DATABASE_ERROR",
               }) as GetCommentsError,
-          ).map((comments) => comments as unknown as CommentData[]),
+          ).map((comments): CommentData[] => comments),
     );
 
 export const getEveryComment = (props?: { limit: number }) =>
