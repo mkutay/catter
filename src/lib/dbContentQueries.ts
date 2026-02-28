@@ -138,9 +138,7 @@ export const getPosts = ({
       >`ARRAY_REMOVE(ARRAY_AGG(DISTINCT ${postKeywords.keyword}), NULL)`.as(
         "keywords",
       ),
-      views: sql<
-        number[]
-      >`ARRAY_REMOVE(ARRAY_AGG(DISTINCT ${views.count}), NULL)`.as("views"),
+      views: sql<number>`COALESCE(MAX(${views.count}), 0)`.as("views"),
       has_included_tag: sql<boolean>`${hasIncludedTagSql}`.as(
         "has_included_tag",
       ),
@@ -182,7 +180,7 @@ export const getPosts = ({
           shortExcerpt: post.shortexcerpt,
           lastModified: post.lastmodified,
           coverSquare: post.coversquare,
-          views: post.views && post.views.length > 0 ? post.views[0] : 0,
+          views: post.views && post.views > 0 ? post.views : 0,
         }) as Post,
     ),
   );
