@@ -1,7 +1,9 @@
+import { desc, eq } from "drizzle-orm";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import type { CommentData } from "@/config/types";
+import { db } from "@/lib/db/drizzle";
+import { comments } from "@/lib/db/schema";
 import { doesPostWithSlugExist } from "@/lib/dbContentQueries";
-import { sql } from "@/lib/postgres";
 
 interface GetCommentsError {
   message: string;
@@ -35,19 +37,26 @@ export const getComments = ({ slug }: { slug: string }) =>
             code: "POST_NOT_FOUND",
           } as GetCommentsError)
         : ResultAsync.fromPromise(
-            sql<CommentData[]>`
-          SELECT id, body, created_by, created_at, updated_at, email
-          FROM comments
-          WHERE slug = (${slug})
-          ORDER BY created_at DESC
-          LIMIT 15;
-        `,
+            db
+              .select({
+                id: comments.id,
+                body: comments.body,
+                created_by: comments.createdBy,
+                created_at: comments.createdAt,
+                updated_at: comments.updatedAt,
+                email: comments.email,
+                slug: comments.slug,
+              })
+              .from(comments)
+              .where(eq(comments.slug, slug))
+              .orderBy(desc(comments.createdAt))
+              .limit(15),
             () =>
               ({
                 message: "Failed to fetch comments. Database error.",
                 code: "DATABASE_ERROR",
               }) as GetCommentsError,
-          ).map((comments) => comments as CommentData[]),
+          ).map((comments) => comments as unknown as CommentData[]),
     );
 
 export const getEveryComment = (props?: { limit: number }) =>
@@ -58,12 +67,19 @@ export const getEveryComment = (props?: { limit: number }) =>
           code: "LIMIT_OUT_OF_RANGE",
         } as GetEveryCommentError)
       : ResultAsync.fromPromise(
-          sql<CommentData[]>`
-            SELECT id, slug, body, created_by, created_at, updated_at, email
-            FROM comments
-            ORDER BY created_at DESC
-            LIMIT ${limit};
-          `,
+          db
+            .select({
+              id: comments.id,
+              slug: comments.slug,
+              body: comments.body,
+              created_by: comments.createdBy,
+              created_at: comments.createdAt,
+              updated_at: comments.updatedAt,
+              email: comments.email,
+            })
+            .from(comments)
+            .orderBy(desc(comments.createdAt))
+            .limit(limit),
           () =>
             ({
               message: "Failed to fetch comments. Database error.",
@@ -74,12 +90,18 @@ export const getEveryComment = (props?: { limit: number }) =>
 
 export const getCommentsByEmail = ({ email }: { email: string }) =>
   ResultAsync.fromPromise(
-    sql<CommentData[]>`
-      SELECT id, slug, body, created_by, created_at, updated_at
-      FROM comments
-      WHERE email = (${email})
-      ORDER BY created_at DESC;
-    `,
+    db
+      .select({
+        id: comments.id,
+        slug: comments.slug,
+        body: comments.body,
+        created_by: comments.createdBy,
+        created_at: comments.createdAt,
+        updated_at: comments.updatedAt,
+      })
+      .from(comments)
+      .where(eq(comments.email, email))
+      .orderBy(desc(comments.createdAt)),
     () =>
       ({
         message: "Failed to fetch comments. Database error.",

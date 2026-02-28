@@ -1,7 +1,8 @@
+import { desc, eq, sum } from "drizzle-orm";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
-
 import type { ViewCount } from "@/config/types";
-import { sql } from "@/lib/postgres";
+import { db } from "@/lib/db/drizzle";
+import { views } from "@/lib/db/schema";
 
 interface GetViewsCountError {
   message: string;
@@ -20,10 +21,7 @@ interface GetViewCountError {
 
 export const getBlogViews = () =>
   ResultAsync.fromPromise(
-    sql<{ count: number }[]>`
-      SELECT count
-      FROM views;
-    `,
+    db.select({ count: sum(views.count) }).from(views),
     () =>
       ({
         message: "Failed to fetch blog views. Database error.",
@@ -40,12 +38,11 @@ export const getViewsCount = ({ postNum }: { postNum: number }) =>
         code: "LIMIT_OUT_OF_RANGE",
       } as GetViewsCountError)
     : ResultAsync.fromPromise(
-        sql<ViewCount[]>`
-          SELECT slug, count
-          FROM views
-          ORDER BY count DESC
-          LIMIT ${postNum};
-        `,
+        db
+          .select({ slug: views.slug, count: views.count })
+          .from(views)
+          .orderBy(desc(views.count))
+          .limit(postNum),
         () =>
           ({
             message: "Failed to fetch views count. Database error.",
@@ -55,11 +52,10 @@ export const getViewsCount = ({ postNum }: { postNum: number }) =>
 
 export const getViewCount = ({ slug }: { slug: string }) =>
   ResultAsync.fromPromise(
-    sql<ViewCount[]>`
-      SELECT slug, count
-      FROM views
-      WHERE slug=(${slug});
-    `,
+    db
+      .select({ slug: views.slug, count: views.count })
+      .from(views)
+      .where(eq(views.slug, slug)),
     () =>
       ({
         message: "Failed to fetch view count. Database error.",

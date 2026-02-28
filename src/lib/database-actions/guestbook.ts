@@ -1,3 +1,4 @@
+import { inArray } from "drizzle-orm";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { revalidatePath } from "next/cache";
 import {
@@ -11,7 +12,8 @@ import {
   doesAllEntriesExist,
   getGuestbookEntriesByEmail,
 } from "@/lib/database-queries/guestbook";
-import { sql } from "@/lib/postgres";
+import { db } from "@/lib/db/drizzle";
+import { guestbook } from "@/lib/db/schema";
 
 interface SaveGuestbookEntryError {
   message: string;
@@ -113,11 +115,17 @@ const insertIntoGuestbook = (
   color: string,
 ) =>
   ResultAsync.fromPromise(
-    sql<EntryData[]>`
-      INSERT INTO guestbook (id, email, body, created_by, created_at, color)
-      VALUES (${random}, ${email}, ${message}, ${created_by}, NOW(), ${color})
-      RETURNING *;
-    `,
+    db
+      .insert(guestbook)
+      .values({
+        id: random,
+        email,
+        body: message,
+        createdBy: created_by,
+        createdAt: new Date().toISOString(),
+        color,
+      })
+      .returning(),
     () => ({
       message: "Failed to insert guestbook entry. Database error.",
       code: "DATABASE_ERROR",
@@ -151,20 +159,16 @@ export const deleteGuestbookEntries = ({ entries }: { entries: number[] }) =>
             code: "NOT_ALL_ENTRIES_EXIST",
           } as DeleteGuestbookEntriesError),
     )
-    .andThen(() => deleteFromGuestbook(`{${entries.join(",")}}`))
+    .andThen(() => deleteFromGuestbook(entries))
     .andThen(() => {
       revalidatePath("/admin");
       revalidatePath("/guestbook");
       return okAsync();
     });
 
-const deleteFromGuestbook = (arrayLiteral: string) =>
+const deleteFromGuestbook = (entries: number[]) =>
   ResultAsync.fromPromise(
-    sql<EntryData[]>`
-      DELETE FROM guestbook
-      WHERE id = ANY(${arrayLiteral}::int[])
-      RETURNING *;
-    `,
+    db.delete(guestbook).where(inArray(guestbook.id, entries)).returning(),
     () => ({
       message: "Failed to delete guestbook entry. Database error.",
       code: "DATABASE_ERROR" as const,

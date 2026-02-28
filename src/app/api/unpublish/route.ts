@@ -1,7 +1,8 @@
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-
+import { db } from "@/lib/db/drizzle";
+import { postKeywords, posts, postTags } from "@/lib/db/schema";
 import { createPost } from "@/lib/dbContentQueries";
-import { sql } from "@/lib/postgres";
 
 export async function POST(request: Request) {
   const authHeader = request.headers.get("Authorization");
@@ -48,8 +49,8 @@ export async function POST(request: Request) {
 }
 
 const deleteFromDB = async (slug: string) => {
-  await sql`DELETE FROM post_tags WHERE slug = ${slug}`;
-  await sql`DELETE FROM post_keywords WHERE slug = ${slug}`;
+  await db.delete(postTags).where(eq(postTags.slug, slug));
+  await db.delete(postKeywords).where(eq(postKeywords.slug, slug));
 
-  await sql`DELETE FROM posts WHERE slug = ${slug}`;
+  await db.delete(posts).where(eq(posts.slug, slug));
 };

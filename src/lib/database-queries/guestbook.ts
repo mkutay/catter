@@ -1,7 +1,8 @@
+import { desc, eq, inArray } from "drizzle-orm";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
-
 import type { EntryData } from "@/config/types";
-import { sql } from "@/lib/postgres";
+import { db } from "@/lib/db/drizzle";
+import { guestbook } from "@/lib/db/schema";
 
 interface GetGuestbookEntriesError {
   message: string;
@@ -21,12 +22,19 @@ export const getGuestbookEntries = (props?: { limit: number }) =>
           code: "LIMIT_OUT_OF_RANGE",
         } as GetGuestbookEntriesError)
       : ResultAsync.fromPromise(
-          sql<EntryData[]>`
-              SELECT id, body, created_by, created_at, updated_at, email, color
-              FROM guestbook
-              ORDER BY created_at DESC
-              LIMIT ${limit};
-            `,
+          db
+            .select({
+              id: guestbook.id,
+              body: guestbook.body,
+              created_by: guestbook.createdBy,
+              created_at: guestbook.createdAt,
+              updated_at: guestbook.updatedAt,
+              email: guestbook.email,
+              color: guestbook.color,
+            })
+            .from(guestbook)
+            .orderBy(desc(guestbook.createdAt))
+            .limit(limit),
           () =>
             ({
               message: "Failed to fetch guestbook entries. Database error.",
@@ -42,11 +50,10 @@ export const doesAllEntriesExist = ({ ids }: { ids: number[] }) =>
         code: "NO_IDS_GIVEN",
       } as DoesAllEntriesExistError)
     : ResultAsync.fromPromise(
-        sql<{ id: number }[]>`
-          SELECT id
-          FROM guestbook
-          WHERE id IN ${sql(ids)};
-        `,
+        db
+          .select({ id: guestbook.id })
+          .from(guestbook)
+          .where(inArray(guestbook.id, ids)),
         () =>
           ({
             message: "Failed to fetch guestbook entries. Database error.",
@@ -56,12 +63,19 @@ export const doesAllEntriesExist = ({ ids }: { ids: number[] }) =>
 
 export const getGuestbookEntriesByEmail = ({ email }: { email: string }) =>
   ResultAsync.fromPromise(
-    sql<EntryData[]>`
-      SELECT *
-      FROM guestbook
-      WHERE email = ${email}
-      ORDER BY created_at DESC;
-    `,
+    db
+      .select({
+        id: guestbook.id,
+        body: guestbook.body,
+        created_by: guestbook.createdBy,
+        created_at: guestbook.createdAt,
+        updated_at: guestbook.updatedAt,
+        email: guestbook.email,
+        color: guestbook.color,
+      })
+      .from(guestbook)
+      .where(eq(guestbook.email, email))
+      .orderBy(desc(guestbook.createdAt)),
     () => ({
       message: "Failed to fetch guestbook entries. Database error.",
       code: "DATABASE_ERROR" as const,

@@ -83,7 +83,7 @@ export function DeleteComment({
         }
       | {
           action: "delete";
-          commentId: string;
+          commentId: number;
         },
   ) => void;
 }) {
@@ -111,7 +111,7 @@ export function DeleteComment({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button id={comment.id} variant="destructive" size="sm">
+        <Button id={comment.id.toString()} variant="destructive" size="sm">
           Delete Comment
         </Button>
       </DialogTrigger>

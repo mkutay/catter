@@ -33,7 +33,7 @@ export function CommentForm({
         }
       | {
           action: "delete";
-          commentId: string;
+          commentId: number;
         },
   ) => void;
   user: { email: string; name: string };
@@ -50,7 +50,7 @@ export function CommentForm({
   const onSubmit = async (values: z.infer<typeof commentsFormSchema>) => {
     const now = new Date().toDateString();
     const optimisticComment: CommentData = {
-      id: `${Math.random() * 1000000}`,
+      id: Math.random() * 1000000,
       body: values.message,
       created_at: now,
       updated_at: now,
