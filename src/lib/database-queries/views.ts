@@ -61,7 +61,7 @@ export const getViewCount = ({ slug }: { slug: string }) =>
         code: "DATABASE_ERROR",
       }) as GetViewCountError,
   ).andThen((views) =>
-    views.length === 0 || !views[0]
+    views.length === 0 || !views[0] || views[0].count === null
       ? errAsync({
           message: "No views found for this post.",
           code: "NO_VIEWS_FOUND",
