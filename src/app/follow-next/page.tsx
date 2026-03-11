@@ -51,7 +51,7 @@ function FollowCard({
           alt={`An image about ${website.title}`}
           src={image}
           className="rounded-xl shadow-md"
-          quality={50}
+          quality={75}
           placeholder="blur"
         />
       </div>

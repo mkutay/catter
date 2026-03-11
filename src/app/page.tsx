@@ -125,7 +125,7 @@ async function FirstPost({ post }: { post: Post }) {
             <Image
               src={`/api${coverUrl}`}
               alt={`${post.title} post cover image`}
-              quality={60}
+              quality={75}
               className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm w-full h-full object-cover"
               width={placeholder.metadata.width}
               height={placeholder.metadata.height}
@@ -196,7 +196,7 @@ async function PostDisplay({
           <Image
             src={`/api${coverUrl}`}
             alt={`${post.title} post cover image`}
-            quality={60}
+            quality={75}
             className="lg:rounded-md rounded-sm lg:shadow-md shadow-xs"
             width={placeholder.metadata.width}
             height={placeholder.metadata.height}

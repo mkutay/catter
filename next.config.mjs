@@ -7,6 +7,7 @@ const nextConfig = {
   images: {
     loader: "custom",
     loaderFile: "./next-images-loader.js",
+    qualities: [75],
   },
 };
 export default withPlaiceholder(nextConfig);

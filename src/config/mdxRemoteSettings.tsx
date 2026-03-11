@@ -88,7 +88,7 @@ export const components: MDXComponents = {
         width={placeholder.metadata.width}
         height={placeholder.metadata.height}
         placeholder={placeholder.base64 as `data:image/${string}`}
-        quality={50}
+        quality={75}
       />
     );
   },
@@ -111,7 +111,7 @@ export const components: MDXComponents = {
         width={placeholder.metadata.width}
         height={placeholder.metadata.height}
         placeholder={placeholder.base64 as `data:image/${string}`}
-        quality={50}
+        quality={75}
       />
     );
   },

@@ -34,7 +34,7 @@ export default async function ProjectCard({
               alt={`Project ${props.title}'s cover square image`}
               src={`/api${coverUrl}`}
               className="rounded-xl shadow-md"
-              quality={50}
+              quality={75}
               width={placeholder.metadata.width}
               height={placeholder.metadata.height}
               priority={true}
