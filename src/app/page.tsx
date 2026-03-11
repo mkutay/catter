@@ -3,13 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
 import { Suspense } from "react";
-import ProjectCard from "@/components/projectCard";
 import { TypographyH1 } from "@/components/typography/headings";
 import {
   TypographyLarge,
   TypographyParagraph,
 } from "@/components/typography/paragraph";
-import { Button } from "@/components/ui/button";
 import { ViewDisplay } from "@/components/viewDisplay";
 import { components, options } from "@/config/mdxRemoteSettings";
 import { siteConfig } from "@/config/site";
@@ -104,38 +102,6 @@ export default async function Home() {
             </div>
           </div>
         </div>
-      </section>
-
-      <div className="md:max-w-6xl max-w-prose mx-auto px-4">
-        <div className="h-px bg-linear-to-r from-transparent via-border to-transparent" />
-      </div>
-
-      {/* Projects Section */}
-      <section className="py-16 md:py-24">
-        <Projects
-          projects={posts.filter((post) => post.tags.includes("project"))}
-        />
-      </section>
-
-      <div className="md:max-w-6xl max-w-prose mx-auto px-4">
-        <div className="h-px bg-linear-to-r from-transparent via-border to-transparent" />
-      </div>
-
-      {/* Recent Posts Section */}
-      <section className="py-16 md:py-24">
-        <RecentPosts
-          posts={posts
-            .filter(
-              (post) =>
-                !allShownPosts.includes(post) &&
-                siteConfig.homePage.firstSlug !== post.slug &&
-                !post.tags.includes("project"),
-            )
-            .sort(
-              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-            )
-            .slice(0, 5)}
-        />
       </section>
     </div>
   );
@@ -266,98 +232,6 @@ async function PostDisplay({
         <Suspense>
           <ViewDisplay slug={post.slug} />
         </Suspense>
-      </div>
-    </div>
-  );
-}
-
-function Projects({ projects }: { projects: Post[] }) {
-  return (
-    <div className="md:max-w-6xl max-w-prose mx-auto px-4">
-      <div className="text-center mb-12 md:mb-16">
-        <h2 className="text-4xl md:text-5xl font-light italic tracking-tight text-foreground/90">
-          Projects
-        </h2>
-        <div className="w-24 h-px bg-linear-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
-      </div>
-      <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
-        {projects.slice(0, 12).map((project) => (
-          <div key={project.slug} className="group">
-            <ProjectCard props={project} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function RecentPosts({ posts }: { posts: Post[] }) {
-  return (
-    <div className="md:max-w-6xl max-w-prose mx-auto px-4">
-      <div className="text-center mb-12 md:mb-16">
-        <h2 className="text-4xl md:text-5xl font-light italic tracking-tight text-foreground/90">
-          Recently Published
-        </h2>
-        <div className="w-24 h-px bg-linear-to-r from-transparent via-primary to-transparent mx-auto mt-6" />
-      </div>
-
-      <div className="max-w-prose space-y-12">
-        {posts.map((post) => (
-          <article
-            key={post.slug}
-            className="group border-b border-border/30 pb-12 last:border-b-0"
-          >
-            <header className="mb-6">
-              <h3 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mb-3">
-                <Link
-                  href={`/posts/${post.slug}`}
-                  className="hover:text-foreground/80 transition-all"
-                >
-                  {post.title}
-                </Link>
-              </h3>
-              <p className="text-lg text-muted-foreground italic leading-relaxed">
-                {post.description}
-              </p>
-            </header>
-
-            <div className="max-w-none text-muted-foreground mb-6">
-              <MDXRemote
-                source={post.excerpt}
-                options={options}
-                components={components}
-              />
-            </div>
-
-            <div className="flex justify-between items-center">
-              <time
-                className="text-sm text-muted-foreground"
-                dateTime={post.date}
-              >
-                {format(new Date(post.date), "PPP")}
-              </time>
-              <Button asChild variant="ghost" size="sm" className="group/btn">
-                <Link href={`/posts/${post.slug}`}>
-                  <span>Read More</span>
-                  <svg
-                    className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-200"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <title>arrow right</title>
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </Link>
-              </Button>
-            </div>
-          </article>
-        ))}
       </div>
     </div>
   );
