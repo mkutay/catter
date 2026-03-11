@@ -1,12 +1,13 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { env } from "@/env";
 import { db } from "@/lib/db/drizzle";
 import { postKeywords, posts, postTags } from "@/lib/db/schema";
 import { createPost } from "@/lib/dbContentQueries";
 
 export async function POST(request: Request) {
   const authHeader = request.headers.get("Authorization");
-  const apiKey = process.env.UPLOAD_API_KEY;
+  const apiKey = env.UPLOAD_API_KEY;
 
   if (!apiKey) {
     return new Response("API key not configured on server", { status: 500 });

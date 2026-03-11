@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import type { Post } from "@/config/types";
+import { env } from "@/env";
 import { db } from "@/lib/db/drizzle";
 import { postKeywords, posts, postTags, views } from "@/lib/db/schema";
 import { createPost } from "@/lib/dbContentQueries";
@@ -8,7 +9,7 @@ import { uploadImage } from "@/lib/images";
 
 export async function POST(request: Request) {
   const authHeader = request.headers.get("Authorization");
-  const apiKey = process.env.UPLOAD_API_KEY;
+  const apiKey = env.UPLOAD_API_KEY;
 
   if (!apiKey) {
     return new Response("API key not configured on server", { status: 500 });
@@ -81,8 +82,7 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         error: isImageUploadError ? errorMessage : "Failed to process upload",
-        details:
-          process.env.NODE_ENV === "development" ? errorMessage : undefined,
+        details: env.NODE_ENV === "development" ? errorMessage : undefined,
       }),
       {
         status: isImageUploadError ? 400 : 500,

@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import GitHubProvider from "next-auth/providers/github";
 import SpotifyProvider from "next-auth/providers/spotify";
+import { env } from "@/env";
 
 export const {
   handlers: { GET, POST },
@@ -9,16 +10,16 @@ export const {
 } = NextAuth({
   providers: [
     GitHubProvider({
-      clientId: process.env.GITHUB_OAUTH_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_OAUTH_CLIENT_SECRET as string,
+      clientId: env.GITHUB_OAUTH_CLIENT_ID,
+      clientSecret: env.GITHUB_OAUTH_CLIENT_SECRET,
     }),
     DiscordProvider({
-      clientId: process.env.DISCORD_OAUTH_CLIENT_ID as string,
-      clientSecret: process.env.DISCORD_OAUTH_CLIENT_SECRET as string,
+      clientId: env.DISCORD_OAUTH_CLIENT_ID,
+      clientSecret: env.DISCORD_OAUTH_CLIENT_SECRET,
     }),
     SpotifyProvider({
-      clientId: process.env.SPOTIFY_OAUTH_CLIENT_ID as string,
-      clientSecret: process.env.SPOTIFY_OAUTH_CLIENT_SECRET as string,
+      clientId: env.SPOTIFY_OAUTH_CLIENT_ID,
+      clientSecret: env.SPOTIFY_OAUTH_CLIENT_SECRET,
     }),
   ],
 });

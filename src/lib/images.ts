@@ -1,12 +1,13 @@
 import * as Minio from "minio";
 import { getPlaiceholder } from "plaiceholder";
+import { env } from "@/env";
 
 export const minioClient = new Minio.Client({
-  endPoint: process.env.MINIO_ENDPOINT!,
-  accessKey: process.env.MINIO_ACCESS_KEY!,
-  secretKey: process.env.MINIO_SECRET_KEY!,
+  endPoint: env.MINIO_ENDPOINT,
+  accessKey: env.MINIO_ACCESS_KEY,
+  secretKey: env.MINIO_SECRET_KEY,
   useSSL: true, // Enable SSL if using HTTPS
-  region: process.env.MINIO_REGION || "eu-central",
+  region: env.MINIO_REGION,
   partSize: 5 * 1024 * 1024, // 5MB part size for multipart uploads
 });
 
@@ -14,7 +15,7 @@ export const minioClient = new Minio.Client({
 const normalizeKey = (key: string) => key.replace(/^\/+/, "");
 
 export const getImage = (url: string) => {
-  return minioClient.getObject(process.env.S3_BUCKET_NAME!, normalizeKey(url));
+  return minioClient.getObject(env.S3_BUCKET_NAME, normalizeKey(url));
 };
 
 export const fUploadImage = (url: string, path: string) => {
@@ -27,7 +28,7 @@ export const fUploadImage = (url: string, path: string) => {
   };
 
   return minioClient.fPutObject(
-    process.env.S3_BUCKET_NAME!,
+    env.S3_BUCKET_NAME,
     normalizeKey(url),
     path,
     metadata,
@@ -64,7 +65,7 @@ export const uploadImage = async (
       // Add 30-second timeout to the upload operation
       await withTimeout(
         minioClient.putObject(
-          process.env.S3_BUCKET_NAME!,
+          env.S3_BUCKET_NAME,
           normalizeKey(url),
           buffer,
           size,

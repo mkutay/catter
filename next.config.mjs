@@ -1,6 +1,10 @@
 import withPlaiceholder from "@plaiceholder/next";
 
-const isProduction = process.env.NODE_ENV === "production";
+import "./src/env.ts";
+
+import { env } from "./src/env.ts";
+
+const isProduction = env.NODE_ENV === "production";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
