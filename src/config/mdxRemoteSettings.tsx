@@ -98,9 +98,10 @@ export const components: MDXComponents = {
       HTMLImageElement
     >,
   ) => {
-    if (!props.src) return;
-    const placeholder = await getPlaceholder(props.src);
+    if (typeof props.src !== "string" || !props.src) return;
+
     const src = props.src.startsWith("/") ? props.src : `/${props.src}`;
+    const placeholder = await getPlaceholder(props.src);
 
     return (
       <Image

@@ -1,6 +1,5 @@
 import { desc, eq, sum } from "drizzle-orm";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
-import type { ViewCount } from "@/config/types";
 import { db } from "@/lib/db/drizzle";
 import { views } from "@/lib/db/schema";
 
