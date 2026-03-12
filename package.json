@@ -38,7 +38,6 @@
     "@types/remark-heading-id": "^1.0.0",
     "@types/rss": "^0.0.32",
     "@types/three": "^0.177.0",
-    "@typescript-eslint/typescript-estree": "^8.49.0",
     "caniuse-lite": "^1.0.30001760",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -89,9 +88,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.4",
-    "@eslint/eslintrc": "^3.3.3",
-    "@eslint/js": "^8.57.1",
-    "@next/eslint-plugin-next": "16.1.6",
     "@tailwindcss/postcss": "^4.2.1",
     "@types/bun": "latest",
     "@types/node": "20.17.28",
@@ -100,9 +96,6 @@
     "@types/react-dom": "19.2.3",
     "biomejs": "^0.0.0",
     "drizzle-kit": "^0.31.9",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "16.1.6",
-    "eslint-plugin-neverthrow": "^1.1.4",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.2.1",
     "typescript": "5.8.2"
