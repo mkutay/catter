@@ -1,7 +1,5 @@
 "use client";
 
-import { env } from "./src/env";
-
 export default function myImageLoader({ src, width, quality, height }) {
   const isLocal = !src.startsWith("http");
   const query = new URLSearchParams();
@@ -15,7 +13,7 @@ export default function myImageLoader({ src, width, quality, height }) {
   if (quality) query.set("quality", quality);
   if (height) query.set("height", height);
 
-  if (isLocal && env.NODE_ENV === "development") {
+  if (isLocal && process.env.NODE_ENV === "development") {
     return src;
   }
 

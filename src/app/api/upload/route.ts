@@ -82,7 +82,8 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         error: isImageUploadError ? errorMessage : "Failed to process upload",
-        details: env.NODE_ENV === "development" ? errorMessage : undefined,
+        details:
+          process.env.NODE_ENV === "development" ? errorMessage : undefined,
       }),
       {
         status: isImageUploadError ? 400 : 500,

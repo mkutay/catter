@@ -12,7 +12,6 @@ export const env = createEnv({
     POSTGRES_URL: z.string().url(),
     AUTH_SECRET: z.string(),
     AUTH_REDIRECT_PROXY_URL: z.string().url(),
-    NODE_ENV: z.enum(["development", "production", "test"]),
     MINIO_ENDPOINT: z.string(),
     MINIO_ACCESS_KEY: z.string(),
     MINIO_SECRET_KEY: z.string(),

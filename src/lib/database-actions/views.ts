@@ -1,7 +1,6 @@
 import { sql } from "drizzle-orm";
 import { ResultAsync } from "neverthrow";
 import { siteConfig } from "@/config/site";
-import { env } from "@/env";
 import { getSession } from "@/lib/database-queries/auth";
 import { getViewCount } from "@/lib/database-queries/views";
 import { db } from "@/lib/db/drizzle";
@@ -9,7 +8,7 @@ import { views } from "@/lib/db/schema";
 
 export const incrementViews = ({ slug }: { slug: string }) =>
   getSession().andThen((session) =>
-    env.NODE_ENV === "development" ||
+    process.env.NODE_ENV === "development" ||
     (session?.user && siteConfig.admins.includes(session.user.email as string))
       ? getViewCount({ slug })
       : insertIntoViews(slug).map((view) => view[0].count),
