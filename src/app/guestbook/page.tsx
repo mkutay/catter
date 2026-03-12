@@ -84,7 +84,7 @@ async function GuestbookEntries() {
       {entries.map((entry: EntryData) => (
         <p
           key={entry.id}
-          className="w-full break-words lg:text-lg text-md leading-7 not-first:mt-2"
+          className="w-full wrap-break-word lg:text-lg text-md leading-7 not-first:mt-2"
         >
           <span
             className={cn(

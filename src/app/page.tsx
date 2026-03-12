@@ -137,10 +137,10 @@ async function FirstPost({ post }: { post: Post }) {
 
         {/* Content Container */}
         <div className="w-full flex flex-col gap-6">
-          <div className="flex-grow space-y-6">
+          <div className="grow space-y-6">
             <Link className="group block" href={`/posts/${post.slug}`}>
               <h1 className="lg:text-6xl/tight md:text-5xl text-4xl font-normal tracking-tighter text-stroke-medium text-stroke-background fix-text-stroke">
-                <span className="lg:bg-[0%_93%] md:bg-[0%_90%] bg-[0%_89%] bg-gradient-to-r text-foreground from-foreground to-foreground lg:bg-[length:0%_3px] bg-[length:0%_2px] bg-no-repeat lg:group-hover:bg-[length:100%_3px] group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+                <span className="lg:bg-position-[0%_93%] md:bg-position-[0%_90%] bg-position-[0%_89%] bg-linear-to-r text-foreground from-foreground to-foreground lg:bg-size-[0%_3px] bg-size-[0%_2px] bg-no-repeat lg:group-hover:bg-size-[100%_3px] group-hover:bg-size-[100%_2px] transition-all duration-500 ease-out">
                   {post.title}
                 </span>
               </h1>

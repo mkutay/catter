@@ -21,7 +21,7 @@ export function ToggleParentheses({ children }: { children: React.ReactNode }) {
     // biome-ignore lint/a11y/noStaticElementInteractions: needed
     // biome-ignore lint/a11y/useKeyWithClickEvents: needed
     <span onClick={handleToggle}>
-      {/* <span className="text-primary font-semibold mr-[1px]">(</span>{children}<span className="text-primary font-semibold ml-[1px]">)</span> */}
+      {/* <span className="text-primary font-semibold mr-px">(</span>{children}<span className="text-primary font-semibold ml-px">)</span> */}
       ({children})
     </span>
   ) : (

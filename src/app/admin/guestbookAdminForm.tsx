@@ -92,7 +92,7 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
                           />
                         </FormControl>
                         <FormLabel className="text-md font-normal">
-                          <div className="break-words">
+                          <div className="wrap-break-word">
                             <span
                               className={cn(
                                 "mr-1 font-bold tracking-tight",
