@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Server from "@/lib/server";
 import { Skeleton } from "./ui/skeleton";
 
 export function TotalBlogViews() {
@@ -10,8 +9,13 @@ export function TotalBlogViews() {
 
   useEffect(() => {
     const fetchViews = async () => {
-      const views = await Server.Views.GetAll();
-      setViews(views.ok ? views.value : null);
+      const text = await fetch("/api/views/all").then((res) => res.text());
+      const count = parseInt(text, 10);
+      if (!Number.isNaN(count)) {
+        setViews(count);
+      } else {
+        console.error("Failed to parse view count:", text);
+      }
       setIsLoading(false);
     };
     fetchViews();

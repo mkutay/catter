@@ -8,7 +8,7 @@ import { TypographyLarge } from "@/components/typography/paragraph";
 import { Label } from "@/components/ui/label";
 import { siteConfig } from "@/config/site";
 import type { CommentData } from "@/config/types";
-import Server from "@/lib/server";
+import { getUser } from "@/lib/server-helper";
 
 export default function Comments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<CommentData[]>([]);
@@ -20,10 +20,16 @@ export default function Comments({ slug }: { slug: string }) {
     let ignore = false;
     setComments([]);
 
-    Server.Comments.Get({ slug }).then((comments) => {
-      if (ignore) return;
-      setComments(comments.ok ? comments.value : []);
-    });
+    fetch(`/api/comments?slug=${slug}`)
+      .then((data) => data.json())
+      .then((comments) => {
+        if (ignore) return;
+        setComments(comments);
+      })
+      .catch(() => {
+        if (ignore) return;
+        setComments([]);
+      });
 
     return () => {
       ignore = true;
@@ -34,7 +40,7 @@ export default function Comments({ slug }: { slug: string }) {
     let ignore = false;
     setUser(undefined);
 
-    Server.Auth.User().then((user) => {
+    getUser().then((user) => {
       if (ignore) return;
       setUser(user);
     });
