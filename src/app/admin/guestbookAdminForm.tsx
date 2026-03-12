@@ -19,7 +19,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { deleteGuestbookEntryDataFormSchema } from "@/config/schema";
 import type { EntryData } from "@/config/types";
-import Server from "@/lib/server";
+import { deleteGuestbookEntriesAction } from "@/lib/server-helper";
 import { cn } from "@/lib/utils";
 
 // Delete entries from the guestbook
@@ -36,7 +36,9 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
   const onSubmit = async (
     values: z.infer<typeof deleteGuestbookEntryDataFormSchema>,
   ) => {
-    const deleted = await Server.GuestBook.Delete({ entries: values.items });
+    const deleted = await deleteGuestbookEntriesAction({
+      entries: values.items,
+    });
     if (!deleted.ok) {
       console.error(deleted.error.message);
       toast({

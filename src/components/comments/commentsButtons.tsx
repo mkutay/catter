@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import type { CommentData } from "@/config/types";
-import Server from "@/lib/server";
+import { deleteCommentAction } from "@/lib/server-helper";
 
 export function SignOut({ slug }: { slug: string }) {
   return (
@@ -97,7 +97,7 @@ export function DeleteComment({
       editComment({ action: "delete", commentId: comment.id });
     }
 
-    const result = await Server.Comments.Delete({ comment });
+    const result = await deleteCommentAction({ comment });
 
     if (!result.ok) {
       toast({

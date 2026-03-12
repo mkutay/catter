@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { guestbookFormSchema } from "@/config/schema";
-import Server from "@/lib/server";
+import { saveGuestbookEntryAction } from "@/lib/server-helper";
 import { GuestBookSignOut } from "./buttons";
 import { GuestbookDialog } from "./dialog";
 
@@ -30,7 +30,7 @@ export default function GuestbookForm() {
   });
 
   const onSubmit = async (values: z.infer<typeof guestbookFormSchema>) => {
-    const saved = await Server.GuestBook.Save({
+    const saved = await saveGuestbookEntryAction({
       message: values.message,
     });
     if (!saved.ok) {

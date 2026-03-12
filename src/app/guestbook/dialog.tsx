@@ -40,7 +40,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { guestbookDialogFormSchema } from "@/config/schema";
 import { type GuestbookColorsType, guestbookColors } from "@/config/types";
-import Server from "@/lib/server";
+import { saveGuestbookEntryAction } from "@/lib/server-helper";
 import { cn } from "@/lib/utils";
 
 export function GuestbookDialog() {
@@ -58,7 +58,7 @@ export function GuestbookDialog() {
   const onSubmit = async (
     values: z.infer<typeof guestbookDialogFormSchema>,
   ) => {
-    await Server.GuestBook.Save({
+    await saveGuestbookEntryAction({
       message: values.message,
       username: values.username,
       color: values.color,

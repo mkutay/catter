@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { commentsFormSchema } from "@/config/schema";
 import type { CommentData } from "@/config/types";
-import Server from "@/lib/server";
+import { saveCommentAction } from "@/lib/server-helper";
 
 export function CommentForm({
   slug,
@@ -63,7 +63,7 @@ export function CommentForm({
 
     form.reset();
 
-    const saved = await Server.Comments.Save({ slug, message: values.message });
+    const saved = await saveCommentAction({ slug, message: values.message });
 
     editComment({ action: "delete", commentId: optimisticComment.id });
 
