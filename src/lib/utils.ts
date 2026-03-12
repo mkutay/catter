@@ -13,7 +13,7 @@ interface SchemaValidationError {
 }
 
 export const parseSchema = <O extends object>(
-  schema: z.ZodSchema<O>,
+  schema: z.ZodType<O>,
   values: O,
 ): Result<void, SchemaValidationError> => {
   const validation = schema.safeParse(values);
