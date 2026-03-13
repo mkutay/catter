@@ -138,7 +138,13 @@ export default async function Page({
           </div>
         </div>
       </div>
-      <DoublePane side={<SideTOC toc={scope.toc || []} />}>
+      <DoublePane
+        side={
+          <div className="sticky top-20 mt-6 hidden h-full w-1/3 flex-col lg:flex">
+            <SideTOC toc={scope.toc || []} />
+          </div>
+        }
+      >
         <div>
           {coverImage && placeholder && (
             <div className="my-6">

@@ -77,8 +77,8 @@ function TocSectionItem({
   );
 
   const rowClass = cn(
-    "flex items-center gap-0.5 rounded-md px-1 py-0.5 transition-colors duration-150",
-    highlight ? "bg-primary/8" : "hover:bg-muted/50",
+    "flex items-center gap-0.5 rounded-md px-2 py-1 transition-colors duration-150",
+    highlight ? "bg-primary/10" : "hover:bg-muted/50",
   );
 
   if (!hasChildren) {
@@ -127,7 +127,7 @@ function TocSectionItem({
           </div>
 
           <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-            <ul className="mt-1 space-y-1 pl-3.5">
+            <ul className="mt-1 space-y-1 pl-4.5">
               {children.map((child) => (
                 <TocSectionItem
                   key={child.index}
@@ -190,8 +190,8 @@ export function SideTOC({ toc }: { toc: TocItem[] }) {
 
   if (toc.length === 0) return null;
 
-  const shouldShowCompactView = toc.length > 12;
-  const shouldUseScrollArea = toc.length > 15;
+  const shouldShowCompactView = toc.length > 10;
+  const shouldUseScrollArea = toc.length > 12;
 
   const tocList = (
     <ul className="space-y-1 px-1">
@@ -208,43 +208,39 @@ export function SideTOC({ toc }: { toc: TocItem[] }) {
   );
 
   const tocContent = shouldUseScrollArea ? (
-    <ScrollArea className="h-[70vh]">{tocList}</ScrollArea>
+    <ScrollArea className="max-h-[70vh] overflow-y-auto">{tocList}</ScrollArea>
   ) : (
     <div className="max-h-[70vh] overflow-y-auto">{tocList}</div>
   );
 
   return (
-    <div className="sticky top-20 mt-6 hidden h-full w-1/3 flex-col lg:flex">
-      <div className="rounded-lg border border-border/60 bg-card/70 ">
-        {shouldShowCompactView ? (
-          <AccordionPrimitive.Root
-            type="single"
-            collapsible
-            value={isCollapsed ? "" : "contents"}
-            onValueChange={(value) => setIsCollapsed(value !== "contents")}
-          >
-            <AccordionPrimitive.Item value="contents" className="border-none">
-              <AccordionPrimitive.Trigger className="flex w-full items-center justify-between px-2 py-2 text-sm italic uppercase tracking-normal font-medium text-muted-foreground transition-colors hover:text-foreground [&[data-state=open]>svg]:rotate-90">
-                Contents
-                <ChevronRight className="h-3.5 w-3.5 transition-transform duration-200" />
-              </AccordionPrimitive.Trigger>
-
-              <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
-                <div className="border-t border-border/50 py-1">
-                  {tocContent}
-                </div>
-              </AccordionPrimitive.Content>
-            </AccordionPrimitive.Item>
-          </AccordionPrimitive.Root>
-        ) : (
-          <>
-            <p className="border-b border-border/50 px-2 py-2 text-sm font-medium italic uppercase tracking-normal text-muted-foreground">
+    <div className="rounded-lg border border-border/60 bg-card/70 ">
+      {shouldShowCompactView ? (
+        <AccordionPrimitive.Root
+          type="single"
+          collapsible
+          value={isCollapsed ? "" : "contents"}
+          onValueChange={(value) => setIsCollapsed(value !== "contents")}
+        >
+          <AccordionPrimitive.Item value="contents" className="border-none">
+            <AccordionPrimitive.Trigger className="flex w-full items-center justify-between px-3 py-3 text-sm italic uppercase tracking-normal font-medium text-muted-foreground transition-colors hover:text-foreground [&[data-state=open]>svg]:rotate-90">
               Contents
-            </p>
-            <div className="py-1">{tocContent}</div>
-          </>
-        )}
-      </div>
+              <ChevronRight className="h-3.5 w-3.5 transition-transform duration-200" />
+            </AccordionPrimitive.Trigger>
+
+            <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+              <div className="border-t border-border/50 py-1">{tocContent}</div>
+            </AccordionPrimitive.Content>
+          </AccordionPrimitive.Item>
+        </AccordionPrimitive.Root>
+      ) : (
+        <>
+          <p className="border-b border-border/50 px-3 py-3 text-sm font-medium italic uppercase tracking-normal text-muted-foreground">
+            Contents
+          </p>
+          <div className="py-1">{tocContent}</div>
+        </>
+      )}
     </div>
   );
 }
