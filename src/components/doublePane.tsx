@@ -3,8 +3,8 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
-import { TypographyHr } from "./typography/blockquote";
 import { cn } from "@/lib/utils";
+import { TypographyHr } from "./typography/blockquote";
 
 export default function DoublePane({
   children,
