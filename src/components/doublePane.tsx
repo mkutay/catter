@@ -4,15 +4,18 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { TypographyHr } from "./typography/blockquote";
+import { cn } from "@/lib/utils";
 
 export default function DoublePane({
   children,
   hideFollowLink,
   side,
+  sideGap = "gap-12",
 }: Readonly<{
   children: React.ReactNode;
   hideFollowLink?: boolean;
   side?: React.ReactNode;
+  sideGap?: string;
 }>) {
   if (!side) {
     return (
@@ -36,8 +39,13 @@ export default function DoublePane({
   }
 
   return (
-    <section className="w-full mx-auto lg:max-w-6xl md:mb-12 mb-6 flex flex-row gap-12">
-      <div className="w-full space-y-4 max-w-prose lg:mx-0 mx-auto px-4">
+    <section
+      className={cn(
+        "w-full mx-auto lg:max-w-6xl md:mb-12 mb-6 flex flex-row",
+        sideGap,
+      )}
+    >
+      <div className="w-full space-y-4 max-w-prose lg:mx-0 mx-auto px-4 lg:py-2">
         <div>{children}</div>
         <TypographyHr className="my-4" />
         {!hideFollowLink ? (

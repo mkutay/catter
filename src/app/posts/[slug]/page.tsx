@@ -140,10 +140,11 @@ export default async function Page({
       </div>
       <DoublePane
         side={
-          <div className="sticky top-20 mt-6 hidden h-full w-1/3 flex-col lg:flex">
+          <div className="sticky top-20 mt-8 hidden h-full flex-col flex-1 lg:flex pr-4">
             <SideTOC toc={scope.toc || []} />
           </div>
         }
+        sideGap="gap-4"
       >
         <div>
           {coverImage && placeholder && (
