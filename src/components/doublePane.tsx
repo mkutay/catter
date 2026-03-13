@@ -22,7 +22,7 @@ export default function DoublePane({
       <section className="w-full mx-auto lg:max-w-6xl md:mb-12 mb-6">
         <div className="w-full space-y-4 max-w-prose lg:mx-0 mx-auto px-4">
           <div>{children}</div>
-          <TypographyHr className="my-4" />
+          <TypographyHr className="my-12" />
           {!hideFollowLink ? (
             <div className="justify-between items-center gap-4 flex flex-row flex-wrap">
               <EmailSubButton />
@@ -47,7 +47,7 @@ export default function DoublePane({
     >
       <div className="w-full space-y-4 max-w-prose lg:mx-0 mx-auto px-4 lg:py-2">
         <div>{children}</div>
-        <TypographyHr className="my-4" />
+        <TypographyHr className="my-12" />
         {!hideFollowLink ? (
           <div className="justify-between items-center gap-4 flex flex-row flex-wrap">
             <EmailSubButton />
