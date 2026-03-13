@@ -39,7 +39,6 @@ import {
 import { TypographyOList, TypographyUList } from "@/components/typography/list";
 import { TypographyParagraph } from "@/components/typography/paragraph";
 import { getPlaceholder } from "@/lib/images";
-import remarkParentheses from "@/lib/remarkParentheses";
 import { cn } from "@/lib/utils";
 
 // CodeHike configuration for code blocks
@@ -61,7 +60,6 @@ export const options: EvaluateOptions = {
       [remarkCodeHike, chConfig],
       [remarkHeadingId, { defaults: true, uniqueDefaults: true }],
       [remarkFlexibleToc, { skipLevels: [] }],
-      remarkParentheses,
       remarkSmartypants,
     ],
     rehypePlugins: [rehypeKatex],
