@@ -18,23 +18,6 @@ export const getImage = (url: string) => {
   return minioClient.getObject(env.S3_BUCKET_NAME, normalizeKey(url));
 };
 
-export const fUploadImage = (url: string, path: string) => {
-  const ext = path.split(".").pop();
-  const contentType = `image/${ext}`;
-
-  const metadata = {
-    "Content-Type": contentType,
-    "x-amz-acl": "public-read",
-  };
-
-  return minioClient.fPutObject(
-    env.S3_BUCKET_NAME,
-    normalizeKey(url),
-    path,
-    metadata,
-  );
-};
-
 // Utility function to add timeout to promises
 const withTimeout = <T>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
   return Promise.race([
