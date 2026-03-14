@@ -12,6 +12,16 @@ interface ContentError {
   code: "DATABASE_ERROR";
 }
 
+const normalizeImageReference = (value: unknown): string | null => {
+  if (typeof value !== "string") return null;
+
+  const trimmed = value.trim();
+  if (trimmed.length === 0) return null;
+
+  const wikiLinkMatch = trimmed.match(/^\[\[(.+)\]\]$/);
+  return wikiLinkMatch?.[1]?.trim() || trimmed;
+};
+
 /**
  * Get all post files from the posts directory.
  */
@@ -86,7 +96,8 @@ export const getPost = (slug: string) =>
           ...post,
           shortExcerpt: post.shortexcerpt,
           lastModified: post.lastmodified,
-          coverSquare: post.coversquare,
+          cover: normalizeImageReference(post.cover),
+          coverSquare: normalizeImageReference(post.coversquare),
           tags: post.tags || [],
           keywords: post.keywords || [],
         }) as Post,
@@ -179,7 +190,8 @@ export const getPosts = ({
           ...post,
           shortExcerpt: post.shortexcerpt,
           lastModified: post.lastmodified,
-          coverSquare: post.coversquare,
+          cover: normalizeImageReference(post.cover),
+          coverSquare: normalizeImageReference(post.coversquare),
           views: post.views && post.views > 0 ? post.views : 0,
         }) as Post,
     ),
@@ -299,11 +311,8 @@ export function createPost(content: string, slug: string): Post {
     date: getDateValue(frontmatter.date, new Date().toISOString()),
     excerpt: getStringValue(frontmatter.excerpt, ""),
     locale: getStringValue(frontmatter.locale, "en_UK"),
-    cover: typeof frontmatter.cover === "string" ? frontmatter.cover : null,
-    coverSquare:
-      typeof frontmatter.coverSquare === "string"
-        ? frontmatter.coverSquare
-        : null,
+    cover: normalizeImageReference(frontmatter.cover),
+    coverSquare: normalizeImageReference(frontmatter.coverSquare),
     lastModified: getDateValue(
       frontmatter.lastModified,
       new Date().toISOString(),
