@@ -1,29 +1,35 @@
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { NextResponse } from "next/server";
+import z from "zod";
 import { env } from "@/env";
 import { db } from "@/lib/db/drizzle";
 import { postKeywords, posts, postTags } from "@/lib/db/schema";
 import { createPost } from "@/lib/dbContentQueries";
 
+const schema = z.object({
+  content: z.string(),
+  slug: z.string(),
+});
+
 export async function POST(request: Request) {
   const authHeader = request.headers.get("Authorization");
   const apiKey = env.UPLOAD_API_KEY;
 
-  if (!apiKey) {
-    return new Response("API key not configured on server", { status: 500 });
-  }
-
   if (!authHeader || authHeader !== `Bearer ${apiKey}`) {
-    return new Response("Unauthorized", { status: 401 });
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      {
+        status: 401,
+      },
+    );
   }
 
   try {
     const body = await request.json();
-    const content = body.content as string;
-    const slug = body.slug as string;
+    const { content, slug } = schema.parse(body);
 
     const post = createPost(content, slug);
-
     await deleteFromDB(post.slug);
 
     revalidatePath("/projects");
@@ -33,19 +39,17 @@ export async function POST(request: Request) {
     revalidatePath("/posts/page/[id]", "page");
     revalidatePath("/", "page");
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return new NextResponse("", { status: 200 });
   } catch (error) {
     console.error("Error uploading image:", error);
-    return new Response(JSON.stringify({ error: "Failed to upload image" }), {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
+    const message =
+      error instanceof Error ? error.message : "Unknown error occurred.";
+    return NextResponse.json(
+      { error: message },
+      {
+        status: 500,
       },
-    });
+    );
   }
 }
 

@@ -65,11 +65,7 @@ export async function POST(request: Request) {
     revalidatePath("/posts/page/[id]", "page");
     revalidatePath("/", "page");
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return new NextResponse("", { status: 200 });
   } catch (error) {
     console.error("Error in upload API:", error);
 
