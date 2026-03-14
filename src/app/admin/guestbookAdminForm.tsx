@@ -40,7 +40,6 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
       entries: values.items,
     });
     if (!deleted.ok) {
-      console.error(deleted.error.message);
       toast({
         title: "Error deleting entries.",
         description: deleted.error.message,
@@ -80,7 +79,6 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
                             className="mt-1.5"
                             checked={field.value?.includes(entry.id)}
                             onCheckedChange={(checked) => {
-                              console.log(field.value);
                               return checked
                                 ? field.onChange([...field.value, entry.id])
                                 : field.onChange(

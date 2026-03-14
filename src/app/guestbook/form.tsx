@@ -34,7 +34,6 @@ export default function GuestbookForm() {
       message: values.message,
     });
     if (!saved.ok) {
-      console.error(saved.error.message);
       toast({
         title: "Error saving guestbook entry. Please try again later.",
         description: saved.error.message,

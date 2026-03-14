@@ -35,7 +35,6 @@ export async function POST(request: Request) {
       slug: formData.get("slug"),
       files: formData.getAll("files"),
     });
-    console.log(content, slug, files);
 
     // Upload images with better error handling and concurrency control
     await Promise.all(

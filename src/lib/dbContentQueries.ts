@@ -74,7 +74,6 @@ export const getPost = (slug: string) =>
       return okAsync(result);
     })
     .map((result) => result[0])
-    // .andTee((post) => console.log(post))
     .andThen((post) =>
       post.content &&
       post.title &&
