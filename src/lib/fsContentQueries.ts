@@ -28,7 +28,7 @@ export function getAboutProps() {
       "utf-8",
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     notFound();
   }
 
@@ -57,7 +57,7 @@ export function getProps(pathTo: string, slug: string): PostData {
       "utf-8",
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     notFound();
   }
 

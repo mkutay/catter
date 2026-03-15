@@ -2,9 +2,12 @@ import { eq } from "drizzle-orm";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import { commentsFormSchema } from "@/config/schema";
 import { siteConfig } from "@/config/site";
-import type { CommentData } from "@/config/types";
+import type { DatabaseError } from "@/lib/database-errors";
 import { getAuth } from "@/lib/database-queries/auth";
-import { getCommentsByEmail } from "@/lib/database-queries/comments";
+import {
+  getCommentById,
+  getCommentsByEmail,
+} from "@/lib/database-queries/comments";
 import { db } from "@/lib/db/drizzle";
 import { comments } from "@/lib/db/schema";
 import { doesPostWithSlugExist } from "@/lib/dbContentQueries";
@@ -17,12 +20,7 @@ interface SaveCommentError {
 
 interface DeleteCommentError {
   message: string;
-  code: "UNAUTHORISED" | "DATABASE_ERROR";
-}
-
-interface DatabaseError {
-  message: string;
-  code: "DATABASE_ERROR";
+  code: "UNAUTHORISED" | "DATABASE_ERROR" | "COMMENT_NOT_FOUND";
 }
 
 export const saveComment = ({
@@ -52,57 +50,67 @@ export const saveComment = ({
     )
     .andThen(getAuth)
     .andThen((session) =>
-      !session || !session.user
+      !session.user || !session.user.email
         ? errAsync({
-            message: "Session not found.",
+            message: "Session not found or email missing.",
             code: "UNAUTHORISED",
           } as SaveCommentError)
         : okAsync({
-            email: session.user.email || "anon@example.com",
+            email: session.user.email,
             name: session.user.name || "Anonymous",
           }),
     )
-    .andThen(getCommentsByEmail)
-    .andThen((comments) =>
-      // 5 minutes rate limit
-      comments.length > 0 &&
-      Date.now() - new Date(comments[0].createdAt).getTime() < 1000 * 60 * 5
-        ? errAsync({
-            message:
-              "Rate limit exceeded. Please wait before submitting again.",
-            code: "RATE_LIMIT",
-          } as SaveCommentError)
-        : okAsync({ email: comments[0].email, name: comments[0].createdBy }),
+    .andThen((user) =>
+      getCommentsByEmail({ email: user.email }).andThen((commentsList) =>
+        // 5 minutes rate limit
+        commentsList.length > 0 &&
+        Date.now() - new Date(commentsList[0].createdAt).getTime() <
+          1000 * 60 * 5
+          ? errAsync({
+              message:
+                "Rate limit exceeded. Please wait before submitting again.",
+              code: "RATE_LIMIT",
+            } as SaveCommentError)
+          : okAsync(user),
+      ),
     )
     .andThen(({ email, name }) =>
-      insertIntoComments(
-        Math.floor(Math.random() * 10000000),
-        slug,
-        email,
-        message,
-        name,
-      ),
+      insertIntoComments(slug, email, message, name),
     );
 
-export const deleteComment = ({ comment }: { comment: CommentData }) =>
+export const deleteComment = ({ id }: { id: number }) =>
   getAuth()
     .andThen((session) =>
-      !session.user
+      !session.user || !session.user.email
         ? errAsync({
-            message: "Session not found.",
+            message: "Session not found or email missing.",
             code: "UNAUTHORISED",
           } as DeleteCommentError)
-        : okAsync(session.user.email || "anon@example.com"),
+        : okAsync(session.user.email),
     )
-    .andThen((email) =>
-      !siteConfig.admins.includes(email) && comment.email !== email
-        ? errAsync({
-            message: "You are not authorized to delete this comment.",
-            code: "UNAUTHORISED",
-          } as DeleteCommentError)
-        : okAsync(),
+    .andThen((sessionEmail) =>
+      getCommentById({ id })
+        .mapErr(
+          (err) =>
+            ({
+              message: err.message,
+              code:
+                err.code === "COMMENT_NOT_FOUND"
+                  ? "COMMENT_NOT_FOUND"
+                  : "DATABASE_ERROR",
+            }) as DeleteCommentError,
+        )
+        .andThen((dbComment) =>
+          !siteConfig.admins.includes(sessionEmail) &&
+          dbComment.email !== sessionEmail
+            ? errAsync({
+                message: "You are not authorized to delete this comment.",
+                code: "UNAUTHORISED",
+              } as DeleteCommentError)
+            : okAsync(),
+        ),
     )
-    .andThen(() => deleteFromComments(comment.id));
+    .andThen(() => deleteFromComments(id));
 
 const deleteFromComments = (id: number): ResultAsync<void, DatabaseError> =>
   ResultAsync.fromPromise(
@@ -114,7 +122,6 @@ const deleteFromComments = (id: number): ResultAsync<void, DatabaseError> =>
   ).andThen(() => okAsync());
 
 const insertIntoComments = (
-  random: number,
   slug: string,
   email: string,
   message: string,
@@ -124,7 +131,6 @@ const insertIntoComments = (
     db
       .insert(comments)
       .values({
-        id: random,
         slug,
         email,
         body: message,

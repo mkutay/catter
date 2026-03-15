@@ -1,21 +1,12 @@
 import { desc, eq, sum } from "drizzle-orm";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import type { DatabaseError } from "@/lib/database-errors";
 import { db } from "@/lib/db/drizzle";
 import { views } from "@/lib/db/schema";
 
 interface GetViewsCountError {
   message: string;
   code: "LIMIT_OUT_OF_RANGE" | "DATABASE_ERROR";
-}
-
-interface GetBlogViewsError {
-  message: string;
-  code: "DATABASE_ERROR";
-}
-
-interface GetViewCountError {
-  message: string;
-  code: "POST_NOT_FOUND" | "DATABASE_ERROR" | "NO_VIEWS_FOUND";
 }
 
 export const getBlogViews = () =>
@@ -25,7 +16,7 @@ export const getBlogViews = () =>
       ({
         message: "Failed to fetch blog views. Database error.",
         code: "DATABASE_ERROR",
-      }) as GetBlogViewsError,
+      }) as DatabaseError,
   ).map((views) => {
     return views.reduce((acc, curr) => acc + Number(curr.count), 0);
   });
@@ -59,12 +50,9 @@ export const getViewCount = ({ slug }: { slug: string }) =>
       ({
         message: "Failed to fetch view count. Database error.",
         code: "DATABASE_ERROR",
-      }) as GetViewCountError,
-  ).andThen((views) =>
-    views.length === 0 || !views[0] || views[0].count === null
-      ? errAsync({
-          message: "No views found for this post.",
-          code: "NO_VIEWS_FOUND",
-        } as GetViewCountError)
-      : okAsync(views[0].count),
+      }) as DatabaseError,
+  ).andThen((viewsList) =>
+    viewsList.length === 0 || !viewsList[0] || viewsList[0].count === null
+      ? okAsync(0)
+      : okAsync(viewsList[0].count),
   );

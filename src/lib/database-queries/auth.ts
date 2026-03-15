@@ -1,11 +1,6 @@
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
-
 import { auth } from "@/lib/auth";
-
-interface AuthError {
-  message: string;
-  code: "AUTH_ERROR" | "UNAUTHORISED";
-}
+import type { AuthError } from "@/lib/database-errors";
 
 export const getAuth = () =>
   ResultAsync.fromPromise(

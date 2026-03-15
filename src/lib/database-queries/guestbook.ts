@@ -1,6 +1,7 @@
 import { desc, eq, inArray } from "drizzle-orm";
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
 import type { EntryData } from "@/config/types";
+import type { DatabaseError } from "@/lib/database-errors";
 import { db } from "@/lib/db/drizzle";
 import { guestbook } from "@/lib/db/schema";
 
@@ -67,17 +68,18 @@ export const getGuestbookEntriesByEmail = ({ email }: { email: string }) =>
       .select({
         id: guestbook.id,
         body: guestbook.body,
-        created_by: guestbook.createdBy,
-        created_at: guestbook.createdAt,
-        updated_at: guestbook.updatedAt,
+        createdBy: guestbook.createdBy,
+        createdAt: guestbook.createdAt,
+        updatedAt: guestbook.updatedAt,
         email: guestbook.email,
         color: guestbook.color,
       })
       .from(guestbook)
       .where(eq(guestbook.email, email))
       .orderBy(desc(guestbook.createdAt)),
-    () => ({
-      message: "Failed to fetch guestbook entries. Database error.",
-      code: "DATABASE_ERROR" as const,
-    }),
+    () =>
+      ({
+        message: "Failed to fetch guestbook entries. Database error.",
+        code: "DATABASE_ERROR",
+      }) as DatabaseError,
   );

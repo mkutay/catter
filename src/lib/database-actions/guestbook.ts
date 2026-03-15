@@ -6,6 +6,8 @@ import {
   guestbookFormSchema,
 } from "@/config/schema";
 import { siteConfig } from "@/config/site";
+import { type GuestbookColorsType, guestbookColors } from "@/config/types";
+import type { DatabaseError } from "@/lib/database-errors";
 import { getAuth } from "@/lib/database-queries/auth";
 import {
   doesAllEntriesExist,
@@ -21,7 +23,7 @@ interface SaveGuestbookEntryError {
 
 interface DeleteGuestbookEntriesError {
   message: string;
-  code: "UNAUTHORISED" | "NOT_ALL_ENTRIES_EXIST";
+  code: "UNAUTHORISED" | "NOT_ALL_ENTRIES_EXIST" | "DATABASE_ERROR";
 }
 
 export const saveGuestbookEntryData = ({
@@ -35,13 +37,13 @@ export const saveGuestbookEntryData = ({
 }) =>
   getAuth()
     .andThen((session) =>
-      session.user
+      session.user?.email
         ? okAsync({
-            email: session.user.email || "",
-            name: session.user.name || "",
+            email: session.user.email,
+            name: session.user.name || "Anonymous",
           })
         : errAsync({
-            message: "Session not found. Unauthorized.",
+            message: "Session not found or email missing. Unauthorized.",
             code: "UNAUTHORISED",
           } as SaveGuestbookEntryError),
     )
@@ -69,20 +71,26 @@ export const saveGuestbookEntryData = ({
 
       const createdBy = validationPopOver.success ? username || "" : name;
 
-      if (!validationPopOver.success) {
-        color = "text";
+      let validColor = "text";
+      if (
+        validationPopOver.success &&
+        color &&
+        guestbookColors.includes(color as GuestbookColorsType)
+      ) {
+        validColor = color;
       }
 
       return okAsync({
         email,
         createdBy,
+        validColor,
       });
     })
-    .andThen(({ email, createdBy }) =>
+    .andThen(({ email, createdBy, validColor }) =>
       getGuestbookEntriesByEmail({ email })
         .andThen((entries) =>
           entries.length > 0 &&
-          Date.now() - new Date(entries[0].created_at).getTime() < 1000 * 15
+          Date.now() - new Date(entries[0].createdAt).getTime() < 1000 * 15
             ? errAsync({
                 message:
                   "Rate limit exceeded. Please wait before submitting again.",
@@ -91,13 +99,7 @@ export const saveGuestbookEntryData = ({
             : okAsync(),
         )
         .andThen(() =>
-          insertIntoGuestbook(
-            Math.floor(Math.random() * 1000000),
-            email,
-            message,
-            createdBy,
-            color || "text",
-          ),
+          insertIntoGuestbook(email, message, createdBy, validColor),
         ),
     )
     .andThen(() => {
@@ -107,7 +109,6 @@ export const saveGuestbookEntryData = ({
     });
 
 const insertIntoGuestbook = (
-  random: number,
   email: string,
   message: string,
   created_by: string,
@@ -117,7 +118,6 @@ const insertIntoGuestbook = (
     db
       .insert(guestbook)
       .values({
-        id: random,
         email,
         body: message,
         createdBy: created_by,
@@ -125,19 +125,20 @@ const insertIntoGuestbook = (
         color,
       })
       .returning(),
-    () => ({
-      message: "Failed to insert guestbook entry. Database error.",
-      code: "DATABASE_ERROR",
-    }),
+    () =>
+      ({
+        message: "Failed to insert guestbook entry. Database error.",
+        code: "DATABASE_ERROR",
+      }) as DatabaseError,
   );
 
 export const deleteGuestbookEntries = ({ entries }: { entries: number[] }) =>
   getAuth()
     .andThen((session) =>
-      session.user
-        ? okAsync(session.user.email || "")
+      session.user?.email
+        ? okAsync(session.user.email)
         : errAsync({
-            message: "User not found. Unauthorized.",
+            message: "User not found or email missing. Unauthorized.",
             code: "UNAUTHORISED",
           } as DeleteGuestbookEntriesError),
     )
@@ -168,8 +169,9 @@ export const deleteGuestbookEntries = ({ entries }: { entries: number[] }) =>
 const deleteFromGuestbook = (entries: number[]) =>
   ResultAsync.fromPromise(
     db.delete(guestbook).where(inArray(guestbook.id, entries)).returning(),
-    () => ({
-      message: "Failed to delete guestbook entry. Database error.",
-      code: "DATABASE_ERROR" as const,
-    }),
+    () =>
+      ({
+        message: "Failed to delete guestbook entry. Database error.",
+        code: "DATABASE_ERROR",
+      }) as DatabaseError,
   );

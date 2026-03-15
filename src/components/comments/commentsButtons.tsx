@@ -97,7 +97,7 @@ export function DeleteComment({
       editComment({ action: "delete", commentId: comment.id });
     }
 
-    const result = await deleteCommentAction({ comment });
+    const result = await deleteCommentAction({ id: comment.id });
 
     if (!result.ok) {
       toast({
