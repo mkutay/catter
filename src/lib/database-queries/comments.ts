@@ -41,9 +41,9 @@ export const getComments = ({ slug }: { slug: string }) =>
               .select({
                 id: comments.id,
                 body: comments.body,
-                created_by: comments.createdBy,
-                created_at: comments.createdAt,
-                updated_at: comments.updatedAt,
+                createdBy: comments.createdBy,
+                createdAt: comments.createdAt,
+                updatedAt: comments.updatedAt,
                 email: comments.email,
                 slug: comments.slug,
               })
@@ -72,9 +72,9 @@ export const getEveryComment = (props?: { limit: number }) =>
               id: comments.id,
               slug: comments.slug,
               body: comments.body,
-              created_by: comments.createdBy,
-              created_at: comments.createdAt,
-              updated_at: comments.updatedAt,
+              createdBy: comments.createdBy,
+              createdAt: comments.createdAt,
+              updatedAt: comments.updatedAt,
               email: comments.email,
             })
             .from(comments)
@@ -95,9 +95,9 @@ export const getCommentsByEmail = ({ email }: { email: string }) =>
         id: comments.id,
         slug: comments.slug,
         body: comments.body,
-        created_by: comments.createdBy,
-        created_at: comments.createdAt,
-        updated_at: comments.updatedAt,
+        createdBy: comments.createdBy,
+        createdAt: comments.createdAt,
+        updatedAt: comments.updatedAt,
       })
       .from(comments)
       .where(eq(comments.email, email))

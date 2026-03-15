@@ -26,9 +26,9 @@ export const getGuestbookEntries = (props?: { limit: number }) =>
             .select({
               id: guestbook.id,
               body: guestbook.body,
-              created_by: guestbook.createdBy,
-              created_at: guestbook.createdAt,
-              updated_at: guestbook.updatedAt,
+              createdBy: guestbook.createdBy,
+              createdAt: guestbook.createdAt,
+              updatedAt: guestbook.updatedAt,
               email: guestbook.email,
               color: guestbook.color,
             })

@@ -1,4 +1,4 @@
-import type { posts } from "@/lib/db/schema";
+import type { comments, guestbook, posts } from "@/lib/db/schema";
 
 export type DBPost = typeof posts.$inferSelect;
 
@@ -30,25 +30,9 @@ export type PostMeta = {
   shortExcerpt?: string;
 };
 
-export type EntryData = {
-  id: number;
-  body: string;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-  email: string;
-  color: string;
-};
+export type EntryData = typeof guestbook.$inferSelect;
 
-export type CommentData = {
-  id: number;
-  slug: string;
-  body: string;
-  created_by: string;
-  created_at: string;
-  updated_at: string | null;
-  email: string;
-};
+export type CommentData = typeof comments.$inferSelect;
 
 export const guestbookColors = [
   "rosewater",
@@ -68,24 +52,4 @@ export const guestbookColors = [
   "text",
 ] as const;
 
-export type GuestbookColorsType =
-  | "rosewater"
-  | "flamingo"
-  | "pink"
-  | "mauve"
-  | "red"
-  | "maroon"
-  | "peach"
-  | "yellow"
-  | "green"
-  | "teal"
-  | "sky"
-  | "sapphire"
-  | "blue"
-  | "lavender"
-  | "text";
-
-export type ViewCount = {
-  slug: string;
-  count: number;
-};
+export type GuestbookColorsType = (typeof guestbookColors)[number];

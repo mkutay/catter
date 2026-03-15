@@ -99,7 +99,7 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
                                   : `text-${entry.color}`,
                               )}
                             >
-                              {entry.created_by}:
+                              {entry.createdBy}:
                             </span>
                             <span className="text-foreground">
                               {entry.body}

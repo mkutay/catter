@@ -52,10 +52,10 @@ export function CommentForm({
     const optimisticComment: CommentData = {
       id: Math.floor(Math.random() * 10000000),
       body: values.message,
-      created_at: now,
-      updated_at: now,
+      createdAt: now,
+      updatedAt: now,
       email: user.email,
-      created_by: user.name,
+      createdBy: user.name,
       slug: slug,
     };
 

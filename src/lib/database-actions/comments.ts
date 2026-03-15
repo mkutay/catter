@@ -63,8 +63,7 @@ export const saveComment = ({
         .andThen((comments) =>
           // 5 minutes rate limit
           comments.length > 0 &&
-          Date.now() - new Date(comments[0].created_at).getTime() <
-            1000 * 60 * 5
+          Date.now() - new Date(comments[0].createdAt).getTime() < 1000 * 60 * 5
             ? errAsync({
                 message:
                   "Rate limit exceeded. Please wait before submitting again.",
@@ -117,7 +116,7 @@ const insertIntoComments = (
   slug: string,
   email: string,
   message: string,
-  created_by: string,
+  createdBy: string,
 ) =>
   ResultAsync.fromPromise(
     db
@@ -127,7 +126,7 @@ const insertIntoComments = (
         slug,
         email,
         body: message,
-        createdBy: created_by,
+        createdBy,
         createdAt: new Date().toISOString(),
       })
       .returning()
@@ -137,9 +136,9 @@ const insertIntoComments = (
           slug: r.slug,
           email: r.email,
           body: r.body,
-          created_by: r.createdBy,
-          created_at: r.createdAt,
-          updated_at: r.updatedAt,
+          createdBy: r.createdBy,
+          createdAt: r.createdAt,
+          updatedAt: r.updatedAt,
         })),
       ),
     () => ({

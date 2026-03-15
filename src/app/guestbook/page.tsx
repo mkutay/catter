@@ -94,7 +94,7 @@ async function GuestbookEntries() {
                 : `text-${entry.color}`,
             )}
           >
-            {entry.created_by}:
+            {entry.createdBy}:
           </span>
           <span className="text-foreground">{entry.body}</span>
         </p>
