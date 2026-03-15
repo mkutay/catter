@@ -1,3 +1,4 @@
+import type { Readable } from "node:stream";
 import * as Minio from "minio";
 import { getPlaiceholder } from "plaiceholder";
 import { env } from "@/env";
@@ -14,7 +15,7 @@ export const minioClient = new Minio.Client({
 // S3 object keys must not start with a leading slash or signatures will break.
 const normalizeKey = (key: string) => key.replace(/^\/+/, "");
 
-export const getImage = (url: string) => {
+export const getImage = (url: string): Promise<Readable> => {
   return minioClient.getObject(env.S3_BUCKET_NAME, normalizeKey(url));
 };
 
