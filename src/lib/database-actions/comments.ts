@@ -20,6 +20,11 @@ interface DeleteCommentError {
   code: "UNAUTHORISED" | "DATABASE_ERROR";
 }
 
+interface DatabaseError {
+  message: string;
+  code: "DATABASE_ERROR";
+}
+
 export const saveComment = ({
   slug,
   message,
@@ -29,8 +34,7 @@ export const saveComment = ({
 }) =>
   parseSchema(commentsFormSchema, { message })
     .asyncAndThen(() =>
-      ResultAsync.fromPromise(
-        doesPostWithSlugExist(slug),
+      doesPostWithSlugExist(slug).mapErr(
         () =>
           ({
             message: "Error checking post existence.",
@@ -46,7 +50,7 @@ export const saveComment = ({
             code: "INVALID_SLUG",
           } as SaveCommentError),
     )
-    .andThen(() => getAuth())
+    .andThen(getAuth)
     .andThen((session) =>
       !session || !session.user
         ? errAsync({
@@ -54,32 +58,30 @@ export const saveComment = ({
             code: "UNAUTHORISED",
           } as SaveCommentError)
         : okAsync({
-            email: session.user.email || "",
-            name: session.user.name || "",
+            email: session.user.email || "anon@example.com",
+            name: session.user.name || "Anonymous",
           }),
     )
+    .andThen(getCommentsByEmail)
+    .andThen((comments) =>
+      // 5 minutes rate limit
+      comments.length > 0 &&
+      Date.now() - new Date(comments[0].createdAt).getTime() < 1000 * 60 * 5
+        ? errAsync({
+            message:
+              "Rate limit exceeded. Please wait before submitting again.",
+            code: "RATE_LIMIT",
+          } as SaveCommentError)
+        : okAsync({ email: comments[0].email, name: comments[0].createdBy }),
+    )
     .andThen(({ email, name }) =>
-      getCommentsByEmail({ email })
-        .andThen((comments) =>
-          // 5 minutes rate limit
-          comments.length > 0 &&
-          Date.now() - new Date(comments[0].createdAt).getTime() < 1000 * 60 * 5
-            ? errAsync({
-                message:
-                  "Rate limit exceeded. Please wait before submitting again.",
-                code: "RATE_LIMIT",
-              } as SaveCommentError)
-            : okAsync(),
-        )
-        .andThen(() =>
-          insertIntoComments(
-            Math.floor(Math.random() * 10000000),
-            slug,
-            email,
-            message,
-            name,
-          ),
-        ),
+      insertIntoComments(
+        Math.floor(Math.random() * 10000000),
+        slug,
+        email,
+        message,
+        name,
+      ),
     );
 
 export const deleteComment = ({ comment }: { comment: CommentData }) =>
@@ -90,7 +92,7 @@ export const deleteComment = ({ comment }: { comment: CommentData }) =>
             message: "Session not found.",
             code: "UNAUTHORISED",
           } as DeleteCommentError)
-        : okAsync(session.user.email || ""),
+        : okAsync(session.user.email || "anon@example.com"),
     )
     .andThen((email) =>
       !siteConfig.admins.includes(email) && comment.email !== email
@@ -102,14 +104,14 @@ export const deleteComment = ({ comment }: { comment: CommentData }) =>
     )
     .andThen(() => deleteFromComments(comment.id));
 
-const deleteFromComments = (id: number) =>
+const deleteFromComments = (id: number): ResultAsync<void, DatabaseError> =>
   ResultAsync.fromPromise(
     db.delete(comments).where(eq(comments.id, id)).returning(),
     () => ({
       message: "Failed to delete comment. Database error.",
       code: "DATABASE_ERROR" as const,
     }),
-  );
+  ).andThen(() => okAsync());
 
 const insertIntoComments = (
   random: number,
@@ -129,20 +131,10 @@ const insertIntoComments = (
         createdBy,
         createdAt: new Date().toISOString(),
       })
-      .returning()
-      .then((res) =>
-        res.map((r) => ({
-          id: r.id,
-          slug: r.slug,
-          email: r.email,
-          body: r.body,
-          createdBy: r.createdBy,
-          createdAt: r.createdAt,
-          updatedAt: r.updatedAt,
-        })),
-      ),
-    () => ({
-      message: "Failed to save comment. Database error.",
-      code: "DATABASE_ERROR" as const,
-    }),
+      .returning(),
+    () =>
+      ({
+        message: "Failed to save comment. Database error.",
+        code: "DATABASE_ERROR",
+      }) as DatabaseError,
   );

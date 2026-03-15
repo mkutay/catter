@@ -98,6 +98,7 @@ export const getCommentsByEmail = ({ email }: { email: string }) =>
         createdBy: comments.createdBy,
         createdAt: comments.createdAt,
         updatedAt: comments.updatedAt,
+        email: comments.email,
       })
       .from(comments)
       .where(eq(comments.email, email))
