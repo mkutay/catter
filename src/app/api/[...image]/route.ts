@@ -1,5 +1,5 @@
 import type { Readable } from "node:stream";
-import { getImage } from "@/lib/images";
+import { getImageResult } from "@/lib/images";
 
 const ALLOWED_CONTENT_TYPES: Record<string, string> = {
   // Images
@@ -86,7 +86,13 @@ export async function GET(
 
   const fullUrl = `/${decodedImage.join("/")}`;
 
-  const imageStream = await getImage(fullUrl);
+  const imageResult = await getImageResult(fullUrl);
+
+  if (imageResult.isErr()) {
+    return new Response(imageResult.error.message, { status: 404 });
+  }
+
+  const imageStream = imageResult.value;
   const responseStream = toUint8WebStream(imageStream);
 
   return new Response(responseStream, {

@@ -7,7 +7,7 @@ import { env } from "@/env";
 import { db } from "@/lib/db/drizzle";
 import { postKeywords, posts, postTags, views } from "@/lib/db/schema";
 import { createPost } from "@/lib/dbContentQueries";
-import { uploadImage } from "@/lib/images";
+import { uploadImageResult } from "@/lib/images";
 
 const schema = z.object({
   content: z.string(),
@@ -47,7 +47,17 @@ export async function POST(request: Request) {
         }
 
         const buffer = Buffer.from(await image.arrayBuffer());
-        await uploadImage(image.name, buffer, image.size, image.type);
+        const uploadResult = await uploadImageResult(
+          image.name,
+          buffer,
+          image.size,
+          image.type,
+        );
+
+        if (uploadResult.isErr()) {
+          throw new Error(uploadResult.error.message);
+        }
+
         console.log(
           `Successfully uploaded image ${index + 1}/${files.length}: ${image.name}`,
         );

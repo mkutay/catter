@@ -1,5 +1,6 @@
 import type { Readable } from "node:stream";
 import * as Minio from "minio";
+import { ResultAsync } from "neverthrow";
 import { getPlaiceholder } from "plaiceholder";
 import { env } from "@/env";
 
@@ -15,21 +16,85 @@ export const minioClient = new Minio.Client({
 // S3 object keys must not start with a leading slash or signatures will break.
 const normalizeKey = (key: string) => key.replace(/^\/+/, "");
 
-export const getImage = (url: string): Promise<Readable> => {
-  return minioClient.getObject(env.S3_BUCKET_NAME, normalizeKey(url));
+type ErrorBase<T extends string> = {
+  type: T;
+  message: string;
 };
 
-// Utility function to add timeout to promises
-const withTimeout = <T>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
-  return Promise.race([
-    promise,
-    new Promise<never>((_, reject) =>
-      setTimeout(
-        () => reject(new Error(`Operation timed out after ${timeoutMs}ms`)),
-        timeoutMs,
-      ),
+export type GetImageError = ErrorBase<"GET_IMAGE_ERROR">;
+
+export type UploadImageError = ErrorBase<"UPLOAD_FAIL">;
+
+export type PlaceholderError =
+  | ErrorBase<"GET_IMAGE_ERROR">
+  | ErrorBase<"IMAGE_STREAM_ERROR">
+  | ErrorBase<"PLACEHOLDER_ERROR">;
+
+export type PlaceholderResult = Awaited<ReturnType<typeof getPlaiceholder>>;
+
+const toMessage = (error: unknown, fallback: string): string =>
+  error instanceof Error ? error.message : fallback;
+
+const toGetImageError = (error: unknown): GetImageError => ({
+  type: "GET_IMAGE_ERROR",
+  message: `Failed to get image from S3: ${toMessage(error, "Unknown error.")}`,
+});
+
+const toUploadError = (error: unknown): UploadImageError => ({
+  type: "UPLOAD_FAIL",
+  message: `Upload failed: ${toMessage(error, "Unknown error.")}`,
+});
+
+const toImageStreamError = (error: unknown): PlaceholderError => ({
+  type: "IMAGE_STREAM_ERROR",
+  message: `Failed to read image stream: ${toMessage(error, "Unknown error.")}`,
+});
+
+const toPlaceholderError = (error: unknown): PlaceholderError => ({
+  type: "PLACEHOLDER_ERROR",
+  message: `Failed to build image placeholder: ${toMessage(error, "Unknown error.")}`,
+});
+
+export const getImageResult = (
+  url: string,
+): ResultAsync<Readable, GetImageError> =>
+  ResultAsync.fromPromise(
+    minioClient.getObject(env.S3_BUCKET_NAME, normalizeKey(url)),
+    toGetImageError,
+  );
+
+// Backward-compatible wrapper for existing call sites.
+export const getImage = async (url: string): Promise<Readable> => {
+  const result = await getImageResult(url);
+
+  if (result.isErr()) {
+    throw new Error(result.error.message);
+  }
+
+  return result.value;
+};
+
+export const uploadImageResult = (
+  url: string,
+  buffer: Buffer,
+  size: number,
+  contentType: string,
+): ResultAsync<void, UploadImageError> => {
+  const metadata = {
+    "Content-Type": contentType,
+    "x-amz-acl": "public-read",
+  };
+
+  return ResultAsync.fromPromise(
+    minioClient.putObject(
+      env.S3_BUCKET_NAME,
+      normalizeKey(url),
+      buffer,
+      size,
+      metadata,
     ),
-  ]);
+    toUploadError,
+  ).map(() => undefined);
 };
 
 export const uploadImage = async (
@@ -37,61 +102,78 @@ export const uploadImage = async (
   buffer: Buffer,
   size: number,
   contentType: string,
-  retries = 3,
 ): Promise<void> => {
-  const metadata = {
-    "Content-Type": contentType,
-    "x-amz-acl": "public-read",
-  };
+  const result = await uploadImageResult(url, buffer, size, contentType);
 
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      // Add 30-second timeout to the upload operation
-      await withTimeout(
-        minioClient.putObject(
-          env.S3_BUCKET_NAME,
-          normalizeKey(url),
-          buffer,
-          size,
-          metadata,
-        ),
-        30000, // 30 seconds timeout
-      );
-      return; // Success, exit the function
-    } catch (error) {
-      const isLastAttempt = attempt === retries;
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-
-      console.log(
-        `Upload attempt ${attempt}/${retries} failed for ${url}: ${errorMessage}`,
-      );
-
-      if (isLastAttempt) {
-        throw new Error(
-          `Failed to upload ${url} after ${retries} attempts: ${errorMessage}`,
-        );
-      }
-
-      // Wait before retrying (exponential backoff)
-      const delay = Math.min(1000 * 2 ** (attempt - 1), 10000); // Max 10 seconds
-      console.log(`Retrying upload for ${url} in ${delay}ms...`);
-      await new Promise((resolve) => setTimeout(resolve, delay));
-    }
+  if (result.isErr()) {
+    throw new Error(result.error.message);
   }
 };
+
+const streamToBufferResult = (
+  stream: Readable,
+): ResultAsync<Buffer, PlaceholderError> =>
+  ResultAsync.fromPromise(
+    (async () => {
+      const chunks: Uint8Array[] = [];
+
+      for await (const chunk of stream) {
+        if (typeof chunk === "string") {
+          chunks.push(Buffer.from(chunk));
+          continue;
+        }
+
+        if (chunk instanceof Uint8Array) {
+          chunks.push(chunk);
+          continue;
+        }
+
+        if (ArrayBuffer.isView(chunk)) {
+          chunks.push(
+            new Uint8Array(chunk.buffer, chunk.byteOffset, chunk.byteLength),
+          );
+          continue;
+        }
+
+        if (chunk instanceof ArrayBuffer) {
+          chunks.push(new Uint8Array(chunk));
+          continue;
+        }
+
+        throw new TypeError("Unsupported stream chunk while reading image.");
+      }
+
+      return Buffer.concat(chunks);
+    })(),
+    toImageStreamError,
+  );
+
+export const getPlaceholderResult = (
+  image: string,
+): ResultAsync<PlaceholderResult, PlaceholderError> =>
+  getImageResult(image)
+    .mapErr(
+      (error): PlaceholderError => ({
+        type: error.type,
+        message: error.message,
+      }),
+    )
+    .andThen(streamToBufferResult)
+    .andThen((buffer) =>
+      ResultAsync.fromPromise(getPlaiceholder(buffer), toPlaceholderError),
+    );
 
 /**
  * @param image The image url in minio: "/images/catter-blog/cover.png"
  */
-export async function getPlaceholder(image: string) {
-  const imageStream = await getImage(image);
-  const chunks: Uint8Array[] = [];
+export async function getPlaceholder(
+  image: string,
+): Promise<PlaceholderResult> {
+  const result = await getPlaceholderResult(image);
 
-  for await (const chunk of imageStream) {
-    chunks.push(chunk);
+  if (result.isErr()) {
+    throw new Error(result.error.message);
   }
-  const buffer = Buffer.concat(chunks);
 
-  return getPlaiceholder(buffer);
+  return result.value;
 }
