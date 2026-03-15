@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, getTableColumns, not, sql } from "drizzle-orm";
 import matter from "gray-matter";
-import { errAsync, fromPromise, okAsync } from "neverthrow";
+import { errAsync, fromPromise, okAsync, type ResultAsync } from "neverthrow";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import type { Post } from "@/config/types";
@@ -22,31 +22,68 @@ const normalizeImageReference = (value: unknown): string | null => {
   return wikiLinkMatch?.[1]?.trim() || trimmed;
 };
 
+const getContentError = (message: string, error?: unknown): ContentError => {
+  console.error(message, "Database error details:", error);
+  return {
+    message: `${message}${error instanceof Error ? ` ${error.message}` : ""}`,
+    code: "DATABASE_ERROR",
+  };
+};
+
+interface PostTagFilters {
+  tags?: string[];
+  disallowTags?: string[];
+}
+
+const buildTagFilterSql = ({
+  tags,
+  disallowTags,
+}: Required<PostTagFilters>) => {
+  const effectiveDisallowTags = disallowTags.includes(siteConfig.invisible)
+    ? disallowTags
+    : [...disallowTags, siteConfig.invisible];
+
+  const hasIncludedTagSql =
+    tags.length === 0
+      ? sql<boolean>`true`
+      : sql<boolean>`COUNT(DISTINCT ${postTags.tag}) FILTER (WHERE ${postTags.tag} = ANY(ARRAY[${sql.join(
+          tags.map((tag) => sql`${tag}`),
+          sql`, `,
+        )}]::text[])) > 0`;
+
+  const hasDisallowedTagSql =
+    effectiveDisallowTags.length === 0
+      ? sql<boolean>`false`
+      : sql<boolean>`COUNT(DISTINCT ${postTags.tag}) FILTER (WHERE ${postTags.tag} = ANY(ARRAY[${sql.join(
+          effectiveDisallowTags.map((tag) => sql`${tag}`),
+          sql`, `,
+        )}]::text[])) > 0`;
+
+  return {
+    hasIncludedTagSql,
+    hasDisallowedTagSql,
+  };
+};
+
 /**
  * Get all post files from the posts directory.
  */
-export const getPostSlugs = () =>
-  fromPromise(
-    db.select({ slug: posts.slug }).from(posts),
-    () =>
-      ({
-        message: "Error fetching post slugs.",
-        code: "DATABASE_ERROR",
-      }) as ContentError,
-  ).map((values) => values.map((value) => value.slug));
+export const getPostSlugs = (): ResultAsync<string[], ContentError> =>
+  fromPromise(db.select({ slug: posts.slug }).from(posts), () => ({
+    message: "Error fetching post slugs.",
+    code: "DATABASE_ERROR" as const,
+  })).map((values) => values.map((value) => value.slug));
 
-export const doesPostWithSlugExist = (slug: string) =>
+export const doesPostWithSlugExist = (
+  slug: string,
+): ResultAsync<boolean, ContentError> =>
   fromPromise(
     db.select({ slug: posts.slug }).from(posts).where(eq(posts.slug, slug)),
-    () =>
-      ({
-        message: "Error checking if post exists.",
-        code: "DATABASE_ERROR",
-      }) as ContentError,
+    (err) => getContentError("Error checking post existence.", err),
   ).map((values) => values.length > 0);
 
 // This function does not convert and parse content.
-export const getPost = (slug: string) =>
+export const getPost = (slug: string): ResultAsync<Post, ContentError> =>
   fromPromise(
     db
       .select({
@@ -63,11 +100,7 @@ export const getPost = (slug: string) =>
       .leftJoin(postKeywords, eq(posts.slug, postKeywords.slug))
       .where(eq(posts.slug, slug))
       .groupBy(posts.slug),
-    () =>
-      ({
-        message: "Error fetching post.",
-        code: "DATABASE_ERROR",
-      }) as ContentError,
+    (err) => getContentError(`Error fetching post with slug "${slug}".`, err),
   )
     .andThrough((result) => {
       if (result.length === 0 || !result[0]) notFound();
@@ -84,23 +117,21 @@ export const getPost = (slug: string) =>
       post.shortened &&
       post.excerpt !== null
         ? okAsync(post)
-        : errAsync({
-            message: "Post is missing required fields.",
-            code: "DATABASE_ERROR",
-          } as ContentError),
+        : errAsync(
+            getContentError(
+              `Post with slug "${slug}" has missing required fields.`,
+            ),
+          ),
     )
-    .map(
-      (post) =>
-        ({
-          ...post,
-          shortExcerpt: post.shortExcerpt,
-          lastModified: post.lastModified,
-          cover: normalizeImageReference(post.cover),
-          coverSquare: normalizeImageReference(post.coverSquare),
-          tags: post.tags || [],
-          keywords: post.keywords || [],
-        }) as Post,
-    );
+    .map((post) => ({
+      ...post,
+      shortExcerpt: post.shortExcerpt,
+      lastModified: post.lastModified,
+      cover: normalizeImageReference(post.cover),
+      coverSquare: normalizeImageReference(post.coverSquare),
+      tags: post.tags || [],
+      keywords: post.keywords || [],
+    }));
 
 /**
  * Get posts based on filters.
@@ -114,28 +145,11 @@ export const getPosts = ({
 }: {
   startInd?: number;
   endInd?: number;
-  tags?: string[];
-  disallowTags?: string[];
-}) => {
-  if (!disallowTags.includes(siteConfig.invisible)) {
-    disallowTags.push(siteConfig.invisible);
-  }
-
-  const hasIncludedTagSql =
-    tags.length === 0
-      ? sql<boolean>`true`
-      : sql<boolean>`COUNT(DISTINCT ${postTags.tag}) FILTER (WHERE ${postTags.tag} = ANY(ARRAY[${sql.join(
-          tags.map((t) => sql`${t}`),
-          sql`, `,
-        )}]::text[])) > 0`;
-
-  const hasDisallowedTagSql =
-    disallowTags.length === 0
-      ? sql<boolean>`false`
-      : sql<boolean>`COUNT(DISTINCT ${postTags.tag}) FILTER (WHERE ${postTags.tag} = ANY(ARRAY[${sql.join(
-          disallowTags.map((t) => sql`${t}`),
-          sql`, `,
-        )}]::text[])) > 0`;
+} & PostTagFilters): ResultAsync<Post[], ContentError> => {
+  const { hasIncludedTagSql, hasDisallowedTagSql } = buildTagFilterSql({
+    tags,
+    disallowTags,
+  });
 
   const filteredPostsQuery = db
     .select({
@@ -176,24 +190,17 @@ export const getPosts = ({
     .limit(endInd - startInd)
     .offset(startInd);
 
-  return fromPromise(promise, (error) => {
-    console.error("Posts fetching error details:", error);
-    return {
-      message: `Error fetching posts. ${(error as Error).message}`,
-      code: "DATABASE_ERROR",
-    } as ContentError;
-  }).map((postsWithTags) =>
-    postsWithTags.map(
-      (post) =>
-        ({
-          ...post,
-          shortExcerpt: post.shortExcerpt,
-          lastModified: post.lastModified,
-          cover: normalizeImageReference(post.cover),
-          coverSquare: normalizeImageReference(post.coverSquare),
-          views: post.views && post.views > 0 ? post.views : 0,
-        }) as Post,
-    ),
+  return fromPromise(promise, (err) =>
+    getContentError(`Error fetching posts.`, err),
+  ).map((postsWithTags) =>
+    postsWithTags.map((post) => ({
+      ...post,
+      shortExcerpt: post.shortExcerpt,
+      lastModified: post.lastModified,
+      cover: normalizeImageReference(post.cover),
+      coverSquare: normalizeImageReference(post.coverSquare),
+      views: post.views && post.views > 0 ? post.views : 0,
+    })),
   );
 };
 
@@ -203,29 +210,11 @@ export const getPosts = ({
 export const getPostsLength = ({
   tags = [],
   disallowTags = [],
-}: {
-  tags?: string[];
-  disallowTags?: string[];
-}) => {
-  if (!disallowTags.includes(siteConfig.invisible)) {
-    disallowTags.push(siteConfig.invisible);
-  }
-
-  const hasIncludedTagSql =
-    tags.length === 0
-      ? sql<boolean>`true`
-      : sql<boolean>`COUNT(DISTINCT ${postTags.tag}) FILTER (WHERE ${postTags.tag} = ANY(ARRAY[${sql.join(
-          tags.map((t) => sql`${t}`),
-          sql`, `,
-        )}]::text[])) > 0`;
-
-  const hasDisallowedTagSql =
-    disallowTags.length === 0
-      ? sql<boolean>`false`
-      : sql<boolean>`COUNT(DISTINCT ${postTags.tag}) FILTER (WHERE ${postTags.tag} = ANY(ARRAY[${sql.join(
-          disallowTags.map((t) => sql`${t}`),
-          sql`, `,
-        )}]::text[])) > 0`;
+}: PostTagFilters) => {
+  const { hasIncludedTagSql, hasDisallowedTagSql } = buildTagFilterSql({
+    tags,
+    disallowTags,
+  });
 
   const filteredPostsQuery = db
     .select({
@@ -252,14 +241,9 @@ export const getPostsLength = ({
       ),
     );
 
-  return fromPromise(
-    promise,
-    () =>
-      ({
-        message: "Error fetching posts length.",
-        code: "DATABASE_ERROR",
-      }) as ContentError,
-  ).map((result) => Number(result[0].count));
+  return fromPromise(promise, (err) =>
+    getContentError(`Error fetching posts count.`, err),
+  ).map((result) => result[0].count);
 };
 
 /**
@@ -271,38 +255,16 @@ export const getListOfAllTags = () =>
       .selectDistinct({ tag: postTags.tag })
       .from(postTags)
       .orderBy(asc(postTags.tag)),
-    (error) => {
-      console.error("Tags fetching error:", error);
-      return {
-        message: "Error fetching tags.",
-        code: "DATABASE_ERROR",
-      } as ContentError;
-    },
+    (err) => getContentError(`Error fetching list of all tags.`, err),
   ).map((result) => result.map((row) => row.tag));
 
 export function createPost(content: string, slug: string): Post {
   const { data: frontmatter, content: contentWithoutFrontmatter } =
     matter(content);
 
-  const getStringValue = (value: unknown, defaultValue: string): string => {
-    return typeof value === "string" ? value : defaultValue;
-  };
-
-  const getDateValue = (value: unknown, defaultValue: string) => {
-    if (value instanceof Date) return value.toISOString();
-    if (value) return new Date(value as string).toISOString();
-    return defaultValue;
-  };
-
-  const getStringArray = (value: unknown): string[] => {
-    return Array.isArray(value)
-      ? (value.filter((item) => typeof item === "string") as string[])
-      : [];
-  };
-
   slug = getStringValue(frontmatter.slug, slug);
 
-  const post: Post = {
+  return {
     slug,
     title: getStringValue(frontmatter.title, slug),
     content: contentWithoutFrontmatter,
@@ -321,6 +283,16 @@ export function createPost(content: string, slug: string): Post {
     tags: getStringArray(frontmatter.tags),
     keywords: getStringArray(frontmatter.keywords),
   };
-
-  return post;
 }
+
+const getStringValue = (value: unknown, defaultValue: string): string =>
+  typeof value === "string" ? value : defaultValue;
+
+const getDateValue = (value: unknown, defaultValue: string) => {
+  if (value instanceof Date) return value.toISOString();
+  if (value) return new Date(value as string).toISOString();
+  return defaultValue;
+};
+
+const getStringArray = (value: unknown): string[] =>
+  Array.isArray(value) ? value.filter((item) => typeof item === "string") : [];
