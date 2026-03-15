@@ -43,10 +43,10 @@ export const posts = pgTable("posts", {
   excerpt: text().notNull(),
   locale: text().notNull(),
   cover: text(),
-  coversquare: text(),
-  lastmodified: timestamp({ mode: "string" }).notNull(),
+  coverSquare: text(),
+  lastModified: timestamp({ mode: "string" }).notNull(),
   shortened: varchar({ length: 255 }).notNull(),
-  shortexcerpt: text(),
+  shortExcerpt: text(),
 });
 
 export const postKeywords = pgTable(

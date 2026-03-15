@@ -80,7 +80,7 @@ export const getPost = (slug: string) =>
       post.description &&
       post.date &&
       post.locale &&
-      post.lastmodified &&
+      post.lastModified &&
       post.shortened &&
       post.excerpt !== null
         ? okAsync(post)
@@ -93,10 +93,10 @@ export const getPost = (slug: string) =>
       (post) =>
         ({
           ...post,
-          shortExcerpt: post.shortexcerpt,
-          lastModified: post.lastmodified,
+          shortExcerpt: post.shortExcerpt,
+          lastModified: post.lastModified,
           cover: normalizeImageReference(post.cover),
-          coverSquare: normalizeImageReference(post.coversquare),
+          coverSquare: normalizeImageReference(post.coverSquare),
           tags: post.tags || [],
           keywords: post.keywords || [],
         }) as Post,
@@ -187,10 +187,10 @@ export const getPosts = ({
       (post) =>
         ({
           ...post,
-          shortExcerpt: post.shortexcerpt,
-          lastModified: post.lastmodified,
+          shortExcerpt: post.shortExcerpt,
+          lastModified: post.lastModified,
           cover: normalizeImageReference(post.cover),
-          coverSquare: normalizeImageReference(post.coversquare),
+          coverSquare: normalizeImageReference(post.coverSquare),
           views: post.views && post.views > 0 ? post.views : 0,
         }) as Post,
     ),

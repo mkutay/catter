@@ -8,6 +8,13 @@
       "when": 1772144974427,
       "tag": "0000_nervous_mastermind",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773530474545,
+      "tag": "0001_futuristic_doorman",
+      "breakpoints": true
     }
   ]
 }

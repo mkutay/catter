@@ -94,10 +94,10 @@ const insertIntoDB = async ({ post }: { post: Post }) => {
       excerpt: post.excerpt,
       locale: post.locale,
       cover: post.cover,
-      coversquare: post.coverSquare,
-      lastmodified: post.lastModified,
+      coverSquare: post.coverSquare,
+      lastModified: post.lastModified,
       shortened: post.shortened,
-      shortexcerpt: post.shortExcerpt,
+      shortExcerpt: post.shortExcerpt,
     })
     .onConflictDoUpdate({
       target: posts.slug,
@@ -109,10 +109,10 @@ const insertIntoDB = async ({ post }: { post: Post }) => {
         excerpt: post.excerpt,
         locale: post.locale,
         cover: post.cover,
-        coversquare: post.coverSquare,
-        lastmodified: post.lastModified,
+        coverSquare: post.coverSquare,
+        lastModified: post.lastModified,
         shortened: post.shortened,
-        shortexcerpt: post.shortExcerpt,
+        shortExcerpt: post.shortExcerpt,
       },
     });
 
