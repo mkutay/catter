@@ -161,6 +161,22 @@ export const components: MDXComponents = {
   },
   MyCode,
   MyInlineCode,
+  code: (
+    props: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+  ) => (
+    <MyInlineCode
+      codeblock={{
+        code: String(props.children),
+        value: String(props.children),
+        annotations: [],
+        tokens: [],
+        lang: "text",
+        meta: "",
+        themeName: "Catppuccin Frappé",
+        style: {},
+      }}
+    />
+  ),
   p: (
     props: DetailedHTMLProps<
       HTMLAttributes<HTMLParagraphElement>,
