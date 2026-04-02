@@ -41,6 +41,12 @@ export default async function Home() {
 
   const allShownPosts = [middle, ...leftSide, ...rightSide];
 
+  const recentNotDisplayed = posts.filter(
+    (post) =>
+      !allShownPosts.some((displayed) => displayed.slug === post.slug) &&
+      !siteConfig.homePage.firstSlug.includes(post.slug),
+  );
+
   return (
     <div>
       <section className="pt-12 md:pt-20 py-16 md:py-24">
@@ -73,7 +79,7 @@ export default async function Home() {
       </section>
 
       <section className="py-16 md:py-24">
-        <div className="md:max-w-6xl max-w-prose mx-auto px-4">
+        <div className="md:max-w-6xl max-w-prose mx-auto px-4 flex flex-col md:gap-8 gap-6">
           <div className="flex md:flex-row flex-col gap-8">
             {/* Left Sidebar */}
             <aside className="w-full md:w-1/4 hidden md:block space-y-12">
@@ -101,6 +107,16 @@ export default async function Home() {
               ))}
             </div>
           </div>
+          <div className="md:flex flex-row gap-8 hidden">
+            {recentNotDisplayed.slice(0, 3).map((post) => (
+              <PostDisplay post={post} key={post.slug} />
+            ))}
+          </div>
+          <div className="flex gap-6 flex-col md:hidden">
+            {recentNotDisplayed.slice(0, 3).map((post) => (
+              <PostDisplay post={post} key={post.slug} isMiddle />
+            ))}
+          </div>
         </div>
       </section>
     </div>
@@ -118,7 +134,7 @@ async function FirstPost({ post }: { post: Post }) {
 
   return (
     <div className="md:max-w-6xl max-w-prose mx-auto px-4">
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-6 md:gap-8 md:min-h-[400px]">
+      <div className="grid md:grid-cols-2 grid-cols-1 gap-6 md:gap-8 md:min-h-100">
         {/* Image Container */}
         {placeholder && coverUrl && (
           <div className="w-full">
