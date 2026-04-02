@@ -73,6 +73,7 @@ export async function POST(request: Request) {
     revalidatePath("/tags", "layout");
     revalidatePath("/posts/page/[id]", "page");
     revalidatePath("/", "page");
+    revalidatePath("/feed.xml");
 
     return new NextResponse("", { status: 200 });
   } catch (error) {
