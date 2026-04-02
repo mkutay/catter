@@ -92,11 +92,13 @@ export default async function Page({
 
   const time = readingTime(props.content);
 
-  const { content, scope } = await evaluate<PostMeta, Scope>({
+  const { content, scope, error } = await evaluate<PostMeta, Scope>({
     source: props.content,
     options: modifiedOptions,
     components: modifiedComponents,
   });
+
+  if (error) throw new Error(error.message);
 
   const coverImage = props.cover;
   const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
