@@ -101,8 +101,14 @@
   }
 
   /* Style the footnotes section. */
-  [data-footnotes] {
-    @apply mt-6;
+  [data-footnotes],
+  .footnotes {
+    @apply text-sm;
+  }
+
+  [data-footnotes] li,
+  .footnotes li {
+    @apply mb-px leading-tight;
   }
 
   [data-footnote-backref] {
@@ -120,6 +126,12 @@
 
   [data-footnote-ref]::after {
     content: "]";
+  }
+
+  /* Backrefs inside the footnote list (the return links) */
+  .footnotes sup,
+  .footnotes a[data-footnote-backref] {
+    @apply align-middle text-xs leading-none;
   }
 
   /* fixes the colour for latex text in posts */
