@@ -20,7 +20,7 @@ export default function Footer() {
             <p>Thanks for reading.</p>
           </div>
           <p className="text-sm text-muted-foreground">
-            © 2023-present {siteConfig.author}. All Rights Reserved.
+            © 2026 {siteConfig.author}. All Rights Reserved.
           </p>
         </div>
         <div className="flex flex-row gap-16 h-fit">
