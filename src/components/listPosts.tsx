@@ -49,9 +49,15 @@ export default async function ListPosts({
             />
           </div>
           <div className="flex flex-row justify-end">
-            <Button asChild variant="outline" size="default" className="w-fit">
+            <Button
+              asChild
+              variant="outline"
+              size="default"
+              className="w-fit uppercase"
+            >
               <Link href={`/posts/${post.slug}`}>
                 {`Read More: ${post.shortened
+                  .replace(/-/g, " ")
                   .toLowerCase()
                   .split(" ")
                   .map((word) => word[0].toUpperCase() + word.slice(1))
