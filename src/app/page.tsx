@@ -84,37 +84,42 @@ export default async function Home() {
             {/* Left Sidebar */}
             <aside className="w-full md:w-1/4 hidden md:block space-y-12">
               {leftSide.map((post) => (
-                <PostDisplay key={post.slug} post={post} />
+                <Suspense key={post.slug}>
+                  <PostDisplay post={post} />
+                </Suspense>
               ))}
             </aside>
 
             {/* Main Content */}
             <main className="md:w-1/2 w-full">
-              <PostDisplay post={middle} isMiddle />
+              <Suspense>
+                <PostDisplay post={middle} isMiddle />
+              </Suspense>
             </main>
 
             {/* Right Sidebar */}
             <aside className="w-full md:w-1/4 hidden md:block space-y-12">
               {rightSide.map((post) => (
-                <PostDisplay key={post.slug} post={post} />
+                <Suspense key={post.slug}>
+                  <PostDisplay post={post} />
+                </Suspense>
               ))}
             </aside>
 
             {/* Mobile Grid */}
             <div className="md:hidden grid sm:grid-cols-2 grid-cols-1 gap-6 w-full">
               {allShownPosts.slice(1).map((post) => (
-                <PostDisplay key={post.slug} post={post} isMiddle />
+                <Suspense key={post.slug}>
+                  <PostDisplay post={post} isMiddle />
+                </Suspense>
               ))}
             </div>
           </div>
-          <div className="md:flex flex-row gap-8 hidden">
+          <div className="flex md:flex-row flex-col md:gap-8 gap-6">
             {recentNotDisplayed.slice(0, 3).map((post) => (
-              <PostDisplay post={post} key={post.slug} />
-            ))}
-          </div>
-          <div className="flex gap-6 flex-col md:hidden">
-            {recentNotDisplayed.slice(0, 3).map((post) => (
-              <PostDisplay post={post} key={post.slug} isMiddle />
+              <Suspense key={post.slug}>
+                <PostDisplay post={post} />
+              </Suspense>
             ))}
           </div>
         </div>
@@ -182,7 +187,9 @@ async function FirstPost({ post }: { post: Post }) {
             <time dateTime={post.date}>
               {format(new Date(post.date), "PPP")}
             </time>
-            <ViewDisplay slug={post.slug} />
+            <Suspense>
+              <ViewDisplay slug={post.slug} />
+            </Suspense>
           </div>
         </div>
       </div>
