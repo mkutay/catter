@@ -1,4 +1,4 @@
-import { ArrowRight, Mailbox } from "lucide-react";
+import { Mailbox } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,6 @@ export default function DoublePane({
           {!hideFollowLink ? (
             <div className="justify-between items-center gap-4 flex flex-row flex-wrap">
               <EmailSubButton />
-              <FollowNext />
             </div>
           ) : (
             <div className="flex flex-row justify-end items-center">
@@ -51,7 +50,6 @@ export default function DoublePane({
         {!hideFollowLink ? (
           <div className="justify-between items-center gap-4 flex flex-row flex-wrap">
             <EmailSubButton />
-            <FollowNext />
           </div>
         ) : (
           <div className="flex flex-row justify-end items-center">
@@ -79,27 +77,6 @@ function EmailSubButton() {
           <div>Subscribe!</div>
         </Link>
       </Button>
-    </div>
-  );
-}
-
-function FollowNext() {
-  return (
-    <div className="text-primary group pl-0 hover:pl-2 transition-all animate-in flex flex-row items-center grow justify-end">
-      <div className="pr-4 group-hover:pr-2 transition-all animate-in">
-        <ArrowRight
-          stroke="currentColor"
-          strokeWidth="2px"
-          width="18px"
-          height="18px"
-        />
-      </div>
-      <Link
-        href="/follow-next"
-        className="text-xl font-normal italic tracking-wider uppercase text-right w-fit whitespace-nowrap"
-      >
-        Follow Next!
-      </Link>
     </div>
   );
 }

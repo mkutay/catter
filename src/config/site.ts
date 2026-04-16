@@ -1,38 +1,3 @@
-const followNext = [
-  {
-    shortened: "comeau",
-    title: "Josh Comeau's Blog",
-    link: "https://www.joshwcomeau.com/",
-    imagePath: "/follow-next-images/comeau.png",
-    description:
-      "Josh Comeau is a front-end developer who writes about various things, including CSS and React.",
-  },
-  {
-    shortened: "bendersky",
-    title: "Eli Bendersky's Website",
-    link: "https://eli.thegreenplace.net/",
-    imagePath: "/follow-next-images/bendersky.png",
-    description:
-      "Eli's blog is a place where he talks about programming, C++, Python, maths, and more.",
-  },
-  {
-    shortened: "sophie",
-    title: "Sophie's Localghost",
-    link: "https://localghost.dev/",
-    imagePath: "/follow-next-images/localghost.png",
-    description:
-      "Sophie's website is a cool place with an awesome design where she shares things about tech, web development, and mental health.",
-  },
-  {
-    shortened: "melikechan",
-    title: "melikechan's blog",
-    link: "https://melikechan.vercel.app/",
-    imagePath: "/follow-next-images/melikechan.png",
-    description:
-      "Melike's blog is a place where she shares various things, including AI and being a researchering student.",
-  },
-];
-
 export const siteConfig = {
   url: "https://www.mkutay.dev",
   name: "The Deterministic",
@@ -73,7 +38,6 @@ export const siteConfig = {
     middleSlug: "java-and-education",
     firstSlug: "history-of-chess-computers-the-minimax",
   },
-  followNext,
   invisible: "invisible",
   noParentheses: "no-parentheses",
 };
