@@ -21,3 +21,18 @@ export const zodiak = localFont({
   ],
   variable: "--font-body",
 });
+
+export const satoshi = localFont({
+  src: [
+    {
+      path: "../styles/fonts/satoshi/Fonts/WEB/fonts/Satoshi-Variable.woff2",
+      style: "normal",
+    },
+    {
+      path: "../styles/fonts/satoshi/Fonts/WEB/fonts/Satoshi-VariableItalic.woff2",
+      style: "italic",
+    },
+  ],
+  variable: "--font-sans",
+  display: "swap",
+});

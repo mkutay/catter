@@ -52,6 +52,7 @@
 
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
+  --font-sans: var(--font-sans);
 
   --radius-xl: calc(var(--radius) + 2px);
   --radius-lg: var(--radius);
