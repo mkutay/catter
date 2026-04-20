@@ -7,7 +7,7 @@ import "@/styles/katex.min.css";
 import Footer from "@/components/footer";
 import NavBar from "@/components/navBar";
 import { Toaster } from "@/components/ui/toaster";
-import { plex, satoshi, zodiak } from "@/config/fonts";
+import { cabinetGrotesk, plex, zodiak } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -64,7 +64,7 @@ export default function Layout({
         />
       </head>
       <body
-        className={`${zodiak.variable} ${satoshi.variable} ${plex.variable} text-foreground bg-background font-body`}
+        className={`${zodiak.variable} ${cabinetGrotesk.variable} ${plex.variable} text-foreground bg-background font-body`}
       >
         <ThemeProvider attribute="class">
           <main className="flex flex-col min-h-screen">

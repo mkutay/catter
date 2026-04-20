@@ -22,15 +22,11 @@ export const zodiak = localFont({
   variable: "--font-body",
 });
 
-export const satoshi = localFont({
+export const cabinetGrotesk = localFont({
   src: [
     {
-      path: "../styles/fonts/satoshi/Fonts/WEB/fonts/Satoshi-Variable.woff2",
+      path: "../styles/fonts/cabinet-grotesk/Fonts/WEB/fonts/CabinetGrotesk-Variable.woff2",
       style: "normal",
-    },
-    {
-      path: "../styles/fonts/satoshi/Fonts/WEB/fonts/Satoshi-VariableItalic.woff2",
-      style: "italic",
     },
   ],
   variable: "--font-sans",
