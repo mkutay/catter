@@ -46,7 +46,7 @@ export default async function ProjectCard({
       </div>
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
-        <div className="[&_p]:line-clamp-2 text-sm text-muted-foreground">
+        <div className="[&_p]:line-clamp-2 text-sm text-muted-foreground font-sans font-medium">
           <MDXRemote source={props.description} options={options} />
         </div>
       </CardHeader>

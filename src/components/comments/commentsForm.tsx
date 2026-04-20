@@ -91,7 +91,7 @@ export function CommentForm({
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Write a Comment to this Post!</FormLabel>
+              <FormLabel>Write a comment to this post!</FormLabel>
               <FormControl>
                 <Textarea
                   className="h-32"

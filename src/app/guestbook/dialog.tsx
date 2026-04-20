@@ -108,7 +108,7 @@ export function GuestbookDialog() {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
+                    <PopoverContent className="w-[200px] p-0 font-sans font-medium">
                       <Command>
                         <CommandInput
                           placeholder="Search colour..."

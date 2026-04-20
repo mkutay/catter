@@ -32,39 +32,39 @@ export function SignOut({ slug }: { slug: string }) {
 
 export function SignIn({ slug }: { slug: string }) {
   return (
-    <div className="flex flex-row gap-2 items-center mx-auto w-fit">
+    <div className="flex flex-row gap-2 items-center w-full">
       <Button
         variant="secondary"
         size="default"
-        className="flex flex-row gap-2 items-center"
+        className="flex flex-row gap-2 items-center flex-1"
         onClick={() =>
           signIn("github", { callbackUrl: `/posts/${slug}#comments` })
         }
       >
-        <FaGithub />
-        <span>GitHub</span>
+        <FaGithub className="size-4" />
+        GitHub
       </Button>
       <Button
         variant="secondary"
         size="default"
-        className="flex flex-row gap-2 items-center"
+        className="flex flex-row gap-2 items-center flex-1"
         onClick={() =>
           signIn("discord", { callbackUrl: `/posts/${slug}#comments` })
         }
       >
-        <FaDiscord />
-        <span>Discord</span>
+        <FaDiscord className="size-4" />
+        Discord
       </Button>
       <Button
         variant="secondary"
         size="default"
-        className="flex flex-row gap-2 items-center"
+        className="flex flex-row gap-2 items-center flex-1"
         onClick={() =>
           signIn("spotify", { callbackUrl: `/posts/${slug}#comments` })
         }
       >
-        <FaSpotify />
-        <span>Spotify</span>
+        <FaSpotify className="size-4" />
+        Spotify
       </Button>
     </div>
   );

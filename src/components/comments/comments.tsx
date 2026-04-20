@@ -4,11 +4,12 @@ import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { DeleteComment, SignIn } from "@/components/comments/commentsButtons";
 import { CommentForm } from "@/components/comments/commentsForm";
-import { TypographyLarge } from "@/components/typography/paragraph";
+import { TypographySmall } from "@/components/typography/paragraph";
 import { Label } from "@/components/ui/label";
 import { siteConfig } from "@/config/site";
 import type { CommentData } from "@/config/types";
 import { getUser } from "@/lib/server-helper";
+import { TypographyHr } from "../typography/blockquote";
 
 export default function Comments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<CommentData[]>([]);
@@ -74,38 +75,41 @@ export default function Comments({ slug }: { slug: string }) {
   );
 
   return (
-    <div id="comments" className="w-full flex flex-col gap-8 mt-6">
-      {user ? (
-        <CommentForm slug={slug} editComment={editComment} user={user} />
-      ) : (
-        user === null && <CommentAuth slug={slug} />
-      )}
-      {comments.length !== 0 && (
-        <div className="flex flex-col gap-6">
-          {comments.map((comment) => (
-            <Comment
-              comment={comment}
-              key={comment.id}
-              owns={
-                siteConfig.admins.includes(user?.email || "") ||
-                user?.email === comment.email
-              }
-              editComment={editComment}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+    <>
+      <TypographyHr className="my-12" />
+      <div id="comments" className="w-full flex flex-col gap-8">
+        {user ? (
+          <CommentForm slug={slug} editComment={editComment} user={user} />
+        ) : (
+          user === null && <CommentAuth slug={slug} />
+        )}
+        {comments.length !== 0 && (
+          <div className="flex flex-col gap-8">
+            {comments.map((comment) => (
+              <Comment
+                comment={comment}
+                key={comment.id}
+                owns={
+                  siteConfig.admins.includes(user?.email || "") ||
+                  user?.email === comment.email
+                }
+                editComment={editComment}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 }
 
 export function CommentAuth({ slug }: { slug: string }) {
   return (
-    <div className="flex flex-col gap-1 items-center">
-      <TypographyLarge className="text-primary">
-        Sign in to write a comment!
-      </TypographyLarge>
+    <div className="flex flex-col gap-2">
       <SignIn slug={slug} />
+      <TypographySmall className="font-sans">
+        Sign in to write a comment!
+      </TypographySmall>
     </div>
   );
 }
