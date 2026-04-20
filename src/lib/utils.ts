@@ -93,3 +93,11 @@ export function convertParenthesesToComponent(str: string): string {
 
   return cleanedString;
 }
+
+export const postShortened = (str: string): string =>
+  str
+    .replace(/-/g, " ")
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(" ");

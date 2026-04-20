@@ -5,6 +5,7 @@ import { MDXRemote } from "next-mdx-remote-client/rsc";
 import { Button } from "@/components/ui/button";
 import { components, options } from "@/config/mdxRemoteSettings";
 import { getPosts } from "@/lib/dbContentQueries";
+import { postShortened } from "@/lib/utils";
 
 export default async function ListPosts({
   startInd,
@@ -56,12 +57,7 @@ export default async function ListPosts({
               className="w-fit uppercase"
             >
               <Link href={`/posts/${post.slug}`}>
-                {`Read More: ${post.shortened
-                  .replace(/-/g, " ")
-                  .toLowerCase()
-                  .split(" ")
-                  .map((word) => word[0].toUpperCase() + word.slice(1))
-                  .join(" ")}`}
+                {`Read More: ${postShortened(post.shortened)}`}
               </Link>
             </Button>
           </div>

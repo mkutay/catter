@@ -14,7 +14,7 @@ export default function Footer() {
       <div className="items-center px-4 md:my-12 my-6 hidden md:flex flex-row max-w-6xl mx-auto gap-8">
         <div className="grow flex flex-col justify-between h-44">
           <div className="flex flex-col items-start gap-4">
-            <p className="text-lg">
+            <p className="text-sm font-mono uppercase">
               Made with <b className="text-primary">&lt;3</b>
             </p>
             <p>Thanks for reading.</p>
@@ -25,7 +25,9 @@ export default function Footer() {
         </div>
         <div className="flex flex-row gap-16 h-fit">
           <div className="flex flex-col gap-6">
-            <p className="text-muted-foreground text-sm">Connections</p>
+            <p className="text-muted-foreground text-sm uppercase font-mono">
+              Connections
+            </p>
             <div className="flex flex-col gap-3">
               {siteConfig.footerItems.connections.map((item) => (
                 <Link
@@ -40,7 +42,9 @@ export default function Footer() {
             </div>
           </div>
           <div className="flex flex-col gap-6">
-            <p className="text-muted-foreground text-sm">Blog</p>
+            <p className="text-muted-foreground text-sm uppercase font-mono">
+              Blog
+            </p>
             <div className="flex flex-col gap-3">
               {siteConfig.footerItems.blog.map((item) => (
                 <Link
@@ -59,7 +63,7 @@ export default function Footer() {
       <div className="items-center px-4 md:my-12 my-6 md:hidden flex flex-col w-full gap-8 max-w-prose mx-auto">
         <div className="w-full flex flex-col justify-between gap-4">
           <div className="flex flex-row items-center justify-between gap-4 flex-wrap">
-            <p className="text-lg">
+            <p className="text-base font-mono uppercase">
               Made with <b className="text-primary">&lt;3</b>
             </p>
             <p>Thanks for reading.</p>

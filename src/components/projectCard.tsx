@@ -13,6 +13,7 @@ import {
 import { components, options } from "@/config/mdxRemoteSettings";
 import type { Post } from "@/config/types";
 import { getPlaceholder } from "@/lib/images";
+import { postShortened } from "@/lib/utils";
 
 export default async function ProjectCard({
   props,
@@ -60,11 +61,11 @@ export default async function ProjectCard({
         <Button
           asChild
           variant="outline"
-          className="w-full justify-between group/btn hover:bg-primary/5"
+          className="w-full justify-between uppercase"
         >
-          <Link href={`/posts/${props.slug}`} className="relative z-10">
-            <span className="font-medium font-mono">{props.shortened}</span>
-            <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-200" />
+          <Link href={`/posts/${props.slug}`}>
+            Read More: {postShortened(props.shortened)}
+            <ArrowRight className="size-6" />
           </Link>
         </Button>
       </CardFooter>

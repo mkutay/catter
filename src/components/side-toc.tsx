@@ -223,7 +223,7 @@ export function SideTOC({ toc }: { toc: TocItem[] }) {
           onValueChange={(value) => setIsCollapsed(value !== "contents")}
         >
           <AccordionPrimitive.Item value="contents" className="border-none">
-            <AccordionPrimitive.Trigger className="flex w-full items-center justify-between px-3 py-3 text-sm italic uppercase tracking-normal font-medium text-muted-foreground transition-colors hover:text-foreground [&[data-state=open]>svg]:rotate-90">
+            <AccordionPrimitive.Trigger className="flex w-full items-center justify-between px-3 py-3 text-sm uppercase font-mono tracking-normal font-medium text-muted-foreground transition-colors hover:text-foreground [&[data-state=open]>svg]:rotate-90">
               Contents
               <ChevronRight className="h-3.5 w-3.5 transition-transform duration-200" />
             </AccordionPrimitive.Trigger>
@@ -235,7 +235,7 @@ export function SideTOC({ toc }: { toc: TocItem[] }) {
         </AccordionPrimitive.Root>
       ) : (
         <>
-          <p className="border-b border-border/50 px-3 py-3 text-sm font-medium italic uppercase tracking-normal text-muted-foreground">
+          <p className="border-b border-border/50 px-3 py-3 text-sm font-medium font-mono uppercase tracking-normal text-muted-foreground">
             Contents
           </p>
           <div className="py-1">{tocContent}</div>
