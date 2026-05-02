@@ -76,7 +76,7 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
                         <FormControl>
                           <Checkbox
                             id={entry.id.toString()}
-                            className="mt-1.5"
+                            className="mt-1"
                             checked={field.value?.includes(entry.id)}
                             onCheckedChange={(checked) => {
                               return checked

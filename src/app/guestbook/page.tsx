@@ -81,23 +81,20 @@ async function GuestbookEntries() {
   const entries = entriesResult.value;
 
   return (
-    <div>
+    <div className="flex flex-col *:py-3 *:flex *:flex-col *:gap-1 w-full wrap-break-word lg:text-lg text-md divide-border divide-y font-sans -my-3">
       {entries.map((entry: EntryData) => (
-        <p
-          key={entry.id}
-          className="w-full wrap-break-word lg:text-lg text-md leading-7 not-first:mt-2"
-        >
+        <p key={entry.id}>
           <span
             className={cn(
-              "mr-1 font-bold tracking-tight",
-              entry.color === "" || entry.color === null
-                ? "text-foreground"
-                : `text-${entry.color}`,
+              "font-semibold font-serif",
+              entry.color ? `text-${entry.color}` : "text-foreground",
             )}
           >
-            {entry.createdBy}:
+            {entry.createdBy}
           </span>
-          <span className="text-foreground">{entry.body}</span>
+          {entry.body ?? (
+            <span className="text-foreground tracking-tight">{entry.body}</span>
+          )}
         </p>
       ))}
     </div>
