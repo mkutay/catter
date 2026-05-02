@@ -24,7 +24,7 @@ export function getAboutProps() {
   let markdownFile: string;
   try {
     markdownFile = fs.readFileSync(
-      path.join(process.cwd(), path.join("content/pages/about.mdx")),
+      path.join(process.cwd(), path.join("src/app/about/about.mdx")),
       "utf-8",
     );
   } catch (error) {
