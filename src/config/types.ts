@@ -8,12 +8,6 @@ export type Post = DBPost & {
   views?: number;
 };
 
-export type PostData = {
-  slug: string;
-  content: string;
-  meta: PostMeta;
-};
-
 // Frontmatter on posts
 export type PostMeta = {
   title: string;
