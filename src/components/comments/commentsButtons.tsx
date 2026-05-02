@@ -35,7 +35,7 @@ export function SignIn({ slug }: { slug: string }) {
     <div className="flex flex-row gap-2 items-center w-full">
       <Button
         variant="secondary"
-        size="default"
+        size="sm"
         className="flex flex-row gap-2 items-center flex-1"
         onClick={() =>
           signIn("github", { callbackUrl: `/posts/${slug}#comments` })
@@ -46,7 +46,7 @@ export function SignIn({ slug }: { slug: string }) {
       </Button>
       <Button
         variant="secondary"
-        size="default"
+        size="sm"
         className="flex flex-row gap-2 items-center flex-1"
         onClick={() =>
           signIn("discord", { callbackUrl: `/posts/${slug}#comments` })
@@ -57,7 +57,7 @@ export function SignIn({ slug }: { slug: string }) {
       </Button>
       <Button
         variant="secondary"
-        size="default"
+        size="sm"
         className="flex flex-row gap-2 items-center flex-1"
         onClick={() =>
           signIn("spotify", { callbackUrl: `/posts/${slug}#comments` })

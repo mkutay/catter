@@ -21,32 +21,32 @@ export function GuestBookSignOut() {
 export function GuestBookSignIn() {
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex md:flex-row flex-col md:gap-2 gap-3 items-center mx-auto w-full">
+      <div className="flex flex-row gap-2 items-center w-full">
         <Button
           variant="secondary"
-          size="default"
-          className="flex flex-row gap-2 items-center flex-1"
+          size="sm"
+          className="flex flex-row gap-2 items-center flex-1 w-full"
           onClick={() => signIn("github")}
         >
-          <FaGithub size="20px" />
+          <FaGithub className="size-4" />
           GitHub
         </Button>
         <Button
           variant="secondary"
-          size="default"
-          className="flex flex-row gap-2 items-center flex-1"
+          size="sm"
+          className="flex flex-row gap-2 items-center flex-1 w-full"
           onClick={() => signIn("discord")}
         >
-          <FaDiscord size="20px" />
+          <FaDiscord className="size-4" />
           Discord
         </Button>
         <Button
           variant="secondary"
-          size="default"
-          className="flex flex-row gap-2 items-center flex-1"
+          size="sm"
+          className="flex flex-row gap-2 items-center flex-1 w-full"
           onClick={() => signIn("spotify")}
         >
-          <FaSpotify size="20px" />
+          <FaSpotify className="size-4" />
           Spotify
         </Button>
       </div>
