@@ -33,7 +33,7 @@ export default function Footer() {
                 <Link
                   key={item.link}
                   href={item.link}
-                  className="hover:text-foreground/80 transition-all"
+                  className="hover:opacity-80 transition-opacity"
                   prefetch={false}
                 >
                   {item.title}
@@ -50,7 +50,7 @@ export default function Footer() {
                 <Link
                   key={item.link}
                   href={item.link}
-                  className="hover:text-foreground/80 transition-all"
+                  className="hover:opacity-80 transition-opacity"
                   prefetch={false}
                 >
                   {item.title}
@@ -82,7 +82,7 @@ export default function Footer() {
                 <Link
                   key={item.link}
                   href={item.link}
-                  className="hover:text-foreground/80 transition-all"
+                  className="hover:opacity-80 transition-opacity"
                   prefetch={false}
                 >
                   {item.title}
@@ -99,7 +99,7 @@ export default function Footer() {
                 <Link
                   key={item.link}
                   href={item.link}
-                  className="hover:text-foreground/80 transition-all"
+                  className="hover:opacity-80 transition-opacity"
                   prefetch={false}
                 >
                   {item.title}

@@ -169,10 +169,10 @@ async function FirstPost({ post }: { post: Post }) {
                   {post.title}
                 </span>
               </h1>
-              <TypographyLarge className="mt-4 text-muted-foreground group-hover:text-foreground transition-colors duration-300">
-                {post.description}
-              </TypographyLarge>
             </Link>
+            <TypographyLarge className="mt-4 text-muted-foreground">
+              {post.description}
+            </TypographyLarge>
 
             <div className="max-w-none text-muted-foreground">
               <MDXRemote

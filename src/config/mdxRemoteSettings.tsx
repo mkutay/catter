@@ -117,7 +117,7 @@ export const components: MDXComponents = {
     <Link
       {...props}
       className={cn(
-        "text-primary underline hover:text-primary/80 transition-all",
+        "text-primary underline hover:opacity-80 transition-opacity",
         props.className,
       )}
     >
@@ -137,7 +137,7 @@ export const components: MDXComponents = {
         <span
           {...rest}
           className={cn(
-            "text-primary underline hover:text-primary/80 transition-all",
+            "text-primary underline hover:opacity-80 transition-opacity",
             props.className,
           )}
         >
@@ -151,7 +151,7 @@ export const components: MDXComponents = {
         href={href}
         {...rest}
         className={cn(
-          "text-primary underline hover:text-primary/80 transition-all",
+          "text-primary underline hover:opacity-80 transition-opacity",
           props.className,
         )}
       >

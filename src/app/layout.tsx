@@ -66,7 +66,7 @@ export default function Layout({
       <body
         className={`${zodiak.variable} ${cabinetGrotesk.variable} ${plex.variable} text-foreground bg-background font-body`}
       >
-        <ThemeProvider attribute="class">
+        <ThemeProvider attribute="class" disableTransitionOnChange>
           <main className="flex flex-col min-h-screen">
             <NavBar />
             <div className="flex-1">{children}</div>

@@ -16,7 +16,7 @@ export function CopyCodeButton({
   return (
     <button
       className={cn(
-        "text-[#c6d0f5] hover:opacity-80 transition-all",
+        "text-[#c6d0f5] hover:opacity-80 transition-opacity",
         className,
       )}
       onClick={() => {

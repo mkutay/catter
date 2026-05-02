@@ -120,7 +120,7 @@ export default async function Page({
             {props.tags.map((tag: string) => (
               <p
                 key={tag}
-                className="text-primary-foreground uppercase font-mono text-sm underline hover:text-primary-foreground/80 transition-all"
+                className="text-primary-foreground uppercase font-mono text-sm underline hover:opacity-80 transition-opacity"
               >
                 <Link href={`/tags/${tag}/page/1`}>{turnTagString(tag)}</Link>
               </p>

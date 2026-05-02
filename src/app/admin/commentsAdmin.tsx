@@ -36,7 +36,7 @@ export function CommentsAdmin({ comments }: { comments: CommentData[] }) {
           <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight mt-4 mb-2">
             <Link
               href={`/posts/${comments.slug}`}
-              className="underline hover:text-foreground/80 transition-all"
+              className="underline hover:opacity-80 transition-opacity"
             >
               {comments.slug}
             </Link>
