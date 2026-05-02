@@ -4,7 +4,6 @@ import DoublePane from "@/components/doublePane";
 import { TypographyH1 } from "@/components/typography/headings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/config/site";
-import type { EntryData } from "@/config/types";
 import { auth } from "@/lib/auth";
 import { getGuestbookEntries } from "@/lib/database-queries/guestbook";
 import { cn } from "@/lib/utils";
@@ -82,8 +81,8 @@ async function GuestbookEntries() {
   const entries = entriesResult.value;
 
   return (
-    <div className="flex flex-col *:py-3 *:flex *:flex-col *:gap-1 w-full wrap-break-word text-base divide-border divide-y font-sans -my-3">
-      {entries.map((entry: EntryData) => (
+    <div className="flex flex-col *:py-3 *:flex *:flex-col *:gap-1 w-full wrap-break-word md:text-lg text-base divide-border divide-y font-sans -my-3">
+      {entries.map((entry) => (
         <p key={entry.id}>
           <span
             className={cn(
@@ -108,8 +107,8 @@ function GuestbookEntriesFallback() {
   for (let i = 0; i < 10; i++) {
     entries.push(
       <div key={i}>
-        <Skeleton className="h-6 w-32" />
-        <Skeleton className="h-6 w-4/5" />
+        <Skeleton className="md:h-7 h-6 w-32" />
+        <Skeleton className="md:h-7 h-6 w-4/5" />
       </div>,
     );
   }
