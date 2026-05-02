@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import ListPosts from "@/components/listPosts";
 import PaginationArrows from "@/components/paginationArrows";
 import { TotalBlogViews } from "@/components/totalBlogViews";
@@ -11,7 +12,7 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id: string }>;
-}) {
+}): Promise<Metadata> {
   const { id } = await params;
   const result = await getPostsLength({});
   if (result.isErr()) throw new Error(result.error.message);

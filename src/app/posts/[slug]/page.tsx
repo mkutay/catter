@@ -1,5 +1,6 @@
 import path from "node:path";
 import { format } from "date-fns";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -30,7 +31,7 @@ export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<Metadata> {
   const { slug } = await params;
   const result = await getPost(slug);
   if (result.isErr()) throw new Error(result.error.message);

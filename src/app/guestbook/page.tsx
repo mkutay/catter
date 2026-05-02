@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import DoublePane from "@/components/doublePane";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { GuestBookSignIn } from "./buttons";
 import GuestbookForm from "./form";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Sign and Mark My Guestbook",
   description:
     "Sign my guestbook and leave your mark on this infinite internet, here.",

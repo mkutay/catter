@@ -1,10 +1,11 @@
+import type { Metadata } from "next";
 import ProjectCard from "@/components/projectCard";
 import { siteConfig } from "@/config/site";
 import { getPosts } from "@/lib/dbContentQueries";
 
 export const dynamic = "force-static";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Different Coding Projects I Did",
   description:
     "A list for the different projects I did/do in my free time accumulated here.",

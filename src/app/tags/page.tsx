@@ -1,9 +1,10 @@
+import type { Metadata } from "next";
 import TagsButtonGrid from "@/components/tagsButtonGrid";
 import { siteConfig } from "@/config/site";
 
 export const dynamic = "force-static";
 
-export function generateMetadata() {
+export function generateMetadata(): Metadata {
   return {
     title: `List of Tags on the Posts`,
     description: `List and buttons of all the tags that posts have on ${siteConfig.name}.`,

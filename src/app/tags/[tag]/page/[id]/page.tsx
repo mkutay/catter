@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import ListPosts from "@/components/listPosts";
 import PaginationArrows from "@/components/paginationArrows";
 import { turnTagString } from "@/components/tagsButtonGrid";
@@ -14,7 +15,7 @@ export const dynamic = "force-static";
 
 export async function generateMetadata(props: {
   params: Promise<{ tag: string; id: string }>;
-}) {
+}): Promise<Metadata> {
   const params = await props.params;
   const { id, tag } = params;
   const result = await getPosts({ tags: [tag] });

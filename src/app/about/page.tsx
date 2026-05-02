@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
 import DoublePane from "@/components/doublePane";
@@ -9,7 +10,7 @@ import me from "@/public/images/me.jpg";
 
 export const dynamic = "force-static";
 
-export function generateMetadata() {
+export function generateMetadata(): Metadata {
   const props = getAboutProps();
 
   return {
