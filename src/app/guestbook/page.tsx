@@ -8,7 +8,7 @@ import { auth } from "@/lib/auth";
 import { getGuestbookEntries } from "@/lib/database-queries/guestbook";
 import { cn } from "@/lib/utils";
 import { GuestBookSignIn } from "./buttons";
-import GuestbookForm from "./form";
+import GuestbookForm, { GuestBookFormFallback } from "./form";
 
 export const metadata: Metadata = {
   title: "Sign and Mark My Guestbook",
@@ -34,7 +34,7 @@ export default function Page() {
         Sign My Guestbook!
       </h1>
       <main className="flex flex-col gap-4">
-        <Suspense fallback={<Skeleton className="h-10 w-full" />}>
+        <Suspense fallback={<GuestBookFormFallback />}>
           <Form />
         </Suspense>
         <Suspense fallback={<GuestbookEntriesFallback />}>
@@ -81,7 +81,7 @@ async function GuestbookEntries() {
   const entries = entriesResult.value;
 
   return (
-    <div className="flex flex-col *:py-3 *:flex *:flex-col *:gap-1 w-full wrap-break-word lg:text-lg text-md divide-border divide-y font-sans -my-3">
+    <div className="flex flex-col *:py-3 *:flex *:flex-col *:gap-1 w-full wrap-break-word text-base divide-border divide-y font-sans -my-3">
       {entries.map((entry: EntryData) => (
         <p key={entry.id}>
           <span
@@ -104,11 +104,18 @@ async function GuestbookEntries() {
 function GuestbookEntriesFallback() {
   const entries: React.ReactNode[] = [];
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 10; i++) {
     entries.push(
-      <Skeleton key={i} className="h-6 w-full leading-7 not-first:mt-4" />,
+      <div key={i}>
+        <Skeleton className="h-6 w-32" />
+        <Skeleton className="h-6 w-4/5" />
+      </div>,
     );
   }
 
-  return <div>{entries}</div>;
+  return (
+    <div className="flex flex-col *:py-3 *:flex *:flex-col *:gap-1 w-full divide-border divide-y -my-3">
+      {entries}
+    </div>
+  );
 }

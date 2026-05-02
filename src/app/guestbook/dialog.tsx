@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { guestbookDialogFormSchema } from "@/config/schema";
-import { type GuestbookColorsType, guestbookColors } from "@/config/types";
+import { guestbookColors } from "@/config/types";
 import { saveGuestbookEntryAction } from "@/lib/server-helper";
 import { cn } from "@/lib/utils";
 
@@ -76,7 +76,7 @@ export function GuestbookDialog() {
       </DialogTrigger>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Customize Your Guestbook Entry Data</DialogTitle>
+          <DialogTitle>Customize Your Guestbook Entry</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -96,7 +96,7 @@ export function GuestbookDialog() {
                           variant="outline"
                           role="combobox"
                           className={cn(
-                            "w-[200px] justify-between",
+                            "w-50 justify-between",
                             !field.value && "text-muted-foreground",
                           )}
                         >
@@ -108,7 +108,7 @@ export function GuestbookDialog() {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0 font-sans font-medium">
+                    <PopoverContent className="w-50 p-0 font-sans font-medium">
                       <Command>
                         <CommandInput
                           placeholder="Search colour..."
@@ -124,10 +124,7 @@ export function GuestbookDialog() {
                                 }
                                 key={color}
                                 onSelect={() => {
-                                  form.setValue(
-                                    "color",
-                                    color as GuestbookColorsType,
-                                  );
+                                  form.setValue("color", color);
                                 }}
                                 className={`text-${color}`}
                               >

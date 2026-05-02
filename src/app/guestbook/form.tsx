@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { guestbookFormSchema } from "@/config/schema";
 import { saveGuestbookEntryAction } from "@/lib/server-helper";
@@ -75,5 +76,14 @@ export default function GuestbookForm() {
         <GuestBookSignOut />
       </div>
     </Form>
+  );
+}
+
+export function GuestBookFormFallback() {
+  return (
+    <div className="flex flex-col gap-2">
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-9 w-54" />
+    </div>
   );
 }
