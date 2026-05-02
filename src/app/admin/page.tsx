@@ -44,7 +44,7 @@ export default async function Page() {
 
   return (
     <DoublePane>
-      <TypographyH1>Admin</TypographyH1>
+      <TypographyH1 className="mt-6 mb-8 text-primary">Admin</TypographyH1>
       <h2 className="scroll-m-20 border-b border-border pb-1 text-3xl font-semibold tracking-tight mt-6 mb-2">
         Guestbook
       </h2>

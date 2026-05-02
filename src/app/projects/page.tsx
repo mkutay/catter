@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ProjectCard from "@/components/projectCard";
+import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
 import { getPosts } from "@/lib/dbContentQueries";
 
@@ -28,9 +29,9 @@ export default async function Page() {
 
   return (
     <div className="md:max-w-6xl max-w-prose mx-auto w-full px-4">
-      <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
-        Different Coding Projects I Did
-      </h1>
+      <TypographyH1 className="mt-6 mb-8 text-primary">
+        My Projects
+      </TypographyH1>
       <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 my-8">
         {projects.value.map((project) => (
           <ProjectCard props={project} key={project.slug} />

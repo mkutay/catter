@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ListPosts from "@/components/listPosts";
 import PaginationArrows from "@/components/paginationArrows";
+import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
 import { getPostsLength } from "@/lib/dbContentQueries";
 
@@ -40,9 +41,9 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
 
   return (
     <>
-      <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
-        List of All Posts and Tags
-      </h1>
+      <TypographyH1 className="mt-6 mb-8 text-primary">
+        List of All Posts
+      </TypographyH1>
       <ListPosts
         startInd={startInd}
         endInd={endInd}

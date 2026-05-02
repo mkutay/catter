@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import TagsButtonGrid from "@/components/tagsButtonGrid";
+import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
 
 export const dynamic = "force-static";
@@ -20,9 +21,9 @@ export function generateMetadata(): Metadata {
 export default function Page() {
   return (
     <>
-      <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
+      <TypographyH1 className="mt-6 mb-8 text-primary">
         List of Tags on the Blog
-      </h1>
+      </TypographyH1>
       <TagsButtonGrid />
     </>
   );

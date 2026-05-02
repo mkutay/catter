@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import DoublePane from "@/components/doublePane";
+import { TypographyH1 } from "@/components/typography/headings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/config/site";
 import type { EntryData } from "@/config/types";
@@ -30,9 +31,9 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <DoublePane>
-      <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
+      <TypographyH1 className="mt-6 mb-8 text-primary">
         Sign My Guestbook!
-      </h1>
+      </TypographyH1>
       <main className="flex flex-col gap-4">
         <Suspense fallback={<GuestBookFormFallback />}>
           <Form />

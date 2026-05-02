@@ -12,7 +12,7 @@ export function TypographyH1(
     <h1
       {...props}
       className={cn(
-        "scroll-m-20 text-4xl font-normal italic tracking-tight lg:text-5xl not-first:mt-12",
+        "scroll-m-20 text-4xl font-normal italic tracking-tighter lg:text-5xl not-first:mt-12",
         props.className,
       )}
     >

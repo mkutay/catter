@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ListPosts from "@/components/listPosts";
 import PaginationArrows from "@/components/paginationArrows";
 import { turnTagString } from "@/components/tagsButtonGrid";
+import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
 import {
   getListOfAllTags,
@@ -48,10 +49,12 @@ export default async function Page(props: {
 
   return (
     <>
-      <h1 className="scroll-m-20 text-3xl font-semibold tracking-wide text-primary uppercase my-6">
+      <TypographyH1 className="mt-6 mb-8 text-primary">
         Posts With Tag:{" "}
-        <span className="font-bold text-foreground">{turnTagString(tag)}</span>
-      </h1>
+        <span className="font-light not-italic text-foreground tracking-normal">
+          {turnTagString(tag)}
+        </span>
+      </TypographyH1>
       <ListPosts startInd={startInd} endInd={endInd} tags={[tag]} />
       <div className="my-4">
         <PaginationArrows
