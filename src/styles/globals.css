@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@plugin "@designbycode/tailwindcss-text-stroke";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -95,7 +94,64 @@
   }
 }
 
+@utility text-stroke-* {
+  --tst-text-stroke-color: --value(--color-*);
+}
+
+@utility text-stroke-fill-* {
+  --tst-text-stroke-fill-color: --value(--color-*);
+}
+
 @layer utilities {
+  .text-stroke,
+  .text-stroke-thin,
+  .text-stroke-medium,
+  .text-stroke-thick,
+  .text-stroke-none,
+  .text-stroke-0,
+  .text-stroke-1,
+  .text-stroke-2,
+  .text-stroke-3 {
+    -webkit-text-fill-color: var(--tst-text-stroke-fill-color, currentColor);
+    -webkit-text-stroke-color: var(--tst-text-stroke-color, black);
+  }
+
+  .text-stroke {
+    -webkit-text-stroke-width: var(--tst-text-stroke-width, thin);
+  }
+
+  .text-stroke-thin {
+    -webkit-text-stroke-width: var(--tst-text-stroke-width, thin);
+  }
+
+  .text-stroke-medium {
+    -webkit-text-stroke-width: var(--tst-text-stroke-width, medium);
+  }
+
+  .text-stroke-thick {
+    -webkit-text-stroke-width: var(--tst-text-stroke-width, thick);
+  }
+
+  .text-stroke-none {
+    -webkit-text-stroke-width: var(--tst-text-stroke-width, unset);
+  }
+
+  .text-stroke-0 {
+    -webkit-text-stroke-width: var(--tst-text-stroke-width, 0);
+  }
+
+  .text-stroke-1 {
+    -webkit-text-stroke-width: var(--tst-text-stroke-width, 1px);
+  }
+
+  .text-stroke-2 {
+    -webkit-text-stroke-width: var(--tst-text-stroke-width, 2px);
+  }
+
+  .text-stroke-3 {
+    -webkit-text-stroke-width: var(--tst-text-stroke-width, 3px);
+  }
+
   /* fixes stroke around text in the home page */
   .fix-text-stroke {
     paint-order: stroke fill;

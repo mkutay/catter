@@ -1,10 +1,10 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "next-js-blog",
       "dependencies": {
-        "@designbycode/tailwindcss-text-stroke": "^1.3.0",
         "@hookform/resolvers": "^3.10.0",
         "@plaiceholder/next": "^3.0.0",
         "@radix-ui/react-accordion": "^1.2.12",
@@ -113,8 +113,6 @@
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.4.4", "", { "os": "win32", "cpu": "x64" }, "sha512-gnOHKVPFAAPrpoPt2t+Q6FZ7RPry/FDV3GcpU53P3PtLNnQjBmKyN2Vh/JtqXet+H4pme8CC76rScwdjDcT1/A=="],
 
     "@code-hike/lighter": ["@code-hike/lighter@1.0.1", "", { "dependencies": { "ansi-sequence-parser": "1.1.1" } }, "sha512-mccvcsk5UTScRrE02oBz1/qzckyhD8YE3VQlQv++2bSVVZgNuCUX8MpokSCi5OmfRAAxbj6kmNiqq1Um8eXPrw=="],
-
-    "@designbycode/tailwindcss-text-stroke": ["@designbycode/tailwindcss-text-stroke@1.3.0", "", { "peerDependencies": { "tailwindcss": ">=3.0.0 || >=3.0.0-alpha.1" } }, "sha512-EyZi2EDv+/v55JF7OFrPUUJHr0r/C9bZtvhWNpamMj5MjAEMqBMhcO1ZW9aXAD2viszgtlnYLIta80NJtsuy6w=="],
 
     "@drizzle-team/brocli": ["@drizzle-team/brocli@0.10.2", "", {}, "sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w=="],
 
