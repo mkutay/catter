@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import ListPosts from "@/components/listPosts";
 import PaginationArrows from "@/components/paginationArrows";
 import { turnTagString } from "@/components/tagsButtonGrid";
-import { TotalBlogViews } from "@/components/totalBlogViews";
 import { siteConfig } from "@/config/site";
 import {
   getListOfAllTags,
@@ -61,7 +60,6 @@ export default async function Page(props: {
           href={`/tags/${tag}/page`}
         />
       </div>
-      <TotalBlogViews />
       {/* Removing the grid for the tags */}
       {/* <TagsButtonGrid/> */}
     </>

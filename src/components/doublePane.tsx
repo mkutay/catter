@@ -4,58 +4,38 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
+import { TotalBlogViews } from "./totalBlogViews";
 import { TypographyHr } from "./typography/blockquote";
 
 export default function DoublePane({
   children,
-  hideFollowLink,
   side,
   sideGap = "gap-12",
 }: Readonly<{
   children: React.ReactNode;
-  hideFollowLink?: boolean;
   side?: React.ReactNode;
   sideGap?: string;
 }>) {
-  if (!side) {
-    return (
-      <section className="w-full mx-auto lg:max-w-6xl md:mb-12 mb-6">
-        <div className="w-full space-y-4 max-w-prose lg:mx-0 mx-auto px-4">
-          <div>{children}</div>
-          <TypographyHr className="my-12" />
-          {!hideFollowLink ? (
-            <div className="justify-between items-center gap-4 flex flex-row flex-wrap">
-              <EmailSubButton />
-            </div>
-          ) : (
-            <div className="flex flex-row justify-end items-center">
-              <EmailSubButton />
-            </div>
-          )}
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section
       className={cn(
-        "w-full mx-auto lg:max-w-6xl md:mb-12 mb-6 flex flex-row",
-        sideGap,
+        "w-full mx-auto lg:max-w-6xl md:mb-12 mb-6",
+        side ? "flex flex-row" : "",
+        side ? sideGap : "",
       )}
     >
-      <div className="w-full space-y-4 max-w-prose lg:mx-0 mx-auto px-4 lg:py-2">
+      <div
+        className={cn(
+          "w-full space-y-4 max-w-prose lg:mx-0 mx-auto px-4",
+          side ? "lg:py-2" : "",
+        )}
+      >
         <div>{children}</div>
         <TypographyHr className="my-12" />
-        {!hideFollowLink ? (
-          <div className="justify-between items-center gap-4 flex flex-row flex-wrap">
-            <EmailSubButton />
-          </div>
-        ) : (
-          <div className="flex flex-row justify-end items-center">
-            <EmailSubButton />
-          </div>
-        )}
+        <div className="flex flex-row justify-between items-center gap-4">
+          <TotalBlogViews />
+          <EmailSubButton />
+        </div>
       </div>
       {side}
     </section>

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import ListPosts from "@/components/listPosts";
 import PaginationArrows from "@/components/paginationArrows";
-import { TotalBlogViews } from "@/components/totalBlogViews";
 import { siteConfig } from "@/config/site";
 import { getPostsLength } from "@/lib/dbContentQueries";
 
@@ -56,7 +55,6 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
           href="/posts/page"
         />
       </div>
-      <TotalBlogViews />
     </>
   );
 }

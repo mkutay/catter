@@ -23,13 +23,13 @@ export function TotalBlogViews() {
 
   if (isLoading)
     return (
-      <div className="flex justify-center items-center text-primary">
-        <Skeleton className="h-7 w-40" />
+      <div className="flex text-primary">
+        <Skeleton className="h-7 w-43.75" />
       </div>
     );
 
   return (
-    <div className="flex justify-center items-center text-primary font-bold tracking-tight text-lg">
+    <div className="flex text-primary font-bold tracking-tight md:text-lg text-base font-mono leading-5">
       {`${views} total views`}
     </div>
   );
