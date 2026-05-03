@@ -170,7 +170,7 @@ export const components: MDXComponents = {
         value: String(props.children),
         annotations: [],
         tokens: [],
-        lang: "text",
+        lang: "txt",
         meta: "",
         themeName: "Catppuccin Frappé",
         style: {},
