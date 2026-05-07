@@ -56,6 +56,7 @@ interface TocSectionItemProps {
   activeSection: string;
   collapsedSections: Set<string>;
   setSectionOpen: (href: string, isOpen: boolean) => void;
+  setActiveSection: (id: string) => void;
 }
 
 function TocSectionItem({
@@ -63,6 +64,7 @@ function TocSectionItem({
   activeSection,
   collapsedSections,
   setSectionOpen,
+  setActiveSection,
 }: TocSectionItemProps) {
   const { item, children } = section;
   const isActive = activeSection === item.href.replace("#", "");
@@ -91,7 +93,11 @@ function TocSectionItem({
               highlight ? "text-primary/60" : "text-muted-foreground/25",
             )}
           />
-          <Link href={item.href} className={linkClass}>
+          <Link
+            href={item.href}
+            className={linkClass}
+            onClick={() => setActiveSection(item.href.replace("#", ""))}
+          >
             {item.value}
           </Link>
         </div>
@@ -121,7 +127,11 @@ function TocSectionItem({
               <ChevronRight className="h-3.5 w-3.5 transition-transform duration-200" />
             </AccordionPrimitive.Trigger>
 
-            <Link href={item.href} className={linkClass}>
+            <Link
+              href={item.href}
+              className={linkClass}
+              onClick={() => setActiveSection(item.href.replace("#", ""))}
+            >
               {item.value}
             </Link>
           </div>
@@ -135,6 +145,7 @@ function TocSectionItem({
                   activeSection={activeSection}
                   collapsedSections={collapsedSections}
                   setSectionOpen={setSectionOpen}
+                  setActiveSection={setActiveSection}
                 />
               ))}
             </ul>
@@ -202,6 +213,7 @@ export function SideTOC({ toc }: { toc: TocItem[] }) {
           activeSection={activeSection}
           collapsedSections={collapsedSections}
           setSectionOpen={setSectionOpen}
+          setActiveSection={setActiveSection}
         />
       ))}
     </ul>
