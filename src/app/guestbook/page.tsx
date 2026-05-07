@@ -49,11 +49,11 @@ async function Form() {
   const session = await auth();
 
   return session?.user ? (
-    <div className="flex flex-col gap-2">
+    <div className="h-21">
       <GuestbookForm />
     </div>
   ) : (
-    <div className="items-center justify-center flex">
+    <div className="h-21 border-b border-border -mb-1">
       <GuestBookSignIn />
     </div>
   );

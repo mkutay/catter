@@ -46,36 +46,38 @@ export default function GuestbookForm() {
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-row gap-2"
-      >
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormControl>
-                <Input
-                  aria-label="Your message"
-                  placeholder="Your message..."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button variant="default" size="md" type="submit">
-          Sign!
-        </Button>
-      </form>
-      <div className="w-fit flex flex-row gap-2 items-center">
-        <GuestbookDialog />
-        <GuestBookSignOut />
-      </div>
-    </Form>
+    <div className="flex flex-col gap-2">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-row gap-2"
+        >
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl>
+                  <Input
+                    aria-label="Your message"
+                    placeholder="Your message..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button variant="default" size="md" type="submit">
+            Sign!
+          </Button>
+        </form>
+        <div className="w-fit flex flex-row gap-2 items-center">
+          <GuestbookDialog />
+          <GuestBookSignOut />
+        </div>
+      </Form>
+    </div>
   );
 }
 
