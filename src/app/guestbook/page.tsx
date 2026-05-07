@@ -53,7 +53,7 @@ async function Form() {
       <GuestbookForm />
     </div>
   ) : (
-    <div className="h-21 border-b border-border -mb-1">
+    <div className="h-22 border-b border-border -mb-1">
       <GuestBookSignIn />
     </div>
   );
