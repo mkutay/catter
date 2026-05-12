@@ -11,7 +11,7 @@ import {
 import readingTime from "reading-time";
 import type { TocItem } from "remark-flexible-toc";
 import Comments from "@/components/comments/comments";
-import CopyToClipboard from "@/components/copyToClipboard";
+import { CopyShortened } from "@/components/copy-shortened";
 import DoublePane from "@/components/doublePane";
 import { PostViewCounter } from "@/components/postViewCounter";
 import { SideTOC } from "@/components/side-toc";
@@ -165,7 +165,7 @@ export default async function Page({
           )}
           <div className="my-4 flex flex-row items-center gap-4 justify-end text-foreground text-lg">
             <PostViewCounter slug={props.slug} />
-            <CopyToClipboard text={props.shortened} />
+            <CopyShortened shortened={props.shortened} />
           </div>
         </div>
         <main>{content}</main>

@@ -1,23 +1,21 @@
 "use client";
 
 import { ClipboardIcon } from "@radix-ui/react-icons";
-import copy from "copy-to-clipboard";
-
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { siteConfig } from "@/config/site";
 
-export default function CopyToClipboard({ text }: { text: string }) {
+export function CopyShortened({ shortened }: { shortened: string }) {
   const { toast } = useToast();
 
   return (
     <Button
-      onClick={() =>
-        copy(`${siteConfig.url}/${text}`) &&
+      onClick={() => {
+        navigator.clipboard.writeText(`${siteConfig.url}/${shortened}`);
         toast({
           title: "Copied to clipboard!",
-        })
-      }
+        });
+      }}
       variant="outline"
       size="md"
     >

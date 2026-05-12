@@ -9,7 +9,7 @@ import {
   Pre,
 } from "codehike/code";
 
-import { CopyCodeButton } from "@/components/copy-button";
+import { CopyCodeButton } from "@/components/copy-code-button";
 import { myTheme } from "./code-block-theme";
 
 // Handler for CodeHike to wrap code that exceeds the width.
