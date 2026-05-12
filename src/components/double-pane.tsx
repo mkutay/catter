@@ -1,13 +1,21 @@
 import { Mailbox } from "lucide-react";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { TotalBlogViews } from "./totalBlogViews";
 import { TypographyHr } from "./typography/blockquote";
 
-export default function DoublePane({
+/**
+ * A double pane layout component that displays a main content area
+ * and an optional side panel.
+ *
+ * @param children The main content area.
+ * @param side The optional side panel, if provided, otherwise still
+ *  limits the width of the main content area.
+ * @param sideGap The gap between the main content and the side panel.
+ */
+export function DoublePane({
   children,
   side,
   sideGap = "gap-12",
@@ -34,29 +42,18 @@ export default function DoublePane({
         <TypographyHr className="my-12" />
         <div className="flex flex-row justify-between items-center gap-4">
           <TotalBlogViews />
-          <EmailSubButton />
+          <Button variant="secondary" size="lg" asChild>
+            <Link
+              href={siteConfig.newsletterSubscribe}
+              className="flex flex-row gap-3"
+            >
+              <Mailbox stroke="currentColor" strokeWidth="1.6px" />
+              <div>Subscribe!</div>
+            </Link>
+          </Button>
         </div>
       </div>
       {side}
     </section>
-  );
-}
-
-function EmailSubButton() {
-  return (
-    <div className="flex flex-col gap-4">
-      {/* <p className="text-lg leading-7 not-first:mt-6">
-        Subscribe to my newsletter to get updates on new posts and email only specials.
-      </p> */}
-      <Button variant="secondary" size="lg" className="flex mx-auto" asChild>
-        <Link
-          href={siteConfig.newsletterSubscribe}
-          className="flex flex-row gap-3 w-fit font-normal tracking-wide"
-        >
-          <Mailbox stroke="currentColor" strokeWidth="1.6px" />
-          <div>Subscribe!</div>
-        </Link>
-      </Button>
-    </div>
   );
 }

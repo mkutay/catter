@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import DoublePane from "@/components/doublePane";
+import { DoublePane } from "@/components/double-pane";
 import ListPosts from "@/components/listPosts";
 import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";

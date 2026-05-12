@@ -1,4 +1,4 @@
-import DoublePane from "@/components/doublePane";
+import { DoublePane } from "@/components/double-pane";
 
 export default function Layout({
   children,

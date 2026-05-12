@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import DoublePane from "@/components/doublePane";
+import { DoublePane } from "@/components/double-pane";
 import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
 import { auth } from "@/lib/auth";

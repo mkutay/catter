@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
-import DoublePane from "@/components/doublePane";
+import { DoublePane } from "@/components/double-pane";
 import { TypographyH1 } from "@/components/typography/headings";
 import { components, options } from "@/config/mdxRemoteSettings";
 import { siteConfig } from "@/config/site";
