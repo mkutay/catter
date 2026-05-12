@@ -1,18 +1,37 @@
 import { sql } from "drizzle-orm";
-import { ResultAsync } from "neverthrow";
+import { okAsync, ResultAsync } from "neverthrow";
+import type { Session } from "next-auth";
 import { siteConfig } from "@/config/site";
 import type { DatabaseError } from "@/lib/database-errors";
 import { getSession } from "@/lib/database-queries/auth";
-import { getViewCount } from "@/lib/database-queries/views";
 import { db } from "@/lib/db/drizzle";
 import { views } from "@/lib/db/schema";
 
+/**
+ * Checks if the user is an admin based on their session.
+ *
+ * @param session The user's session.
+ * @returns `true` if the user is an admin, `false` otherwise.
+ */
+const isAdmin = (session?: Session | null | undefined): boolean => {
+  const email = session?.user?.email;
+
+  return typeof email === "string" && siteConfig.admins.includes(email);
+};
+
+/**
+ * Increments the view count for a given slug, unless the user is an
+ * admin or in development mode.
+ *
+ * @param slug The slug of the post to increment views for.
+ * @returns A `ResultAsync` that resolves to `void` if successful,
+ *  or a `DatabaseError` if an error occurs.
+ */
 export const incrementViews = ({ slug }: { slug: string }) =>
   getSession().andThen((session) =>
-    process.env.NODE_ENV === "development" ||
-    (session?.user && siteConfig.admins.includes(session.user.email as string))
-      ? getViewCount({ slug })
-      : insertIntoViews(slug).map((view) => view[0].count),
+    process.env.NODE_ENV === "development" || isAdmin(session)
+      ? okAsync()
+      : insertIntoViews(slug),
   );
 
 const insertIntoViews = (slug: string) =>
@@ -27,7 +46,7 @@ const insertIntoViews = (slug: string) =>
       .returning(),
     () =>
       ({
-        message: "Failed to increment views. Database error.",
+        message: "Failed to increment views.",
         code: "DATABASE_ERROR",
       }) as DatabaseError,
-  );
+  ).andThen(() => okAsync());
