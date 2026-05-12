@@ -1,12 +1,10 @@
+import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { getPosts } from "@/lib/dbContentQueries";
 import { getAboutProps } from "@/lib/fsContentQueries";
 
-export default async function sitemap() {
-  const siteMap: {
-    url: string;
-    lastModified: string;
-  }[] = [];
+export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
+  const siteMap: MetadataRoute.Sitemap = [];
 
   siteMap.push({
     url: siteConfig.url,
@@ -39,12 +37,16 @@ export default async function sitemap() {
 
   siteMap.push({
     url: `${siteConfig.url}/posts`,
-    lastModified: siteConfig.date,
+    lastModified: new Date(posts.value[0].date).toISOString().split("T")[0],
   });
 
   siteMap.push({
     url: `${siteConfig.url}/projects`,
-    lastModified: siteConfig.date,
+    lastModified: new Date(
+      posts.value.filter((p) => p.tags.includes("project"))[0].date,
+    )
+      .toISOString()
+      .split("T")[0],
   });
 
   return siteMap;
