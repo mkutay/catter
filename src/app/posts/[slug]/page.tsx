@@ -15,7 +15,6 @@ import CopyToClipboard from "@/components/copyToClipboard";
 import DoublePane from "@/components/doublePane";
 import { PostViewCounter } from "@/components/postViewCounter";
 import { SideTOC } from "@/components/side-toc";
-import { turnTagString } from "@/components/tagsButtonGrid";
 import { ToggleParentheses } from "@/components/toggleParentheses";
 import { TypographyH1 } from "@/components/typography/headings";
 import { components, options } from "@/config/mdxRemoteSettings";
@@ -23,6 +22,7 @@ import { siteConfig } from "@/config/site";
 import type { PostMeta } from "@/config/types";
 import { getPost, getPostSlugs } from "@/lib/dbContentQueries";
 import { getPlaceholder } from "@/lib/images";
+import { turnTagString } from "@/lib/utils";
 
 export const dynamic = "force-static";
 // export const dynamicParams = false;
@@ -122,7 +122,7 @@ export default async function Page({
                 key={tag}
                 className="text-primary-foreground uppercase font-mono text-sm underline hover:opacity-80 transition-opacity"
               >
-                <Link href={`/tags/${tag}/page/1`}>{turnTagString(tag)}</Link>
+                <Link href={`/tags/${tag}`}>{turnTagString(tag)}</Link>
               </p>
             ))}
           </div>

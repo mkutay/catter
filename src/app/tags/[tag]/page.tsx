@@ -1,21 +1,54 @@
-import { redirect } from "next/navigation";
-
-import { getListOfAllTags } from "@/lib/dbContentQueries";
+import type { Metadata } from "next";
+import ListPosts from "@/components/listPosts";
+import { TypographyH1 } from "@/components/typography/headings";
+import { siteConfig } from "@/config/site";
+import { getListOfAllTags, getPostsLength } from "@/lib/dbContentQueries";
+import { turnTagString } from "@/lib/utils";
 
 export const dynamic = "force-static";
-// export const dynamicParams = false;
+
+export async function generateMetadata(props: {
+  params: Promise<{ tag: string }>;
+}): Promise<Metadata> {
+  const params = await props.params;
+  const { tag } = params;
+
+  return {
+    title: `Posts With Tag: ${tag}`,
+    description: `List of all the tags that posts have on ${siteConfig.name}, currently displaying tag ${tag}.`,
+    openGraph: {
+      title: `Posts With Tag: ${tag}`,
+      description: `List of all the tags that posts have on ${siteConfig.name}, currently displaying tag ${tag}.`,
+      url: `${siteConfig.url}/tags/${tag}`,
+    },
+  };
+}
 
 export default async function Page(props: {
   params: Promise<{ tag: string }>;
 }) {
   const params = await props.params;
-  const { tag } = params;
-  redirect(`/tags/${tag}/page/1`);
+  const tag = params.tag;
+
+  const result = await getPostsLength({ tags: [tag] });
+  if (result.isErr()) throw new Error(result.error.message);
+  const postsLength = result.value;
+
+  return (
+    <>
+      <TypographyH1 className="mt-6 mb-8 text-primary">
+        Posts With Tag:{" "}
+        <span className="font-light not-italic text-foreground uppercase">
+          {turnTagString(tag)}
+        </span>
+      </TypographyH1>
+      <ListPosts startInd={0} endInd={postsLength} tags={[tag]} />
+    </>
+  );
 }
 
 export async function generateStaticParams() {
-  const tags = await getListOfAllTags();
-  if (tags.isErr()) throw new Error(tags.error.message);
-
-  return tags.value.map((tag) => ({ tag }));
+  const result = await getListOfAllTags();
+  if (result.isErr()) throw new Error(result.error.message);
+  return result.value.map((tag) => ({ tag }));
 }

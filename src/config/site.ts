@@ -27,8 +27,6 @@ export const siteConfig = {
       { title: "Admin", link: "/admin" },
     ],
   },
-  tagsThatShouldBeCapital: ["ib", "ai"],
-  postNumPerPage: 5,
   newsletterSubscribe: "https://mkutay.substack.com/subscribe",
   admins: ["me@mkutay.dev", "hello@mkutay.dev"],
   date: new Date().toISOString().split("T")[0],

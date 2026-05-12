@@ -101,3 +101,11 @@ export const postShortened = (str: string): string =>
     .split(" ")
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(" ");
+
+export const turnTagString = (tag: string) =>
+  tag
+    .replace("-", " ")
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(" ");
