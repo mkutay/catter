@@ -8,18 +8,14 @@ import { getPosts } from "@/lib/dbContentQueries";
 import { postShortened } from "@/lib/utils";
 
 export default async function ListPosts({
-  startInd,
-  endInd,
   tags,
   disallowTags,
 }: {
-  startInd: number;
-  endInd: number;
   tags?: string[];
   disallowTags?: string[];
 }) {
   // half-open interval
-  const result = await getPosts({ startInd, endInd, tags, disallowTags });
+  const result = await getPosts({ tags, disallowTags });
   if (result.isErr()) throw new Error(result.error.message);
   const posts = result.value;
 

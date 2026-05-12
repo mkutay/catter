@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ListPosts from "@/components/listPosts";
 import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
-import { getListOfAllTags, getPostsLength } from "@/lib/dbContentQueries";
+import { getListOfAllTags } from "@/lib/dbContentQueries";
 import { turnTagString } from "@/lib/utils";
 
 export const dynamic = "force-static";
@@ -29,11 +29,6 @@ export default async function Page(props: {
 }) {
   const params = await props.params;
   const tag = params.tag;
-
-  const result = await getPostsLength({ tags: [tag] });
-  if (result.isErr()) throw new Error(result.error.message);
-  const postsLength = result.value;
-
   return (
     <>
       <TypographyH1 className="mt-6 mb-8 text-primary">
@@ -42,7 +37,7 @@ export default async function Page(props: {
           {turnTagString(tag)}
         </span>
       </TypographyH1>
-      <ListPosts startInd={0} endInd={postsLength} tags={[tag]} />
+      <ListPosts tags={[tag]} />
     </>
   );
 }

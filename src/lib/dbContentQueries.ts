@@ -138,8 +138,6 @@ export const getPost = (slug: string): ResultAsync<Post, ContentError> =>
  * This function does not convert and parse content.
  */
 export const getPosts = ({
-  startInd = 0,
-  endInd = 100000,
   tags = [],
   disallowTags = [],
 }: {
@@ -186,9 +184,7 @@ export const getPosts = ({
         not(filteredPostsQuery.has_disallowed_tag),
       ),
     )
-    .orderBy(desc(filteredPostsQuery.date))
-    .limit(endInd - startInd)
-    .offset(startInd);
+    .orderBy(desc(filteredPostsQuery.date));
 
   return fromPromise(promise, (err) =>
     getContentError(`Error fetching posts.`, err),
@@ -202,48 +198,6 @@ export const getPosts = ({
       views: post.views && post.views > 0 ? post.views : 0,
     })),
   );
-};
-
-/**
- * Get the number of posts for given filters
- */
-export const getPostsLength = ({
-  tags = [],
-  disallowTags = [],
-}: PostTagFilters) => {
-  const { hasIncludedTagSql, hasDisallowedTagSql } = buildTagFilterSql({
-    tags,
-    disallowTags,
-  });
-
-  const filteredPostsQuery = db
-    .select({
-      slug: posts.slug,
-      has_included_tag: sql<boolean>`${hasIncludedTagSql}`.as(
-        "has_included_tag",
-      ),
-      has_disallowed_tag: sql<boolean>`${hasDisallowedTagSql}`.as(
-        "has_disallowed_tag",
-      ),
-    })
-    .from(posts)
-    .leftJoin(postTags, eq(posts.slug, postTags.slug))
-    .groupBy(posts.slug)
-    .as("filtered_posts");
-
-  const promise = db
-    .select({ count: sql<number>`count(*)` })
-    .from(filteredPostsQuery)
-    .where(
-      and(
-        tags.length === 0 ? sql`true` : filteredPostsQuery.has_included_tag,
-        not(filteredPostsQuery.has_disallowed_tag),
-      ),
-    );
-
-  return fromPromise(promise, (err) =>
-    getContentError(`Error fetching posts count.`, err),
-  ).map((result) => result[0].count);
 };
 
 /**

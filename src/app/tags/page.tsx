@@ -5,18 +5,16 @@ import { siteConfig } from "@/config/site";
 
 export const dynamic = "force-static";
 
-export function generateMetadata(): Metadata {
-  return {
+export const metadata: Metadata = {
+  title: `List of Tags on the Posts`,
+  description: `List and buttons of all the tags that posts have on ${siteConfig.name}.`,
+  openGraph: {
     title: `List of Tags on the Posts`,
     description: `List and buttons of all the tags that posts have on ${siteConfig.name}.`,
-    openGraph: {
-      title: `List of Tags on the Posts`,
-      description: `List and buttons of all the tags that posts have on ${siteConfig.name}.`,
-      url: `${siteConfig.url}/tags`,
-      images: ["images/favicon.png"],
-    },
-  };
-}
+    url: `${siteConfig.url}/tags`,
+    images: ["images/favicon.png"],
+  },
+};
 
 export default function Page() {
   return (
