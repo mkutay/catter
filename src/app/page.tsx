@@ -8,7 +8,7 @@ import {
   TypographyLarge,
   TypographyParagraph,
 } from "@/components/typography/paragraph";
-import { ViewDisplay } from "@/components/viewDisplay";
+import { ViewDisplay } from "@/components/view-display";
 import { components, options } from "@/config/mdxRemoteSettings";
 import { siteConfig } from "@/config/site";
 import type { Post } from "@/config/types";
@@ -187,9 +187,7 @@ async function FirstPost({ post }: { post: Post }) {
             <time dateTime={post.date}>
               {format(new Date(post.date), "PPP")}
             </time>
-            <Suspense>
-              <ViewDisplay slug={post.slug} />
-            </Suspense>
+            <ViewDisplay slug={post.slug} />
           </div>
         </div>
       </div>
@@ -256,9 +254,7 @@ async function PostDisplay({
       )}
       <div className="text-sm text-foreground tracking-tight font-light flex flex-row justify-between">
         <p>{format(post.date, "PP")}</p>
-        <Suspense>
-          <ViewDisplay slug={post.slug} />
-        </Suspense>
+        <ViewDisplay slug={post.slug} />
       </div>
     </div>
   );

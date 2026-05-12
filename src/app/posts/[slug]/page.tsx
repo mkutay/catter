@@ -13,10 +13,10 @@ import type { TocItem } from "remark-flexible-toc";
 import Comments from "@/components/comments/comments";
 import { CopyShortened } from "@/components/copy-shortened";
 import { DoublePane } from "@/components/double-pane";
-import { PostViewCounter } from "@/components/postViewCounter";
 import { SideTOC } from "@/components/side-toc";
 import { ToggleParentheses } from "@/components/toggleParentheses";
 import { TypographyH1 } from "@/components/typography/headings";
+import { ViewDisplay } from "@/components/view-display";
 import { components, options } from "@/config/mdxRemoteSettings";
 import { siteConfig } from "@/config/site";
 import type { PostMeta } from "@/config/types";
@@ -164,7 +164,7 @@ export default async function Page({
             </div>
           )}
           <div className="my-4 flex flex-row items-center gap-4 justify-end text-foreground text-lg">
-            <PostViewCounter slug={props.slug} />
+            <ViewDisplay slug={props.slug} increment />
             <CopyShortened shortened={props.shortened} />
           </div>
         </div>

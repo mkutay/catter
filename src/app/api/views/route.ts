@@ -1,4 +1,6 @@
+import { safeTry } from "neverthrow";
 import { type NextRequest, NextResponse } from "next/server";
+import { incrementViews } from "@/lib/database-actions/views";
 import { getViewCount } from "@/lib/database-queries/views";
 
 export async function GET(request: NextRequest) {
@@ -8,9 +10,16 @@ export async function GET(request: NextRequest) {
     return new NextResponse("Missing slug parameter", { status: 400 });
   }
 
-  const result = await getViewCount({ slug });
+  const increment = searchParams.get("increment") === "true";
+
+  const result = await safeTry(async function* () {
+    if (increment) yield* incrementViews({ slug });
+
+    return getViewCount({ slug });
+  });
+
   if (result.isErr()) {
-    return new NextResponse("Error fetching view count", { status: 500 });
+    return new NextResponse(result.error.message, { status: 500 });
   }
 
   return new NextResponse(result.value.toString(), { status: 200 });

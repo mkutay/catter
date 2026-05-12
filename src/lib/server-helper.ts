@@ -7,9 +7,6 @@ import {
   deleteGuestbookEntries,
   saveGuestbookEntryData,
 } from "./database-actions/guestbook";
-import { incrementViews } from "./database-actions/views";
-import { getComments } from "./database-queries/comments";
-import { getBlogViews, getViewCount } from "./database-queries/views";
 
 export async function getUser() {
   const session = await auth();
@@ -29,18 +26,6 @@ export const saveCommentAction = async (props: {
 
 export const deleteCommentAction = async (props: { id: number }) =>
   resultAsyncToActionResult(deleteComment(props));
-
-export const getCommentsAction = async (props: { slug: string }) =>
-  resultAsyncToActionResult(getComments(props));
-
-export const getViewCountAction = async (props: { slug: string }) =>
-  resultAsyncToActionResult(getViewCount(props));
-
-export const incrementViewsAction = async (props: { slug: string }) =>
-  resultAsyncToActionResult(incrementViews(props));
-
-export const getBlogViewsAction = async () =>
-  resultAsyncToActionResult(getBlogViews());
 
 export const saveGuestbookEntryAction = async (props: {
   color?: string;
