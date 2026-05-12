@@ -16,6 +16,8 @@ export function CopyCodeButton({
   return (
     <button
       className={cn(
+        // this colour is used for the copy button text in the code blocks,
+        // which use the Catppuccin Macchiato theme.
         "text-[#c6d0f5] hover:opacity-80 transition-opacity",
         className,
       )}
