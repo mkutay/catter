@@ -1,4 +1,4 @@
-import DoublePane from "@/components/doublePane";
+import { DoublePane } from "@/components/double-pane";
 import { TypographyH1 } from "@/components/typography/headings";
 
 export default function NotFound() {

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import DoublePane from "@/components/doublePane";
+import { DoublePane } from "@/components/double-pane";
 import { TypographyH1 } from "@/components/typography/headings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/config/site";

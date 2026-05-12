@@ -12,7 +12,7 @@ import readingTime from "reading-time";
 import type { TocItem } from "remark-flexible-toc";
 import Comments from "@/components/comments/comments";
 import { CopyShortened } from "@/components/copy-shortened";
-import DoublePane from "@/components/doublePane";
+import { DoublePane } from "@/components/double-pane";
 import { PostViewCounter } from "@/components/postViewCounter";
 import { SideTOC } from "@/components/side-toc";
 import { ToggleParentheses } from "@/components/toggleParentheses";
