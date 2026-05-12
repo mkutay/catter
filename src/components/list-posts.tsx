@@ -7,14 +7,20 @@ import { components, options } from "@/config/mdxRemoteSettings";
 import { getPosts } from "@/lib/dbContentQueries";
 import { postShortened } from "@/lib/utils";
 
-export default async function ListPosts({
-  tags,
-  disallowTags,
+/**
+ * Renders a list of posts based on the provided tags and disallowed tags.
+ *
+ * @param tags An optional array of tags to filter posts by.
+ * @param disallowTags An optional array of tags to exclude from the list.
+ * @note If no posts are found, a 404 error is thrown.
+ */
+export async function ListPosts({
+  tags = [],
+  disallowTags = [],
 }: {
   tags?: string[];
   disallowTags?: string[];
 }) {
-  // half-open interval
   const result = await getPosts({ tags, disallowTags });
   if (result.isErr()) throw new Error(result.error.message);
   const posts = result.value;
