@@ -8,7 +8,7 @@ export const siteConfig = {
     { label: "About", href: "/about" },
     { label: "Guest Book", href: "/guestbook" },
     { label: "Projects", href: "/projects" },
-    { label: "Posts", href: "/posts/page/1" },
+    { label: "Posts", href: "/posts" },
   ],
   footerItems: {
     connections: [

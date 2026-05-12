@@ -38,7 +38,7 @@ export default async function sitemap() {
   });
 
   siteMap.push({
-    url: `${siteConfig.url}/posts/page/1`,
+    url: `${siteConfig.url}/posts`,
     lastModified: siteConfig.date,
   });
 
