@@ -52,6 +52,7 @@ export default function Footer() {
                   href={item.link}
                   className="hover:opacity-80 transition-opacity"
                   prefetch={false}
+                  target={item.link.startsWith("/") ? "_self" : "_blank"}
                 >
                   {item.title}
                 </Link>
@@ -101,6 +102,7 @@ export default function Footer() {
                   href={item.link}
                   className="hover:opacity-80 transition-opacity"
                   prefetch={false}
+                  target={item.link.startsWith("/") ? "_self" : "_blank"}
                 >
                   {item.title}
                 </Link>

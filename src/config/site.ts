@@ -18,7 +18,7 @@ export const siteConfig = {
       },
       { title: "Instagram", link: "https://www.instagram.com/mkutaybozkurt" },
       { title: "GitHub", link: "https://github.com/mkutay" },
-      { title: "Resume (Old)", link: "/pdfs/mehmet-kutay-bozkurt.pdf" },
+      { title: "LinkedIn", link: "https://www.linkedin.com/in/mkutay" },
     ],
     blog: [
       { title: "Sponsor Me", link: "https://github.com/sponsors/mkutay?o=esb" },
