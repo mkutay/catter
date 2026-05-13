@@ -14,7 +14,10 @@ import Comments from "@/components/comments/comments";
 import { CopyShortened } from "@/components/copy-shortened";
 import { DoublePane } from "@/components/double-pane";
 import { SideTOC } from "@/components/side-toc";
-import { ToggleParentheses } from "@/components/toggleParentheses";
+import {
+  ToggleParentheses,
+  ToggleParenthesesContextToggleButton,
+} from "@/components/toggle-parentheses";
 import { TypographyH1 } from "@/components/typography/headings";
 import { ViewDisplay } from "@/components/view-display";
 import { components, options } from "@/config/mdxRemoteSettings";
@@ -163,9 +166,14 @@ export default async function Page({
               />
             </div>
           )}
-          <div className="my-4 flex flex-row items-center gap-4 justify-end text-foreground text-lg">
-            <ViewDisplay slug={props.slug} increment />
-            <CopyShortened shortened={props.shortened} />
+          <div className="my-4 flex flex-row items-center gap-4 justify-between">
+            <ToggleParenthesesContextToggleButton />
+            <div className="flex flex-row items-center gap-4 justify-end">
+              <div className="tracking-tight font-light text-base">
+                <ViewDisplay slug={props.slug} increment />
+              </div>
+              <CopyShortened shortened={props.shortened} />
+            </div>
           </div>
         </div>
         <main>{content}</main>

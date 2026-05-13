@@ -6,6 +6,7 @@ import "@/styles/globals.css";
 import "@/styles/katex.min.css";
 import Footer from "@/components/footer";
 import NavBar from "@/components/navBar";
+import { ToggleParenthesesProvider } from "@/components/toggle-parentheses";
 import { Toaster } from "@/components/ui/toaster";
 import { cabinetGrotesk, plex, zodiak } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
@@ -69,7 +70,9 @@ export default function Layout({
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <main className="flex flex-col min-h-screen">
             <NavBar />
-            <div className="flex-1">{children}</div>
+            <ToggleParenthesesProvider defaultOpen={true}>
+              <div className="flex-1">{children}</div>
+            </ToggleParenthesesProvider>
             <Footer />
           </main>
           <Toaster />
