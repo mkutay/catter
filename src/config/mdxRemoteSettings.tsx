@@ -24,7 +24,7 @@ import remarkHeadingId from "remark-heading-id";
 import remarkLint from "remark-lint";
 import remarkMath from "remark-math";
 import remarkSmartypants from "remark-smartypants";
-import { ToggleParentheses } from "@/components/toggleParentheses";
+import { ToggleParentheses } from "@/components/toggle-parentheses";
 import {
   TypographyBlockquote,
   TypographyHr,
@@ -39,6 +39,7 @@ import {
 import { TypographyOList, TypographyUList } from "@/components/typography/list";
 import { TypographyParagraph } from "@/components/typography/paragraph";
 import { getPlaceholder } from "@/lib/images";
+import remarkParentheses from "@/lib/remark-parentheses";
 import { cn } from "@/lib/utils";
 
 // CodeHike configuration for code blocks
@@ -61,6 +62,7 @@ export const options: EvaluateOptions = {
       [remarkHeadingId, { defaults: true, uniqueDefaults: true }],
       [remarkFlexibleToc, { skipLevels: [] }],
       remarkSmartypants,
+      remarkParentheses,
     ],
     rehypePlugins: [rehypeKatex],
     recmaPlugins: [recmaMdxImportReact],

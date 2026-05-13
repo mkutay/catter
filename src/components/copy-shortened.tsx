@@ -1,6 +1,5 @@
 "use client";
 
-import { ClipboardIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { siteConfig } from "@/config/site";
@@ -16,14 +15,9 @@ export function CopyShortened({ shortened }: { shortened: string }) {
           title: "Copied to clipboard!",
         });
       }}
-      variant="outline"
-      size="md"
+      variant="default"
+      size="sm"
     >
-      <ClipboardIcon
-        className="mr-2 h-5 w-5"
-        strokeWidth="0.3px"
-        stroke="currentColor"
-      />
       Share
     </Button>
   );
