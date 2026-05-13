@@ -25,7 +25,7 @@ import { siteConfig } from "@/config/site";
 import type { PostMeta } from "@/config/types";
 import { getPost, getPostSlugs } from "@/lib/dbContentQueries";
 import { getPlaceholder } from "@/lib/images";
-import { turnTagString } from "@/lib/utils";
+import { humanReadable } from "@/lib/utils";
 
 export const dynamic = "force-static";
 // export const dynamicParams = false;
@@ -125,7 +125,7 @@ export default async function Page({
                 key={tag}
                 className="text-primary-foreground uppercase font-mono text-sm underline hover:opacity-80 transition-opacity"
               >
-                <Link href={`/tags/${tag}`}>{turnTagString(tag)}</Link>
+                <Link href={`/tags/${tag}`}>{humanReadable(tag)}</Link>
               </p>
             ))}
           </div>

@@ -3,7 +3,7 @@ import { ListPosts } from "@/components/list-posts";
 import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
 import { getListOfAllTags } from "@/lib/dbContentQueries";
-import { turnTagString } from "@/lib/utils";
+import { humanReadable } from "@/lib/utils";
 
 export const dynamic = "force-static";
 
@@ -34,7 +34,7 @@ export default async function Page(props: {
       <TypographyH1 className="mt-6 mb-8 text-primary">
         Posts With Tag:{" "}
         <span className="font-light not-italic text-foreground uppercase">
-          {turnTagString(tag)}
+          {humanReadable(tag)}
         </span>
       </TypographyH1>
       <ListPosts tags={[tag]} />

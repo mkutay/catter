@@ -5,7 +5,7 @@ import { MDXRemote } from "next-mdx-remote-client/rsc";
 import { Button } from "@/components/ui/button";
 import { components, options } from "@/config/mdxRemoteSettings";
 import { getPosts } from "@/lib/dbContentQueries";
-import { postShortened } from "@/lib/utils";
+import { humanReadable } from "@/lib/utils";
 
 /**
  * Renders a list of posts based on the provided tags and disallowed tags.
@@ -59,7 +59,7 @@ export async function ListPosts({
               className="w-fit uppercase"
             >
               <Link href={`/posts/${post.slug}`}>
-                {`Read More: ${postShortened(post.shortened)}`}
+                {`Read More: ${humanReadable(post.shortened)}`}
               </Link>
             </Button>
           </div>
