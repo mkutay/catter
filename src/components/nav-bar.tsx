@@ -17,7 +17,9 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-// This is the logo that will be displayed on the navbar. You can change this as you desire
+/**
+ * The logo that will be displayed on the navbar.
+ */
 export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
   width,
@@ -91,7 +93,12 @@ export const Logo: React.FC<IconSvgProps> = ({
   </svg>
 );
 
-export default function NavBar() {
+/**
+ * The navigation bar component.
+ *
+ * On mobile, the navigation items are hidden and can be toggled with a dropdown menu.
+ */
+export function NavBar() {
   const [triggered, setTriggered] = useState(false);
 
   return (
