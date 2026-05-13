@@ -5,7 +5,7 @@ import { ThemeProvider } from "next-themes";
 import "@/styles/globals.css";
 import "@/styles/katex.min.css";
 import Footer from "@/components/footer";
-import NavBar from "@/components/navBar";
+import { NavBar } from "@/components/nav-bar";
 import { ToggleParenthesesProvider } from "@/components/toggle-parentheses";
 import { Toaster } from "@/components/ui/toaster";
 import { cabinetGrotesk, plex, zodiak } from "@/config/fonts";
