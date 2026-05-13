@@ -13,7 +13,7 @@ import {
 import { components, options } from "@/config/mdxRemoteSettings";
 import type { Post } from "@/config/types";
 import { getPlaceholder } from "@/lib/images";
-import { postShortened } from "@/lib/utils";
+import { humanReadable } from "@/lib/utils";
 
 export async function ProjectCard({
   props,
@@ -64,7 +64,7 @@ export async function ProjectCard({
           className="w-full justify-between uppercase"
         >
           <Link href={`/posts/${props.slug}`}>
-            Read More: {postShortened(props.shortened)}
+            Read More: {humanReadable(props.shortened)}
             <ArrowRight className="size-6" />
           </Link>
         </Button>

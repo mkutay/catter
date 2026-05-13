@@ -4,7 +4,7 @@ import { TypographyH1 } from "@/components/typography/headings";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { getListOfAllTags } from "@/lib/dbContentQueries";
-import { turnTagString } from "@/lib/utils";
+import { humanReadable } from "@/lib/utils";
 
 export const dynamic = "force-static";
 
@@ -31,7 +31,7 @@ export default async function Page() {
         <div className="gap-2 grid grid-flow-row sm:grid-cols-3 grid-cols-2 items-center">
           {tags.value.map((tag) => (
             <Button key={tag} variant="outline" asChild className="uppercase">
-              <Link href={`/tags/${tag}`}>{turnTagString(tag)}</Link>
+              <Link href={`/tags/${tag}`}>{humanReadable(tag)}</Link>
             </Button>
           ))}
         </div>
