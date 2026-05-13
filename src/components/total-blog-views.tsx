@@ -3,6 +3,12 @@
 import { useEffect, useState } from "react";
 import { Skeleton } from "./ui/skeleton";
 
+/**
+ * Displays the total number of views for all blog posts.
+ *
+ * Shows a loading indicator while fetching the view count,
+ * then displays the total number of views.
+ */
 export function TotalBlogViews() {
   const [views, setViews] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +36,7 @@ export function TotalBlogViews() {
 
   return (
     <div className="flex text-primary font-bold tracking-tight md:text-lg text-base font-mono leading-5">
-      {`${views} total views`}
+      {views} total views
     </div>
   );
 }

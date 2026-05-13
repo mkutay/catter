@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
-import { TotalBlogViews } from "./totalBlogViews";
+import { TotalBlogViews } from "./total-blog-views";
 import { TypographyHr } from "./typography/blockquote";
 
 /**
