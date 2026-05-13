@@ -15,7 +15,7 @@ import type { Post } from "@/config/types";
 import { getPlaceholder } from "@/lib/images";
 import { postShortened } from "@/lib/utils";
 
-export default async function ProjectCard({
+export async function ProjectCard({
   props,
   className,
 }: {
