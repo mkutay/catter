@@ -3,7 +3,7 @@
 import { Cross1Icon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { type SVGProps, useState } from "react";
-import ThemeChanger from "@/components/themeChanger";
+import { ThemeChanger } from "@/components/theme-changer";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
