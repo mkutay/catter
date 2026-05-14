@@ -53,7 +53,7 @@ export const saveComment = ({
 
     const session = yield* getAuth();
 
-    if (!session.user || !session.user.email) {
+    if (!session.user?.email) {
       return errAsync({
         message: "Session not found or email missing.",
         code: "UNAUTHORISED",
