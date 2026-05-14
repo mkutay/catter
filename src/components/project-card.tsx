@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { components, options } from "@/config/mdxRemoteSettings";
+import { components, options } from "@/config/mdx-settings";
 import type { Post } from "@/config/types";
 import { getPlaceholder } from "@/lib/images";
 import { humanReadable } from "@/lib/utils";

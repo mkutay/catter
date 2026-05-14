@@ -6,6 +6,15 @@ import { visit } from "unist-util-visit";
 
 /**
  * A remark plugin that converts parentheses in paragraphs to ToggleParentheses components as JSX elements.
+ *
+ * It iterates through the children of each paragraph and splits text nodes whenever
+ * it encounters parentheses. Content within parentheses is wrapped in a `ToggleParentheses`
+ * MDX component.
+ *
+ * Special cases:
+ * - Nested parentheses: Not explicitly handled, will treat the first ')' as the closer for the first '('.
+ * - Unclosed parentheses: If an opening '(' is found but no closing ')' follows in the same paragraph,
+ *   it falls back to rendering the original text (including the opening parenthesis).
  */
 const remarkParentheses: Plugin = () => {
   return (tree: Node) => {

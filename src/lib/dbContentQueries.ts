@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, getTableColumns, not, sql } from "drizzle-orm";
 import matter from "gray-matter";
-import { errAsync, fromPromise, okAsync, type ResultAsync } from "neverthrow";
+import { fromPromise, okAsync, type ResultAsync } from "neverthrow";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import type { Post } from "@/config/types";
@@ -12,6 +12,11 @@ interface ContentError {
   code: "DATABASE_ERROR";
 }
 
+/**
+ * Normalises an image reference from the database.
+ *
+ * Handles wiki-style links like [[image.jpg]] and simple strings.
+ */
 const normalizeImageReference = (value: unknown): string | null => {
   if (typeof value !== "string") return null;
 
@@ -22,6 +27,9 @@ const normalizeImageReference = (value: unknown): string | null => {
   return wikiLinkMatch?.[1]?.trim() || trimmed;
 };
 
+/**
+ * Formats a database error into a structured ContentError.
+ */
 const getContentError = (message: string, error?: unknown): ContentError => {
   console.error(message, "Database error details:", error);
   return {
@@ -35,6 +43,11 @@ interface PostTagFilters {
   disallowTags?: string[];
 }
 
+/**
+ * Builds SQL filters for tags, handling both inclusion and exclusion.
+ *
+ * Uses PostgreSQL ANY and ARRAY to efficiently filter posts based on their associated tags.
+ */
 const buildTagFilterSql = ({
   tags,
   disallowTags,
@@ -43,6 +56,7 @@ const buildTagFilterSql = ({
     ? disallowTags
     : [...disallowTags, siteConfig.invisible];
 
+  // Including posts that have at least one of the specified tags.
   const hasIncludedTagSql =
     tags.length === 0
       ? sql<boolean>`true`
@@ -51,6 +65,7 @@ const buildTagFilterSql = ({
           sql`, `,
         )}]::text[])) > 0`;
 
+  // Excluding posts that have any of the disallowed tags.
   const hasDisallowedTagSql =
     effectiveDisallowTags.length === 0
       ? sql<boolean>`false`
@@ -66,7 +81,7 @@ const buildTagFilterSql = ({
 };
 
 /**
- * Get all post files from the posts directory.
+ * Fetches all post slugs from the database.
  */
 export const getPostSlugs = (): ResultAsync<string[], ContentError> =>
   fromPromise(db.select({ slug: posts.slug }).from(posts), () => ({
@@ -74,6 +89,9 @@ export const getPostSlugs = (): ResultAsync<string[], ContentError> =>
     code: "DATABASE_ERROR" as const,
   })).map((values) => values.map((value) => value.slug));
 
+/**
+ * Checks if a post with the given slug exists in the database.
+ */
 export const doesPostWithSlugExist = (
   slug: string,
 ): ResultAsync<boolean, ContentError> =>
@@ -82,7 +100,11 @@ export const doesPostWithSlugExist = (
     (err) => getContentError("Error checking post existence.", err),
   ).map((values) => values.length > 0);
 
-// This function does not convert and parse content.
+/**
+ * Fetches a single post by its slug, including its tags and keywords.
+ *
+ * @note This function retrieves raw content and does not parse MDX.
+ */
 export const getPost = (slug: string): ResultAsync<Post, ContentError> =>
   fromPromise(
     db
@@ -101,41 +123,15 @@ export const getPost = (slug: string): ResultAsync<Post, ContentError> =>
       .where(eq(posts.slug, slug))
       .groupBy(posts.slug),
     (err) => getContentError(`Error fetching post with slug "${slug}".`, err),
-  )
-    .andThrough((result) => {
-      if (result.length === 0 || !result[0]) notFound();
-      return okAsync(result);
-    })
-    .map((result) => result[0])
-    .andThen((post) =>
-      post.content &&
-      post.title &&
-      post.description &&
-      post.date &&
-      post.locale &&
-      post.lastModified &&
-      post.shortened &&
-      post.excerpt !== null
-        ? okAsync(post)
-        : errAsync(
-            getContentError(
-              `Post with slug "${slug}" has missing required fields.`,
-            ),
-          ),
-    )
-    .map((post) => ({
-      ...post,
-      shortExcerpt: post.shortExcerpt,
-      lastModified: post.lastModified,
-      cover: normalizeImageReference(post.cover),
-      coverSquare: normalizeImageReference(post.coverSquare),
-      tags: post.tags || [],
-      keywords: post.keywords || [],
-    }));
+  ).andThen((result) => {
+    if (result.length === 0 || !result[0]) notFound();
+    return okAsync(result[0]);
+  });
 
 /**
- * Get posts based on filters.
- * This function does not convert and parse content.
+ * Fetches a list of posts based on tag filters.
+ *
+ * @note This function retrieves raw content and does not parse MDX.
  */
 export const getPosts = ({
   tags = [],
@@ -212,6 +208,9 @@ export const getListOfAllTags = () =>
     (err) => getContentError(`Error fetching list of all tags.`, err),
   ).map((result) => result.map((row) => row.tag));
 
+/**
+ * Creates a Post object from raw content and slug, parsing frontmatter if present.
+ */
 export function createPost(content: string, slug: string): Post {
   const { data: frontmatter, content: contentWithoutFrontmatter } =
     matter(content);
@@ -239,14 +238,23 @@ export function createPost(content: string, slug: string): Post {
   };
 }
 
+/**
+ * Ensures a value is a string, otherwise returns a default value.
+ */
 const getStringValue = (value: unknown, defaultValue: string): string =>
   typeof value === "string" ? value : defaultValue;
 
+/**
+ * Parses a date value into an ISO string, using a default if parsing fails.
+ */
 const getDateValue = (value: unknown, defaultValue: string) => {
   if (value instanceof Date) return value.toISOString();
   if (value) return new Date(value as string).toISOString();
   return defaultValue;
 };
 
+/**
+ * Ensures a value is an array of strings.
+ */
 const getStringArray = (value: unknown): string[] =>
   Array.isArray(value) ? value.filter((item) => typeof item === "string") : [];

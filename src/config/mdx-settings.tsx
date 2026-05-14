@@ -5,20 +5,17 @@ import type {
   EvaluateOptions,
   MDXComponents,
 } from "next-mdx-remote-client/rsc";
-import {
-  type AnchorHTMLAttributes,
-  type BlockquoteHTMLAttributes,
-  Children,
-  type ComponentProps,
-  type DetailedHTMLProps,
-  type HTMLAttributes,
-  type ImgHTMLAttributes,
-  isValidElement,
-  type ReactElement,
+import type {
+  AnchorHTMLAttributes,
+  BlockquoteHTMLAttributes,
+  ComponentProps,
+  DetailedHTMLProps,
+  HTMLAttributes,
+  ImgHTMLAttributes,
 } from "react";
 import recmaMdxImportReact from "recma-mdx-import-react";
 import rehypeKatex from "rehype-katex";
-import remarkFlexibleToc from "remark-flexible-toc";
+import remarkFlexibleToc, { type TocItem } from "remark-flexible-toc";
 import remarkGfm from "remark-gfm";
 import remarkHeadingId from "remark-heading-id";
 import remarkLint from "remark-lint";
@@ -39,19 +36,49 @@ import {
 import { TypographyOList, TypographyUList } from "@/components/typography/list";
 import { TypographyParagraph } from "@/components/typography/paragraph";
 import { getPlaceholder } from "@/lib/images";
+import rehypeKatexBlock from "@/lib/rehype-katex-block";
 import remarkParentheses from "@/lib/remark-parentheses";
 import { cn } from "@/lib/utils";
 
-// CodeHike configuration for code blocks
+/**
+ * CodeHike configuration for code blocks.
+ */
 const chConfig: CodeHikeConfig = {
   components: {
     code: "MyCode",
     inlineCode: "MyInlineCode",
   },
+  /**
+   * Ignore code blocks without a language specified or with "null" as the language.
+   *
+   * This prevents CodeHike from trying to process code blocks that are not meant to
+   * be highlighted, while still allowing them to be rendered as plain text.
+   *
+   * This resolves the warning `Code Hike warning: Unknown language ""` for code
+   * blocks without a language.
+   */
+  ignoreCode: (code) => {
+    if (code.lang === "" || code.lang === null || code.lang === "null")
+      code.lang = "txt";
+    return false;
+  },
 };
 
-// Settings and plugins to use with MDXRemote to compile mdx files
-export const options: EvaluateOptions = {
+/**
+ * Type definition for the scope used in MDXRemote evaluation.
+ *
+ * Includes the table of contents (TOC) extracted from the vfile data.
+ */
+export type Scope = {
+  toc?: TocItem[];
+};
+
+/**
+ * Configuration options for MDXRemote evaluation.
+ *
+ * Includes plugins for GFM, Math/KaTeX, TOC, and custom remark/rehype transformations.
+ */
+export const options: EvaluateOptions<Scope> = {
   mdxOptions: {
     baseUrl: import.meta.url,
     remarkPlugins: [
@@ -64,11 +91,20 @@ export const options: EvaluateOptions = {
       remarkSmartypants,
       remarkParentheses,
     ],
-    rehypePlugins: [rehypeKatex],
+    rehypePlugins: [rehypeKatex, rehypeKatexBlock],
     recmaPlugins: [recmaMdxImportReact],
   },
+  /**
+   * This is to extract the table of contents(TOC) from the vfile data into the scope.
+   */
+  vfileDataIntoScope: "toc",
 };
 
+/**
+ * Custom MDX components to be used globally across blog posts.
+ *
+ * Maps standard HTML elements and custom components to their styled React counterparts.
+ */
 export const components: MDXComponents = {
   Image: async (props: ImageProps) => {
     if (typeof props.src !== "string")
@@ -168,49 +204,38 @@ export const components: MDXComponents = {
   ) => (
     <MyInlineCode
       codeblock={{
-        code: String(props.children),
         value: String(props.children),
-        annotations: [],
-        tokens: [],
-        lang: "txt",
+        lang: "text",
         meta: "",
-        themeName: "Catppuccin Frappé",
-        style: {},
       }}
     />
   ),
+  div: (
+    props: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+  ) => {
+    if ("data-math-block" in props) {
+      /**
+       * Wrap math blocks in a div with overflow-x-auto to allow
+       * horizontal scrolling for wide equations.
+       *
+       * @see {@link rehypeKatexBlock}
+       */
+      return (
+        <div
+          className={cn("my-4 overflow-x-auto mx-auto w-fit", props.className)}
+        >
+          {props.children}
+        </div>
+      );
+    }
+    return <div {...props} />;
+  },
   p: (
     props: DetailedHTMLProps<
       HTMLAttributes<HTMLParagraphElement>,
       HTMLParagraphElement
     >,
-  ) => {
-    const childrenArray = Children.toArray(props.children);
-
-    // this is SO DUBIOUS but it works
-    // and i give up on trying to find a better way
-    const isOnlyKatex =
-      childrenArray.length === 1 &&
-      isValidElement(childrenArray[0]) &&
-      childrenArray[0].type === "span" &&
-      typeof (childrenArray[0] as ReactElement<HTMLSpanElement>).props
-        .className === "string" &&
-      (
-        (childrenArray[0] as ReactElement<HTMLSpanElement>).props
-          .className as string
-      )
-        .split(" ")
-        .includes("katex");
-
-    return (
-      <TypographyParagraph
-        {...props}
-        className={cn(isOnlyKatex && "mx-auto w-fit", props.className)}
-      >
-        {props.children}
-      </TypographyParagraph>
-    );
-  },
+  ) => <TypographyParagraph {...props}>{props.children}</TypographyParagraph>,
   h1: (
     props: DetailedHTMLProps<
       HTMLAttributes<HTMLHeadingElement>,

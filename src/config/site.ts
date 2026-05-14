@@ -37,5 +37,4 @@ export const siteConfig = {
     firstSlug: "history-of-chess-computers-the-minimax",
   },
   invisible: "invisible",
-  noParentheses: "no-parentheses",
 };
