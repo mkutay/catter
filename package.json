@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "check": "biome check . --write",
+    "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -73,7 +74,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.4",
+    "@biomejs/biome": "2.4.15",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4.2.1",
     "@testing-library/jest-dom": "^6.9.1",
@@ -95,6 +96,10 @@
     "drizzle-kit": "^0.31.9",
     "jsdom": "^29.1.1",
     "postcss": "^8.5.6",
+    "rehype": "^13.0.2",
+    "rehype-parse": "^9.0.1",
+    "rehype-stringify": "^10.0.1",
+    "remark-mdx": "^3.1.1",
     "tailwindcss": "^4.2.1",
     "typescript": "5.8.2",
     "vitest": "^4.1.4"
