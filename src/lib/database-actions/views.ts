@@ -34,6 +34,13 @@ export const incrementViews = ({ slug }: { slug: string }) =>
       : insertIntoViews(slug),
   );
 
+/**
+ * Directly inserts a new view record or increments the existing view count for a slug.
+ *
+ * @param slug The slug of the post to update views for.
+ * @returns A `ResultAsync` that resolves to `void` if successful,
+ * or a `DatabaseError` if the database operation fails.
+ */
 const insertIntoViews = (slug: string) =>
   ResultAsync.fromPromise(
     db
