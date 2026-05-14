@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
-import { errAsync, ResultAsync, safeTry } from "neverthrow";
+import { errAsync, okAsync, ResultAsync, safeTry } from "neverthrow";
+import { revalidatePath } from "next/cache";
 import { commentsFormSchema } from "@/config/schema";
 import { siteConfig } from "@/config/site";
 import type { CommentData, DatabaseError } from "@/config/types";
@@ -97,6 +98,8 @@ export const isRateLimited = (
  * Verifies that the user is authenticated and is either an admin
  * or the author of the comment.
  *
+ * Revalidates the admin path and the post path after deletion.
+ *
  * @param props.id The numeric ID of the comment to delete.
  * @returns A ResultAsync containing the deleted comment or an error.
  */
@@ -123,7 +126,10 @@ export const deleteComment = ({ id }: { id: number }) =>
       } as DeleteCommentError);
     }
 
-    return deleteFromComments(id);
+    const deleted = yield* deleteFromComments(id);
+    revalidatePath("/admin");
+    revalidatePath(`/posts/${comment.slug}`);
+    return okAsync(deleted);
   });
 
 /**
