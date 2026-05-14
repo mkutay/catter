@@ -5,7 +5,7 @@ import { DoublePane } from "@/components/double-pane";
 import { TypographyH1 } from "@/components/typography/headings";
 import { components, options } from "@/config/mdx-settings";
 import { siteConfig } from "@/config/site";
-import { getAboutProps } from "@/lib/fsContentQueries";
+import { getAboutProps } from "@/lib/content-queries";
 import me from "@/public/images/me.jpg";
 
 export const dynamic = "force-static";

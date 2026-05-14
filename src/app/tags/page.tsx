@@ -3,7 +3,7 @@ import Link from "next/link";
 import { TypographyH1 } from "@/components/typography/headings";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
-import { getListOfAllTags } from "@/lib/dbContentQueries";
+import { getListOfAllTags } from "@/lib/content-queries";
 import { humanReadable } from "@/lib/utils";
 
 export const dynamic = "force-static";

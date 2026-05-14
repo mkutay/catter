@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
 import { Button } from "@/components/ui/button";
 import { components, options } from "@/config/mdx-settings";
-import { getPosts } from "@/lib/dbContentQueries";
+import { getPosts } from "@/lib/content-queries";
 import { humanReadable } from "@/lib/utils";
 
 /**

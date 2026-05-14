@@ -1,8 +1,8 @@
 import { safeTry } from "neverthrow";
 import { type NextRequest, NextResponse } from "next/server";
+import { doesPostWithSlugExist } from "@/lib/content-queries";
 import { incrementViews } from "@/lib/database-actions/views";
 import { getViewCount } from "@/lib/database-queries/views";
-import { doesPostWithSlugExist } from "@/lib/dbContentQueries";
 
 /**
  * GET handler for fetching or incrementing the view count of a specific post.

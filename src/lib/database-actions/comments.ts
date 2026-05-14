@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { commentsFormSchema } from "@/config/schema";
 import { siteConfig } from "@/config/site";
 import type { CommentData, DatabaseError } from "@/config/types";
+import { doesPostWithSlugExist } from "@/lib/content-queries";
 import { getAuth } from "@/lib/database-queries/auth";
 import {
   getCommentById,
@@ -11,7 +12,6 @@ import {
 } from "@/lib/database-queries/comments";
 import { db } from "@/lib/db/drizzle";
 import { comments } from "@/lib/db/schema";
-import { doesPostWithSlugExist } from "@/lib/dbContentQueries";
 import { parseSchema } from "@/lib/utils";
 
 export interface SaveCommentError {

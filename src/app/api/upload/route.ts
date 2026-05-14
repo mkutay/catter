@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 import z from "zod";
 import type { Post } from "@/config/types";
 import { env } from "@/env";
+import { createPost } from "@/lib/content-queries";
 import { db } from "@/lib/db/drizzle";
 import { postKeywords, posts, postTags, views } from "@/lib/db/schema";
-import { createPost } from "@/lib/dbContentQueries";
 import { uploadImageResult } from "@/lib/images";
 
 const schema = z.object({
