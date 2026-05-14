@@ -1,12 +1,12 @@
 import { inArray } from "drizzle-orm";
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { err, errAsync, ok, okAsync, ResultAsync, safeTry } from "neverthrow";
 import { revalidatePath } from "next/cache";
 import {
   guestbookDialogFormSchema,
   guestbookFormSchema,
 } from "@/config/schema";
 import { siteConfig } from "@/config/site";
-import { type GuestbookColorsType, guestbookColors } from "@/config/types";
+import type { EntryData } from "@/config/types";
 import type { DatabaseError } from "@/lib/database-errors";
 import { getAuth } from "@/lib/database-queries/auth";
 import {
@@ -26,6 +26,16 @@ interface DeleteGuestbookEntriesError {
   code: "UNAUTHORISED" | "NOT_ALL_ENTRIES_EXIST" | "DATABASE_ERROR";
 }
 
+/**
+ * Saves a new guestbook entry.
+ *
+ * Handles authentication, validation, rate limiting, and database insertion.
+ *
+ * @param props.color The display color for the entry's creator name.
+ * @param props.username The name to display for the entry. Defaults to the user's session name.
+ * @param props.message The content of the guestbook entry.
+ * @returns ResultAsync indicating success or containing an error.
+ */
 export const saveGuestbookEntryData = ({
   color,
   username,
@@ -35,79 +45,115 @@ export const saveGuestbookEntryData = ({
   username?: string;
   message: string;
 }) =>
-  getAuth()
-    .andThen((session) =>
-      session.user?.email
-        ? okAsync({
-            email: session.user.email,
-            name: session.user.name || "Anonymous",
-          })
-        : errAsync({
-            message: "Session not found or email missing. Unauthorized.",
-            code: "UNAUTHORISED",
-          } as SaveGuestbookEntryError),
-    )
-    .andThen(({ email, name }) => {
-      const validationPopOver = guestbookDialogFormSchema.safeParse({
-        color,
-        message,
-        username,
-      });
+  safeTry(async function* () {
+    const session = yield* getAuth();
+    const email = session.user?.email;
+    const name = session.user?.name ?? "Anonymous";
+    if (!email) {
+      return errAsync({
+        message: "Session not found or email missing. Unauthorized.",
+        code: "UNAUTHORISED",
+      } as SaveGuestbookEntryError);
+    }
 
-      const validationGuestbook = guestbookFormSchema.safeParse({
-        message,
-      });
+    const entries = yield* getGuestbookEntriesByEmail({ email });
 
-      if (!validationPopOver.success && !validationGuestbook.success) {
-        return errAsync({
-          message:
-            "Validation error: " +
-            validationPopOver.error.message +
-            ", " +
-            validationGuestbook.error.message,
-          code: "VALIDATION_ERROR",
-        } as SaveGuestbookEntryError);
-      }
+    if (isRateLimited(entries, 1000 * 15))
+      return errAsync({
+        message: "Rate limit exceeded. Please wait before submitting again.",
+        code: "RATE_LIMIT",
+      } as SaveGuestbookEntryError);
 
-      const createdBy = validationPopOver.success ? username || "" : name;
-
-      let validColor = "text";
-      if (
-        validationPopOver.success &&
-        color &&
-        guestbookColors.includes(color as GuestbookColorsType)
-      ) {
-        validColor = color;
-      }
-
-      return okAsync({
-        email,
-        createdBy,
-        validColor,
-      });
-    })
-    .andThen(({ email, createdBy, validColor }) =>
-      getGuestbookEntriesByEmail({ email })
-        .andThen((entries) =>
-          entries.length > 0 &&
-          Date.now() - new Date(entries[0].createdAt).getTime() < 1000 * 15
-            ? errAsync({
-                message:
-                  "Rate limit exceeded. Please wait before submitting again.",
-                code: "RATE_LIMIT",
-              } as SaveGuestbookEntryError)
-            : okAsync(),
-        )
-        .andThen(() =>
-          insertIntoGuestbook(email, message, createdBy, validColor),
-        ),
-    )
-    .andThen(() => {
-      revalidatePath("/guestbook");
-      revalidatePath("/admin");
-      return okAsync();
+    const parsed = yield* validateInsert({
+      color,
+      username,
+      message,
+      name,
     });
 
+    yield* insertIntoGuestbook(
+      email,
+      parsed.message,
+      parsed.createdBy,
+      parsed.validColour,
+    );
+
+    revalidatePath("/guestbook");
+    revalidatePath("/admin");
+
+    return okAsync();
+  });
+
+/**
+ * Validate inputs using both possible schemas (dialog vs inline form).
+ *
+ * @param props.color The color of the entry.
+ * @param props.username The username of the entry.
+ * @param props.message The message of the entry.
+ * @param props.name The name of the entry.
+ * @returns A Result containing the validated guestbook entry or an error.
+ */
+const validateInsert = ({
+  color,
+  username,
+  message,
+  name,
+}: {
+  color?: string;
+  username?: string;
+  message: string;
+  name: string;
+}) => {
+  const dialogValidation = guestbookDialogFormSchema.safeParse({
+    color,
+    message,
+    username,
+  });
+
+  const inlineValidation = guestbookFormSchema.safeParse({
+    message,
+  });
+
+  if (!dialogValidation.success && !inlineValidation.success) {
+    const error = `${dialogValidation.error?.message} ${inlineValidation.error?.message}`;
+    return err({
+      message: `Validation error: ${error}`,
+      code: "VALIDATION_ERROR",
+    } as SaveGuestbookEntryError);
+  }
+
+  const createdBy = dialogValidation.success && username ? username : name;
+  const validColour = dialogValidation.success
+    ? dialogValidation.data.color
+    : "text";
+
+  return ok({
+    createdBy,
+    validColour,
+    message,
+  });
+};
+
+/**
+ * Checks if the user is rate limited based on their guestbook entries.
+ *
+ * @param entries The user's guestbook entries.
+ * @param time The rate limit in milliseconds.
+ * @returns `true` if the user is rate limited, `false` otherwise.
+ */
+const isRateLimited = (entries: EntryData[], time: number): boolean => {
+  const newestEntry = entries.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  )[0];
+
+  return (
+    newestEntry && Date.now() - new Date(newestEntry.createdAt).getTime() < time
+  );
+};
+
+/**
+ * Inserts a guestbook entry into the database.
+ */
 const insertIntoGuestbook = (
   email: string,
   message: string,
@@ -132,40 +178,42 @@ const insertIntoGuestbook = (
       }) as DatabaseError,
   );
 
+/**
+ * Deletes multiple guestbook entries.
+ *
+ * Requires admin privileges.
+ *
+ * @param props.entries Array of guestbook entry IDs to delete.
+ * @returns ResultAsync indicating success or containing an error.
+ */
 export const deleteGuestbookEntries = ({ entries }: { entries: number[] }) =>
-  getAuth()
-    .andThen((session) =>
-      session.user?.email
-        ? okAsync(session.user.email)
-        : errAsync({
-            message: "User not found or email missing. Unauthorized.",
-            code: "UNAUTHORISED",
-          } as DeleteGuestbookEntriesError),
-    )
-    .andThen((email) =>
-      !siteConfig.admins.includes(email)
-        ? errAsync({
-            message: "Not an admin. Unauthorized.",
-            code: "UNAUTHORISED",
-          } as DeleteGuestbookEntriesError)
-        : okAsync(),
-    )
-    .andThen(() => doesAllEntriesExist({ ids: entries }))
-    .andThen((exists) =>
-      exists
-        ? okAsync()
-        : errAsync({
-            message: "Not all entries exist. Not performing.",
-            code: "NOT_ALL_ENTRIES_EXIST",
-          } as DeleteGuestbookEntriesError),
-    )
-    .andThen(() => deleteFromGuestbook(entries))
-    .andThen(() => {
-      revalidatePath("/admin");
-      revalidatePath("/guestbook");
-      return okAsync();
-    });
+  safeTry(async function* () {
+    const session = yield* getAuth();
+    const sessionEmail = session.user?.email;
+    if (!sessionEmail || !siteConfig.admins.includes(sessionEmail)) {
+      return errAsync({
+        message: "Not an admin. Unauthorised.",
+        code: "UNAUTHORISED",
+      } as DeleteGuestbookEntriesError);
+    }
 
+    const entriesExist = yield* doesAllEntriesExist({ ids: entries });
+    if (!entriesExist) {
+      return errAsync({
+        message: "Not all entries exist. Not performing.",
+        code: "NOT_ALL_ENTRIES_EXIST",
+      } as DeleteGuestbookEntriesError);
+    }
+
+    yield* deleteFromGuestbook(entries);
+    revalidatePath("/admin");
+    revalidatePath("/guestbook");
+    return okAsync();
+  });
+
+/**
+ * Deletes guestbook entries from the database by their IDs.
+ */
 const deleteFromGuestbook = (entries: number[]) =>
   ResultAsync.fromPromise(
     db.delete(guestbook).where(inArray(guestbook.id, entries)).returning(),

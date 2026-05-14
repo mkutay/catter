@@ -22,7 +22,13 @@ import type { EntryData } from "@/config/types";
 import { deleteGuestbookEntriesAction } from "@/lib/server-helper";
 import { cn } from "@/lib/utils";
 
-// Delete entries from the guestbook
+/**
+ * Admin form for managing guestbook entries.
+ *
+ * Allows admins to select and delete multiple entries from the guestbook.
+ *
+ * @param props.entries The list of guestbook entries to manage.
+ */
 export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
   const { toast } = useToast();
 
@@ -46,6 +52,12 @@ export function GuestbookAdminForm({ entries }: { entries: EntryData[] }) {
         variant: "destructive",
       });
       return;
+    } else {
+      toast({
+        title: "Entries deleted.",
+        description: "The selected entries have been deleted successfully.",
+        variant: "default",
+      });
     }
     form.reset();
   };

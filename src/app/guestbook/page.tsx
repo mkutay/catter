@@ -65,7 +65,9 @@ async function Form() {
   );
 }
 
-// text-rosewater text-flamingo text-pink text-mauve text-red text-maroon text-peach text-yellow text-green text-teal text-sky text-sapphire text-blue text-lavender
+/**
+ * Server component that fetches and renders guestbook entries.
+ */
 async function GuestbookEntries() {
   const entriesResult = await getGuestbookEntries();
 
@@ -86,6 +88,10 @@ async function GuestbookEntries() {
 
   const entries = entriesResult.value;
 
+  /**
+   * The following comment ensures that dynamically generated colour classes are included in the production build.
+   * text-rosewater text-flamingo text-pink text-mauve text-red text-maroon text-peach text-yellow text-green text-teal text-sky text-sapphire text-blue text-lavender
+   */
   return (
     <div className="flex flex-col *:py-3 *:flex *:flex-col *:gap-1 w-full wrap-break-word md:text-lg text-base divide-border divide-y font-sans -my-3">
       {entries.map((entry) => (
@@ -98,15 +104,16 @@ async function GuestbookEntries() {
           >
             {entry.createdBy}
           </span>
-          {entry.body ?? (
-            <span className="text-foreground tracking-tight">{entry.body}</span>
-          )}
+          {entry.body}
         </p>
       ))}
     </div>
   );
 }
 
+/**
+ * Fallback component for guestbook entries displayed during loading.
+ */
 function GuestbookEntriesFallback() {
   const entries: React.ReactNode[] = [];
 

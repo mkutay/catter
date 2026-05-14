@@ -43,6 +43,11 @@ import { guestbookColors } from "@/config/types";
 import { saveGuestbookEntryAction } from "@/lib/server-helper";
 import { cn } from "@/lib/utils";
 
+/**
+ * A dialog component that allows users to customise their guestbook entry.
+ *
+ * Users can choose a colour, specify a custom username, and write a message.
+ */
 export function GuestbookDialog() {
   const [open, setOpen] = useState(false);
 
