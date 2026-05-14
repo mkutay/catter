@@ -19,6 +19,11 @@ import { guestbookFormSchema } from "@/config/schema";
 import { saveGuestbookEntryAction } from "@/lib/server-helper";
 import { GuestbookDialog } from "./dialog";
 
+/**
+ * A client-side form for submitting a simple guestbook entry.
+ *
+ * Includes a message input, a "Sign!" button, and a link to a customization dialog.
+ */
 export default function GuestbookForm() {
   const { toast } = useToast();
 
@@ -80,6 +85,9 @@ export default function GuestbookForm() {
   );
 }
 
+/**
+ * Fallback component for the GuestbookForm displayed during loading.
+ */
 export function GuestBookFormFallback() {
   return (
     <div className="flex flex-col gap-2">
