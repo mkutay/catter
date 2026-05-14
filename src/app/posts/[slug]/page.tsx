@@ -10,7 +10,7 @@ import {
 } from "next-mdx-remote-client/rsc";
 import readingTime from "reading-time";
 import type { TocItem } from "remark-flexible-toc";
-import Comments from "@/components/comments/comments";
+import { Comments } from "@/components/comments/comments";
 import { CopyShortened } from "@/components/copy-shortened";
 import { DoublePane } from "@/components/double-pane";
 import { SideTOC } from "@/components/side-toc";
