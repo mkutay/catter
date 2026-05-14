@@ -80,7 +80,14 @@ export function ToggleParenthesesContextToggleButton({
         </Button>
       </TooltipTrigger>
       <TooltipContent suppressHydrationWarning>
-        {open ? <p>Close all parentheses.</p> : <p>Show all parentheses.</p>}
+        {open ? (
+          <p className="text-center">
+            Close all parentheses. <br />
+            You can still open them individually.
+          </p>
+        ) : (
+          <p className="text-center">Show all parentheses.</p>
+        )}
       </TooltipContent>
     </Tooltip>
   );
