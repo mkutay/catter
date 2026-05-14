@@ -1,8 +1,9 @@
 import type { Readable } from "node:stream";
-import { getImageResult } from "@/lib/images";
+import { chunkToUint8Array, getImage } from "@/lib/images";
 
+/** MIME types served by this proxy route. */
 const ALLOWED_CONTENT_TYPES: Record<string, string> = {
-  // Images
+  // Images:
   avif: "image/avif",
   bmp: "image/bmp",
   gif: "image/gif",
@@ -14,47 +15,29 @@ const ALLOWED_CONTENT_TYPES: Record<string, string> = {
   tif: "image/tiff",
   tiff: "image/tiff",
   webp: "image/webp",
-  // Documents
+  // Documents:
   md: "text/markdown; charset=utf-8",
   markdown: "text/markdown; charset=utf-8",
   pdf: "application/pdf",
 };
 
+/**
+ * Converts a Node.js `Readable` to a Web `ReadableStream<Uint8Array>` for streaming responses.
+ */
 const toUint8WebStream = (stream: Readable): ReadableStream<Uint8Array> => {
   const iterator = stream[Symbol.asyncIterator]();
 
   return new ReadableStream<Uint8Array>({
     async pull(controller) {
       const { done, value } = await iterator.next();
-
-      if (done) {
-        controller.close();
-        return;
-      }
-
-      if (value instanceof Uint8Array) {
-        controller.enqueue(value);
-        return;
-      }
-
-      if (typeof value === "string") {
-        controller.enqueue(new TextEncoder().encode(value));
-        return;
-      }
-
-      if (value instanceof ArrayBuffer) {
-        controller.enqueue(new Uint8Array(value));
-        return;
-      }
-
-      if (ArrayBuffer.isView(value)) {
-        controller.enqueue(
-          new Uint8Array(value.buffer, value.byteOffset, value.byteLength),
-        );
-        return;
-      }
-
-      throw new TypeError("Unexpected stream chunk type.");
+      if (done) return controller.close();
+      const arr = chunkToUint8Array(value).match(
+        (a) => a,
+        (err) => {
+          throw new Error(err.message);
+        },
+      );
+      controller.enqueue(arr);
     },
     async cancel(reason) {
       stream.destroy(reason instanceof Error ? reason : undefined);
@@ -63,6 +46,9 @@ const toUint8WebStream = (stream: Readable): ReadableStream<Uint8Array> => {
   });
 };
 
+/**
+ * Proxy route that streams S3 objects to the client with appropriate content-type headers.
+ */
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ image: string[] }> },
@@ -78,26 +64,18 @@ export async function GET(
     return new Response("Missing file extension.", { status: 400 });
   }
 
-  const contentType = ALLOWED_CONTENT_TYPES[ext];
-
-  if (!contentType) {
+  if (!(ext in ALLOWED_CONTENT_TYPES)) {
     return new Response("Unsupported file type.", { status: 415 });
   }
 
+  const contentType = ALLOWED_CONTENT_TYPES[ext];
   const fullUrl = `/${decodedImage.join("/")}`;
 
-  const imageResult = await getImageResult(fullUrl);
-
-  if (imageResult.isErr()) {
-    return new Response(imageResult.error.message, { status: 404 });
-  }
-
-  const imageStream = imageResult.value;
-  const responseStream = toUint8WebStream(imageStream);
-
-  return new Response(responseStream, {
-    headers: {
-      "Content-Type": contentType,
-    },
-  });
+  return (await getImage(fullUrl)).match(
+    (stream) =>
+      new Response(toUint8WebStream(stream), {
+        headers: { "Content-Type": contentType },
+      }),
+    (err) => new Response(err.message, { status: 404 }),
+  );
 }

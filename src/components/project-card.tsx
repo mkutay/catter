@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { components, options } from "@/config/mdx-settings";
 import type { Post } from "@/config/types";
-import { getPlaceholder } from "@/lib/images";
+import { getImagePlaceholder } from "@/lib/images";
 import { humanReadable } from "@/lib/utils";
 
 export async function ProjectCard({
@@ -22,27 +22,24 @@ export async function ProjectCard({
   props: Post;
   className?: string;
 }) {
-  const coverImage = props.coverSquare || "/images/favicon.png";
-  const coverUrl = coverImage[0] === "/" ? coverImage : `/${coverImage}`;
-  const placeholder = await getPlaceholder(coverImage);
+  const coverImage = props.coverSquare ?? "/images/favicon.png";
+  const { metadata, base64, url } = await getImagePlaceholder(coverImage);
 
   return (
     <Card className={className}>
       <div className="m-2">
-        {coverUrl && (
-          <Link href={`/posts/${props.slug}`}>
-            <Image
-              alt={`Project ${props.title}'s cover square image`}
-              src={`/api${coverUrl}`}
-              className="rounded-xl shadow-md"
-              quality={75}
-              width={placeholder.metadata.width}
-              height={placeholder.metadata.height}
-              priority={true}
-              placeholder={placeholder.base64 as `data:image/${string}`}
-            />
-          </Link>
-        )}
+        <Link href={`/posts/${props.slug}`}>
+          <Image
+            alt={`Project ${props.title}'s cover square image`}
+            src={url}
+            className="rounded-xl shadow-md"
+            quality={75}
+            width={metadata.width}
+            height={metadata.height}
+            priority={true}
+            placeholder={base64}
+          />
+        </Link>
       </div>
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>

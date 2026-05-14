@@ -19,7 +19,7 @@ import { components, options, type Scope } from "@/config/mdx-settings";
 import { siteConfig } from "@/config/site";
 import type { PostMeta } from "@/config/types";
 import { getPost, getPostSlugs } from "@/lib/content-queries";
-import { getPlaceholder } from "@/lib/images";
+import { getImagePlaceholder } from "@/lib/images";
 import { humanReadable } from "@/lib/utils";
 
 export const dynamic = "force-static";
@@ -81,12 +81,7 @@ export default async function Page({
   if (error) throw new Error(error.message);
 
   const coverImage = props.cover;
-  const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
-  const coverUrl = coverImage
-    ? coverImage[0] === "/"
-      ? coverImage
-      : `/${coverImage}`
-    : null;
+  const placeholder = coverImage ? await getImagePlaceholder(coverImage) : null;
 
   return (
     <ToggleParenthesesProvider defaultOpen={true}>
@@ -121,7 +116,7 @@ export default async function Page({
         </div>
       </div>
 
-      {/* Main content layout with a sticky sidebar for TOC */}
+      {/* Main content layout with a sticky sidebar for TOC. */}
       <DoublePane
         side={
           <div className="sticky top-20 mt-8 hidden h-full flex-col flex-1 lg:flex pr-4">
@@ -131,11 +126,11 @@ export default async function Page({
         sideGap="gap-4"
       >
         <div>
-          {coverImage && placeholder && (
+          {placeholder && (
             <div className="my-6">
               <Image
                 alt={`${props.title} post cover image`}
-                src={`/api${coverUrl}`}
+                src={placeholder.url}
                 className="lg:rounded-md rounded-sm lg:shadow-md shadow-xs"
                 width={placeholder.metadata.width}
                 height={placeholder.metadata.height}

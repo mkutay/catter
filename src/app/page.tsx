@@ -13,7 +13,7 @@ import { components, options } from "@/config/mdx-settings";
 import { siteConfig } from "@/config/site";
 import type { Post } from "@/config/types";
 import { getPosts } from "@/lib/content-queries";
-import { getPlaceholder } from "@/lib/images";
+import { getImagePlaceholder } from "@/lib/images";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-static";
@@ -130,28 +130,22 @@ export default async function Home() {
 
 async function FirstPost({ post }: { post: Post }) {
   const coverImage = post.cover;
-  const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
-  const coverUrl = coverImage
-    ? coverImage[0] === "/"
-      ? coverImage
-      : `/${coverImage}`
-    : null;
+  const placeholder = coverImage ? await getImagePlaceholder(coverImage) : null;
 
   return (
     <div className="md:max-w-6xl max-w-prose mx-auto px-4">
       <div className="grid md:grid-cols-2 grid-cols-1 gap-6 md:gap-8 md:min-h-100">
-        {/* Image Container */}
-        {placeholder && coverUrl && (
+        {placeholder && (
           <div className="w-full">
             <Image
-              src={`/api${coverUrl}`}
+              src={placeholder.url}
               alt={`${post.title} post cover image`}
               quality={75}
               className="lg:rounded-md rounded-sm lg:shadow-md shadow-sm w-full h-full object-cover"
               width={placeholder.metadata.width}
               height={placeholder.metadata.height}
               priority={true}
-              placeholder={placeholder.base64 as `data:image/${string}`}
+              placeholder={placeholder.base64}
             />
           </div>
         )}
@@ -203,12 +197,7 @@ async function PostDisplay({
   isMiddle?: boolean;
 }) {
   const coverImage = post.cover;
-  const placeholder = coverImage ? await getPlaceholder(coverImage) : null;
-  const coverUrl = coverImage
-    ? coverImage[0] === "/"
-      ? coverImage
-      : `/${coverImage}`
-    : null;
+  const placeholder = coverImage ? await getImagePlaceholder(coverImage) : null;
 
   return (
     <div className={cn("flex flex-col", isMiddle ? "gap-4" : "gap-2")}>
@@ -217,16 +206,16 @@ async function PostDisplay({
         className={cn("flex flex-col group", isMiddle ? "gap-4" : "gap-2")}
         prefetch={false}
       >
-        {placeholder && coverUrl && (
+        {placeholder && (
           <Image
-            src={`/api${coverUrl}`}
+            src={placeholder.url}
             alt={`${post.title} post cover image`}
             quality={75}
             className="lg:rounded-md rounded-sm lg:shadow-md shadow-xs"
             width={placeholder.metadata.width}
             height={placeholder.metadata.height}
             priority={true}
-            placeholder={placeholder.base64 as `data:image/${string}`}
+            placeholder={placeholder.base64}
           />
         )}
         {isMiddle ? (

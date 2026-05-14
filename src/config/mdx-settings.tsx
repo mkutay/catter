@@ -1,5 +1,4 @@
 import { type CodeHikeConfig, remarkCodeHike } from "codehike/mdx";
-import Image, { type ImageProps } from "next/image";
 import Link from "next/link";
 import type {
   EvaluateOptions,
@@ -11,7 +10,6 @@ import type {
   ComponentProps,
   DetailedHTMLProps,
   HTMLAttributes,
-  ImgHTMLAttributes,
 } from "react";
 import recmaMdxImportReact from "recma-mdx-import-react";
 import rehypeKatex from "rehype-katex";
@@ -33,9 +31,9 @@ import {
   TypographyH3,
   TypographyH4,
 } from "@/components/typography/headings";
+import { image } from "@/components/typography/image";
 import { TypographyOList, TypographyUList } from "@/components/typography/list";
 import { TypographyParagraph } from "@/components/typography/paragraph";
-import { getPlaceholder } from "@/lib/images";
 import rehypeKatexBlock from "@/lib/rehype-katex-block";
 import remarkParentheses from "@/lib/remark-parentheses";
 import { cn } from "@/lib/utils";
@@ -106,51 +104,8 @@ export const options: EvaluateOptions<Scope> = {
  * Maps standard HTML elements and custom components to their styled React counterparts.
  */
 export const components: MDXComponents = {
-  Image: async (props: ImageProps) => {
-    if (typeof props.src !== "string")
-      return <Image {...props} alt={props.alt} />;
-
-    type Placeholder = Awaited<ReturnType<typeof getPlaceholder>>;
-    const placeholder: Placeholder = await getPlaceholder(props.src);
-
-    const src = props.src.startsWith("/") ? props.src : `/${props.src}`;
-
-    return (
-      <Image
-        {...props}
-        alt={props.alt || ""}
-        src={`/api${src}`}
-        className={cn("my-8 lg:rounded-md rounded-sm", props.className)}
-        width={placeholder.metadata.width}
-        height={placeholder.metadata.height}
-        placeholder={placeholder.base64 as `data:image/${string}`}
-        quality={75}
-      />
-    );
-  },
-  img: async (
-    props: DetailedHTMLProps<
-      ImgHTMLAttributes<HTMLImageElement>,
-      HTMLImageElement
-    >,
-  ) => {
-    if (typeof props.src !== "string" || !props.src) return;
-
-    const src = props.src.startsWith("/") ? props.src : `/${props.src}`;
-    const placeholder = await getPlaceholder(props.src);
-
-    return (
-      <Image
-        alt={props.alt || ""}
-        src={`/api${src}`}
-        className="my-8 lg:rounded-md rounded-sm"
-        width={placeholder.metadata.width}
-        height={placeholder.metadata.height}
-        placeholder={placeholder.base64 as `data:image/${string}`}
-        quality={75}
-      />
-    );
-  },
+  Image: image,
+  img: image,
   Link: (props: ComponentProps<typeof Link>) => (
     <Link
       {...props}
