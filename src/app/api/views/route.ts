@@ -2,6 +2,7 @@ import { safeTry } from "neverthrow";
 import { type NextRequest, NextResponse } from "next/server";
 import { incrementViews } from "@/lib/database-actions/views";
 import { getViewCount } from "@/lib/database-queries/views";
+import { doesPostWithSlugExist } from "@/lib/dbContentQueries";
 
 /**
  * GET handler for fetching or incrementing the view count of a specific post.
@@ -15,7 +16,12 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const slug = searchParams.get("slug");
   if (!slug) {
-    return new NextResponse("Missing slug parameter", { status: 400 });
+    return new NextResponse("Missing slug parameter.", { status: 400 });
+  }
+
+  const postExists = await doesPostWithSlugExist(slug);
+  if (postExists.isErr() || postExists.value === false) {
+    return new NextResponse("Post not found.", { status: 404 });
   }
 
   const increment = searchParams.get("increment") === "true";
