@@ -1,6 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
+import type { Session } from "next-auth";
 import { useCallback, useEffect, useState } from "react";
 import { DeleteComment } from "@/components/comments/delete";
 import { CommentForm } from "@/components/comments/form";
@@ -8,7 +9,7 @@ import { TypographySmall } from "@/components/typography/paragraph";
 import { Label } from "@/components/ui/label";
 import { siteConfig } from "@/config/site";
 import type { CommentData } from "@/config/types";
-import { getUser } from "@/lib/server-helper";
+import { getSessionAction } from "@/lib/server-helper";
 import { SignIn } from "../auth-buttons";
 import { TypographyHr } from "../typography/blockquote";
 import type { CommentActionProps } from "./types";
@@ -19,9 +20,14 @@ import type { CommentActionProps } from "./types";
  */
 export function Comments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<CommentData[]>([]);
-  const [user, setUser] = useState<
-    { email: string; name: string } | null | undefined
-  >(undefined);
+
+  /**
+   * The authenticated session.
+   *
+   * `undefined` is the initial state before the session is loaded.
+   * `null` indicates the user is not authenticated.
+   */
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
 
   useEffect(() => {
     let ignore = false;
@@ -45,11 +51,12 @@ export function Comments({ slug }: { slug: string }) {
 
   useEffect(() => {
     let ignore = false;
-    setUser(undefined);
+    setSession(undefined);
 
-    getUser().then((user) => {
+    getSessionAction().then((session) => {
       if (ignore) return;
-      setUser(user);
+      if (session.ok) setSession(session.value);
+      else setSession(null);
     });
 
     return () => {
@@ -73,14 +80,20 @@ export function Comments({ slug }: { slug: string }) {
     }
   }, []);
 
+  const sessionEmail = session?.user?.email ?? "";
+
   return (
     <>
       <TypographyHr className="my-12" />
       <div id="comments" className="w-full flex flex-col gap-8">
-        {user ? (
-          <CommentForm slug={slug} editComment={editComment} user={user} />
+        {session ? (
+          <CommentForm
+            slug={slug}
+            editComment={editComment}
+            session={session}
+          />
         ) : (
-          user === null && (
+          session === null && (
             <div className="flex flex-col gap-2">
               <SignIn callbackUrl={`/posts/${slug}#comments`} />
               <TypographySmall className="font-sans">
@@ -104,8 +117,8 @@ export function Comments({ slug }: { slug: string }) {
                 </div>
 
                 {/* Show delete button if the current user owns the comment or is an admin. */}
-                {(siteConfig.admins.includes(user?.email ?? "") ||
-                  user?.email === comment.email) && (
+                {(siteConfig.admins.includes(sessionEmail) ||
+                  sessionEmail === comment.email) && (
                   <div className="flex flex-row justify-end">
                     <DeleteComment
                       comment={comment}

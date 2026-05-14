@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { Session } from "next-auth";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -29,11 +30,11 @@ import type { CommentActionProps } from "./types";
 export function CommentForm({
   slug,
   editComment,
-  user,
+  session,
 }: {
   slug: string;
   editComment: (props: CommentActionProps) => void;
-  user: { email: string; name: string };
+  session: Session;
 }) {
   const { toast } = useToast();
 
@@ -44,6 +45,9 @@ export function CommentForm({
     },
   });
 
+  const sessionEmail = session?.user?.email ?? "";
+  const sessionName = session?.user?.name ?? "Anonymous";
+
   const onSubmit = async (values: z.infer<typeof commentsFormSchema>) => {
     const now = new Date().toDateString();
 
@@ -53,8 +57,8 @@ export function CommentForm({
       body: values.message,
       createdAt: now,
       updatedAt: now,
-      email: user.email,
-      createdBy: user.name,
+      email: sessionEmail,
+      createdBy: sessionName,
       slug: slug,
     } as CommentData;
 

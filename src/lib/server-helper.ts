@@ -1,38 +1,53 @@
 "use server";
 
 import { resultAsyncToActionResult } from "./action-result";
-import { auth } from "./auth";
 import { deleteComment, saveComment } from "./database-actions/comments";
 import {
   deleteGuestbookEntries,
   saveGuestbookEntryData,
 } from "./database-actions/guestbook";
+import { getSession } from "./database-queries/auth";
 
-export async function getUser() {
-  const session = await auth();
-  if (!session || !session.user || !session.user.email || !session.user.name) {
-    return null;
-  }
-  return {
-    email: session.user.email,
-    name: session.user.name,
-  };
-}
+/**
+ * Retrieves the current session.
+ *
+ * @see {@link getSession}
+ */
+export const getSessionAction = async () =>
+  resultAsyncToActionResult(getSession());
 
-export const saveCommentAction = async (props: {
-  slug: string;
-  message: string;
-}) => resultAsyncToActionResult(saveComment(props));
+/**
+ * Saves a comment.
+ *
+ * @see {@link saveComment}
+ */
+export const saveCommentAction = async (
+  props: Parameters<typeof saveComment>[0],
+) => resultAsyncToActionResult(saveComment(props));
 
-export const deleteCommentAction = async (props: { id: number }) =>
-  resultAsyncToActionResult(deleteComment(props));
+/**
+ * Deletes a comment.
+ *
+ * @see {@link deleteComment}
+ */
+export const deleteCommentAction = async (
+  props: Parameters<typeof deleteComment>[0],
+) => resultAsyncToActionResult(deleteComment(props));
 
-export const saveGuestbookEntryAction = async (props: {
-  color?: string;
-  username?: string;
-  message: string;
-}) => resultAsyncToActionResult(saveGuestbookEntryData(props));
+/**
+ * Saves a guestbook entry.
+ *
+ * @see {@link saveGuestbookEntryData}
+ */
+export const saveGuestbookEntryAction = async (
+  props: Parameters<typeof saveGuestbookEntryData>[0],
+) => resultAsyncToActionResult(saveGuestbookEntryData(props));
 
-export const deleteGuestbookEntriesAction = async (props: {
-  entries: number[];
-}) => resultAsyncToActionResult(deleteGuestbookEntries(props));
+/**
+ * Deletes guestbook entries.
+ *
+ * @see {@link deleteGuestbookEntries}
+ */
+export const deleteGuestbookEntriesAction = async (
+  props: Parameters<typeof deleteGuestbookEntries>[0],
+) => resultAsyncToActionResult(deleteGuestbookEntries(props));
