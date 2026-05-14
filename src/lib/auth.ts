@@ -22,4 +22,5 @@ export const {
       clientSecret: env.SPOTIFY_OAUTH_CLIENT_SECRET,
     }),
   ],
+  trustHost: true,
 });
