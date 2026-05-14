@@ -1,6 +1,6 @@
 import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import type { AuthError } from "@/config/types";
 import { auth } from "@/lib/auth";
-import type { AuthError } from "@/lib/database-errors";
 
 export const getAuth = () =>
   ResultAsync.fromPromise(

@@ -1,6 +1,6 @@
 import { desc, eq, inArray } from "drizzle-orm";
 import { errAsync, okAsync, ResultAsync, safeTry } from "neverthrow";
-import type { DatabaseError } from "@/lib/database-errors";
+import type { DatabaseError } from "@/config/types";
 import { db } from "@/lib/db/drizzle";
 import { guestbook } from "@/lib/db/schema";
 

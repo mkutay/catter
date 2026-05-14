@@ -47,3 +47,16 @@ export const guestbookColors = [
 ] as const;
 
 export type GuestbookColorsType = (typeof guestbookColors)[number];
+
+/**
+ * Shared error type for all database query and action modules.
+ */
+export interface DatabaseError {
+  message: string;
+  code: "DATABASE_ERROR";
+}
+
+export interface AuthError {
+  message: string;
+  code: "AUTH_ERROR" | "UNAUTHORISED";
+}
