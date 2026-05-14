@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote-client/rsc";
-
 import { Button } from "@/components/ui/button";
-import { components, options } from "@/config/mdxRemoteSettings";
+import { components, options } from "@/config/mdx-settings";
 import { getPosts } from "@/lib/dbContentQueries";
 import { humanReadable } from "@/lib/utils";
 

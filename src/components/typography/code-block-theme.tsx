@@ -1,4 +1,4 @@
-export const myTheme = {
+export const CatppuccinFrappe = {
   name: "Catppuccin Frappé",
   type: "dark",
   colors: {

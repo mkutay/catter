@@ -3,24 +3,16 @@ import { format } from "date-fns";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  type EvaluateOptions,
-  evaluate,
-  MDXRemote,
-} from "next-mdx-remote-client/rsc";
+import { evaluate, MDXRemote } from "next-mdx-remote-client/rsc";
 import readingTime from "reading-time";
-import type { TocItem } from "remark-flexible-toc";
 import { Comments } from "@/components/comments/comments";
 import { CopyShortened } from "@/components/copy-shortened";
 import { DoublePane } from "@/components/double-pane";
 import { SideTOC } from "@/components/side-toc";
-import {
-  ToggleParentheses,
-  ToggleParenthesesContextToggleButton,
-} from "@/components/toggle-parentheses";
+import { ToggleParenthesesContextToggleButton } from "@/components/toggle-parentheses";
 import { TypographyH1 } from "@/components/typography/headings";
 import { ViewDisplay } from "@/components/view-display";
-import { components, options } from "@/config/mdxRemoteSettings";
+import { components, options, type Scope } from "@/config/mdx-settings";
 import { siteConfig } from "@/config/site";
 import type { PostMeta } from "@/config/types";
 import { getPost, getPostSlugs } from "@/lib/dbContentQueries";
@@ -28,7 +20,6 @@ import { getPlaceholder } from "@/lib/images";
 import { humanReadable } from "@/lib/utils";
 
 export const dynamic = "force-static";
-// export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
@@ -62,44 +53,26 @@ export async function generateMetadata({
   };
 }
 
-type Scope = {
-  toc?: TocItem[];
-};
-
-function EmptyToggleParentheses({ children }: { children: React.ReactNode }) {
-  return <>({children})</>;
-}
-
 export default async function Page({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const result = await getPost(slug);
-  if (result.isErr()) throw new Error(result.error.message);
-  const props = result.value;
+  const props = await getPost(slug).match(
+    (p) => p,
+    (err) => {
+      throw new Error(err.message);
+    },
+  );
 
   const formattedDate = format(props.date, "PP");
-
-  const modifiedOptions: EvaluateOptions<Scope> = {
-    ...options,
-    vfileDataIntoScope: "toc",
-  };
-
-  const modifiedComponents = {
-    ...components,
-    ToggleParentheses: props.tags.includes(siteConfig.noParentheses)
-      ? EmptyToggleParentheses
-      : ToggleParentheses,
-  };
-
   const time = readingTime(props.content);
 
   const { content, scope, error } = await evaluate<PostMeta, Scope>({
     source: props.content,
-    options: modifiedOptions,
-    components: modifiedComponents,
+    options,
+    components,
   });
 
   if (error) throw new Error(error.message);
@@ -138,16 +111,18 @@ export default async function Page({
             </TypographyH1>
             <MDXRemote
               source={props.description}
-              components={modifiedComponents}
-              options={modifiedOptions}
+              components={components}
+              options={options}
             />
           </div>
         </div>
       </div>
+
+      {/* Main content layout with a sticky sidebar for TOC */}
       <DoublePane
         side={
           <div className="sticky top-20 mt-8 hidden h-full flex-col flex-1 lg:flex pr-4">
-            <SideTOC toc={scope.toc || []} />
+            <SideTOC toc={scope.toc ?? []} />
           </div>
         }
         sideGap="gap-4"
@@ -183,11 +158,15 @@ export default async function Page({
   );
 }
 
+/**
+ * Generates static paths for all posts at build time.
+ */
 export async function generateStaticParams() {
-  const posts = await getPostSlugs();
-  if (posts.isErr()) return [];
-
-  return posts.value.map((slug) => ({
-    slug,
-  }));
+  return await getPostSlugs().match(
+    (posts) =>
+      posts.map((slug) => ({
+        slug,
+      })),
+    () => [],
+  );
 }

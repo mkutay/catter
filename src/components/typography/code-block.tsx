@@ -1,18 +1,19 @@
 import {
   type AnnotationHandler,
-  type HighlightedCode,
   highlight,
   Inline,
   InnerLine,
   InnerPre,
   InnerToken,
   Pre,
+  type RawCode,
 } from "codehike/code";
-
 import { CopyCodeButton } from "@/components/copy-code-button";
-import { myTheme } from "./code-block-theme";
+import { CatppuccinFrappe } from "./code-block-theme";
 
-// Handler for CodeHike to wrap code that exceeds the width.
+/**
+ * Handler for CodeHike to wrap code that exceeds the width.
+ */
 export const wordWrap: AnnotationHandler = {
   name: "word-wrap",
   Pre: (props) => <InnerPre merge={props} className="whitespace-pre-wrap" />,
@@ -31,6 +32,9 @@ export const wordWrap: AnnotationHandler = {
   Token: (props) => <InnerToken merge={props} style={{ textIndent: 0 }} />,
 };
 
+/**
+ * Handler for CodeHike to make code horizontally scrollable when it exceeds the width.
+ */
 export const scrollable: AnnotationHandler = {
   name: "scrollable",
   Pre: (props) => (
@@ -49,16 +53,12 @@ export const scrollable: AnnotationHandler = {
       </div>
     </InnerLine>
   ),
-  Token: (props) => (
-    <InnerToken
-      merge={props}
-      // className="overflow-x-auto overflow-y-hidden whitespace-nowrap"
-      style={{ textIndent: 0 }}
-    />
-  ),
+  Token: (props) => <InnerToken merge={props} style={{ textIndent: 0 }} />,
 };
 
-// Handler for CodeHike to add line numbers.
+/**
+ * Handler for CodeHike to add line numbers.
+ */
 export const lineNumbers: AnnotationHandler = {
   name: "line-numbers",
   Line: (props) => {
@@ -77,8 +77,14 @@ export const lineNumbers: AnnotationHandler = {
   },
 };
 
-export const MyCode = async ({ codeblock }: { codeblock: HighlightedCode }) => {
-  const highlighted = await highlight(codeblock, myTheme);
+/**
+ * Custom code block component that uses CodeHike for syntax highlighting and
+ * supports copying code to clipboard.
+ *
+ * Should be used with MDX to render code blocks.
+ */
+export const MyCode = async ({ codeblock }: { codeblock: RawCode }) => {
+  const highlighted = await highlight(codeblock, CatppuccinFrappe);
   return (
     <div className="relative">
       <CopyCodeButton
@@ -94,12 +100,13 @@ export const MyCode = async ({ codeblock }: { codeblock: HighlightedCode }) => {
   );
 };
 
-export const MyInlineCode = async ({
-  codeblock,
-}: {
-  codeblock: HighlightedCode;
-}) => {
-  const highlighted = await highlight(codeblock, myTheme);
+/**
+ * Custom inline code component that uses CodeHike for syntax highlighting.
+ *
+ * Should be used with MDX to render inline code.
+ */
+export const MyInlineCode = async ({ codeblock }: { codeblock: RawCode }) => {
+  const highlighted = await highlight(codeblock, CatppuccinFrappe);
   return (
     <Inline
       code={highlighted}

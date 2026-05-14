@@ -9,7 +9,7 @@ import {
   TypographyParagraph,
 } from "@/components/typography/paragraph";
 import { ViewDisplay } from "@/components/view-display";
-import { components, options } from "@/config/mdxRemoteSettings";
+import { components, options } from "@/config/mdx-settings";
 import { siteConfig } from "@/config/site";
 import type { Post } from "@/config/types";
 import { getPosts } from "@/lib/dbContentQueries";

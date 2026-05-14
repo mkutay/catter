@@ -14,6 +14,9 @@ interface TocSection {
   index: number;
 }
 
+/**
+ * Converts a flat list of TOC items into a nested hierarchy based on heading depth.
+ */
 function buildHierarchy(items: TocItem[]): TocSection[] {
   const result: TocSection[] = [];
   const stack: TocSection[] = [];
@@ -40,6 +43,11 @@ function buildHierarchy(items: TocItem[]): TocSection[] {
   return result;
 }
 
+/**
+ * Recursively checks if any child of a section is the currently active section.
+ *
+ * This is used to highlight parent sections when a child is active and the parent is collapsed.
+ */
 function hasActiveDescendant(
   section: TocSection,
   activeSection: string,
@@ -59,6 +67,11 @@ interface TocSectionItemProps {
   setActiveSection: (id: string) => void;
 }
 
+/**
+ * A single item in the Table of Contents, which may have nested children.
+ *
+ * Uses an Accordion to toggle visibility of nested sub-sections.
+ */
 function TocSectionItem({
   section,
   activeSection,
@@ -156,6 +169,14 @@ function TocSectionItem({
   );
 }
 
+/**
+ * A sticky Table of Contents sidebar component.
+ *
+ * - Nested hierarchy based on heading levels.
+ * - Automatic active section highlighting using IntersectionObserver.
+ * - Collapsible sections with smooth animations.
+ * - Compact view for long TOCs.
+ */
 export function SideTOC({ toc }: { toc: TocItem[] }) {
   const [activeSection, setActiveSection] = useState<string>("");
   const [isCollapsed, setIsCollapsed] = useState(false);
