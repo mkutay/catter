@@ -9,11 +9,15 @@ export function CopyShortened({ shortened }: { shortened: string }) {
 
   return (
     <Button
-      onClick={() => {
-        navigator.clipboard.writeText(`${siteConfig.url}/${shortened}`);
-        toast({
-          title: "Copied to clipboard!",
-        });
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(`${siteConfig.url}/${shortened}`);
+          toast({
+            title: "Copied to clipboard!",
+          });
+        } catch {
+          // Clipboard writes can fail if permissions are denied or the context is insecure.
+        }
       }}
       variant="default"
       size="sm"
