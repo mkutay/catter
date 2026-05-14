@@ -210,10 +210,13 @@ export const components: MDXComponents = {
       }}
     />
   ),
-  div: (
-    props: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+  span: (
+    props: DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>,
   ) => {
-    if ("data-math-block" in props) {
+    if (
+      "data-math-block" in props ||
+      props.className?.includes("katex-display")
+    ) {
       /**
        * Wrap math blocks in a div with overflow-x-auto to allow
        * horizontal scrolling for wide equations.
@@ -221,9 +224,28 @@ export const components: MDXComponents = {
        * @see {@link rehypeKatexBlock}
        */
       return (
-        <div
-          className={cn("my-4 overflow-x-auto mx-auto w-fit", props.className)}
-        >
+        <div className="overflow-x-auto overflow-y-hidden mx-auto w-fit max-w-full not-first:mt-6 block">
+          <span {...props} />
+        </div>
+      );
+    }
+    return <span {...props} />;
+  },
+  div: (
+    props: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+  ) => {
+    if (
+      "data-math-block" in props ||
+      props.className?.includes("katex-display")
+    ) {
+      /**
+       * Wrap math blocks in a div with overflow-x-auto to allow
+       * horizontal scrolling for wide equations.
+       *
+       * @see {@link rehypeKatexBlock}
+       */
+      return (
+        <div className="overflow-x-auto overflow-y-hidden mx-auto w-fit max-w-full not-first:mt-6 block">
           {props.children}
         </div>
       );
