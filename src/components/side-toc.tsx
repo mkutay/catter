@@ -8,7 +8,7 @@ import type { TocItem } from "remark-flexible-toc";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "./ui/scroll-area";
 
-interface TocSection {
+export interface TocSection {
   item: TocItem;
   children: TocSection[];
   index: number;
@@ -17,7 +17,7 @@ interface TocSection {
 /**
  * Converts a flat list of TOC items into a nested hierarchy based on heading depth.
  */
-function buildHierarchy(items: TocItem[]): TocSection[] {
+export function buildHierarchy(items: TocItem[]): TocSection[] {
   const result: TocSection[] = [];
   const stack: TocSection[] = [];
 
@@ -48,7 +48,7 @@ function buildHierarchy(items: TocItem[]): TocSection[] {
  *
  * This is used to highlight parent sections when a child is active and the parent is collapsed.
  */
-function hasActiveDescendant(
+export function hasActiveDescendant(
   section: TocSection,
   activeSection: string,
 ): boolean {
@@ -59,7 +59,7 @@ function hasActiveDescendant(
   );
 }
 
-interface TocSectionItemProps {
+export interface TocSectionItemProps {
   section: TocSection;
   activeSection: string;
   collapsedSections: Set<string>;
@@ -72,7 +72,7 @@ interface TocSectionItemProps {
  *
  * Uses an Accordion to toggle visibility of nested sub-sections.
  */
-function TocSectionItem({
+export function TocSectionItem({
   section,
   activeSection,
   collapsedSections,
