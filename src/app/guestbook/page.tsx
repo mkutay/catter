@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { SignIn } from "@/components/auth-buttons";
 import { DoublePane } from "@/components/double-pane";
 import { TypographyH1 } from "@/components/typography/headings";
+import { TypographySmall } from "@/components/typography/paragraph";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/config/site";
 import { auth } from "@/lib/auth";
 import { getGuestbookEntries } from "@/lib/database-queries/guestbook";
 import { cn } from "@/lib/utils";
-import { GuestBookSignIn } from "./buttons";
 import GuestbookForm, { GuestBookFormFallback } from "./form";
 
 export const metadata: Metadata = {
@@ -54,7 +55,12 @@ async function Form() {
     </div>
   ) : (
     <div className="h-22 border-b border-border -mb-1">
-      <GuestBookSignIn />
+      <div className="flex flex-col w-full gap-2">
+        <SignIn />
+        <TypographySmall className="font-sans">
+          Sign in to leave your mark on this infinite internet, here.
+        </TypographySmall>
+      </div>
     </div>
   );
 }

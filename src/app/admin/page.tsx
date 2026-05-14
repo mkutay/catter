@@ -6,8 +6,8 @@ import { siteConfig } from "@/config/site";
 import { auth } from "@/lib/auth";
 import { getEveryComment } from "@/lib/database-queries/comments";
 import { getGuestbookEntries } from "@/lib/database-queries/guestbook";
-import { CommentsAdmin } from "./commentsAdmin";
-import { GuestbookAdminForm } from "./guestbookAdminForm";
+import { CommentsAdmin } from "./comments";
+import { GuestbookAdminForm } from "./guestbook";
 
 export const metadata: Metadata = {
   title: "Site Admin",

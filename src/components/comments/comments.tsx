@@ -2,16 +2,22 @@
 
 import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
-import { DeleteComment, SignIn } from "@/components/comments/commentsButtons";
-import { CommentForm } from "@/components/comments/commentsForm";
+import { DeleteComment } from "@/components/comments/delete";
+import { CommentForm } from "@/components/comments/form";
 import { TypographySmall } from "@/components/typography/paragraph";
 import { Label } from "@/components/ui/label";
 import { siteConfig } from "@/config/site";
 import type { CommentData } from "@/config/types";
 import { getUser } from "@/lib/server-helper";
+import { SignIn } from "../auth-buttons";
 import { TypographyHr } from "../typography/blockquote";
+import type { CommentActionProps } from "./types";
 
-export default function Comments({ slug }: { slug: string }) {
+/**
+ * The main Comments component that handles fetching, displaying,
+ * and managing comments for a given post slug.
+ */
+export function Comments({ slug }: { slug: string }) {
   const [comments, setComments] = useState<CommentData[]>([]);
   const [user, setUser] = useState<
     { email: string; name: string } | null | undefined
@@ -51,28 +57,21 @@ export default function Comments({ slug }: { slug: string }) {
     };
   }, []);
 
-  const editComment = useCallback(
-    (
-      props:
-        | {
-            action: "add";
-            newComment: CommentData;
-          }
-        | {
-            action: "delete";
-            commentId: number;
-          },
-    ) => {
-      if (props.action === "add") {
-        setComments((prevComments) => [props.newComment, ...prevComments]);
-      } else if (props.action === "delete") {
-        setComments((prevComments) =>
-          prevComments.filter((comment) => comment.id !== props.commentId),
-        );
-      }
-    },
-    [],
-  );
+  /**
+   * Updates the comments list based on actions (add or delete).
+   *
+   * This is passed down to child components to allow optimistic
+   * updates and state synchronisation.
+   */
+  const editComment = useCallback((props: CommentActionProps) => {
+    if (props.action === "add") {
+      setComments((prevComments) => [props.newComment, ...prevComments]);
+    } else if (props.action === "delete") {
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.id !== props.commentId),
+      );
+    }
+  }, []);
 
   return (
     <>
@@ -81,69 +80,44 @@ export default function Comments({ slug }: { slug: string }) {
         {user ? (
           <CommentForm slug={slug} editComment={editComment} user={user} />
         ) : (
-          user === null && <CommentAuth slug={slug} />
+          user === null && (
+            <div className="flex flex-col gap-2">
+              <SignIn callbackUrl={`/posts/${slug}#comments`} />
+              <TypographySmall className="font-sans">
+                Sign in to write a comment!
+              </TypographySmall>
+            </div>
+          )
         )}
+
         {comments.length !== 0 && (
           <div className="flex flex-col gap-8">
             {comments.map((comment) => (
-              <Comment
-                comment={comment}
+              <div
+                id={comment.id.toString()}
+                className="flex flex-col gap-2 w-full"
                 key={comment.id}
-                owns={
-                  siteConfig.admins.includes(user?.email || "") ||
-                  user?.email === comment.email
-                }
-                editComment={editComment}
-              />
+              >
+                <Label>{`${comment.createdBy} on ${format(comment.createdAt, "PP")}`}</Label>
+                <div className="border border-border shadow-xs rounded-md px-3 py-2">
+                  {comment.body}
+                </div>
+
+                {/* Show delete button if the current user owns the comment or is an admin. */}
+                {(siteConfig.admins.includes(user?.email ?? "") ||
+                  user?.email === comment.email) && (
+                  <div className="flex flex-row justify-end">
+                    <DeleteComment
+                      comment={comment}
+                      editComment={editComment}
+                    />
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         )}
       </div>
     </>
-  );
-}
-
-export function CommentAuth({ slug }: { slug: string }) {
-  return (
-    <div className="flex flex-col gap-2">
-      <SignIn slug={slug} />
-      <TypographySmall className="font-sans">
-        Sign in to write a comment!
-      </TypographySmall>
-    </div>
-  );
-}
-
-export function Comment({
-  comment,
-  owns,
-  editComment,
-}: {
-  comment: CommentData;
-  owns?: boolean | null;
-  editComment?: (
-    props:
-      | {
-          action: "add";
-          newComment: CommentData;
-        }
-      | {
-          action: "delete";
-          commentId: number;
-        },
-  ) => void;
-}) {
-  return (
-    <div id={comment.id.toString()} className="flex flex-col gap-2 w-full">
-      <Label>{`${comment.createdBy} on ${format(comment.createdAt, "PP")}`}</Label>
-      <div className="border border-border shadow-xs rounded-md px-3 py-2">
-        {comment.body}
-      </div>
-      {owns && (
-        <div className="flex flex-row justify-end">
-          <DeleteComment comment={comment} editComment={editComment} />
-        </div>
-      )}
-    </div>
   );
 }

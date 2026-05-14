@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-
+import { SignOut } from "@/components/auth-buttons";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,7 +17,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { guestbookFormSchema } from "@/config/schema";
 import { saveGuestbookEntryAction } from "@/lib/server-helper";
-import { GuestBookSignOut } from "./buttons";
 import { GuestbookDialog } from "./dialog";
 
 export default function GuestbookForm() {
@@ -74,7 +73,7 @@ export default function GuestbookForm() {
         </form>
         <div className="w-fit flex flex-row gap-2 items-center">
           <GuestbookDialog />
-          <GuestBookSignOut />
+          <SignOut className="w-fit" />
         </div>
       </Form>
     </div>

@@ -1,76 +1,75 @@
 import { desc, eq } from "drizzle-orm";
-import { errAsync, okAsync, ResultAsync } from "neverthrow";
+import { errAsync, okAsync, ResultAsync, safeTry } from "neverthrow";
 import type { CommentData } from "@/config/types";
 import type { DatabaseError } from "@/lib/database-errors";
 import { db } from "@/lib/db/drizzle";
 import { comments } from "@/lib/db/schema";
 import { doesPostWithSlugExist } from "@/lib/dbContentQueries";
 
-interface GetCommentsError {
+export interface GetCommentsError {
   message: string;
   code: "POST_NOT_FOUND" | "DATABASE_ERROR" | "INVALID_SLUG";
 }
 
-interface GetEveryCommentError {
+export interface GetEveryCommentError {
   message: string;
   code: "LIMIT_OUT_OF_RANGE" | "DATABASE_ERROR";
 }
 
-interface GetCommentByIdError {
+export interface GetCommentByIdError {
   message: string;
   code: "COMMENT_NOT_FOUND" | "DATABASE_ERROR";
 }
 
-/* Limiting to 15 to avoid loading too many comments at once. */
-export const getComments = ({ slug }: { slug: string }) =>
-  okAsync(slug)
-    .andThen((s) => {
-      // Basic validation: slug should be alphanumeric with hyphens, maybe underscores
-      const isValid = /^[a-zA-Z0-9_-]+$/.test(s) && s.length <= 200;
-      return isValid
-        ? okAsync(s)
-        : errAsync({
-            message: "Invalid slug format.",
-            code: "INVALID_SLUG",
-          } as GetCommentsError);
-    })
-    .andThen(() => doesPostWithSlugExist(slug))
-    .mapErr(
-      (err) =>
-        ({
-          message: err.message,
-          code: err.code === "INVALID_SLUG" ? "INVALID_SLUG" : "POST_NOT_FOUND",
-        }) as GetCommentsError,
-    )
-    .andThen((exists) =>
-      !exists
-        ? errAsync({
-            message: "Post not found.",
-            code: "POST_NOT_FOUND",
-          } as GetCommentsError)
-        : ResultAsync.fromPromise(
-            db
-              .select({
-                id: comments.id,
-                body: comments.body,
-                createdBy: comments.createdBy,
-                createdAt: comments.createdAt,
-                updatedAt: comments.updatedAt,
-                email: comments.email,
-                slug: comments.slug,
-              })
-              .from(comments)
-              .where(eq(comments.slug, slug))
-              .orderBy(desc(comments.createdAt))
-              .limit(15),
-            () =>
-              ({
-                message: "Failed to fetch comments. Database error.",
-                code: "DATABASE_ERROR",
-              }) as GetCommentsError,
-          ).map((comments): CommentData[] => comments),
-    );
+/**
+ * Fetches the most recent comments for a specific post.
+ *
+ * @param slug The unique identifier (slug) of the post.
+ * @returns A ResultAsync containing an array of CommentData or a GetCommentsError.
+ */
+export const getComments = ({
+  slug,
+}: {
+  slug: string;
+}): ResultAsync<CommentData[], GetCommentsError> =>
+  safeTry(async function* () {
+    const postExists = yield* doesPostWithSlugExist(slug);
+    if (!postExists) {
+      return errAsync({
+        message: "Post not found.",
+        code: "POST_NOT_FOUND",
+      } as GetCommentsError);
+    }
 
+    return ResultAsync.fromPromise(
+      db
+        .select({
+          id: comments.id,
+          body: comments.body,
+          createdBy: comments.createdBy,
+          createdAt: comments.createdAt,
+          updatedAt: comments.updatedAt,
+          email: comments.email,
+          slug: comments.slug,
+        })
+        .from(comments)
+        .where(eq(comments.slug, slug))
+        .orderBy(desc(comments.createdAt))
+        .limit(15),
+      () =>
+        ({
+          message: "Failed to fetch comments. Database error.",
+          code: "DATABASE_ERROR",
+        }) as GetCommentsError,
+    );
+  });
+
+/**
+ * Fetches all comments across all posts, primarily for administrative use.
+ *
+ * @param props.limit The maximum number of comments to fetch (1-100, defaults to 15).
+ * @returns A ResultAsync containing an array of comments or a GetEveryCommentError.
+ */
 export const getEveryComment = (props?: { limit: number }) =>
   okAsync(props ? props.limit : 15).andThen((limit) =>
     limit <= 0 || limit > 100
@@ -100,6 +99,12 @@ export const getEveryComment = (props?: { limit: number }) =>
         ),
   );
 
+/**
+ * Fetches all comments created by a specific user email.
+ *
+ * @param email The user's email address.
+ * @returns A ResultAsync containing an array of comments or a DatabaseError.
+ */
 export const getCommentsByEmail = ({ email }: { email: string }) =>
   ResultAsync.fromPromise(
     db
@@ -122,6 +127,12 @@ export const getCommentsByEmail = ({ email }: { email: string }) =>
       }) as DatabaseError,
   );
 
+/**
+ * Fetches a single comment by its unique ID.
+ *
+ * @param id The numeric ID of the comment.
+ * @returns A ResultAsync containing the CommentData or a GetCommentByIdError.
+ */
 export const getCommentById = ({ id }: { id: number }) =>
   ResultAsync.fromPromise(
     db

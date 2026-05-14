@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { SignOut } from "@/components/comments/commentsButtons";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,24 +17,22 @@ import { useToast } from "@/components/ui/use-toast";
 import { commentsFormSchema } from "@/config/schema";
 import type { CommentData } from "@/config/types";
 import { saveCommentAction } from "@/lib/server-helper";
+import { SignOut } from "../auth-buttons";
+import type { CommentActionProps } from "./types";
 
+/**
+ * Form component for submitting new comments.
+ *
+ * Features optimistic updates: displays the comment immediately
+ * and then synchronises with the server.
+ */
 export function CommentForm({
   slug,
   editComment,
   user,
 }: {
   slug: string;
-  editComment: (
-    props:
-      | {
-          action: "add";
-          newComment: CommentData;
-        }
-      | {
-          action: "delete";
-          commentId: number;
-        },
-  ) => void;
+  editComment: (props: CommentActionProps) => void;
   user: { email: string; name: string };
 }) {
   const { toast } = useToast();
@@ -49,7 +46,9 @@ export function CommentForm({
 
   const onSubmit = async (values: z.infer<typeof commentsFormSchema>) => {
     const now = new Date().toDateString();
-    const optimisticComment: CommentData = {
+
+    // Create a temporary "optimistic" comment to show in the UI immediately.
+    const optimisticComment = {
       id: Math.floor(Math.random() * 10000000),
       body: values.message,
       createdAt: now,
@@ -57,14 +56,17 @@ export function CommentForm({
       email: user.email,
       createdBy: user.name,
       slug: slug,
-    };
+    } as CommentData;
 
+    // Add the optimistic comment to the list.
     editComment({ action: "add", newComment: optimisticComment });
 
     form.reset();
 
     const saved = await saveCommentAction({ slug, message: values.message });
 
+    // Remove the optimistic comment regardless of success,
+    // it will be replaced by the real one on success.
     editComment({ action: "delete", commentId: optimisticComment.id });
 
     if (!saved.ok) {
@@ -76,6 +78,7 @@ export function CommentForm({
         variant: "destructive",
       });
     } else {
+      // Add the real comment returned from the server.
       editComment({ action: "add", newComment: saved.value[0] });
     }
   };
@@ -104,7 +107,7 @@ export function CommentForm({
           )}
         />
         <div className="flex flex-row gap-2 justify-end items-center">
-          <SignOut slug={slug} />
+          <SignOut callbackUrl={`/posts/${slug}#comments`} />
           <Button variant="default" size="default" type="submit">
             Post
           </Button>

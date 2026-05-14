@@ -1,8 +1,6 @@
 "use client";
 
-import { signIn, signOut } from "next-auth/react";
 import { useState } from "react";
-import { FaDiscord, FaGithub, FaSpotify } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,76 +14,19 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import type { CommentData } from "@/config/types";
 import { deleteCommentAction } from "@/lib/server-helper";
+import type { CommentActionProps } from "./types";
 
-export function SignOut({ slug }: { slug: string }) {
-  return (
-    <Button
-      type="button"
-      variant="ghost"
-      size="default"
-      onClick={() => signOut({ callbackUrl: `/posts/${slug}#comments` })}
-    >
-      Sign Out
-    </Button>
-  );
-}
-
-export function SignIn({ slug }: { slug: string }) {
-  return (
-    <div className="flex flex-row gap-2 items-center w-full">
-      <Button
-        variant="secondary"
-        size="sm"
-        className="flex flex-row gap-2 items-center flex-1"
-        onClick={() =>
-          signIn("github", { callbackUrl: `/posts/${slug}#comments` })
-        }
-      >
-        <FaGithub className="size-4" />
-        GitHub
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        className="flex flex-row gap-2 items-center flex-1"
-        onClick={() =>
-          signIn("discord", { callbackUrl: `/posts/${slug}#comments` })
-        }
-      >
-        <FaDiscord className="size-4" />
-        Discord
-      </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        className="flex flex-row gap-2 items-center flex-1"
-        onClick={() =>
-          signIn("spotify", { callbackUrl: `/posts/${slug}#comments` })
-        }
-      >
-        <FaSpotify className="size-4" />
-        Spotify
-      </Button>
-    </div>
-  );
-}
-
+/**
+ * Button component that opens a confirmation dialog to delete a comment.
+ *
+ * Handles optimistic deletion and provides feedback via toasts if the operation fails.
+ */
 export function DeleteComment({
   comment,
   editComment,
 }: {
   comment: CommentData;
-  editComment?: (
-    props:
-      | {
-          action: "add";
-          newComment: CommentData;
-        }
-      | {
-          action: "delete";
-          commentId: number;
-        },
-  ) => void;
+  editComment?: (props: CommentActionProps) => void;
 }) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
@@ -93,18 +34,20 @@ export function DeleteComment({
   const handleDelete = async () => {
     setOpen(false);
 
-    if (editComment) {
-      editComment({ action: "delete", commentId: comment.id });
-    }
+    // Optimistically remove the comment from the UI.
+    editComment?.({ action: "delete", commentId: comment.id });
 
     const result = await deleteCommentAction({ id: comment.id });
 
+    // If deletion fails, notify the user, and revert the optimistic update.
     if (!result.ok) {
       toast({
         title: "Error",
         description: `Error deleting comment. ${result.error.message}`,
         variant: "destructive",
       });
+
+      editComment?.({ action: "add", newComment: comment });
     }
   };
 
