@@ -2,7 +2,7 @@ import { sql } from "drizzle-orm";
 import { okAsync, ResultAsync } from "neverthrow";
 import type { Session } from "next-auth";
 import { siteConfig } from "@/config/site";
-import type { DatabaseError } from "@/lib/database-errors";
+import type { DatabaseError } from "@/config/types";
 import { getSession } from "@/lib/database-queries/auth";
 import { db } from "@/lib/db/drizzle";
 import { views } from "@/lib/db/schema";

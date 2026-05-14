@@ -6,8 +6,7 @@ import {
   guestbookFormSchema,
 } from "@/config/schema";
 import { siteConfig } from "@/config/site";
-import type { EntryData } from "@/config/types";
-import type { DatabaseError } from "@/lib/database-errors";
+import type { DatabaseError, EntryData } from "@/config/types";
 import { getAuth } from "@/lib/database-queries/auth";
 import {
   doesAllEntriesExist,

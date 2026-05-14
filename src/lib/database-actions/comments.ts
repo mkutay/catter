@@ -2,8 +2,7 @@ import { eq } from "drizzle-orm";
 import { errAsync, ResultAsync, safeTry } from "neverthrow";
 import { commentsFormSchema } from "@/config/schema";
 import { siteConfig } from "@/config/site";
-import type { CommentData } from "@/config/types";
-import type { DatabaseError } from "@/lib/database-errors";
+import type { CommentData, DatabaseError } from "@/config/types";
 import { getAuth } from "@/lib/database-queries/auth";
 import {
   getCommentById,
