@@ -11,6 +11,29 @@ import { visit } from "unist-util-visit";
  * @note `className` may be a string or array; we normalise it.
  * @note Matches `katex` or `katex-display`, but only when it is the only child.
  * @note The `data-math-block` flag lets the MDX `div` component style the block.
+ *
+ * This plugin is pretty necessary to make sure that the different ways of writing
+ * inline vs block math in MDX (i.e., `$...$` vs `$$...$$`) are styled consistently,
+ * since rehyp-katex and remark-math looks at if the LaTeX is written between dollar
+ * signs, with new lines, like the following:
+ *
+ * ```md
+ * This will be display block math:
+ * $$
+ * \int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+ * $$
+ *
+ * This will be inline:
+ * $$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$$
+ * ```
+ *
+ * Unfortunately, most other LaTeX viewing systems don't differentiate between inline
+ * and block math like this, instead they focus on whether there is a single or there
+ * are double dollar signs.
+ *
+ * @note In the future, instead of KaTeX, using MathJax might be a better option since
+ * Obsidian also uses MathJax and it would be nice to have the same rendering engine
+ * across both platforms.
  */
 const rehypeKatexBlock = () => {
   return (tree: Root) => {
