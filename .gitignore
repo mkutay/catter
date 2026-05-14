@@ -36,3 +36,9 @@ yarn-error.log*
 next-env.d.ts
 
 dump.sql
+
+# test results from vitest, unit
+test-results
+
+# test results from playwright, e2e
+playwright-report
