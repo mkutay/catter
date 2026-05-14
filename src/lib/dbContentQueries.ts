@@ -123,10 +123,16 @@ export const getPost = (slug: string): ResultAsync<Post, ContentError> =>
       .where(eq(posts.slug, slug))
       .groupBy(posts.slug),
     (err) => getContentError(`Error fetching post with slug "${slug}".`, err),
-  ).andThen((result) => {
-    if (result.length === 0 || !result[0]) notFound();
-    return okAsync(result[0]);
-  });
+  )
+    .andThen((result) => {
+      if (result.length === 0 || !result[0]) notFound();
+      return okAsync(result[0]);
+    })
+    .map((post) => ({
+      ...post,
+      cover: normalizeImageReference(post.cover),
+      coverSquare: normalizeImageReference(post.coverSquare),
+    }));
 
 /**
  * Fetches a list of posts based on tag filters.
@@ -187,8 +193,6 @@ export const getPosts = ({
   ).map((postsWithTags) =>
     postsWithTags.map((post) => ({
       ...post,
-      shortExcerpt: post.shortExcerpt,
-      lastModified: post.lastModified,
       cover: normalizeImageReference(post.cover),
       coverSquare: normalizeImageReference(post.coverSquare),
       views: post.views && post.views > 0 ? post.views : 0,
