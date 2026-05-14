@@ -3,9 +3,9 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import z from "zod";
 import { env } from "@/env";
+import { createPost } from "@/lib/content-queries";
 import { db } from "@/lib/db/drizzle";
 import { postKeywords, posts, postTags } from "@/lib/db/schema";
-import { createPost } from "@/lib/dbContentQueries";
 
 const schema = z.object({
   content: z.string(),

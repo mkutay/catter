@@ -1,9 +1,9 @@
 import { desc, eq } from "drizzle-orm";
 import { errAsync, okAsync, ResultAsync, safeTry } from "neverthrow";
 import type { CommentData, DatabaseError } from "@/config/types";
+import { doesPostWithSlugExist } from "@/lib/content-queries";
 import { db } from "@/lib/db/drizzle";
 import { comments } from "@/lib/db/schema";
-import { doesPostWithSlugExist } from "@/lib/dbContentQueries";
 
 export interface GetCommentsError {
   message: string;

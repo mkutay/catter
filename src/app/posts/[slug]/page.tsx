@@ -18,7 +18,7 @@ import { ViewDisplay } from "@/components/view-display";
 import { components, options, type Scope } from "@/config/mdx-settings";
 import { siteConfig } from "@/config/site";
 import type { PostMeta } from "@/config/types";
-import { getPost, getPostSlugs } from "@/lib/dbContentQueries";
+import { getPost, getPostSlugs } from "@/lib/content-queries";
 import { getPlaceholder } from "@/lib/images";
 import { humanReadable } from "@/lib/utils";
 

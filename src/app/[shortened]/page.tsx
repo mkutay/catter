@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { siteConfig } from "@/config/site";
-import { getPosts } from "@/lib/dbContentQueries";
+import { getPosts } from "@/lib/content-queries";
 
 export const dynamic = "force-static";
 // export const dynamicParams = false;

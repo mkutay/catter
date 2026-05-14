@@ -1,4 +1,6 @@
+import path from "node:path";
 import { and, asc, desc, eq, getTableColumns, not, sql } from "drizzle-orm";
+import fs from "fs";
 import matter from "gray-matter";
 import { fromPromise, okAsync, type ResultAsync } from "neverthrow";
 import { notFound } from "next/navigation";
@@ -17,7 +19,7 @@ interface ContentError {
  *
  * Handles wiki-style links like [[image.jpg]] and simple strings.
  */
-const normalizeImageReference = (value: unknown): string | null => {
+const normaliseImageReference = (value: unknown): string | null => {
   if (typeof value !== "string") return null;
 
   const trimmed = value.trim();
@@ -130,8 +132,8 @@ export const getPost = (slug: string): ResultAsync<Post, ContentError> =>
     })
     .map((post) => ({
       ...post,
-      cover: normalizeImageReference(post.cover),
-      coverSquare: normalizeImageReference(post.coverSquare),
+      cover: normaliseImageReference(post.cover),
+      coverSquare: normaliseImageReference(post.coverSquare),
     }));
 
 /**
@@ -193,8 +195,8 @@ export const getPosts = ({
   ).map((postsWithTags) =>
     postsWithTags.map((post) => ({
       ...post,
-      cover: normalizeImageReference(post.cover),
-      coverSquare: normalizeImageReference(post.coverSquare),
+      cover: normaliseImageReference(post.cover),
+      coverSquare: normaliseImageReference(post.coverSquare),
       views: post.views && post.views > 0 ? post.views : 0,
     })),
   );
@@ -229,8 +231,8 @@ export function createPost(content: string, slug: string): Post {
     date: getDateValue(frontmatter.date, new Date().toISOString()),
     excerpt: getStringValue(frontmatter.excerpt, ""),
     locale: getStringValue(frontmatter.locale, "en_UK"),
-    cover: normalizeImageReference(frontmatter.cover),
-    coverSquare: normalizeImageReference(frontmatter.coverSquare),
+    cover: normaliseImageReference(frontmatter.cover),
+    coverSquare: normaliseImageReference(frontmatter.coverSquare),
     lastModified: getDateValue(
       frontmatter.lastModified,
       new Date().toISOString(),
@@ -262,3 +264,34 @@ const getDateValue = (value: unknown, defaultValue: string) => {
  */
 const getStringArray = (value: unknown): string[] =>
   Array.isArray(value) ? value.filter((item) => typeof item === "string") : [];
+
+/**
+ * Fetches the content and metadata for the 'About' page from the filesystem.
+ *
+ * Parses the MDX file located at `src/app/about/about.mdx`.
+ */
+export function getAboutProps() {
+  let markdownFile: string;
+  try {
+    markdownFile = fs.readFileSync(
+      path.join(process.cwd(), path.join("src/app/about/about.mdx")),
+      "utf-8",
+    );
+  } catch (error) {
+    console.error(error);
+    notFound();
+  }
+
+  const { data: frontMatter, content } = matter(markdownFile);
+
+  const postData = {
+    meta: frontMatter as {
+      title: string;
+      description: string;
+      date: string;
+    },
+    content: content,
+  };
+
+  return postData;
+}

@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
-import { getPosts } from "@/lib/dbContentQueries";
-import { getAboutProps } from "@/lib/fsContentQueries";
+import { getAboutProps, getPosts } from "@/lib/content-queries";
 
 export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteMap: MetadataRoute.Sitemap = [];

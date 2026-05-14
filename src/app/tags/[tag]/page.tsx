@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ListPosts } from "@/components/list-posts";
 import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
-import { getListOfAllTags } from "@/lib/dbContentQueries";
+import { getListOfAllTags } from "@/lib/content-queries";
 import { humanReadable } from "@/lib/utils";
 
 export const dynamic = "force-static";

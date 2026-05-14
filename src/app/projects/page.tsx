@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ProjectCard } from "@/components/project-card";
 import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
-import { getPosts } from "@/lib/dbContentQueries";
+import { getPosts } from "@/lib/content-queries";
 
 export const dynamic = "force-static";
 
