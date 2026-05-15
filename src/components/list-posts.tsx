@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote-client/rsc";
 import { Button } from "@/components/ui/button";
-import { components, options } from "@/config/mdx-settings";
 import { getPosts } from "@/lib/content-queries";
+import { RenderPost } from "@/lib/rendering";
 import { humanReadable } from "@/lib/utils";
 
 /**
@@ -44,11 +43,7 @@ export async function ListPosts({
             {post.description}
           </h3>
           <div>
-            <MDXRemote
-              source={post.excerpt}
-              options={options}
-              components={components}
-            />
+            <RenderPost source={post.excerpt} />
           </div>
           <div className="flex flex-row justify-end">
             <Button

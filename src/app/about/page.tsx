@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { MDXRemote } from "next-mdx-remote-client/rsc";
 import { DoublePane } from "@/components/double-pane";
 import { TypographyH1 } from "@/components/typography/headings";
-import { components, options } from "@/config/mdx-settings";
 import { siteConfig } from "@/config/site";
 import { getAboutProps } from "@/lib/content-queries";
+import { RenderPost } from "@/lib/rendering";
 import me from "@/public/images/me.jpg";
 
 export const dynamic = "force-static";
@@ -45,11 +44,7 @@ export default async function Page() {
           />
         </div>
         <main>
-          <MDXRemote
-            source={props.content}
-            options={options}
-            components={components}
-          />
+          <RenderPost source={props.content} />
         </main>
       </DoublePane>
     </div>

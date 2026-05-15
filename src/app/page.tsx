@@ -1,7 +1,6 @@
 import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
-import { MDXRemote } from "next-mdx-remote-client/rsc";
 import { Suspense } from "react";
 import { TypographyH1 } from "@/components/typography/headings";
 import {
@@ -9,11 +8,11 @@ import {
   TypographyParagraph,
 } from "@/components/typography/paragraph";
 import { ViewDisplay } from "@/components/view-display";
-import { components, options } from "@/config/mdx-settings";
 import { siteConfig } from "@/config/site";
 import type { Post } from "@/config/types";
 import { getPosts } from "@/lib/content-queries";
 import { getImagePlaceholder } from "@/lib/images";
+import { RenderPost } from "@/lib/rendering";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-static";
@@ -169,11 +168,7 @@ async function FirstPost({ post }: { post: Post }) {
             </TypographyLarge>
 
             <div className="max-w-none text-muted-foreground">
-              <MDXRemote
-                source={post.shortExcerpt || post.excerpt}
-                options={options}
-                components={components}
-              />
+              <RenderPost source={post.shortExcerpt || post.excerpt} />
             </div>
           </div>
 
@@ -234,11 +229,7 @@ async function PostDisplay({
       </Link>
       {isMiddle && (
         <div className="leading-normal">
-          <MDXRemote
-            source={post.shortExcerpt || post.excerpt}
-            options={options}
-            components={components}
-          />
+          <RenderPost source={post.shortExcerpt || post.excerpt} />
         </div>
       )}
       <div className="text-sm text-foreground tracking-tight font-light flex flex-row justify-between">

@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { evaluate, MDXRemote } from "next-mdx-remote-client/rsc";
 import readingTime from "reading-time";
 import { Comments } from "@/components/comments/comments";
 import { CopyShortened } from "@/components/copy-shortened";
@@ -15,11 +14,10 @@ import {
 } from "@/components/toggle-parentheses";
 import { TypographyH1 } from "@/components/typography/headings";
 import { ViewDisplay } from "@/components/view-display";
-import { components, options, type Scope } from "@/config/mdx-settings";
 import { siteConfig } from "@/config/site";
-import type { PostMeta } from "@/config/types";
 import { getPost, getPostSlugs } from "@/lib/content-queries";
 import { getImagePlaceholder } from "@/lib/images";
+import { RenderPost, renderPost } from "@/lib/rendering";
 import { humanReadable } from "@/lib/utils";
 
 export const dynamic = "force-static";
@@ -72,13 +70,9 @@ export default async function Page({
   const formattedDate = format(props.date, "PP");
   const time = readingTime(props.content);
 
-  const { content, scope, error } = await evaluate<PostMeta, Scope>({
-    source: props.content,
-    options,
-    components,
-  });
-
-  if (error) throw new Error(error.message);
+  const result = await renderPost(props.content);
+  if (result.isErr()) throw new Error(result.error.message);
+  const { content, scope } = result.value;
 
   const coverImage = props.cover;
   const placeholder = coverImage ? await getImagePlaceholder(coverImage) : null;
@@ -105,13 +99,9 @@ export default async function Page({
           <p>{time.text}</p>
           <div className="lg:space-y-5 space-y-3">
             <TypographyH1 className="leading-tight">
-              <MDXRemote source={props.title} />
+              <RenderPost source={props.description} naked />
             </TypographyH1>
-            <MDXRemote
-              source={props.description}
-              components={components}
-              options={options}
-            />
+            <RenderPost source={props.description} />
           </div>
         </div>
       </div>
