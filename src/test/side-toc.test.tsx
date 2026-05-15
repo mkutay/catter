@@ -1,14 +1,24 @@
 import { render, screen, within } from "@testing-library/react";
 import { evaluate } from "next-mdx-remote-client/rsc";
 import type { TocItem } from "remark-flexible-toc";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   buildHierarchy,
   hasActiveDescendant,
   SideTOC,
   type TocSection,
 } from "@/components/side-toc";
-import { components, options, type Scope } from "@/config/mdx-settings";
+import { options, type Scope } from "@/config/mdx-settings";
+
+vi.mock("@/env", () => ({
+  env: {
+    MINIO_ENDPOINT: "localhost",
+    MINIO_ACCESS_KEY: "minioadmin",
+    MINIO_SECRET_KEY: "minioadmin",
+    MINIO_REGION: "us-east-1",
+    S3_BUCKET_NAME: "bucket",
+  },
+}));
 
 // Minimal IntersectionObserver stub to prevent crash in JSDOM.
 if (typeof window !== "undefined" && !window.IntersectionObserver) {
@@ -107,7 +117,6 @@ describe("SideTOC Integration", () => {
     const { scope } = await evaluate<never, Scope>({
       source,
       options,
-      components,
     });
     return scope.toc ?? [];
   };
