@@ -40,8 +40,10 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Create non-root user for running the app
-RUN groupadd -r -g 1001 nodejs \
+# Install wget for healthcheck and create non-root user
+RUN apt-get update && apt-get install -y --no-install-recommends wget \
+  && rm -rf /var/lib/apt/lists/* \
+  && groupadd -r -g 1001 nodejs \
   && useradd -r -u 1001 -g nodejs nextjs
 
 # Copy environment files for runtime
@@ -60,6 +62,9 @@ EXPOSE 3000
 
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
 
 # server.js is created by next build from the standalone output
 CMD ["node", "server.js"]
