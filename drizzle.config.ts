@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import { defineConfig } from "drizzle-kit";
 
-config({ path: [".env.local", ".env"] });
+config({ path: [".env.local", ".env", ".env.development"] });
 
 const postgresURL = process.env.POSTGRES_URL;
 
