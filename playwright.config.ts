@@ -1,5 +1,12 @@
 import { defineConfig, devices } from "@playwright/test";
 
+/**
+ * Playwright configuration for the Catter e2e tests.
+ *
+ * @note The web server is started before the tests begin, using `bun run start`.
+ * Therefore, the codebase needs to be built before running the tests to ensure
+ * the newest version of the code is being tested.
+ */
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
