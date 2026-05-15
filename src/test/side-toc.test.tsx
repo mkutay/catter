@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { evaluate } from "next-mdx-remote-client/rsc";
 import type { TocItem } from "remark-flexible-toc";
-import { describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import {
   buildHierarchy,
   hasActiveDescendant,
@@ -20,14 +20,16 @@ vi.mock("@/env", () => ({
   },
 }));
 
-// Minimal IntersectionObserver stub to prevent crash in JSDOM.
-if (typeof window !== "undefined" && !window.IntersectionObserver) {
-  window.IntersectionObserver = class IntersectionObserver {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  } as unknown as typeof IntersectionObserver;
-}
+beforeAll(() => {
+  // Minimal IntersectionObserver stub to prevent crash in JSDOM.
+  if (typeof window !== "undefined" && !window.IntersectionObserver) {
+    window.IntersectionObserver = class IntersectionObserver {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    } as unknown as typeof IntersectionObserver;
+  }
+});
 
 describe("SideTOC Helpers", () => {
   const mockItem = (depth: number, href: string): TocItem =>
