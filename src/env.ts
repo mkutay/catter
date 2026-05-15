@@ -19,6 +19,8 @@ export const env = createEnv({
     S3_BUCKET_NAME: z.string(),
     SITE_URL: z.url(),
     UPLOAD_API_KEY: z.string(),
+    NODE_ENV: z.enum(["development", "production", "test"]),
+    BUILDING: z.enum(["true", "false"]).nullable().default("false"),
   },
   client: {},
   // If you're using Next.js < 13.4.4, you'll need to specify the runtimeEnv manually

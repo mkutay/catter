@@ -3,6 +3,7 @@ import { okAsync, ResultAsync } from "neverthrow";
 import type { Session } from "next-auth";
 import { siteConfig } from "@/config/site";
 import type { DatabaseError } from "@/config/types";
+import { env } from "@/env";
 import { getSession } from "@/lib/database-queries/auth";
 import { db } from "@/lib/db/drizzle";
 import { views } from "@/lib/db/schema";
@@ -29,7 +30,9 @@ const isAdmin = (session?: Session | null | undefined): boolean => {
  */
 export const incrementViews = ({ slug }: { slug: string }) =>
   getSession().andThen((session) =>
-    process.env.NODE_ENV === "development" || isAdmin(session)
+    env.NODE_ENV === "development" ||
+    env.NODE_ENV === "test" ||
+    isAdmin(session)
       ? okAsync()
       : insertIntoViews(slug),
   );

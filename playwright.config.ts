@@ -12,7 +12,7 @@ export default defineConfig({
   fullyParallel: true,
   retries: 0,
   workers: undefined,
-  reporter: "html",
+  reporter: "list",
   use: {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
@@ -32,7 +32,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "bun run start",
+    command: "NODE_ENV=test bun run start",
     url: "http://localhost:3000",
     reuseExistingServer: true,
   },

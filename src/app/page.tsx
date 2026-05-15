@@ -36,7 +36,7 @@ export default async function Home() {
     (post) => post.slug === siteConfig.homePage.firstSlug,
   );
 
-  if (middle === undefined || firstPost === undefined) return;
+  if (middle === undefined || firstPost === undefined) return null;
 
   const allShownPosts = [middle, ...leftSide, ...rightSide];
 

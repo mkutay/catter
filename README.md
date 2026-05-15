@@ -33,7 +33,39 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Copy `.env.example` and populate `.env.local`. Use GitHub, Discord, and Spotify OAuth for guestbook and comments. Add your Postgres database URL, `AUTH_SECRET`, `AUTH_REDIRECT_PROXY_URL`, and `SITE_URL`. For image hosting, also fill in the MinIO/S3 variables (`MINIO_ENDPOINT`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, `MINIO_REGION`, `S3_BUCKET_NAME`, `UPLOAD_API_KEY`).
+Create an environment file `.env` (or for each stage, i.e., `.env.development`, `.env.production`, and `.env.test`) with the following fields:
+
+```bash
+# Any authentication method can be removed or added.
+SPOTIFY_OAUTH_CLIENT_SECRET=
+SPOTIFY_OAUTH_CLIENT_ID=
+DISCORD_OAUTH_CLIENT_SECRET=
+DISCORD_OAUTH_CLIENT_ID=
+GITHUB_OAUTH_CLIENT_ID=
+GITHUB_OAUTH_CLIENT_SECRET=
+
+# For NextAuth to work, see: https://authjs.dev/getting-started/installation?framework=next-js
+AUTH_SECRET=
+AUTH_REDIRECT_PROXY_URL=YOUR_SITE/api/auth
+
+POSTGRES_URL= # The URL of the postgres database, hosted somewhere.
+
+NODE_ENV=development
+
+MINIO_ENDPOINT=
+MINIO_ACCESS_KEY=
+MINIO_SECRET_KEY=
+MINIO_REGION=eu-central
+S3_BUCKET_NAME=
+
+SITE_URL="http://localhost:3000"
+
+# For you to upload/delete new posts.
+UPLOAD_API_KEY=
+
+# Set to "true" during the build process.
+BUILDING=
+```
 
 After setting up your database, run the migrations:
 
@@ -48,6 +80,13 @@ Change the values in `src/config/site.ts` to change the config of your site. Imp
 You can fork this repository and add it to Vercel manually, or you can use the following button.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmkutay%2Fcatter)
+
+Or, you can use the given Dockerfile:
+
+```bash
+docker build -t catter .
+docker run -p 3000:3000 -e  catter
+```
 
 ## Contributing
 
