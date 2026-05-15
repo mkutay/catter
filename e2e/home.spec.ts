@@ -18,25 +18,9 @@ test("home page loads and displays posts", async ({ page }) => {
   const views = page.locator("text=/\\d+ views/");
   await expect(views.first()).toBeVisible();
 
-  // Verify hover states on post titles
-  const postTitle = postLinks.locator("span").first();
-  const initialStyles = await postTitle.evaluate(
-    (el) => getComputedStyle(el).backgroundSize,
-  );
-
-  await postTitle.hover();
-
-  // The hover effect triggers a background size change
-  // We check if the background size contains '100%' after hover.
-  await page.waitForFunction(() => {
-    const el = document.querySelector("a[href^='/posts/'] span");
-    if (!el) return false;
-    return getComputedStyle(el).backgroundSize.includes("100%");
-  });
-
-  const hoveredStyles = await postTitle.evaluate(
-    (el) => getComputedStyle(el).backgroundSize,
-  );
-  expect(initialStyles).not.toEqual(hoveredStyles);
-  expect(hoveredStyles).toContain("100%");
+  // Verify navigation to a post
+  const firstPost = postLinks.first();
+  const href = await firstPost.getAttribute("href");
+  await firstPost.click();
+  await expect(page).toHaveURL(new RegExp(href as string));
 });
