@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CopyShortened } from "@/components/copy-shortened";
 
 const mockToast = vi.fn();
@@ -10,12 +10,23 @@ vi.mock("@/components/ui/use-toast", () => ({
 }));
 
 describe("CopyShortened", () => {
+  let originalClipboard: typeof navigator.clipboard;
+
   beforeEach(() => {
     vi.clearAllMocks();
-    Object.assign(navigator, {
-      clipboard: {
+    originalClipboard = navigator.clipboard;
+    Object.defineProperty(navigator, "clipboard", {
+      value: {
         writeText: vi.fn().mockResolvedValue(undefined),
       },
+      configurable: true,
+    });
+  });
+
+  afterEach(() => {
+    Object.defineProperty(navigator, "clipboard", {
+      value: originalClipboard,
+      configurable: true,
     });
   });
 

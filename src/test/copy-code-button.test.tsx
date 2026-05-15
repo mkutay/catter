@@ -1,15 +1,27 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CopyCodeButton } from "@/components/copy-code-button";
 
 describe("CopyCodeButton", () => {
+  let originalClipboard: typeof navigator.clipboard;
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
-    Object.assign(navigator, {
-      clipboard: {
+    originalClipboard = navigator.clipboard;
+    Object.defineProperty(navigator, "clipboard", {
+      value: {
         writeText: vi.fn().mockResolvedValue(undefined),
       },
+      configurable: true,
+    });
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    Object.defineProperty(navigator, "clipboard", {
+      value: originalClipboard,
+      configurable: true,
     });
   });
 
