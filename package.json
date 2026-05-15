@@ -90,7 +90,6 @@
     "@types/remark-heading-id": "^1.0.0",
     "@types/rss": "^0.0.32",
     "@vitejs/plugin-react": "^6.0.1",
-    "@vitejs/vite-plugin-react-monorepo": "vitejs/vite-plugin-react",
     "@vitest/coverage-v8": "^4.1.4",
     "biomejs": "^0.0.0",
     "drizzle-kit": "^0.31.9",

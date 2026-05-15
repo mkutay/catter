@@ -99,7 +99,7 @@ export default async function Page({
           <p>{time.text}</p>
           <div className="lg:space-y-5 space-y-3">
             <TypographyH1 className="leading-tight">
-              <RenderPost source={props.description} naked />
+              <RenderPost source={props.title} naked />
             </TypographyH1>
             <RenderPost source={props.description} />
           </div>

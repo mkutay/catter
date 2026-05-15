@@ -6,7 +6,7 @@ test.describe("Skip-List Post Rendering", () => {
 
     // Verify Title and Description
     await expect(page.locator("h1")).toContainText(
-      /A data structure that can simulate a binary search/i,
+      /An actual binary search on a linked list\?\?\?/i,
     );
     await expect(page.getByText(/Yes, please!/i).first()).toBeVisible();
 
