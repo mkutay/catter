@@ -160,7 +160,7 @@ export const components: MDXComponents = {
     <MyInlineCode
       codeblock={{
         value: String(props.children),
-        lang: "text",
+        lang: "txt",
         meta: "",
       }}
     />
