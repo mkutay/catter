@@ -1,7 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { MDXRemote } from "next-mdx-remote-client/rsc";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,9 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { components, options } from "@/config/mdx-settings";
 import type { Post } from "@/config/types";
 import { getImagePlaceholder } from "@/lib/images";
+import { RenderPost } from "@/lib/rendering";
 import { humanReadable } from "@/lib/utils";
 
 export async function ProjectCard({
@@ -44,15 +43,11 @@ export async function ProjectCard({
       <CardHeader>
         <CardTitle>{props.title}</CardTitle>
         <div className="[&_p]:line-clamp-2 text-sm text-muted-foreground font-sans font-medium">
-          <MDXRemote source={props.description} options={options} />
+          <RenderPost source={props.description} />
         </div>
       </CardHeader>
       <CardContent className="[&_p]:line-clamp-4">
-        <MDXRemote
-          source={props.excerpt}
-          options={options}
-          components={components}
-        />
+        <RenderPost source={props.excerpt} />
       </CardContent>
       <CardFooter>
         <Button
