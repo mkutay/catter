@@ -16,13 +16,11 @@ jobs:
   lint:
     name: Lint & format
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 3
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -35,16 +33,17 @@ jobs:
       - name: Run linter and formatter
         run: bun run check
 
+      - name: Run typecheck
+        run: bun run typecheck
+
   unit:
     name: Unit tests
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 3
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
