@@ -8,10 +8,7 @@ import { Comments } from "@/components/comments/comments";
 import { CopyShortened } from "@/components/copy-shortened";
 import { DoublePane } from "@/components/double-pane";
 import { SideTOC } from "@/components/side-toc";
-import {
-  ToggleParenthesesContextToggleButton,
-  ToggleParenthesesProvider,
-} from "@/components/toggle-parentheses";
+import { ToggleParenthesesContextToggleButton } from "@/components/toggle-parentheses";
 import { TypographyH1 } from "@/components/typography/headings";
 import { ViewDisplay } from "@/components/view-display";
 import { siteConfig } from "@/config/site";
@@ -78,7 +75,7 @@ export default async function Page({
   const placeholder = coverImage ? await getImagePlaceholder(coverImage) : null;
 
   return (
-    <ToggleParenthesesProvider defaultOpen={true}>
+    <>
       <div className="bg-primary w-full h-fit py-6 lg:space-y-14 space-y-10">
         <div className="lg:max-w-6xl max-w-prose mx-auto px-4 space-y-2">
           <p className="text-lg font-semibold text-primary-foreground">
@@ -142,7 +139,7 @@ export default async function Page({
         <main>{content}</main>
         <Comments slug={props.slug} />
       </DoublePane>
-    </ToggleParenthesesProvider>
+    </>
   );
 }
 

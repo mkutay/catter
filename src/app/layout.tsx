@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import PlausibleProvider from "next-plausible";
 import { ThemeProvider } from "next-themes";
-
-import "@/styles/globals.css";
-import "@/styles/katex.min.css";
 import Footer from "@/components/footer";
 import { NavBar } from "@/components/nav-bar";
+import { ToggleParenthesesProvider } from "@/components/toggle-parentheses";
 import { Toaster } from "@/components/ui/toaster";
 import { cabinetGrotesk, plex, zodiak } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
+import "@/styles/globals.css";
+import "@/styles/katex.min.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(`${siteConfig.url}`),
@@ -67,11 +67,13 @@ export default function Layout({
         className={`${zodiak.variable} ${cabinetGrotesk.variable} ${plex.variable} text-foreground bg-background font-body`}
       >
         <ThemeProvider attribute="class" disableTransitionOnChange>
-          <main className="flex flex-col min-h-screen">
-            <NavBar />
-            <div className="flex-1">{children}</div>
-            <Footer />
-          </main>
+          <ToggleParenthesesProvider defaultOpen={true}>
+            <main className="flex flex-col min-h-screen">
+              <NavBar />
+              <div className="flex-1">{children}</div>
+              <Footer />
+            </main>
+          </ToggleParenthesesProvider>
           <Toaster />
         </ThemeProvider>
       </body>
