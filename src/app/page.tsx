@@ -7,7 +7,7 @@ import {
   TypographyLarge,
   TypographyParagraph,
 } from "@/components/typography/paragraph";
-import { ViewDisplay } from "@/components/view-display";
+import { ViewDisplay, ViewDisplaySkeleton } from "@/components/view-display";
 import { siteConfig } from "@/config/site";
 import type { Post } from "@/config/types";
 import { getPosts } from "@/lib/content-queries";
@@ -15,9 +15,8 @@ import { getImagePlaceholder } from "@/lib/images";
 import { RenderPost } from "@/lib/rendering";
 import { cn } from "@/lib/utils";
 
-export const dynamic = "force-static";
-
 export default async function Home() {
+  "use cache";
   const result = await getPosts({});
   if (result.isErr()) throw new Error(result.error.message);
   const posts = result.value;
@@ -176,7 +175,9 @@ async function FirstPost({ post }: { post: Post }) {
             <time dateTime={post.date}>
               {format(new Date(post.date), "PPP")}
             </time>
-            <ViewDisplay slug={post.slug} />
+            <Suspense fallback={<ViewDisplaySkeleton />}>
+              <ViewDisplay slug={post.slug} />
+            </Suspense>
           </div>
         </div>
       </div>
@@ -234,7 +235,9 @@ async function PostDisplay({
       )}
       <div className="text-sm text-foreground tracking-tight font-light flex flex-row justify-between">
         <p>{format(post.date, "PP")}</p>
-        <ViewDisplay slug={post.slug} />
+        <Suspense fallback={<ViewDisplaySkeleton />}>
+          <ViewDisplay slug={post.slug} />
+        </Suspense>
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 import { Mailbox } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
-import { TotalBlogViews } from "./total-blog-views";
+import { TotalBlogViews, TotalBlogViewsSkeleton } from "./total-blog-views";
 import { TypographyHr } from "./typography/blockquote";
 
 /**
@@ -41,7 +42,9 @@ export function DoublePane({
         <div>{children}</div>
         <TypographyHr className="my-12" />
         <div className="flex flex-row justify-between items-center gap-4">
-          <TotalBlogViews />
+          <Suspense fallback={<TotalBlogViewsSkeleton />}>
+            <TotalBlogViews />
+          </Suspense>
           <Button variant="secondary" size="lg" asChild>
             <Link
               href={siteConfig.newsletterSubscribe}

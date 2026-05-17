@@ -3,27 +3,27 @@ import { format } from "date-fns";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import readingTime from "reading-time";
-import { Comments } from "@/components/comments/comments";
+import { Comments, CommentsSkeleton } from "@/components/comments/comments";
 import { CopyShortened } from "@/components/copy-shortened";
 import { DoublePane } from "@/components/double-pane";
 import { SideTOC } from "@/components/side-toc";
 import { ToggleParenthesesContextToggleButton } from "@/components/toggle-parentheses";
 import { TypographyH1 } from "@/components/typography/headings";
-import { ViewDisplay } from "@/components/view-display";
+import { ViewDisplay, ViewDisplaySkeleton } from "@/components/view-display";
 import { siteConfig } from "@/config/site";
 import { getPost, getPostSlugs } from "@/lib/content-queries";
 import { getImagePlaceholder } from "@/lib/images";
 import { RenderPost, renderPost } from "@/lib/rendering";
 import { humanReadable } from "@/lib/utils";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
+  "use cache";
   const { slug } = await params;
   const result = await getPost(slug);
   if (result.isErr()) throw new Error(result.error.message);
@@ -55,7 +55,8 @@ export default async function Page({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+  }) {
+  "use cache";
   const { slug } = await params;
   const props = await getPost(slug).match(
     (p) => p,
@@ -130,14 +131,18 @@ export default async function Page({
             <ToggleParenthesesContextToggleButton />
             <div className="flex flex-row items-center gap-4 justify-end">
               <div className="tracking-tight font-light text-base">
-                <ViewDisplay slug={props.slug} increment />
+                <Suspense fallback={<ViewDisplaySkeleton />}>
+                  <ViewDisplay slug={props.slug} increment />
+                </Suspense>
               </div>
               <CopyShortened shortened={props.shortened} />
             </div>
           </div>
         </div>
         <main>{content}</main>
-        <Comments slug={props.slug} />
+        <Suspense fallback={<CommentsSkeleton />}>
+          <Comments slug={props.slug} />
+        </Suspense>
       </DoublePane>
     </>
   );

@@ -4,8 +4,6 @@ import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
 import { getPosts } from "@/lib/content-queries";
 
-export const dynamic = "force-static";
-
 export const metadata: Metadata = {
   title: "Different Coding Projects I Did",
   description:
@@ -24,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+  "use cache";
   const projects = await getPosts({ tags: ["project"] });
   if (projects.isErr()) throw new Error(projects.error.message);
 

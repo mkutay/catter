@@ -6,8 +6,6 @@ import { siteConfig } from "@/config/site";
 import { getListOfAllTags } from "@/lib/content-queries";
 import { humanReadable } from "@/lib/utils";
 
-export const dynamic = "force-static";
-
 export const metadata: Metadata = {
   title: `List of Tags on the Posts`,
   description: `List and buttons of all the tags that posts have on ${siteConfig.name}.`,
@@ -20,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+  "use cache";
   const tags = await getListOfAllTags();
   if (tags.isErr()) throw new Error(tags.error.message);
   return (

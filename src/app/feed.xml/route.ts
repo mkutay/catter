@@ -2,9 +2,8 @@ import Rss from "rss";
 import { siteConfig } from "@/config/site";
 import { getPosts } from "@/lib/content-queries";
 
-export const dynamic = "force-static";
-
 export async function GET() {
+  "use cache";
   const feed = new Rss({
     title: siteConfig.name,
     description: siteConfig.description,

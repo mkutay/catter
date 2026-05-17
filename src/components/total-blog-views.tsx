@@ -1,42 +1,30 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { cacheLife } from "next/dist/server/use-cache/cache-life";
+import { getBlogViews } from "@/lib/database-queries/views";
 import { Skeleton } from "./ui/skeleton";
 
 /**
  * Displays the total number of views for all blog posts.
- *
- * Shows a loading indicator while fetching the view count,
- * then displays the total number of views.
  */
-export function TotalBlogViews() {
-  const [views, setViews] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchViews = async () => {
-      const text = await fetch("/api/views/all").then((res) => res.text());
-      const count = parseInt(text, 10);
-      if (!Number.isNaN(count)) {
-        setViews(count);
-      } else {
-        console.error("Failed to parse view count:", text);
-      }
-      setIsLoading(false);
-    };
-    fetchViews();
-  }, []);
-
-  if (isLoading)
-    return (
-      <div className="flex text-primary">
-        <Skeleton className="h-7 w-43.75" />
-      </div>
-    );
+export async function TotalBlogViews() {
+  "use cache";
+  cacheLife("minutes");
+  const result = await getBlogViews();
+  if (result.isErr()) return null;
 
   return (
     <div className="flex text-primary font-bold tracking-tight md:text-lg text-base font-mono leading-5">
-      {views} total views
+      {result.value} total views
+    </div>
+  );
+}
+
+/**
+ * Skeleton component for the total blog views.
+ */
+export function TotalBlogViewsSkeleton() {
+  return (
+    <div className="flex text-primary">
+      <Skeleton className="h-7 w-43.75" />
     </div>
   );
 }

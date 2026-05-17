@@ -5,14 +5,12 @@ import { notFound, redirect } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { getPosts } from "@/lib/content-queries";
 
-export const dynamic = "force-static";
-// export const dynamicParams = false;
-
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ shortened: string }>;
 }): Promise<Metadata> {
+  "use cache";
   const { shortened } = await params;
   const posts = await getPosts({});
   if (posts.isErr()) throw new Error(posts.error.message);
@@ -47,6 +45,7 @@ export default async function Page({
 }: {
   params: Promise<{ shortened: string }>;
 }) {
+  "use cache";
   const { shortened } = await params;
   const posts = await getPosts({});
   if (posts.isErr()) throw new Error(posts.error.message);

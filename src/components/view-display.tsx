@@ -1,51 +1,33 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { safeTry } from "neverthrow";
+import { incrementViews } from "@/lib/database-actions/views";
+import { getViewCount } from "@/lib/database-queries/views";
 
 /**
  * Component that displays the view count for a post with a given
- * slug, and optionally increments it when the component mounts.
+ * slug, and optionally increments it.
  *
  * @param slug The slug of the post to display the view count for.
- * @param increment Whether to increment the view count when the
- *  component mounts.
+ * @param increment Whether to increment the view count.
  */
-export function ViewDisplay({
+export async function ViewDisplay({
   slug,
   increment = false,
 }: {
   slug: string;
   increment?: boolean;
 }) {
-  const [views, setViews] = useState<number | null>(null);
+  const result = await safeTry(async function* () {
+    if (increment) yield* incrementViews({ slug });
+    return getViewCount({ slug });
+  });
 
-  useEffect(() => {
-    let ignore = false;
-
-    const searchParams = new URLSearchParams({ slug });
-    if (increment) {
-      searchParams.append("increment", "true");
-    }
-
-    fetch(`/api/views?${searchParams.toString()}`)
-      .then((res) => res.text())
-      .then((text) => {
-        if (ignore) return;
-        const count = parseInt(text, 10);
-        if (!Number.isNaN(count)) {
-          setViews(count);
-        } else {
-          console.error("Failed to parse view count:", text);
-        }
-      });
-
-    return () => {
-      ignore = true;
-    };
-  }, [slug, increment]);
-
-  if (!views) return null;
+  if (result.isErr()) return null;
+  const views = result.value;
 
   if (views === 1) return <p>1 view</p>;
   return <p>{views} views</p>;
+}
+
+export function ViewDisplaySkeleton() {
+  return null;
 }

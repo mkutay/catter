@@ -5,11 +5,10 @@ import { siteConfig } from "@/config/site";
 import { getListOfAllTags } from "@/lib/content-queries";
 import { humanReadable } from "@/lib/utils";
 
-export const dynamic = "force-static";
-
 export async function generateMetadata(props: {
   params: Promise<{ tag: string }>;
 }): Promise<Metadata> {
+  "use cache";
   const params = await props.params;
   const { tag } = params;
 
@@ -27,6 +26,7 @@ export async function generateMetadata(props: {
 export default async function Page(props: {
   params: Promise<{ tag: string }>;
 }) {
+  "use cache";
   const params = await props.params;
   const tag = params.tag;
   return (

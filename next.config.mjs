@@ -9,6 +9,7 @@ const nextConfig = {
   output: "standalone",
   pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
   turbopack: {},
+  cacheComponents: true,
   images: {
     qualities: [75],
     ...(isProduction
