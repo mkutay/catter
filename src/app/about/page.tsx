@@ -5,7 +5,7 @@ import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
 import { getAboutProps } from "@/lib/content-queries";
 import { RenderPost } from "@/lib/rendering";
-import me from "@/public/images/me.jpg";
+import me from "./me.jpg";
 
 export const dynamic = "force-static";
 
