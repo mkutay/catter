@@ -304,17 +304,3 @@ export function getAboutProps() {
 
   return postData;
 }
-
-export const getKeyValues = (keys: readonly string[]) =>
-  fromPromise(
-    db.select().from(keyValues).where(inArray(keyValues.key, keys)).execute(),
-    (err) => {
-      console.error(err);
-      return {
-        code: "DATABASE_ERROR" as const,
-        message:
-          "Database error while fetching key value: " +
-          (err instanceof Error ? err.message : String(err)),
-      };
-    },
-  );

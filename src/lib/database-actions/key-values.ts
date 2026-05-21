@@ -1,4 +1,11 @@
-import { errAsync, okAsync, ResultAsync, safeTry } from "neverthrow";
+import { inArray } from "drizzle-orm";
+import {
+  errAsync,
+  fromPromise,
+  okAsync,
+  ResultAsync,
+  safeTry,
+} from "neverthrow";
 import { revalidatePath } from "next/cache";
 import { existingKeys, siteConfig } from "@/config/site";
 import type { DatabaseError } from "@/config/types";
@@ -10,6 +17,11 @@ import { doesPostWithSlugExist } from "../content-queries";
 export interface UpdateKeyValueError {
   message: string;
   code: "UNAUTHORISED" | "INVALID_KEY" | "DATABASE_ERROR" | "INVALID_SLUG";
+}
+
+export interface GetKeyValuesError {
+  message: string;
+  code: "DATABASE_ERROR";
 }
 
 /**
@@ -93,4 +105,24 @@ export const upsertKeyValue = ({
         message: "Failed to update key value. Database error.",
         code: "DATABASE_ERROR",
       }) as DatabaseError,
+  );
+
+/**
+ * Fetches key-value pairs from the database for the specified keys.
+ *
+ * @param keys An array of keys to fetch values for.
+ * @returns A `ResultAsync` containing an array of key-value pairs,
+ * or an error if the operation fails.
+ */
+export const getKeyValues = (
+  keys: readonly string[],
+): ResultAsync<{ key: string; value: string }[], GetKeyValuesError> =>
+  fromPromise(
+    db.select().from(keyValues).where(inArray(keyValues.key, keys)).execute(),
+    (err) => ({
+      code: "DATABASE_ERROR",
+      message:
+        "Database error while fetching key value: " +
+        (err instanceof Error ? err.message : String(err)),
+    }),
   );

@@ -12,8 +12,7 @@ import {
 } from "neverthrow";
 import { getPlaiceholder } from "plaiceholder";
 import { env } from "@/env";
-import { getKeyValues } from "./content-queries";
-import { upsertKeyValue } from "./database-actions/key-values";
+import { getKeyValues, upsertKeyValue } from "./database-actions/key-values";
 
 /**
  * The Minio client for interacting with the S3-compatible storage.

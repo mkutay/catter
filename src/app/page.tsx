@@ -11,7 +11,8 @@ import {
 import { ViewDisplay } from "@/components/view-display";
 import { existingKeys } from "@/config/site";
 import type { Post } from "@/config/types";
-import { getKeyValues, getPost, getPosts } from "@/lib/content-queries";
+import { getPost, getPosts } from "@/lib/content-queries";
+import { getKeyValues } from "@/lib/database-actions/key-values";
 import { getImagePlaceholder } from "@/lib/images";
 import { RenderPost } from "@/lib/rendering";
 import { cn } from "@/lib/utils";
