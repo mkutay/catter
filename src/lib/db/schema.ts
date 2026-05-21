@@ -110,3 +110,11 @@ export const postTags = pgTable(
     primaryKey({ columns: [table.tag, table.slug], name: "post_tags_pkey" }),
   ],
 );
+
+/**
+ * Simple (key, value) store.
+ */
+export const keyValues = pgTable("key_values", {
+  key: text().primaryKey(),
+  value: text().notNull(),
+});
