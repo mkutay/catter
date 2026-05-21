@@ -2,6 +2,8 @@ import type { Readable } from "node:stream";
 import * as Minio from "minio";
 import {
   err,
+  errAsync,
+  fromThrowable,
   ok,
   okAsync,
   type Result,
@@ -10,6 +12,9 @@ import {
 } from "neverthrow";
 import { getPlaiceholder } from "plaiceholder";
 import { env } from "@/env";
+import { db } from "@/lib/db/drizzle";
+import { keyValues } from "@/lib/db/schema";
+import { getKeyValues } from "./content-queries";
 
 /**
  * The Minio client for interacting with the S3-compatible storage.
@@ -34,10 +39,107 @@ export type PlaceholderError =
   | ErrorBase<"PLACEHOLDER_ERROR">
   | ChunkConvertError;
 
+type Base64 = `data:image/${string};base64,${string}`;
+
+export type PlaceholderCacheError = ErrorBase<"PLACEHOLDER_CACHE_ERROR">;
 export type PlaceholderResult = Awaited<ReturnType<typeof getPlaiceholder>>;
+type PlaceholderCacheValue = {
+  metadata: {
+    width: PlaceholderResult["metadata"]["width"];
+    height: PlaceholderResult["metadata"]["height"];
+    format: PlaceholderResult["metadata"]["format"];
+    orientation: PlaceholderResult["metadata"]["orientation"];
+    size: PlaceholderResult["metadata"]["size"];
+  };
+  base64: Base64;
+  url: string;
+  createdAt: string;
+};
 
 /** S3 object keys must not start with a leading slash or request signatures break. */
 const normalizeKey = (key: string) => key.replace(/^\/+/, "");
+
+/** Get the cache key for placeholder result from `url`. */
+const getPlaceholderCacheKey = (url: string) => `image-placeholder:${url}`;
+
+/**
+ * Parses a JSON string into a `PlaceholderCacheValue`, returning a
+ * structured error if parsing fails.
+ *
+ * @param value The JSON string to parse.
+ * @returns A `Result` containing the parsed `PlaceholderCacheValue`
+ * or a `PlaceholderCacheError`.
+ * @note We trust the data in the cache to be correctly formatted.
+ */
+const parsePlaceholderCacheValue = (value: string) =>
+  fromThrowable(
+    (): PlaceholderCacheValue => JSON.parse(value),
+    (err): PlaceholderCacheError => ({
+      type: "PLACEHOLDER_CACHE_ERROR",
+      message: `Failed to parse placeholder cache value: ${toMessage(err)}`,
+    }),
+  )();
+
+/**
+ * Fetches a cached placeholder from the database for the given cache key.
+ *
+ * @param cacheKey The key to look up in the cache.
+ * @returns A `ResultAsync` containing the cached `PlaceholderCacheValue`
+ * or an error if the cache entry is missing, malformed, if multiple
+ * entries are returned, or if the cache entry is stale.
+ * @note Cache entries are considered stale if they are older than 48 hours.
+ */
+const getCachedPlaceholder = (cacheKey: string) =>
+  getKeyValues([cacheKey])
+    .andThen((entries) =>
+      entries.length !== 1
+        ? errAsync({
+            type: "PLACEHOLDER_CACHE_ERROR",
+            message: "Unexpected number of cache entries returned.",
+          } as PlaceholderCacheError)
+        : okAsync(entries[0]),
+    )
+    .andThen(({ value }) => parsePlaceholderCacheValue(value))
+    .andThen((value) =>
+      // Only return the cache entry if it's less than 48 hours old.
+      new Date(value.createdAt) > new Date(Date.now() - 48 * 60 * 60 * 1000)
+        ? okAsync(value)
+        : errAsync({
+            type: "PLACEHOLDER_CACHE_ERROR",
+            message: "Cache entry is stale.",
+          } as PlaceholderCacheError),
+    );
+
+/**
+ * Sets a placeholder cache entry in the database for the given cache
+ * key and value.
+ *
+ * @param cacheKey The key to set in the cache.
+ * @param value The `PlaceholderCacheValue` to cache, which will be
+ * serialised to JSON.
+ * @returns A `ResultAsync` that resolves to `void` on success, or a
+ * `PlaceholderCacheError` on failure.
+ */
+const setCachedPlaceholder = (
+  cacheKey: string,
+  value: PlaceholderCacheValue,
+): ResultAsync<void, PlaceholderCacheError> => {
+  const serialized = JSON.stringify(value);
+  return ResultAsync.fromPromise(
+    db
+      .insert(keyValues)
+      .values({ key: cacheKey, value: serialized })
+      .onConflictDoUpdate({
+        target: keyValues.key,
+        set: { value: serialized },
+      })
+      .execute(),
+    (error): PlaceholderCacheError => ({
+      type: "PLACEHOLDER_CACHE_ERROR",
+      message: `Failed to write placeholder cache: ${toMessage(error)}`,
+    }),
+  ).andThen(() => okAsync());
+};
 
 /** Converts an error to a human-readable message, falling back to a generic message if unknown. */
 const toMessage = (
@@ -151,17 +253,35 @@ export const getPlaceholder = (
  * @see {@link getPlaceholder}
  * @note The image must be in the S3 bucket. This function does not accept external images.
  */
-export const getImagePlaceholder = async (image: string) => {
+export const getImagePlaceholder = async (
+  image: string,
+): Promise<PlaceholderCacheValue> => {
   const url = image.startsWith("/") ? `/api${image}` : `/api/${image}`;
-  const { metadata, base64 } = await getPlaceholder(image).match(
-    (placeholder) => ({
-      metadata: placeholder.metadata,
-      base64: placeholder.base64 as `data:image/${string}`,
-    }),
-    (err) => {
-      throw new Error(err.message);
-    },
-  );
+  const cacheKey = getPlaceholderCacheKey(url);
 
-  return { metadata, base64, url };
+  return await getCachedPlaceholder(cacheKey)
+    .orElse(() =>
+      getPlaceholder(image)
+        .map(
+          (plc): PlaceholderCacheValue => ({
+            metadata: {
+              width: plc.metadata.width,
+              height: plc.metadata.height,
+              format: plc.metadata.format,
+              orientation: plc.metadata.orientation,
+              size: plc.metadata.size,
+            },
+            base64: plc.base64 as Base64,
+            url,
+            createdAt: new Date().toISOString(),
+          }),
+        )
+        .andTee((value) => setCachedPlaceholder(cacheKey, value)),
+    )
+    .match(
+      (value) => value,
+      (err) => {
+        throw new Error(err.message);
+      },
+    );
 };
