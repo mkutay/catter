@@ -12,7 +12,7 @@ import {
 } from "neverthrow";
 import { getPlaiceholder } from "plaiceholder";
 import { env } from "@/env";
-import { getKeyValues, upsertKeyValue } from "./database-actions/key-values";
+import { getValue, upsertKeyValue } from "./database-actions/key-values";
 
 /**
  * The Minio client for interacting with the S3-compatible storage.
@@ -88,15 +88,7 @@ const parsePlaceholderCacheValue = (value: string) =>
  * @note Cache entries are considered stale if they are older than 48 hours.
  */
 const getCachedPlaceholder = (cacheKey: string) =>
-  getKeyValues([cacheKey])
-    .andThen((entries) =>
-      entries.length !== 1
-        ? errAsync({
-            type: "PLACEHOLDER_CACHE_ERROR",
-            message: "Unexpected number of cache entries returned.",
-          } as PlaceholderCacheError)
-        : okAsync(entries[0]),
-    )
+  getValue(cacheKey)
     .andThen(({ value }) => parsePlaceholderCacheValue(value))
     .andThen((value) =>
       // Only return the cache entry if it's less than 48 hours old.

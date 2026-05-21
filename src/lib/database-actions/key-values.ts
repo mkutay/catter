@@ -19,7 +19,7 @@ export interface UpdateKeyValueError {
   code: "UNAUTHORISED" | "INVALID_KEY" | "DATABASE_ERROR" | "INVALID_SLUG";
 }
 
-export interface GetKeyValuesError {
+export interface GetKeyValueError {
   message: string;
   code: "DATABASE_ERROR";
 }
@@ -116,7 +116,7 @@ export const upsertKeyValue = ({
  */
 export const getKeyValues = (
   keys: readonly string[],
-): ResultAsync<{ key: string; value: string }[], GetKeyValuesError> =>
+): ResultAsync<{ key: string; value: string }[], GetKeyValueError> =>
   fromPromise(
     db.select().from(keyValues).where(inArray(keyValues.key, keys)).execute(),
     (err) => ({
@@ -125,4 +125,23 @@ export const getKeyValues = (
         "Database error while fetching key value: " +
         (err instanceof Error ? err.message : String(err)),
     }),
+  );
+
+/**
+ * Fetches the value for a single key from the database.
+ *
+ * @param key The key to fetch the value for.
+ * @returns A `ResultAsync` containing the key-value pair,
+ * or an error if the operation fails
+ */
+export const getValue = (
+  key: string,
+): ResultAsync<{ key: string; value: string }, GetKeyValueError> =>
+  getKeyValues([key]).andThen((entries) =>
+    entries.length !== 1
+      ? errAsync({
+          message: "Unexpected number of entries returned for key: " + key,
+          code: "DATABASE_ERROR",
+        } as GetKeyValueError)
+      : okAsync(entries[0]),
   );

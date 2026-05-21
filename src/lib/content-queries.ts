@@ -1,22 +1,13 @@
 import fs from "node:fs";
 import path from "node:path";
-import {
-  and,
-  asc,
-  desc,
-  eq,
-  getTableColumns,
-  inArray,
-  not,
-  sql,
-} from "drizzle-orm";
+import { and, asc, desc, eq, getTableColumns, not, sql } from "drizzle-orm";
 import matter from "gray-matter";
 import { fromPromise, okAsync, type ResultAsync } from "neverthrow";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import type { Post } from "@/config/types";
 import { db } from "./db/drizzle";
-import { keyValues, postKeywords, posts, postTags, views } from "./db/schema";
+import { postKeywords, posts, postTags, views } from "./db/schema";
 
 interface ContentError {
   message: string;
