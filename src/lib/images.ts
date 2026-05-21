@@ -13,6 +13,7 @@ import {
 import { getPlaiceholder } from "plaiceholder";
 import { env } from "@/env";
 import { getValue, upsertKeyValue } from "./database-actions/key-values";
+import { toMessage } from "./utils";
 
 /**
  * The Minio client for interacting with the S3-compatible storage.
@@ -137,12 +138,6 @@ const setPlaceholderCache = (
     .andTee((value) =>
       upsertKeyValue({ key: cacheKey, value: JSON.stringify(value) }),
     );
-
-/** Converts an error to a human-readable message, falling back to a generic message if unknown. */
-const toMessage = (
-  error: unknown,
-  fallback: string = "Unknown error.",
-): string => (error instanceof Error ? error.message : fallback);
 
 /**
  * Normalises a single Node.js stream chunk to `Uint8Array`.

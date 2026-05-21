@@ -1,5 +1,6 @@
 import {
   type AnnotationHandler,
+  type HighlightedCode,
   highlight,
   Inline,
   InnerLine,
@@ -8,7 +9,10 @@ import {
   Pre,
   type RawCode,
 } from "codehike/code";
+import { fromPromise, fromThrowable } from "neverthrow";
 import { CopyCodeButton } from "@/components/copy-code-button";
+import { getValue, upsertKeyValue } from "@/lib/database-actions/key-values";
+import { toMessage } from "@/lib/utils";
 import { CatppuccinFrappe } from "./code-block-theme";
 
 /**
@@ -84,7 +88,7 @@ export const lineNumbers: AnnotationHandler = {
  * Should be used with MDX to render code blocks.
  */
 export const MyCode = async ({ codeblock }: { codeblock: RawCode }) => {
-  const highlighted = await highlight(codeblock, CatppuccinFrappe);
+  const highlighted = await getHighlight(codeblock);
   return (
     <div className="relative">
       <CopyCodeButton
@@ -106,11 +110,56 @@ export const MyCode = async ({ codeblock }: { codeblock: RawCode }) => {
  * Should be used with MDX to render inline code.
  */
 export const MyInlineCode = async ({ codeblock }: { codeblock: RawCode }) => {
-  const highlighted = await highlight(codeblock, CatppuccinFrappe);
+  const highlighted = await getHighlight(codeblock);
   return (
     <Inline
       code={highlighted}
       className="px-1 py-0.5 rounded-sm text-sm font-mono bg-[#303446]"
     />
   );
+};
+
+type CacheError = {
+  code: "CACHE_ERROR";
+  message: string;
+};
+
+const parseCachedValue = (value: string) =>
+  fromThrowable(
+    (): HighlightedCode => JSON.parse(value),
+    (err): CacheError => ({
+      code: "CACHE_ERROR",
+      message: `Failed to parse placeholder cache value: ${toMessage(err)}`,
+    }),
+  )();
+
+const getCache = (cacheKey: string) =>
+  getValue(cacheKey).andThen(({ value }) => parseCachedValue(value));
+
+const setCache = (cacheKey: string, code: RawCode) =>
+  fromPromise(
+    highlight(code, CatppuccinFrappe),
+    (err): CacheError => ({
+      code: "CACHE_ERROR",
+      message: `Failed to highlight code for caching: ${toMessage(err)}`,
+    }),
+  ).andTee((highlighted) =>
+    upsertKeyValue({
+      key: cacheKey,
+      value: JSON.stringify(highlighted),
+    }),
+  );
+
+const getCacheKey = (code: RawCode) => JSON.stringify(code);
+
+const getHighlight = async (code: RawCode): Promise<HighlightedCode> => {
+  const cacheKey = getCacheKey(code);
+  return await getCache(cacheKey)
+    .orElse(() => setCache(cacheKey, code))
+    .match(
+      (val) => val,
+      (err) => {
+        throw new Error(err.message);
+      },
+    );
 };

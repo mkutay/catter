@@ -48,3 +48,9 @@ export const humanReadable = (str: string): string =>
     .split(" ")
     .map((word) => word[0].toUpperCase() + word.slice(1))
     .join(" ");
+
+/** Converts an error to a human-readable message, falling back to a generic message if unknown. */
+export const toMessage = (
+  error: unknown,
+  fallback: string = "Unknown error.",
+): string => (error instanceof Error ? error.message : fallback);
