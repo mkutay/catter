@@ -1,5 +1,6 @@
 "use server";
 
+import type { ResultAsync } from "neverthrow";
 import { resultAsyncToActionResult } from "./action-result";
 import { deleteComment, saveComment } from "./database-actions/comments";
 import {
@@ -9,55 +10,51 @@ import {
 import { updateKeyValue } from "./database-actions/key-values";
 import { getSession } from "./database-queries/auth";
 
+const asAction =
+  <Args extends unknown[], R extends ResultAsync<unknown, unknown>>(
+    fn: (...args: Args) => R,
+  ) =>
+  async (...args: Args) =>
+    resultAsyncToActionResult(fn(...args));
+
 /**
  * Retrieves the current session.
  *
  * @see {@link getSession}
  */
-export const getSessionAction = async () =>
-  resultAsyncToActionResult(getSession());
+export const getSessionAction = asAction(getSession);
 
 /**
  * Saves a comment.
  *
  * @see {@link saveComment}
  */
-export const saveCommentAction = async (
-  props: Parameters<typeof saveComment>[0],
-) => resultAsyncToActionResult(saveComment(props));
+export const saveCommentAction = asAction(saveComment);
 
 /**
  * Deletes a comment.
  *
  * @see {@link deleteComment}
  */
-export const deleteCommentAction = async (
-  props: Parameters<typeof deleteComment>[0],
-) => resultAsyncToActionResult(deleteComment(props));
+export const deleteCommentAction = asAction(deleteComment);
 
 /**
  * Saves a guestbook entry.
  *
  * @see {@link saveGuestbookEntryData}
  */
-export const saveGuestbookEntryAction = async (
-  props: Parameters<typeof saveGuestbookEntryData>[0],
-) => resultAsyncToActionResult(saveGuestbookEntryData(props));
+export const saveGuestbookEntryAction = asAction(saveGuestbookEntryData);
 
 /**
  * Deletes guestbook entries.
  *
  * @see {@link deleteGuestbookEntries}
  */
-export const deleteGuestbookEntriesAction = async (
-  props: Parameters<typeof deleteGuestbookEntries>[0],
-) => resultAsyncToActionResult(deleteGuestbookEntries(props));
+export const deleteGuestbookEntriesAction = asAction(deleteGuestbookEntries);
 
 /**
  * Updates a homepage key-value entry.
  *
  * @see {@link updateKeyValue}
  */
-export const updateKeyValueAction = async (
-  props: Parameters<typeof updateKeyValue>[0],
-) => resultAsyncToActionResult(updateKeyValue(props));
+export const updateKeyValueAction = asAction(updateKeyValue);
