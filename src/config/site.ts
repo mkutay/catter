@@ -30,11 +30,14 @@ export const siteConfig = {
   newsletterSubscribe: "https://mkutay.substack.com/subscribe",
   admins: ["me@mkutay.dev", "hello@mkutay.dev"],
   date: new Date().toISOString().split("T")[0],
-  homePage: {
-    leftSideSlugs: ["creating-a-clone-of-yourself", "skip-list"],
-    rightSideSlugs: ["some-reflection-on-writing", "why-mathematics-is-lonely"],
-    middleSlug: "java-and-education",
-    firstSlug: "history-of-chess-computers-the-minimax",
-  },
   invisible: "invisible",
 };
+
+export const existingKeys = [
+  "site:first-slug",
+  "site:middle-slug",
+  "site:left-side-1",
+  "site:left-side-2",
+  "site:right-side-1",
+  "site:right-side-2",
+] as const;

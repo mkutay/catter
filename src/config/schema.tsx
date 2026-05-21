@@ -52,3 +52,9 @@ export const deleteGuestbookEntryDataFormSchema = z.object({
     error: "You have to select at least one item.",
   }),
 });
+
+export const updateKeyValueFormSchema = z.object({
+  value: z.string().min(1, {
+    error: "A slug is required.",
+  }),
+});

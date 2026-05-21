@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { okAsync, safeTry } from "neverthrow";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -8,42 +9,55 @@ import {
   TypographyParagraph,
 } from "@/components/typography/paragraph";
 import { ViewDisplay } from "@/components/view-display";
-import { siteConfig } from "@/config/site";
+import { existingKeys } from "@/config/site";
 import type { Post } from "@/config/types";
-import { getPosts } from "@/lib/content-queries";
+import { getKeyValues, getPost, getPosts } from "@/lib/content-queries";
 import { getImagePlaceholder } from "@/lib/images";
 import { RenderPost } from "@/lib/rendering";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-static";
 
+const getPostsFromKeys = (keys: readonly string[]) =>
+  safeTry(async function* () {
+    const kvs = yield* getKeyValues(keys);
+
+    const posts: Array<{ key: string; post: Post }> = [];
+
+    for (const { key, value } of kvs) {
+      // value is the slug
+      const post = yield* getPost(value);
+      posts.push({ key, post });
+    }
+
+    return okAsync(
+      Object.fromEntries(posts.map(({ key, post }) => [key, post])),
+    );
+  });
+
 export default async function Home() {
-  const result = await getPosts({});
+  const result = await safeTry(async function* () {
+    const allPosts = yield* getPosts({});
+    const posts = yield* getPostsFromKeys(existingKeys);
+
+    return okAsync({ posts, allPosts });
+  });
+
   if (result.isErr()) throw new Error(result.error.message);
-  const posts = result.value;
+  const { posts, allPosts } = result.value;
 
-  const leftSide = posts.filter((post) =>
-    siteConfig.homePage.leftSideSlugs.includes(post.slug),
-  );
-  const rightSide = posts.filter((post) =>
-    siteConfig.homePage.rightSideSlugs.includes(post.slug),
-  );
-  const middle = posts.find(
-    (post) => post.slug === siteConfig.homePage.middleSlug,
-  );
+  const middle = posts["site:middle-slug"];
+  const firstPost = posts["site:first-slug"];
+  const leftSide = [posts["site:left-side-1"], posts["site:left-side-2"]];
+  const rightSide = [posts["site:right-side-1"], posts["site:right-side-2"]];
 
-  const firstPost = posts.find(
-    (post) => post.slug === siteConfig.homePage.firstSlug,
-  );
+  const sides = [...leftSide, ...rightSide];
 
-  if (middle === undefined || firstPost === undefined) return null;
-
-  const allShownPosts = [middle, ...leftSide, ...rightSide];
-
-  const recentNotDisplayed = posts.filter(
+  const recentNotDisplayed = allPosts.filter(
     (post) =>
-      !allShownPosts.some((displayed) => displayed.slug === post.slug) &&
-      !siteConfig.homePage.firstSlug.includes(post.slug),
+      !sides.some((displayed) => displayed.slug === post.slug) &&
+      middle.slug !== post.slug &&
+      firstPost.slug !== post.slug,
   );
 
   return (
@@ -107,7 +121,7 @@ export default async function Home() {
 
             {/* Mobile Grid */}
             <div className="md:hidden grid sm:grid-cols-2 grid-cols-1 gap-6 w-full">
-              {allShownPosts.slice(1).map((post) => (
+              {sides.map((post) => (
                 <Suspense key={post.slug}>
                   <PostDisplay post={post} isMiddle />
                 </Suspense>

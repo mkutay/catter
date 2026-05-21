@@ -6,6 +6,7 @@ import {
   deleteGuestbookEntries,
   saveGuestbookEntryData,
 } from "./database-actions/guestbook";
+import { updateKeyValue } from "./database-actions/key-values";
 import { getSession } from "./database-queries/auth";
 
 /**
@@ -51,3 +52,12 @@ export const saveGuestbookEntryAction = async (
 export const deleteGuestbookEntriesAction = async (
   props: Parameters<typeof deleteGuestbookEntries>[0],
 ) => resultAsyncToActionResult(deleteGuestbookEntries(props));
+
+/**
+ * Updates a homepage key-value entry.
+ *
+ * @see {@link updateKeyValue}
+ */
+export const updateKeyValueAction = async (
+  props: Parameters<typeof updateKeyValue>[0],
+) => resultAsyncToActionResult(updateKeyValue(props));

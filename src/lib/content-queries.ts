@@ -1,13 +1,22 @@
 import fs from "node:fs";
 import path from "node:path";
-import { and, asc, desc, eq, getTableColumns, not, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  getTableColumns,
+  inArray,
+  not,
+  sql,
+} from "drizzle-orm";
 import matter from "gray-matter";
 import { fromPromise, okAsync, type ResultAsync } from "neverthrow";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import type { Post } from "@/config/types";
 import { db } from "./db/drizzle";
-import { postKeywords, posts, postTags, views } from "./db/schema";
+import { keyValues, postKeywords, posts, postTags, views } from "./db/schema";
 
 interface ContentError {
   message: string;
@@ -295,3 +304,17 @@ export function getAboutProps() {
 
   return postData;
 }
+
+export const getKeyValues = (keys: readonly string[]) =>
+  fromPromise(
+    db.select().from(keyValues).where(inArray(keyValues.key, keys)).execute(),
+    (err) => {
+      console.error(err);
+      return {
+        code: "DATABASE_ERROR" as const,
+        message:
+          "Database error while fetching key value: " +
+          (err instanceof Error ? err.message : String(err)),
+      };
+    },
+  );
