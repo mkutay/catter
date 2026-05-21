@@ -9,6 +9,9 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
+/**
+ * The table for comments on the blog.
+ */
 export const comments = pgTable("comments", {
   id: serial().primaryKey().notNull(),
   email: varchar({ length: 255 }).notNull(),
@@ -19,6 +22,9 @@ export const comments = pgTable("comments", {
   updatedAt: timestamp("updated_at", { mode: "string" }),
 });
 
+/**
+ * The table for guestbook entries.
+ */
 export const guestbook = pgTable("guestbook", {
   id: serial().primaryKey().notNull(),
   email: varchar({ length: 255 }).notNull(),
@@ -26,14 +32,25 @@ export const guestbook = pgTable("guestbook", {
   createdBy: varchar("created_by", { length: 255 }).notNull(),
   createdAt: timestamp("created_at", { mode: "string" }).notNull(),
   updatedAt: timestamp("updated_at", { mode: "string" }),
+  /**
+   * The color of the comment in the guestbook author text.
+   *
+   * This uses Catppuccin colour palette.
+   */
   color: varchar({ length: 255 }),
 });
 
+/**
+ * The table for tracking the number of views for each post.
+ */
 export const views = pgTable("views", {
   slug: text().primaryKey().notNull(),
   count: integer(),
 });
 
+/**
+ * The table for blog posts.
+ */
 export const posts = pgTable("posts", {
   slug: varchar({ length: 255 }).primaryKey().notNull(),
   content: text().notNull(),
@@ -49,6 +66,9 @@ export const posts = pgTable("posts", {
   shortExcerpt: text(),
 });
 
+/**
+ * The table for keywords associated with each post.
+ */
 export const postKeywords = pgTable(
   "post_keywords",
   {
@@ -70,6 +90,9 @@ export const postKeywords = pgTable(
   ],
 );
 
+/**
+ * The table for tags associated with each post.
+ */
 export const postTags = pgTable(
   "post_tags",
   {
