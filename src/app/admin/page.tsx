@@ -35,7 +35,9 @@ export default async function Page() {
     const entries = yield* getGuestbookEntries();
     const comments = yield* getEveryComment();
     const posts = yield* getPosts({});
-    const kvs = (yield* getKeyValues(existingKeys)) as Array<{
+    const kvs = (yield* getKeyValues(existingKeys)).sort((a, b) =>
+      a.key.localeCompare(b.key),
+    ) as Array<{
       key: (typeof existingKeys)[number];
       value: string;
     }>;

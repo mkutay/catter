@@ -7,7 +7,7 @@ import {
   deleteGuestbookEntries,
   saveGuestbookEntryData,
 } from "./database-actions/guestbook";
-import { updateKeyValue } from "./database-actions/key-values";
+import { updateKeyValueHomePage } from "./database-actions/key-values";
 import { getSession } from "./database-queries/auth";
 
 const asAction =
@@ -57,4 +57,4 @@ export const deleteGuestbookEntriesAction = asAction(deleteGuestbookEntries);
  *
  * @see {@link updateKeyValue}
  */
-export const updateKeyValueAction = asAction(updateKeyValue);
+export const updateKeyValueHomePageAction = asAction(updateKeyValueHomePage);

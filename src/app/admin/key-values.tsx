@@ -1,9 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useForm } from "react-hook-form";
-import type z from "zod";
+import { type FormEvent, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -15,21 +13,13 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useToast } from "@/components/ui/use-toast";
-import { updateKeyValueFormSchema } from "@/config/schema";
 import type { existingKeys } from "@/config/site";
-import { updateKeyValueAction } from "@/lib/server-helper";
+import { updateKeyValueHomePageAction } from "@/lib/server-helper";
 import { cn } from "@/lib/utils";
 
 export function HomePagePostsForm({
@@ -42,19 +32,32 @@ export function HomePagePostsForm({
   allSlugs: string[];
 }) {
   const { toast } = useToast();
+  const [selectedSlug, setSelectedSlug] = useState(value);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const form = useForm<z.infer<typeof updateKeyValueFormSchema>>({
-    resolver: zodResolver(updateKeyValueFormSchema),
-    defaultValues: {
-      value,
-    },
-  });
+  useEffect(() => {
+    setSelectedSlug(value);
+  }, [value]);
 
-  const onSubmit = async (values: z.infer<typeof updateKeyValueFormSchema>) => {
-    const updated = await updateKeyValueAction({
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!selectedSlug) {
+      toast({
+        title: "Select a post slug.",
+        description: "Pick a slug before saving the homepage slot.",
+        variant: "destructive",
+      });
+
+      return;
+    }
+
+    setIsSaving(true);
+    const updated = await updateKeyValueHomePageAction({
       key: slotKey,
-      value: values.value,
+      slug: selectedSlug,
     });
+    setIsSaving(false);
 
     if (!updated.ok) {
       toast({
@@ -67,85 +70,66 @@ export function HomePagePostsForm({
 
     toast({
       title: "Homepage slot updated.",
-      description: `Now showing: ${values.value}`,
+      description: `Now showing: ${selectedSlug}`,
       variant: "default",
     });
-
-    form.reset({ value: values.value });
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-row gap-2"
-      >
-        <FormField
-          control={form.control}
-          name="value"
-          render={({ field }) => (
-            <FormItem className="flex flex-col w-full">
-              <Popover modal={true}>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        "w-full justify-between",
-                        !field.value && "text-muted-foreground",
-                      )}
-                      size="sm"
+    <form onSubmit={onSubmit} className="flex flex-row gap-2">
+      <div className="flex flex-col w-full">
+        <Popover modal={true}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              className={cn(
+                "w-full justify-between",
+                !selectedSlug && "text-muted-foreground",
+              )}
+              size="sm"
+            >
+              {selectedSlug || "Select post slug"}
+              <CaretSortIcon className="h-4 w-4 shrink-0 opacity-70" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[--radix-popover-trigger-width] p-0 font-sans font-medium">
+            <Command>
+              <CommandInput placeholder="Search slug..." className="h-9" />
+              <CommandList className="max-h-48 lg:max-h-72">
+                <CommandEmpty>No slug found.</CommandEmpty>
+                <CommandGroup className="py-1">
+                  {allSlugs.map((slug) => (
+                    <CommandItem
+                      value={slug}
+                      key={slug}
+                      onSelect={() => {
+                        setSelectedSlug(slug);
+                      }}
                     >
-                      {field.value || "Select post slug"}
-                      <CaretSortIcon className="h-4 w-4 shrink-0 opacity-70" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-[--radix-popover-trigger-width] p-0 font-sans font-medium">
-                  <Command>
-                    <CommandInput
-                      placeholder="Search slug..."
-                      className="h-9"
-                    />
-                    <CommandList className="max-h-48 lg:max-h-72">
-                      <CommandEmpty>No slug found.</CommandEmpty>
-                      <CommandGroup className="py-1">
-                        {allSlugs.map((slug) => (
-                          <CommandItem
-                            value={slug}
-                            key={slug}
-                            onSelect={() => {
-                              form.setValue("value", slug, {
-                                shouldValidate: true,
-                                shouldDirty: true,
-                              });
-                            }}
-                          >
-                            {slug}
-                            <CheckIcon
-                              className={cn(
-                                "ml-auto h-4 w-4",
-                                slug === field.value
-                                  ? "opacity-100"
-                                  : "opacity-0",
-                              )}
-                            />
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" size="sm" className="w-fit">
-          Save
-        </Button>
-      </form>
-    </Form>
+                      {slug}
+                      <CheckIcon
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          slug === selectedSlug ? "opacity-100" : "opacity-0",
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
+      <Button
+        type="submit"
+        size="sm"
+        className="w-fit"
+        disabled={!selectedSlug || isSaving}
+      >
+        {isSaving ? "Saving..." : "Save"}
+      </Button>
+    </form>
   );
 }
