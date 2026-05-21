@@ -10,6 +10,7 @@ Welcome to the **Catter** codebase! This documentation is designed to quickly on
 - **Runtime & Package Manager**: [Bun](file:///Users/kutay/code/catter/bun.lock) (for fast execution, linting, testing, and dependency resolution).
 - **Styling**: TailwindCSS v4 with [Shadcn UI](file:///Users/kutay/code/catter/src/components/ui/) (Catppuccin color scheme).
 - **Database**: PostgreSQL with [Drizzle ORM](file:///Users/kutay/code/catter/src/lib/db/) and [Drizzle Kit](file:///Users/kutay/code/catter/drizzle.config.ts).
+- **Cache & Key-Value Store**: Redis via [ioredis](file:///Users/kutay/code/catter/src/lib/redis.ts) for caching image placeholders and syntax-highlighted code blocks with native TTL.
 - **Content Engine**: MDX powered by [next-mdx-remote-client](file:///Users/kutay/code/catter/package.json) with custom LaTeX, Table of Contents, and [CodeHike](file:///Users/kutay/code/catter/src/config/mdx-settings.tsx) syntax highlighting plugins.
 - **Linting & Formatting**: [Biome](file:///Users/kutay/code/catter/biome.json) (replaces ESLint/Prettier with ultra-fast checks).
 - **Testing**: [Vitest](file:///Users/kutay/code/catter/vitest.config.ts) for unit/integration tests and [Playwright](file:///Users/kutay/code/catter/playwright.config.ts) for E2E testing.
@@ -278,6 +279,7 @@ To deploy Catter inside Coolify, create a new **Private Repository / Git Resourc
    | Variable                      | Description                                  | Example Value                                |
    | :---------------------------- | :------------------------------------------- | :------------------------------------------- |
    | `POSTGRES_URL`                | PostgreSQL connection endpoint               | `postgresql://user:password@pg-host:5432/db` |
+   | `REDIS_URL`                   | Redis connection endpoint                    | `redis://user:password@redis-host:6379`      |
    | `SITE_URL`                    | Full address URL of the website              | `https://www.mkutay.dev`                     |
    | `AUTH_SECRET`                 | Secret key used by Auth.js to crypt sessions | _Generate a random base64 string_            |
    | `AUTH_REDIRECT_PROXY_URL`     | Redirect address for Auth.js handlers        | `https://www.mkutay.dev/api/auth`            |
