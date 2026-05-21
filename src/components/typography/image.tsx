@@ -1,6 +1,6 @@
 import Image, { type ImageProps } from "next/image";
 import type { DetailedHTMLProps, ImgHTMLAttributes } from "react";
-import { getPlaceholder } from "@/lib/images";
+import { getImagePlaceholder } from "@/lib/images";
 
 /**
  * Renders an image with a placeholder if the source is a string.
@@ -30,26 +30,16 @@ export const image = async (
       />
     );
 
-  const imageUrl = src.startsWith("/") ? src : `/${src}`;
-  const { metadata, base64 } = await getPlaceholder(src).match(
-    (placeholder) => ({
-      metadata: placeholder.metadata,
-      base64: placeholder.base64 as `data:image/${string}`,
-    }),
-    (err) => {
-      throw new Error(err.message);
-    },
-  );
+  const { url, metadata, base64 } = await getImagePlaceholder(src);
 
   return (
     <Image
       alt={alt}
-      src={`/api${imageUrl}`}
+      src={url}
       className="my-8 lg:rounded-md rounded-sm"
       width={metadata.width}
       height={metadata.height}
       placeholder={base64}
-      quality={75}
     />
   );
 };
