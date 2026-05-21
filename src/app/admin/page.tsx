@@ -60,10 +60,14 @@ export default async function Page() {
         Home Page
       </h2>
       <div className="space-y-4">
-        {kvs.map(({ key, value }) => (
+        {existingKeys.map((key) => (
           <div key={key} className="space-y-1">
             <h3 className="text-base font-mono">{key}</h3>
-            <HomePagePostsForm slotKey={key} value={value} allSlugs={slugs} />
+            <HomePagePostsForm
+              slotKey={key}
+              value={kvs.find((k) => k.key === key)?.value}
+              allSlugs={slugs}
+            />
           </div>
         ))}
       </div>

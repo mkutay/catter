@@ -2,7 +2,6 @@ import type { Readable } from "node:stream";
 import * as Minio from "minio";
 import {
   err,
-  errAsync,
   fromThrowable,
   ok,
   okAsync,
@@ -89,17 +88,7 @@ const parsePlaceholderCacheValue = (value: string) =>
  * @note Cache entries are considered stale if they are older than 48 hours.
  */
 const getCachedPlaceholder = (cacheKey: string) =>
-  getValue(cacheKey)
-    .andThen(({ value }) => parsePlaceholderCacheValue(value))
-    .andThen((value) =>
-      // Only return the cache entry if it's less than 48 hours old.
-      new Date(value.createdAt) > new Date(Date.now() - 48 * 60 * 60 * 1000)
-        ? okAsync(value)
-        : errAsync({
-            type: "PLACEHOLDER_CACHE_ERROR",
-            message: "Cache entry is stale.",
-          } as PlaceholderCacheError),
-    );
+  getValue(cacheKey).andThen(({ value }) => parsePlaceholderCacheValue(value));
 
 /**
  * Generates a placeholder for the given image and stores it in the cache.
@@ -136,7 +125,11 @@ const setPlaceholderCache = (
       }),
     )
     .andTee((value) =>
-      upsertKeyValue({ key: cacheKey, value: JSON.stringify(value) }),
+      upsertKeyValue({
+        key: cacheKey,
+        value: JSON.stringify(value),
+        ttl: 48 * 60 * 60, // 48 hours
+      }),
     );
 
 /**

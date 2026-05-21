@@ -22,3 +22,16 @@ vi.mock("next-auth/react", () => ({
     status: "unauthenticated",
   }),
 }));
+
+vi.mock("ioredis", () => {
+  class RedisMock {
+    set = vi.fn(async () => "OK");
+    mget = vi.fn(async (...keys: string[]) => keys.map(() => null));
+    get = vi.fn(async () => null);
+    on = vi.fn(() => this);
+    quit = vi.fn(async () => undefined);
+    disconnect = vi.fn();
+  }
+
+  return { default: RedisMock };
+});

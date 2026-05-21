@@ -129,7 +129,7 @@ const parseCachedValue = (value: string) =>
     (): HighlightedCode => JSON.parse(value),
     (err): CacheError => ({
       code: "CACHE_ERROR",
-      message: `Failed to parse placeholder cache value: ${toMessage(err)}`,
+      message: `Failed to parse code-block cache value: ${toMessage(err)}`,
     }),
   )();
 
@@ -147,6 +147,7 @@ const setCache = (cacheKey: string, code: RawCode) =>
     upsertKeyValue({
       key: cacheKey,
       value: JSON.stringify(highlighted),
+      ttl: 7 * 24 * 60 * 60, // 7 days
     }),
   );
 
