@@ -11,7 +11,6 @@ export const env = createEnv({
     GITHUB_OAUTH_CLIENT_ID: z.string(),
     POSTGRES_URL: z.url(),
     AUTH_SECRET: z.string(),
-    AUTH_REDIRECT_PROXY_URL: z.url(),
     MINIO_ENDPOINT: z.string(),
     MINIO_ACCESS_KEY: z.string(),
     MINIO_SECRET_KEY: z.string(),

@@ -282,7 +282,6 @@ To deploy Catter inside Coolify, create a new **Private Repository / Git Resourc
    | `REDIS_URL`                   | Redis connection endpoint                    | `redis://user:password@redis-host:6379`      |
    | `SITE_URL`                    | Full address URL of the website              | `https://www.mkutay.dev`                     |
    | `AUTH_SECRET`                 | Secret key used by Auth.js to crypt sessions | _Generate a random base64 string_            |
-   | `AUTH_REDIRECT_PROXY_URL`     | Redirect address for Auth.js handlers        | `https://www.mkutay.dev/api/auth`            |
    | `UPLOAD_API_KEY`              | Key allowed to push assets / write posts     | _A unique secret key of your choice_         |
    | `MINIO_ENDPOINT`              | Hostname of S3/MinIO service                 | `https://s3.eu-central.amazonaws.com`        |
    | `MINIO_ACCESS_KEY`            | Access key credentials                       | _Access Key ID_                              |

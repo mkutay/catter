@@ -46,7 +46,6 @@ GITHUB_OAUTH_CLIENT_SECRET=
 
 # For NextAuth to work, see: https://authjs.dev/getting-started/installation?framework=next-js
 AUTH_SECRET=
-AUTH_REDIRECT_PROXY_URL=YOUR_SITE/api/auth
 
 POSTGRES_URL= # The URL of the postgres database, hosted somewhere.
 
