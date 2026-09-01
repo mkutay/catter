@@ -12,7 +12,7 @@ export const {
     GitHubProvider({
       clientId: env.GITHUB_OAUTH_CLIENT_ID,
       clientSecret: env.GITHUB_OAUTH_CLIENT_SECRET,
-      issuer: "https://github.com",
+      issuer: "https://github.com/login/oauth",
     }),
     DiscordProvider({
       clientId: env.DISCORD_OAUTH_CLIENT_ID,
