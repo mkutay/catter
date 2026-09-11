@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,7 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
 import type { CommentData } from "@/config/types";
 import { deleteCommentAction } from "@/lib/server-helper";
 import type { CommentActionProps } from "./types";
@@ -29,7 +29,6 @@ export function DeleteComment({
   editComment?: (props: CommentActionProps) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const { toast } = useToast();
 
   const handleDelete = async () => {
     setOpen(false);
@@ -41,10 +40,8 @@ export function DeleteComment({
 
     // If deletion fails, notify the user, and revert the optimistic update.
     if (!result.ok) {
-      toast({
-        title: "Error",
-        description: `Error deleting comment. ${result.error.message}`,
-        variant: "destructive",
+      toast.error("Error deleting comment.", {
+        description: result.error.message,
       });
 
       editComment?.({ action: "add", newComment: comment });

@@ -10,7 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown";
+} from "@/components/ui/dropdown-menu";
 import { siteConfig } from "@/config/site";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {

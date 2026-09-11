@@ -2,11 +2,12 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CopyShortened } from "@/components/copy-shortened";
 
-const mockToast = vi.fn();
-vi.mock("@/components/ui/use-toast", () => ({
-  useToast: () => ({
-    toast: mockToast,
-  }),
+const { mockToast } = vi.hoisted(() => ({
+  mockToast: vi.fn(),
+}));
+
+vi.mock("sonner", () => ({
+  toast: mockToast,
 }));
 
 describe("CopyShortened", () => {
@@ -45,9 +46,7 @@ describe("CopyShortened", () => {
       `https://www.mkutay.dev/test-slug`,
     );
     await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith({
-        title: "Copied to clipboard!",
-      });
+      expect(mockToast).toHaveBeenCalledWith("Copied to clipboard!");
     });
   });
 });

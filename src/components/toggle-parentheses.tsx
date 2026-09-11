@@ -2,8 +2,12 @@
 
 import { createContext, useContext, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
-import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 type ToggleParenthesesContextValue = {
   open: boolean;
@@ -48,7 +52,7 @@ export function ToggleParenthesesProvider({
 
   return (
     <ToggleParenthesesContext.Provider value={{ open, setOpen, toggle }}>
-      {children}
+      <TooltipProvider>{children}</TooltipProvider>
     </ToggleParenthesesContext.Provider>
   );
 }
@@ -67,17 +71,15 @@ export function ToggleParenthesesContextToggleButton({
   return (
     <Tooltip delayDuration={300}>
       <TooltipTrigger asChild>
-        <Button
+        <button
           type="button"
           onClick={toggle}
           aria-pressed={open}
-          variant="outline"
-          size="sm"
-          className={className}
+          className={`hover:bg-muted text-foreground transition-colors inline-flex items-center justify-center rounded-md text-sm font-medium border border-border h-8 px-3 ${className}`}
           suppressHydrationWarning
         >
           {open ? "Hide" : "Show"}
-        </Button>
+        </button>
       </TooltipTrigger>
       <TooltipContent suppressHydrationWarning>
         {open ? (
