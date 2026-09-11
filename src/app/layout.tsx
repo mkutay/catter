@@ -4,7 +4,8 @@ import { ThemeProvider } from "next-themes";
 import Footer from "@/components/footer";
 import { NavBar } from "@/components/nav-bar";
 import { ToggleParenthesesProvider } from "@/components/toggle-parentheses";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { cabinetGrotesk, plex, zodiak } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 import "@/styles/globals.css";
@@ -67,14 +68,16 @@ export default function Layout({
         className={`${zodiak.variable} ${cabinetGrotesk.variable} ${plex.variable} text-foreground bg-background font-body`}
       >
         <ThemeProvider attribute="class" disableTransitionOnChange>
-          <ToggleParenthesesProvider defaultOpen={true}>
-            <main className="flex flex-col min-h-screen">
-              <NavBar />
-              <div className="flex-1">{children}</div>
-              <Footer />
-            </main>
-          </ToggleParenthesesProvider>
-          <Toaster />
+          <TooltipProvider>
+            <ToggleParenthesesProvider defaultOpen={true}>
+              <main className="flex flex-col min-h-screen">
+                <NavBar />
+                <div className="flex-1">{children}</div>
+                <Footer />
+              </main>
+            </ToggleParenthesesProvider>
+            <Toaster />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

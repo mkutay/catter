@@ -2,19 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Session } from "next-auth";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
 import { commentsFormSchema } from "@/config/schema";
 import type { CommentData } from "@/config/types";
 import { saveCommentAction } from "@/lib/server-helper";
@@ -36,8 +29,6 @@ export function CommentForm({
   editComment: (props: CommentActionProps) => void;
   session: Session;
 }) {
-  const { toast } = useToast();
-
   const form = useForm<z.infer<typeof commentsFormSchema>>({
     resolver: zodResolver(commentsFormSchema),
     defaultValues: {
@@ -74,13 +65,9 @@ export function CommentForm({
     editComment({ action: "delete", commentId: optimisticComment.id });
 
     if (!saved.ok) {
-      toast({
-        title: "Error",
-        description:
-          "Could not save comment. Please try again later. " +
-          saved.error.message,
-        variant: "destructive",
-      });
+      toast.error(
+        `Could not save comment. Please try again later. ${saved.error.message}`,
+      );
     } else {
       // Add the real comment returned from the server.
       editComment({ action: "add", newComment: saved.value[0] });
@@ -88,35 +75,37 @@ export function CommentForm({
   };
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-2"
-      >
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Write a comment to this post!</FormLabel>
-              <FormControl>
-                <Textarea
-                  className="h-32"
-                  placeholder="Your comment..."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex flex-row gap-2 justify-end items-center">
-          <SignOut callbackUrl={`/posts/${slug}#comments`} />
-          <Button variant="default" size="default" type="submit">
-            Post
-          </Button>
-        </div>
-      </form>
-    </Form>
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="flex flex-col gap-2"
+    >
+      <Controller
+        control={form.control}
+        name="message"
+        render={({ field, fieldState }) => (
+          <Field data-invalid={!!fieldState.error} className="gap-2">
+            <FieldLabel htmlFor={field.name}>
+              Write a comment to this post!
+            </FieldLabel>
+            <Textarea
+              id={field.name}
+              className="h-32"
+              placeholder="Your comment..."
+              aria-invalid={!!fieldState.error}
+              {...field}
+            />
+            {fieldState.error && (
+              <FieldError>{fieldState.error.message}</FieldError>
+            )}
+          </Field>
+        )}
+      />
+      <div className="flex flex-row gap-2 justify-end items-center">
+        <SignOut callbackUrl={`/posts/${slug}#comments`} />
+        <Button variant="default" size="default" type="submit">
+          Post
+        </Button>
+      </div>
+    </form>
   );
 }

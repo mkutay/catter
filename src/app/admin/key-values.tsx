@@ -2,6 +2,7 @@
 
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { type FormEvent, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +18,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useToast } from "@/components/ui/use-toast";
 import type { existingKeys } from "@/config/site";
 import { updateKeyValueHomePageAction } from "@/lib/server-helper";
 import { cn } from "@/lib/utils";
@@ -31,7 +31,6 @@ export function HomePagePostsForm({
   value: string | undefined;
   allSlugs: string[];
 }) {
-  const { toast } = useToast();
   const [selectedSlug, setSelectedSlug] = useState(value);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -43,10 +42,8 @@ export function HomePagePostsForm({
     event.preventDefault();
 
     if (!selectedSlug) {
-      toast({
-        title: "Select a post slug.",
+      toast.error("Select a post slug.", {
         description: "Pick a slug before saving the homepage slot.",
-        variant: "destructive",
       });
 
       return;
@@ -60,18 +57,14 @@ export function HomePagePostsForm({
     setIsSaving(false);
 
     if (!updated.ok) {
-      toast({
-        title: "Error updating homepage slot.",
+      toast.error("Error updating homepage slot.", {
         description: updated.error.message,
-        variant: "destructive",
       });
       return;
     }
 
-    toast({
-      title: "Homepage slot updated.",
+    toast.success("Homepage slot updated.", {
       description: `Now showing: ${selectedSlug}`,
-      variant: "default",
     });
   };
 

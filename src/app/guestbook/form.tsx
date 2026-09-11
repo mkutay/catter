@@ -1,20 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
 import { SignOut } from "@/components/auth-buttons";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/components/ui/use-toast";
 import { guestbookFormSchema } from "@/config/schema";
 import { saveGuestbookEntryAction } from "@/lib/server-helper";
 import { GuestbookDialog } from "./dialog";
@@ -25,8 +19,6 @@ import { GuestbookDialog } from "./dialog";
  * Includes a message input, a "Sign!" button, and a link to a customization dialog.
  */
 export default function GuestbookForm() {
-  const { toast } = useToast();
-
   const form = useForm<z.infer<typeof guestbookFormSchema>>({
     resolver: zodResolver(guestbookFormSchema),
     defaultValues: {
@@ -39,10 +31,8 @@ export default function GuestbookForm() {
       message: values.message,
     });
     if (!saved.ok) {
-      toast({
-        title: "Error saving guestbook entry. Please try again later.",
+      toast.error("Error saving guestbook entry. Please try again later.", {
         description: saved.error.message,
-        variant: "destructive",
       });
       return;
     }
@@ -51,36 +41,35 @@ export default function GuestbookForm() {
 
   return (
     <div className="flex flex-col gap-2">
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-row gap-2"
-        >
-          <FormField
-            control={form.control}
-            name="message"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormControl>
-                  <Input
-                    aria-label="Your message"
-                    placeholder="Your message..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button variant="default" size="md" type="submit">
-            Sign!
-          </Button>
-        </form>
-        <div className="w-fit flex flex-row gap-2 items-center">
-          <GuestbookDialog />
-          <SignOut className="w-fit" />
-        </div>
-      </Form>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-row gap-2"
+      >
+        <Controller
+          control={form.control}
+          name="message"
+          render={({ field, fieldState }) => (
+            <Field className="w-full" data-invalid={!!fieldState.error}>
+              <Input
+                aria-label="Your message"
+                placeholder="Your message..."
+                aria-invalid={!!fieldState.error}
+                {...field}
+              />
+              {fieldState.error && (
+                <FieldError>{fieldState.error.message}</FieldError>
+              )}
+            </Field>
+          )}
+        />
+        <Button variant="default" size="md" type="submit">
+          Sign!
+        </Button>
+      </form>
+      <div className="w-fit flex flex-row gap-2 items-center">
+        <GuestbookDialog />
+        <SignOut className="w-fit" />
+      </div>
     </div>
   );
 }
