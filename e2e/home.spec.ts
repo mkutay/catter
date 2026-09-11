@@ -15,7 +15,7 @@ test("home page loads and displays posts", async ({ page }) => {
   await expect(images.first()).toBeVisible();
 
   // Verify Views
-  const views = page.locator("text=/\\d+ views/");
+  const views = page.locator("text=/\\d+ views?/");
   await expect(views.first()).toBeVisible();
 
   // Verify navigation to a post

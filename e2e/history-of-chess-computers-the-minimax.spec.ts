@@ -78,7 +78,7 @@ test.describe("Markdown Rendering Integration", () => {
     await expect(toc).toBeVisible();
 
     // Verify View Count
-    const viewCount = page.locator("text=/\\d+ views/");
+    const viewCount = page.locator("text=/\\d+ views?/");
     await expect(viewCount).toBeVisible();
 
     // Verify Tags
