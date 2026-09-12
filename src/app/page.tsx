@@ -129,7 +129,7 @@ export default async function Home() {
               ))}
             </div>
           </div>
-          <div className="flex md:flex-row flex-col md:gap-8 gap-6">
+          <div className="flex md:flex-row flex-col md:gap-8 gap-6 *:w-1/3">
             {recentNotDisplayed.slice(0, 3).map((post) => (
               <Suspense key={post.slug}>
                 <PostDisplay post={post} />

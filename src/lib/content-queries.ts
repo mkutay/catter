@@ -265,16 +265,11 @@ const getDateValue = (value: unknown, defaultValue: string) => {
 const getStringArray = (value: unknown): string[] =>
   Array.isArray(value) ? value.filter((item) => typeof item === "string") : [];
 
-/**
- * Fetches the content and metadata for the 'About' page from the filesystem.
- *
- * Parses the MDX file located at `src/app/about/about.mdx`.
- */
-export function getAboutProps() {
+export function getPageProps(pagePath: string) {
   let markdownFile: string;
   try {
     markdownFile = fs.readFileSync(
-      path.join(process.cwd(), path.join("src/app/about/about.mdx")),
+      path.join(process.cwd(), path.join(pagePath)),
       "utf-8",
     );
   } catch (error) {

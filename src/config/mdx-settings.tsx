@@ -19,6 +19,7 @@ import remarkHeadingId from "remark-heading-id";
 import remarkLint from "remark-lint";
 import remarkMath from "remark-math";
 import remarkSmartypants from "remark-smartypants";
+import { DeltaGammaCalculator } from "@/components/delta-gamma-calculator";
 import { ToggleParentheses } from "@/components/toggle-parentheses";
 import {
   TypographyBlockquote,
@@ -89,7 +90,17 @@ export const options: EvaluateOptions<Scope> = {
       remarkSmartypants,
       remarkParentheses,
     ],
-    rehypePlugins: [rehypeKatex, rehypeKatexBlock],
+    rehypePlugins: [
+      [
+        rehypeKatex,
+        {
+          macros: {
+            "\\textdollar": "\\$",
+          },
+        },
+      ],
+      rehypeKatexBlock,
+    ],
     recmaPlugins: [recmaMdxImportReact],
   },
   /**
@@ -253,6 +264,7 @@ export const components: MDXComponents = {
     props: DetailedHTMLProps<HTMLAttributes<HTMLHRElement>, HTMLHRElement>,
   ) => <TypographyHr className={cn("my-12", props.className)} />,
   ToggleParentheses,
+  DeltaGammaCalculator,
   ol: (
     props: DetailedHTMLProps<
       HTMLAttributes<HTMLOListElement>,
