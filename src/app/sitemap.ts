@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
-import { getAboutProps, getPosts } from "@/lib/content-queries";
+import { getPageProps, getPosts } from "@/lib/content-queries";
 
 export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteMap: MetadataRoute.Sitemap = [];
@@ -17,7 +17,7 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
 
   siteMap.push({
     url: `${siteConfig.url}/about`,
-    lastModified: new Date(getAboutProps().meta.date)
+    lastModified: new Date(getPageProps("src/app/about/about.mdx").meta.date)
       .toISOString()
       .split("T")[0],
   });

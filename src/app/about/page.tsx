@@ -3,13 +3,13 @@ import Image from "next/image";
 import { DoublePane } from "@/components/double-pane";
 import { TypographyH1 } from "@/components/typography/headings";
 import { siteConfig } from "@/config/site";
-import { getAboutProps } from "@/lib/content-queries";
+import { getPageProps } from "@/lib/content-queries";
 import { getImagePlaceholder } from "@/lib/images";
 import { RenderPost } from "@/lib/rendering";
 
 export const dynamic = "force-static";
 
-const about = getAboutProps();
+const about = getPageProps("src/app/about/about.mdx");
 
 export const metadata: Metadata = {
   title: about.meta.title,
