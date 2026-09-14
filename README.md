@@ -74,6 +74,24 @@ bun run db:migrate
 
 Change the values in `src/config/site.ts` to change the config of your site. Importantly, add your email to `admins` to access the admin page on your site, where you can delete comments and guestbook entries.
 
+## Setting Drizzle up
+
+```bash
+docker pull postgres
+```
+
+Start an instance:
+
+```bash
+docker run --name drizzle-postgres -e POSTGRES_PASSWORD=mypassword -d -p 5432:5432 postgres
+```
+
+Add to `.env.local`:
+
+```bash
+POSTGRES_URL="postgres://postgres:mypassword@localhost:5432/postgres"
+```
+
 ## Deploying
 
 You can fork this repository and add it to Vercel manually, or you can use the following button.
