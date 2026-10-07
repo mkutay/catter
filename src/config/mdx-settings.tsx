@@ -35,6 +35,16 @@ import {
 import { image } from "@/components/typography/image";
 import { TypographyOList, TypographyUList } from "@/components/typography/list";
 import { TypographyParagraph } from "@/components/typography/paragraph";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import rehypeKatexBlock from "@/lib/rehype-katex-block";
 import remarkParentheses from "@/lib/remark-parentheses";
 import { cn } from "@/lib/utils";
@@ -115,6 +125,14 @@ export const options: EvaluateOptions<Scope> = {
  * Maps standard HTML elements and custom components to their styled React counterparts.
  */
 export const components: MDXComponents = {
+  table: Table,
+  thead: TableHeader,
+  tbody: TableBody,
+  tfoot: TableFooter,
+  tr: TableRow,
+  th: TableHead,
+  td: TableCell,
+  caption: TableCaption,
   Image: image,
   img: image,
   Link: (props: ComponentProps<typeof Link>) => (
