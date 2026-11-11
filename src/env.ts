@@ -18,6 +18,10 @@ export const env = createEnv({
     S3_BUCKET_NAME: z.string(),
     SITE_URL: z.url(),
     UPLOAD_API_KEY: z.string(),
+    CALENDAR_URLS: z
+      .string()
+      .transform((value) => value.split(",").map((url) => url.trim()))
+      .pipe(z.array(z.url()).min(1)),
     NODE_ENV: z.enum(["development", "production", "test"]),
     BUILDING: z.enum(["true", "false"]).nullable().default("false"),
     REDIS_URL: z.string(),

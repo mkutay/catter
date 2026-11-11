@@ -60,3 +60,20 @@ export interface AuthError {
   message: string;
   code: "AUTH_ERROR" | "UNAUTHORISED";
 }
+
+export const AVAILABILITY_TIME_ZONE = "Europe/London";
+
+export const UKTime = new Intl.DateTimeFormat("en-GB", {
+  timeZone: AVAILABILITY_TIME_ZONE,
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+export type BusyPeriod = { start: number; end: number };
+
+export type Availability = {
+  dayStart: number;
+  dayEnd: number;
+  busy: BusyPeriod[];
+};

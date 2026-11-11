@@ -283,6 +283,7 @@ To deploy Catter inside Coolify, create a new **Private Repository / Git Resourc
    | `SITE_URL`                    | Full address URL of the website              | `https://www.mkutay.dev`                     |
    | `AUTH_SECRET`                 | Secret key used by Auth.js to crypt sessions | _Generate a random base64 string_            |
    | `UPLOAD_API_KEY`              | Key allowed to push assets / write posts     | _A unique secret key of your choice_         |
+   | `CALENDAR_URLS`               | Comma-separated availability calendar URLs  | `https://example.com/Calendar.ics,https://example.com/Classes.ics` |
    | `MINIO_ENDPOINT`              | Hostname of S3/MinIO service                 | `https://s3.eu-central.amazonaws.com`        |
    | `MINIO_ACCESS_KEY`            | Access key credentials                       | _Access Key ID_                              |
    | `MINIO_SECRET_KEY`            | Secret access key credentials                | _Secret Access Key_                          |

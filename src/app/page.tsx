@@ -3,6 +3,7 @@ import { okAsync, safeTry } from "neverthrow";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
+import { TodayAvailability } from "@/components/today-availability";
 import { TypographyH1 } from "@/components/typography/headings";
 import {
   TypographyLarge,
@@ -138,6 +139,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <TodayAvailability />
     </div>
   );
 }
