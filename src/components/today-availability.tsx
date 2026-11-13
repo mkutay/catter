@@ -54,12 +54,16 @@ export function TodayAvailability() {
     return;
   }
 
-  const duration = data.dayEnd - data.dayStart;
+  const duration = 18 * 3_600_000;
+  const visibleStart = data.dayEnd - duration;
   const position = (time: number) =>
-    `${((time - data.dayStart) / duration) * 100}%`;
+    `${((time - visibleStart) / duration) * 100}%`;
+  const busy = data.busy
+    .map(({ start, end }) => ({ start: Math.max(start, visibleStart), end }))
+    .filter(({ start, end }) => start < end);
   const hours = Array.from(
-    { length: duration / 3_600_000 },
-    (_, hour) => data.dayStart + hour * 3_600_000,
+    { length: 18 },
+    (_, hour) => visibleStart + hour * 3_600_000,
   );
 
   return (
@@ -69,11 +73,11 @@ export function TodayAvailability() {
       id="free"
     >
       <div className="space-y-2 font-mono">
-        <p className="text-sm">Today / UK time / Purple = Busy / Rest = Free</p>
+        <p className="text-sm">Today / UK time / Purple = Busy</p>
         <div className="overflow-x-auto">
           <div className="relative h-28 min-w-240 text-xs tabular-nums">
             <div className="absolute inset-x-0 inset-y-6 bg-muted" />
-            {data.busy.map(({ start, end }) => (
+            {busy.map(({ start, end }) => (
               <div
                 key={start}
                 className="absolute inset-y-6 bg-mauve"
@@ -88,29 +92,33 @@ export function TodayAvailability() {
               <div
                 key={hour}
                 className={`absolute inset-y-6 border-l border-dashed ${
-                  data.busy.some(
-                    ({ start, end }) => hour >= start && hour < end,
-                  )
+                  busy.some(({ start, end }) => hour >= start && hour < end)
                     ? "border-primary-foreground/60"
                     : "border-muted-foreground/40"
                 }`}
                 style={{ left: position(hour) }}
               >
-                <span className="absolute -top-4.5">{UKTime.format(hour)}</span>
+                <span className="absolute -top-4.5 left-0">
+                  {UKTime.format(hour)}
+                </span>
               </div>
             ))}
-            <div
-              className={`absolute inset-y-6 border-l-2 ${
-                data.busy.some(({ start, end }) => now >= start && now < end)
-                  ? "border-primary-foreground"
-                  : "border-foreground"
-              }`}
-              style={{ left: position(now) }}
-            >
-              <span className="absolute top-full left-1 whitespace-nowrap">
-                {UKTime.format(now)}
-              </span>
-            </div>
+            {now >= visibleStart && (
+              <div
+                className={`absolute inset-y-6 border-l-2 ${
+                  busy.some(({ start, end }) => now >= start && now < end)
+                    ? "border-primary-foreground"
+                    : "border-foreground"
+                }`}
+                style={{ left: position(now) }}
+              >
+                <span
+                  className={`absolute top-full whitespace-nowrap ${now >= data.dayEnd - 3_600_000 ? "right-0" : "left-0"}`}
+                >
+                  {UKTime.format(now)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
